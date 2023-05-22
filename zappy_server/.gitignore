@@ -1,0 +1,4 @@
+zappy_server
+*.o
+.vscode
+vgcore*
