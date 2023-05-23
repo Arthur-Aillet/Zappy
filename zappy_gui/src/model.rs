@@ -9,7 +9,7 @@ use nannou::prelude::*;
 use nannou_egui::{self, Egui};
 
 pub struct Model {
-    pub(crate) egui: Egui,
+    pub egui: Egui,
 }
 
 fn window_event(_app: &App, _model: &mut Model, _event: WindowEvent) {
@@ -25,9 +25,9 @@ pub fn model(app: &App) -> Model {
         .event(window_event)
         .raw_event(raw_window_event)
         .build()
-        .unwrap();
+        .expect("Error getting window");
 
-    let window = app.window(window_id).unwrap();
+    let window = app.window(window_id).expect("Error getting window");
 
     Model {
         egui: Egui::from_window(&window)
