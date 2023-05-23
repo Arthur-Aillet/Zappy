@@ -13,9 +13,13 @@ use nannou::prelude::*;
 
 fn main() {
     nannou::app(model)
+        .event(event)
+        .view(view)
         .update(update)
-        .simple_window(view)
         .run();
+}
+
+fn event(_app: &App, _model: &mut Model, _event: Event) {
 }
 
 fn update(_app: &App, _model: &mut Model, _update: Update) {
