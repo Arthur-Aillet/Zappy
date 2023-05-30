@@ -74,8 +74,11 @@ struct Mesh {
 }
 
 impl Mesh {
-    fn parse_face_point(&mut self, point : String) -> Option<(f32, f32, f32)> {
+    fn parse_face_point(&mut self, point : String) -> Option<(Vertex, Option<Vertex>, Option<Vertex>)> {
         let mut iter = &mut point.split('/');
+        let mut position = Vertex{x: 0., y: 0.,z: 0.};
+        let mut normal = Some(Option{x: 0., y: 0.,z: 0.});
+        let mut texture = None;
 
         if iter.count() != 3 {
             return none;
@@ -84,21 +87,37 @@ impl Mesh {
             match i {
                 i if i == 0 => {
                     match item.parse::<u16>() {
-                        Ok(x) => { self.indices.push(x) }
+                        Ok(x) => {
+                            if self.verticies.size() < x {
+                                position = self.vertices[x]
+                            } else {
+                                return None
+                            }
+                        }
                         Err(_) => { return none }
                     }
                 },
                 i if i == 1 => { continue; },
                 i if i == 2 => {
+                    if item.is_empty() {
+                        normal = None;
+                        continue
+                    }
                     match item.parse::<u16>() {
-                        Ok(x) => { self.normals.push(x) }
+                        Ok(x) => {
+                            if self.normals.size() < x {
+                                normal = self.normals[x]
+                            } else {
+                                return None
+                            }
+                        }
                         Err(_) => { return none }
                     }
                 },
                 _ => { return none}
             }
         }
-        return Some((0., 0., 0.))
+        return Some((position, None, normal));
     }
 
     pub fn parse_face(&mut self, line : String, vertices : &Vec<Vertex>) -> bool {
@@ -112,10 +131,12 @@ impl Mesh {
             return false
         }
         let fst_triangle = Triangle::new();
-        for point in points[0..3] {
-            match parse_face_point(point) {
-                Some(T) => {
-                    fst_triangle.points
+        for i in 0..3 {
+            match parse_face_point(points[i]) {
+                Some(point) => {
+                    fst_triangle.points[i] = point.0;
+                    fst_triangle.points[i] = point.1;
+                    fst_triangle.points[i] = point.2;
                 },
                 None => { return false }
             }
@@ -170,13 +191,7 @@ impl Mesh {
                             }
                         }
                         s if s.starts_with("f ") => {
-                            let face_parsed = self.parse_face(s, &vertexes);
-                            if let Some(face_fst) = face_parsed.0 {
-                                self.triangles.push(face_fst);
-                                if let Some(face_snd) = face_parsed.1 {
-                                    self.triangles.push(face_snd);
-                                }
-                            } else {
+                            if !self.parse_face(s, &vertexes) {
                                 println!("Invalid face in \"{}\" !", file_name);
                                 return;
                             }
