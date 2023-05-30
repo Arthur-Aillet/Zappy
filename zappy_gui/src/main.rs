@@ -1,9 +1,10 @@
 use nannou::prelude::*;
 use nannou::winit;
 use std::cell::RefCell;
-use std::process::exit;
+use std::ops::Sub;
 
 mod data;
+mod obj_parser;
 
 struct Model {
     camera_is_active: bool,
@@ -39,6 +40,60 @@ pub struct Vertex {
     x: f32, //offset
     y: f32, //height
     z: f32, //depth
+}
+
+impl From<Vertex> for Normal {
+    fn from(vertex: Vertex) -> Self {
+        Normal {
+            x: vertex.x,
+            y: vertex.y,
+            z: vertex.z,
+        }
+    }
+}
+
+impl From<Normal> for Vertex {
+    fn from(normal: Normal) -> Self {
+        Vertex {
+            x: normal.x,
+            y: normal.y,
+            z: normal.z,
+        }
+    }
+}
+
+impl Sub<Vertex> for Vertex {
+    type Output = Vertex;
+    fn sub(self, other: Vertex) -> Vertex {
+        Vertex {
+            x: self.x - other.x,
+            y: self.y - other.y,
+            z: self.z - other.z,
+        }
+    }
+}
+
+impl Vertex {
+    pub fn cross_product (&self, other: Vertex) -> Vertex {
+        Vertex {
+            x: self.y * other.z - self.z * other.y,
+            y: self.z * other.x - self.x * other.z,
+            z: self.x * other.y - self.y * other.x
+        }
+    }
+
+    pub fn len(self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
+    }
+
+    pub fn normalize(&self) -> Self {
+        let len = self.len();
+        Vertex {
+            x: self.x / len,
+            y: self.y / len,
+            z: self.z / len,
+        }
+    }
 }
 
 #[repr(C)]

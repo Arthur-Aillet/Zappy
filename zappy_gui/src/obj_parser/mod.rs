@@ -7,8 +7,6 @@
 
 use std::fs::OpenOptions;
 use std::io::{BufRead, BufReader};
-use nannou::draw::theme::Primitive::Tri;
-use nannou::text::text;
 use crate::{Vertex, Normal};
 
 #[derive(Clone, Debug)]
@@ -19,9 +17,10 @@ struct Triangle {
     textures: Option<[usize; 3]>,
 }
 
+
 impl Triangle {
-    fn normal_from_points(&self) -> Normal {
-        (self.points[0] - self.points[1]).cross_product(self.points[0] - self.points[2]).normalize().into()
+    fn normal_from_points(point_a: Vertex, point_b: Vertex, point_c: Vertex) -> Normal {
+        (point_a - point_b).cross_product(point_a - point_c).normalize().into()
     }
 
     fn new() -> Triangle {
@@ -89,54 +88,56 @@ impl Mesh {
         return Some((position, texture, normal));
     }
 
+    fn normal_from_indexes(&self, triangle: &Triangle) -> Normal {
+        Triangle::normal_from_points(self.vertices[triangle.points[0]], self.vertices[triangle.points[1]], self.vertices[triangle.points[2]])
+    }
+
     fn get_second_face(&mut self, fst_triangle: &Triangle, last_point: &str) -> Option<Triangle> {
-        let mut points: [usize; 3] = [0; 3];
-        let mut textures: Option<[usize; 3]> = None;
-        let mut normals: Option<[usize; 3]> = None;
+        let mut points: [usize; 3] = [fst_triangle.points[1], fst_triangle.points[2], 0];
+        let mut textures = match fst_triangle.textures {
+            Some(tex ) => Some([tex[1], tex[2], 0]),
+            None => None
+        };
+        let mut normals = match fst_triangle.textures {
+            Some(nor ) => Some([nor[1], nor[2], 0]),
+            None => None
+        };
 
-        points[0] = fst_triangle.points[1];
-        points[1] = fst_triangle.points[2];
-        if let Some(fst_textures) = &fst_triangle.textures {
-            textures = Some([fst_textures[1], fst_textures[2], 0]);
-        }
-        if let Some(fst_normals) = &fst_triangle.normals {
-            normals = Some([fst_normals[1], fst_normals[2], 0]);
-        }
+        if let Some(indexes) = self.parse_face_point(last_point) {
+            points[2] = indexes.0;
 
-        if let Some(point) = self.parse_face_point(last_point) {
-            points[2] = point.0;
-
-            match point.1 {
-                Some(valid_point) => {
-                    if let Some(ref mut elem) = textures {
-                        elem[2] = valid_point;
+            match indexes.1 {
+                Some(index) => {
+                    if let Some(ref mut point_texture) = textures {
+                        point_texture[2] = index;
                     }
                 }
-                None => { texture = None }
+                None => { textures = None }
             }
-            match point.2 {
-                Some(valid_point) => {
-                    if let Some(ref mut elem) = normals {
-                        elem[2] = valid_point;
+            match indexes.2 {
+                Some(index) => {
+                    if let Some(ref mut point_normal) = normals {
+                        point_normal[2] = index;
                     }
                 }
-                None => { normal = None }
+                None => { normals = None }
             }
         } else {
             return None
         }
 
-        if normals.is_none() {
-            calculated_normal = Some(self.calculated.len());
-            self.calculated.push(snd_triangle.normal_from_points());
-            snd_triangle.calculated_normal = Some(index);
-        }
-        return Some(Triangle {
+        let mut snd_triangle = Triangle {
             points,
             normals,
-            calculated_normal,
+            calculated_normal: None,
             textures,
-        });
+        };
+        if normals.is_none() {
+            let index = self.calculated.len();
+            self.calculated.push(self.normal_from_indexes(&snd_triangle));
+            snd_triangle.calculated_normal = Some(index);
+        }
+        return Some(snd_triangle);
     }
 
     pub fn parse_face(&mut self, line : String, vertices : &Vec<Vertex>) -> bool {
@@ -172,15 +173,15 @@ impl Mesh {
         }
         if fst_triangle.normals.is_none() {
             let index = self.calculated.len();
-            self.calculated.push(fst_triangle.normal_from_points());
+            self.calculated.push(self.normal_from_indexes(&fst_triangle));
             fst_triangle.calculated_normal = Some(index);
         }
-        self.triangles.push(fst_triangle);
         if len == 4 {
             if let Some(snd_face) = self.get_second_face(&fst_triangle, points[4]) {
                 self.triangles.push(snd_face);
             } else { return false }
         }
+        self.triangles.push(fst_triangle);
         return true
     }
 
