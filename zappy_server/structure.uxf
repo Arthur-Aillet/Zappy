@@ -59,7 +59,7 @@ bg=orange</panel_attributes><additional_attributes></additional_attributes></ele
 int player_number;
 size_t x;
 size_t y;
-size_t orientation;	
+size_t orientation;
 size_t level;
 size_t life;
 size_t *inventory;

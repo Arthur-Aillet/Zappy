@@ -24,6 +24,13 @@ enum Resource {
     egg
 };
 
+enum orientation {
+    Nord,
+    Est,
+    Sud,
+    West
+};
+
 typedef struct tile_s {
     size_t *resources;
 } tile_t;
@@ -39,13 +46,21 @@ typedef struct error_handling_s {
     u_int8_t msg_error;
 } error_handling_t;
 
+typedef struct egg_s {
+    size_t egg_number;
+    size_t x;
+    size_t y;
+} egg_t;
+
 typedef struct player_s {
-    size_t pos_x;
-    size_t pos_y;
+    int player_number;
+    size_t x;
+    size_t y;
+    size_t orientation;
     size_t level;
     size_t life;
-    size_t satiety;
-    size_t *resources;
+    size_t *inventory;
+    egg_t *egg;
 } player_t;
 
 typedef struct teams_s {
@@ -54,8 +69,16 @@ typedef struct teams_s {
     player_t *player;
 } teams_t;
 
+typedef struct msg_queue_s {
+    size_t time;
+    u_int8_t **msg;
+    void (*handler)(u_int8_t **args, )
+    //pointeur sur fonctione qu'on doit executer
+} msg_queue_t;
+
 typedef struct gui_s {
     map_t map;
+    msg_queue_t msg_queue;
     error_handling_t error;
     teams_t *teams;
 } gui_t;
