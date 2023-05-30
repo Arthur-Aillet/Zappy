@@ -1,25 +1,24 @@
-<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>60</x><y>180</y><w>210</w><h>80</h></coordinates><panel_attributes>GUI_Protocole: struct
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>60</x><y>230</y><w>210</w><h>80</h></coordinates><panel_attributes>GUI_Protocole: struct
 --
-map_t *map;
 u_uint8_t *commands;
+map_t *map;
 
-
-bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>410</x><y>140</y><w>210</w><h>150</h></coordinates><panel_attributes>Common_Protocol: struct
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>410</x><y>190</y><w>210</w><h>150</h></coordinates><panel_attributes>Common_Protocol: struct
 --
 enum resources;
 --
 GUI_Protocole;
 IA_Protocole;
 size_t port;
-char **teams_name;
+u_uint_8 *teams;
 size_t client_nb;
 size_t freq; (time unit)
 
-bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>410</x><y>330</y><w>210</w><h>70</h></coordinates><panel_attributes>IA_Protocole: struct
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>410</x><y>380</y><w>210</w><h>70</h></coordinates><panel_attributes>IA_Protocole: struct
 --
 u_uint8_t *commands;
 
-bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>650</x><y>170</y><w>120</w><h>160</h></coordinates><panel_attributes>resource: enum
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>590</x><y>0</y><w>120</w><h>160</h></coordinates><panel_attributes>resource: enum
 --
 - food
 - linemate
@@ -30,71 +29,83 @@ bg=yellow</panel_attributes><additional_attributes></additional_attributes></ele
 - thystame
 - egg
 
-bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>500</x><y>150</y><w>170</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
-</panel_attributes><additional_attributes>150;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>60</x><y>300</y><w>210</w><h>70</h></coordinates><panel_attributes>map_t: struct
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>60</x><y>350</y><w>210</w><h>70</h></coordinates><panel_attributes>map_t: struct
 --
 size_t width;
 size_t height;
 tile_t **tiles;
 
-bg=green</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>60</x><y>410</y><w>210</w><h>70</h></coordinates><panel_attributes>tile_t: struct
+bg=green</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>60</x><y>460</y><w>210</w><h>70</h></coordinates><panel_attributes>tile_t: struct
 --
 size_t *resources;
 
-bg=green</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>580</x><y>410</y><w>210</w><h>80</h></coordinates><panel_attributes>team_t: struct
+bg=green</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>670</x><y>280</y><w>210</w><h>80</h></coordinates><panel_attributes>team_t: struct
 --
 char *team_name;
 size_t nb_slot;
-trantor_t *player_t;
+player_t *players;
 
 
-bg=#800080</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>140</x><y>0</y><w>400</w><h>80</h></coordinates><panel_attributes>command_t: struct
+bg=#800080</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>130</x><y>0</y><w>400</w><h>90</h></coordinates><panel_attributes>command_t: struct
 --
 char *command_name;
 void (comand*)(void); // à modifier
 int error;
+error_handling_t err;
 
-bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>820</x><y>460</y><w>180</w><h>160</h></coordinates><panel_attributes>player_t: struct
+bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>690</x><y>430</y><w>180</w><h>170</h></coordinates><panel_attributes>player_t: struct
 --
 int player_number;
 size_t x;
 size_t y;
-size_t orientation;
+size_t orientation;	
 size_t level;
 size_t life;
 size_t *inventory;
 egg_t *egg;
+player_t *next_player;
 
-bg=#800080</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>190</x><y>650</y><w>210</w><h>70</h></coordinates><panel_attributes>error_handling_t: struct
+bg=#800080</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>190</x><y>100</y><w>210</w><h>60</h></coordinates><panel_attributes>error_handling_t: struct
 --
 int error;
 u_int8_t msg_error;
 
-bg=red</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>140</x><y>360</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>900</x><y>170</y><w>140</w><h>390</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
-
-</panel_attributes><additional_attributes>10;10;120;10;120;370;30;370</additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>200</y><w>70</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
-</panel_attributes><additional_attributes>50;140;10;140;10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>170</y><w>170</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
-</panel_attributes><additional_attributes>10;20;150;20</additional_attributes></element><element><id>Relation</id><coordinates><x>0</x><y>0</y><w>160</w><h>250</h></coordinates><panel_attributes>fg=#FF7F50
+bg=red</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>140</x><y>410</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>250</y><w>70</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+</panel_attributes><additional_attributes>50;140;10;140;10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>220</y><w>170</w><h>50</h></coordinates><panel_attributes>
+lt=&lt;&lt;&lt;-
+</panel_attributes><additional_attributes>10;20;150;20</additional_attributes></element><element><id>Relation</id><coordinates><x>0</x><y>0</y><w>150</w><h>280</h></coordinates><panel_attributes>fg=#FF7F50
 lt=&lt;&lt;&lt;-
 
-</panel_attributes><additional_attributes>60;230;10;230;10;10;140;10</additional_attributes></element><element><id>Relation</id><coordinates><x>0</x><y>110</y><w>430</w><h>270</h></coordinates><panel_attributes>fg=#FF7F50
+</panel_attributes><additional_attributes>60;260;10;260;10;10;130;10</additional_attributes></element><element><id>Relation</id><coordinates><x>0</x><y>160</y><w>430</w><h>270</h></coordinates><panel_attributes>fg=#FF7F50
 lt=&lt;&lt;&lt;-
-</panel_attributes><additional_attributes>410;250;350;250;350;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>790</x><y>170</y><w>120</w><h>90</h></coordinates><panel_attributes>orientation: enum
+</panel_attributes><additional_attributes>410;250;350;250;350;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>750</x><y>0</y><w>120</w><h>90</h></coordinates><panel_attributes>orientation: enum
 --
 - Nord = 1
 - Est = 2
 - Sud = 3
 - West = 4
 
-bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>610</x><y>590</y><w>180</w><h>80</h></coordinates><panel_attributes>egg_t: struct
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>690</x><y>640</y><w>180</w><h>80</h></coordinates><panel_attributes>egg_t: struct
 --
 int egg_number;
 size_t x;
 size_t y;
 
-bg=#800080</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>780</x><y>580</y><w>60</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+bg=#800080</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>590</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
 
-</panel_attributes><additional_attributes>10;20;40;20</additional_attributes></element><element><id>Relation</id><coordinates><x>690</x><y>450</y><w>150</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>350</y><w>30</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
 
-</panel_attributes><additional_attributes>130;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>20</x><y>200</y><w>60</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
-</panel_attributes><additional_attributes>40;110;10;110;10;10;40;10</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>20</x><y>270</y><w>60</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+</panel_attributes><additional_attributes>40;90;10;90;10;10;40;10</additional_attributes></element><element><id>Relation</id><coordinates><x>500</x><y>270</y><w>190</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+</panel_attributes><additional_attributes>170;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>140</x><y>70</y><w>70</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+</panel_attributes><additional_attributes>50;40;10;40;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>790</x><y>0</y><w>130</w><h>530</h></coordinates><panel_attributes>fg=blue
+lt=&lt;&lt;&lt;-
+</panel_attributes><additional_attributes>10;510;110;510;110;10;80;10</additional_attributes></element><element><id>Relation</id><coordinates><x>160</x><y>150</y><w>500</w><h>360</h></coordinates><panel_attributes>fg=blue
+lt=&lt;&lt;&lt;-
+</panel_attributes><additional_attributes>10;340;480;340;480;10</additional_attributes></element><element><id>Relation</id><coordinates><x>700</x><y>110</y><w>290</w><h>460</h></coordinates><panel_attributes>fg=blue
+lt=&lt;&lt;&lt;-
+</panel_attributes><additional_attributes>100;440;270;440;270;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>170</x><y>590</y><w>500</w><h>90</h></coordinates><panel_attributes>msg_queue_t: struct
+--
+size_t time;
+
+bg=orange</panel_attributes><additional_attributes></additional_attributes></element></diagram>
