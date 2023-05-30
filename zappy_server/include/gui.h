@@ -43,29 +43,30 @@ typedef struct map_s {
 
 typedef struct error_handling_s {
     int error;
-    u_int8_t msg_error;
+    u_int8_t *msg_error;
 } error_handling_t;
 
 typedef struct egg_s {
-    size_t egg_number;
+    size_t egg_id;
     size_t x;
     size_t y;
 } egg_t;
 
 typedef struct player_s {
-    int player_number;
+    int id;
     size_t x;
     size_t y;
     size_t orientation;
     size_t level;
     size_t life;
     size_t *inventory;
-    egg_t *egg;
+    egg_t egg;
 } player_t;
 
 typedef struct teams_s {
     u_int8_t *teams;
-    size_t slot;
+    size_t slot;//nbr de joueur dans la teams
+    size_t actif_player;
     player_t *player;
 } teams_t;
 
@@ -78,7 +79,7 @@ typedef struct msg_queue_s {
 
 typedef struct gui_s {
     map_t map;
-    msg_queue_t msg_queue;
+    msg_queue_t msg_queue; //liste chaîner
     error_handling_t error;
     teams_t *teams;
 } gui_t;
