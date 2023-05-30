@@ -52,7 +52,6 @@ When a client connects to the server:
 | take object | "Take object" | 7/f | ok/ko |
 | set object down | "Set object" | 7/f | ok/ko |
 | start incantation | "Incantation" | 300/f | Elevation underway current level `k` / ko |
-| create an new slot for his team | "fork" | - | ok |
 
 ##### Fork command:
 
