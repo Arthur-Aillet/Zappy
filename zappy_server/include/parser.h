@@ -10,6 +10,7 @@
     #include <stdio.h>
 
 typedef struct parser_s {
+    size_t nb_teams;
     size_t port;
     size_t height;
     size_t width;
@@ -19,5 +20,7 @@ typedef struct parser_s {
 } parser_t;
 
 parser_t *set_parser(void);
+
+void get_parameters(int ac, char *av[], parser_t *parser);
 
 #endif /* !PARSER_H_ */

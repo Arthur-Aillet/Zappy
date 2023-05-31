@@ -67,4 +67,6 @@ typedef struct client_gui_s {
 //     {"sst", funct_client_sst},
 // };
 
+gui_t *set_gui(void);
+
 #endif /* !GUI_H_ */

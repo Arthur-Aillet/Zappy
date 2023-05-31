@@ -19,6 +19,7 @@ typedef struct tile_s {
 typedef struct map_s {
     size_t width;
     size_t height;
+    tile_t **tiles;
 } map_t;
 
 #endif /* !MAP_H_ */

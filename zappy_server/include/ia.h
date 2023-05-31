@@ -40,4 +40,6 @@ typedef struct server_ia_s {
 //     {"Connect_nbr", funct_client_sst},
 // };
 
+ia_t *set_ia(void);
+
 #endif /* !IA_H_ */

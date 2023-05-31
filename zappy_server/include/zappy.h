@@ -20,4 +20,6 @@ typedef struct common_s {
     size_t freq; //NOTE: - time unit
 } common_t;
 
+common_t set_common(int ac, char *av[]);
+
 #endif /* !ZAPPY_H_ */
