@@ -17,7 +17,6 @@ struct Triangle {
     textures: Option<[usize; 3]>,
 }
 
-
 impl Triangle {
     fn normal_from_points(point_a: Vertex, point_b: Vertex, point_c: Vertex) -> Normal {
         (point_a - point_b).cross_product(point_a - point_c).normalize().into()
@@ -190,10 +189,10 @@ impl Mesh {
         let mut iter = line.split_ascii_whitespace().filter(|&x| !x.is_empty());
 
         iter.next();
-        for coord in [&mut new_vertex.x, &mut new_vertex.y, &mut new_vertex.z].iter_mut() {
+        for coord in [new_vertex.x, new_vertex.y, new_vertex.z].iter_mut() {
             if let Some(point) = iter.next() {
-                if let Ok(point) = (point).parse::<f64>() {
-                    **coord = point as f32;
+                if let Ok(point) = point.parse::<f32>() {
+                    *coord = point as f32;
                 } else {
                     return None;
                 };
@@ -203,6 +202,16 @@ impl Mesh {
         }
         Some(new_vertex)
     }
+
+    pub fn parse_normal(&mut self, line: String) -> Option<Normal> {
+        let mut new_normal_asv = self.parse_vertex(line);
+        if let Some(normal_vertex) = new_normal_asv {
+            Some(normal_vertex.from().normalize())
+        } else {
+            None
+        }
+    }
+
     pub fn parse_obj(&mut self, file_name: &str) {
         let file = OpenOptions::new().read(true).open(file_name);
 
@@ -216,10 +225,18 @@ impl Mesh {
                         s if s.chars().all(|x| x.is_ascii_whitespace()) => { continue; }
                         s if s.starts_with('#') => { continue; }
                         s if s.starts_with("o ") => { continue; }
-                        s if s.starts_with("vn ") => { continue; }
                         s if s.starts_with("vt ") => { continue; }
                         s if s.starts_with("s ") => { continue; }
+                        s if s.starts_with("mtllib ") => { continue; }
                         s if s.starts_with("v ") => {
+                            if let Some(vertex) = self.parse_vertex(s) {
+                                vertexes.push(vertex);
+                            } else {
+                                println!("Invalid vertexes in \"{}\" !", file_name);
+                                return;
+                            }
+                        }
+                        s if s.starts_with("vn ") => {
                             if let Some(vertex) = self.parse_vertex(s) {
                                 vertexes.push(vertex);
                             } else {
@@ -233,7 +250,6 @@ impl Mesh {
                                 return;
                             }
                         }
-                        s if s.starts_with("mtllib ") => { continue; }
                         _ => {
                             println!("Invalid \"{}\" mesh file!", file_name);
                             return;
