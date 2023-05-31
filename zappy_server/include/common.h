@@ -51,9 +51,10 @@ typedef struct sock_s {
 } sock_t;
 
 typedef struct buffered_socket_s {
-    buffer_t bufferRead;
-    buffer_t bufferWrite;
+    buffer_t read_buffer;
+    buffer_t writte_buffer;
     sock_t sock;
 } buffered_socket_t;
 
 #endif /* !COMMON_H_ */
+

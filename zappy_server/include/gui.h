@@ -20,7 +20,7 @@ typedef struct gui_s {
 } gui_t;
 
 typedef struct server_gui_s {
-    const uint8_t *comd;
+    const uint8_t *cmd;
     void (*handler)(uint8_t **args, gui_t *gui);
 } server_gui_t;
 
@@ -68,3 +68,4 @@ typedef struct client_gui_s {
 // };
 
 #endif /* !GUI_H_ */
+
