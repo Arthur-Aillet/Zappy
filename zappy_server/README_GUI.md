@@ -59,12 +59,12 @@
 ### Connection:
 
 When a client connects to the server:
-    - The server sends: "WELCOME\n"
-    - The client sends: "GRAPHIC\n"
-    - The server sends: command `msz X Y`
-    - The server sends: command `sgt T`
-    - The server sends: command `bct X Y q0 q1 q2 q3 q4 q5 q6\n` for all tile
-    - The server sends: command `tna N` for all teams (by default: 4 teams)
+- The server sends: "WELCOME\n"
+- The client sends: "GRAPHIC\n"
+- The server sends: command `msz X Y`
+- The server sends: command `sgt T`
+- The server sends: command `bct X Y q0 q1 q2 q3 q4 q5 q6\n` for all tile
+- The server sends: command `tna N` for all teams (by default: 4 teams)
 
 ### Error Handling:
 
