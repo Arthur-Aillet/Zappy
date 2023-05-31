@@ -41,7 +41,7 @@ typedef struct error_handling_s {
 } error_handling_t;
 
 typedef struct buffer_s {
-    u_int8_t *octets;
+    u_int8_t *bytes;
     size_t usedSize;
 } buffer_t;
 
