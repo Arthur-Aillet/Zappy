@@ -11,12 +11,12 @@
     #include "map.h"
     #include "common.h"
 
-    // #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0])) //FIXME - what is this ?
+    #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
 typedef struct gui_s {
     msg_queue_t *msg_queue;
     map_t map;
-    error_handling_t error; //FIXME - chaque protocole à sa propre error handlig ? ou on crrer une seul error handling (on devra rajouter un pointeur) ?
+    error_handling_t *error; //FIXME - chaque protocole à sa propre error handlig ? ou on crrer une seul error handling (on devra rajouter un pointeur) ?
 } gui_t;
 
 typedef struct server_gui_s {

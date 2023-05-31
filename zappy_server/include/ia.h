@@ -10,7 +10,7 @@
 
     #include "common.h"
 
-    // #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0])) //FIXME - what is this ?
+    #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
 typedef struct ia_s {
     msg_queue_t *queue;

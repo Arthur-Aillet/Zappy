@@ -9,6 +9,12 @@
     #define COMMON_H_
     #include <stdint.h>
     #include <time.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <sys/stat.h>
+    #include <netinet/in.h>
+    #include <sys/select.h>
+    #include <sys/time.h>
 
 enum resources {
     FOOD,
@@ -24,7 +30,7 @@ enum resources {
 typedef struct msg_queue_s {
     time_t time;
     uint8_t **msg;
-    void (*handler)(uint8_t **args); //FIXME - check arguments
+    void (*handler)(uint8_t **args, buffered_socket_t *client, void *info); //FIXME - check arguments
     //NOTE - pointeur sur fonctione qu'on doit executer
     msg_queue_s *next_msg;
 } msg_queue_t;
@@ -33,5 +39,21 @@ typedef struct error_handling_s {
     int error_code;
     uint8_t *msg_error;
 } error_handling_t;
+
+typedef struct buffer_s {
+    u_int8_t *octets;
+    size_t usedSize;
+} buffer_t;
+
+typedef struct sock_s {
+    int sockfd;
+    struct sockaddr_in addr;
+} sock_t;
+
+typedef struct buffered_socket_s {
+    buffer_t bufferRead;
+    buffer_t bufferWrite;
+    sock_t sock;
+} buffered_socket_t;
 
 #endif /* !COMMON_H_ */
