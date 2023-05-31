@@ -13,7 +13,7 @@ use crate::{Vertex, Normal};
 struct Triangle {
     points: [usize; 3],
     normals: Option<[usize; 3]>,
-    calculated_normal: Option<usize>,
+    calculated_normal: usize,
     textures: Option<[usize; 3]>,
 }
 
@@ -26,7 +26,7 @@ impl Triangle {
         Triangle {
             points: [0; 3],
             normals: None,
-            calculated_normal: None,
+            calculated_normal: 0,
             textures: None,
         }
     }
@@ -36,16 +36,28 @@ struct Mesh {
     triangles : Vec<Triangle>,
     normals : Vec<Normal>,
     calculated : Vec<Normal>,
-    vertices : Vec<Vertex>,
-    indices : Vec<u16>,
+    vertices : Vertices,
 }
 
+type Vertices = Vec<Vertex>;
+type Indices = Vec<u16>;
+type Normals = Vec<Normal>;
+
 impl Mesh {
+    pub fn as_buffers(&mut self) -> (Vertices, Indices, Normals) {
+        let mut indices: Indices = vec![];
+
+        for triangle in &self.triangles {
+            indices.extend(triangle.points.iter().map(|x| *x as u16));
+        }
+        (self.vertices.clone(), indices, self.calculated.clone())
+    }
+
     fn parse_face_point(&self, point : &str) -> Option<(usize, Option<usize>, Option<usize>)> {
         let iter = &mut point.split('/');
         let mut position = 0;
         let mut normal: Option<usize> = None;
-        let mut texture: Option<usize> = None;
+        let texture: Option<usize> = None;
 
         if let Some(str) = iter.next() {
             match str.parse::<usize>() {
@@ -124,19 +136,15 @@ impl Mesh {
         } else {
             return None
         }
-
-        let mut snd_triangle = Triangle {
+        let calculated_normal = self.calculated.len();
+        let snd_triangle = Triangle {
             points,
             normals,
-            calculated_normal: None,
+            calculated_normal,
             textures,
         };
-        if normals.is_none() {
-            let index = self.calculated.len();
-            self.calculated.push(self.normal_from_indexes(&snd_triangle));
-            snd_triangle.calculated_normal = Some(index);
-        }
-        return Some(snd_triangle);
+        self.calculated.push(self.normal_from_indexes(&snd_triangle));
+        Some(snd_triangle)
     }
 
     pub fn parse_face(&mut self, line : String, vertices : &Vec<Vertex>) -> bool {
@@ -144,7 +152,6 @@ impl Mesh {
             .filter(|&x| !x.is_empty())
             .skip(1)
             .collect();
-        let vertices_available = vertices.len();
         let len = points.len();
         if len < 3 || len > 4 {
             return false
@@ -170,11 +177,8 @@ impl Mesh {
                 return false
             }
         }
-        if fst_triangle.normals.is_none() {
-            let index = self.calculated.len();
-            self.calculated.push(self.normal_from_indexes(&fst_triangle));
-            fst_triangle.calculated_normal = Some(index);
-        }
+        fst_triangle.calculated_normal = self.calculated.len();
+        self.calculated.push(self.normal_from_indexes(&fst_triangle));
         if len == 4 {
             if let Some(snd_face) = self.get_second_face(&fst_triangle, points[4]) {
                 self.triangles.push(snd_face);
@@ -185,7 +189,7 @@ impl Mesh {
     }
 
     pub fn parse_vertex(&mut self, line: String) -> Option<Vertex> {
-        let mut new_vertex: Vertex = Vertex { x: 0.0, y: 0.0, z: 0.0, };
+        let new_vertex: Vertex = Vertex { x: 0.0, y: 0.0, z: 0.0, };
         let mut iter = line.split_ascii_whitespace().filter(|&x| !x.is_empty());
 
         iter.next();
@@ -206,7 +210,7 @@ impl Mesh {
     pub fn parse_normal(&mut self, line: String) -> Option<Normal> {
         let mut new_normal_asv = self.parse_vertex(line);
         if let Some(normal_vertex) = new_normal_asv {
-            Some(normal_vertex.from().normalize())
+            Some(Normal::from(normal_vertex.normalize()))
         } else {
             None
         }
