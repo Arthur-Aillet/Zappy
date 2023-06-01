@@ -36,7 +36,8 @@ fn main(
 ) -> VertexOutput {
     let worldview: mat4x4<f32> = uniforms.view * uniforms.world;
     let wv3: mat3x3<f32> = mat3x3<f32>(worldview[0].xyz, worldview[1].xyz, worldview[2].xyz);
-    let out_normal: vec3<f32> = transpose(custom_inverse(wv3)) * normal;
+    let out_normal: vec3<f32> = wv3 * normal;
+//    let out_normal: vec3<f32> = transpose(custom_inverse(wv3)) * normal;
     let out_pos: vec4<f32> = uniforms.proj * worldview * vec4<f32>(pos, 1.0);
     return VertexOutput(normal, out_pos);
 }

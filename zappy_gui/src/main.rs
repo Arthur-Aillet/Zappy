@@ -207,7 +207,7 @@ fn model(app: &App) -> Model {
     let depth_texture = create_depth_texture(device, [win_w, win_h], DEPTH_FORMAT, msaa_samples);
     let depth_texture_view = depth_texture.view().build();
 
-    let eye = Point3::new(0.0, 0.0, 1.0);
+    let eye = Point3::new(0.0, 0.0, 0.0);
     let pitch = 0.0;
     let yaw = std::f32::consts::PI * 0.5;
     let camera = Camera { eye, pitch, yaw };
@@ -260,7 +260,7 @@ fn model(app: &App) -> Model {
 
 // Move the camera based on the current key pressed and its current direction.
 fn update(app: &App, model: &mut Model, update: Update) {
-    const CAM_SPEED_HZ: f64 = 0.5;
+    const CAM_SPEED_HZ: f64 = 0.1;
     if model.camera_is_active {
         let velocity = (update.since_last.secs() * CAM_SPEED_HZ) as f32;
         // Go forwards on W.
@@ -393,7 +393,7 @@ fn create_uniforms([w, h]: [u32; 2], view: Mat4) -> Uniforms {
     let rotation = Mat4::from_rotation_y(0f32);
     let aspect_ratio = w as f32 / h as f32;
     let fov_y = std::f32::consts::FRAC_PI_2;
-    let near = 0.01;
+    let near = 0.0001;
     let far = 100.0;
     let proj = Mat4::perspective_rh_gl(fov_y, aspect_ratio, near, far);
     let scale = Mat4::from_scale(Vec3::splat(0.01));
