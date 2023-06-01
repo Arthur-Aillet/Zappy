@@ -125,16 +125,16 @@ impl Camera {
     // The camera's "view" matrix.
     fn view(&self) -> Mat4 {
         let direction = self.direction();
-        let up = Vec3::Y;
+        let up = Vec3::Z;
         Mat4::look_to_rh(self.eye, direction, up)
     }
 }
 
 fn pitch_yaw_to_direction(pitch: f32, yaw: f32) -> Vec3 {
     let xz_unit_len = pitch.cos();
-    let x = xz_unit_len * yaw.cos();
-    let y = pitch.sin();
-    let z = xz_unit_len * (-yaw).sin();
+    let x = - xz_unit_len * yaw.cos();
+    let y = - xz_unit_len * (yaw).sin();
+    let z = pitch.sin();
     vec3(x, y, z)
 }
 
@@ -175,8 +175,12 @@ fn model(app: &App) -> Model {
     for index in buffers.1.clone() {
         println!("index => {}",index)
     }
-    for normal in buffers.2.clone() {
-        println!("normal => {:?}",normal)
+    let normals_vec = buffers.2.clone();
+    for i in 0..1 {
+        println!("i = {i}")
+    }
+    for i in 0..normals_vec.len() {
+        println!("normal{i} => {:?}",normals_vec[i])
     }
     // Create the vertex, normal and index buffers.
     let vertices_bytes = vertices_as_bytes(&buffers.0);
@@ -270,9 +274,9 @@ fn update(app: &App, model: &mut Model, update: Update) {
         // Strafe left on A.
         if app.keys.down.contains(&Key::Q) {
             let pitch = 0.0;
-            let yaw = model.camera.yaw + std::f32::consts::PI * 0.5;
+            let yaw = model.camera.yaw - std::f32::consts::PI * 0.5;
             let direction = pitch_yaw_to_direction(pitch, yaw);
-            model.camera.eye += direction * velocity;
+            model.camera.eye -= direction * velocity;
         }
         // Strafe right on D.
         if app.keys.down.contains(&Key::D) {
@@ -282,7 +286,7 @@ fn update(app: &App, model: &mut Model, update: Update) {
             model.camera.eye += direction * velocity;
         }
         // Float down on Q.
-        if app.keys.down.contains(&Key::Q) {
+        if app.keys.down.contains(&Key::A) {
             let pitch = model.camera.pitch - std::f32::consts::PI * 0.5;
             let direction = pitch_yaw_to_direction(pitch, model.camera.yaw);
             model.camera.eye += direction * velocity;
@@ -372,12 +376,9 @@ fn view(_app: &App, model: &Model, frame: Frame) {
     render_pass.set_bind_group(0, &g.bind_group, &[]);
     render_pass.set_pipeline(&g.render_pipeline);
     render_pass.set_vertex_buffer(0, g.vertex_buffer.slice(..));
-    render_pass.set_vertex_buffer(1, g.normal_buffer.slice(..));
+    render_pass.set_vertex_buffer(1, g.normal_buffer.slice(0..1));
     render_pass.set_index_buffer(g.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
-    let index_range = 0..model.buffers.1.len() as u32;
-    let start_vertex = 0;
-    let instance_range = 0..1;
-    render_pass.draw_indexed(index_range, start_vertex, instance_range);
+    render_pass.draw_indexed( 0..model.buffers.1.len() as u32, 0, 0..1);
 }
 
 fn create_uniforms([w, h]: [u32; 2], view: Mat4) -> Uniforms {
