@@ -41,5 +41,6 @@ typedef struct server_ia_s {
 // };
 
 ia_t *set_ia(void);
+void free_ia(ia_t *ia);
 
 #endif /* !IA_H_ */
