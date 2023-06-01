@@ -10,12 +10,12 @@
 
     #include "ia.h"
     #include "gui.h"
-    #include "team.h"
+    #include "teams.h"
 
 typedef struct common_s {
     gui_t *gui;
     ia_t *ia;
-    uint8_t *teams;
+    team_t *teams;
     size_t port;
     size_t freq; //NOTE: - time unit
 } common_t;

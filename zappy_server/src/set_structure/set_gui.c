@@ -6,6 +6,8 @@
 */
 
 #include "gui.h"
+#include <stdlib.h>
+#include <string.h>
 
 static map_t set_map(int height, int width)
 {

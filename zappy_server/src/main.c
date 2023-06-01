@@ -5,6 +5,7 @@
 ** main
 */
 
+#include "zappy.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,7 +15,7 @@
 
 int main(int ac, char *av[])
 {
-    get_parameters(ac, av);
+    set_common(ac, av);
     // while (1) {
     //     set_new_loop();
     //     if (/* select(MAX_SD, READ_FDS, NULL, NULL, NULL) < 0*/) {

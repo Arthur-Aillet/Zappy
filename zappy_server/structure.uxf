@@ -11,7 +11,7 @@ group=group-12
 GUI_Protocole;
 IA_Protocole;
 size_t port;
-uint_8 *teams;
+team_t *teams;
 size_t freq; (time unit)
 
 bg=yellow

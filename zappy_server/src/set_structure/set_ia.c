@@ -6,6 +6,7 @@
 */
 
 #include "ia.h"
+#include <stdlib.h>
 
 ia_t *set_ia(void)
 {
