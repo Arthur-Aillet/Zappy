@@ -5,13 +5,16 @@
 // mesh parser
 //
 
+mod solver;
+
 use std::fs::OpenOptions;
 use std::io::{BufRead, BufReader};
 use nannou::mesh::vertices;
 use crate::{Vertex, Normal};
+use crate::obj_parser::solver::solve_indices;
 
 #[derive(Clone, Debug)]
-struct Triangle {
+pub struct Triangle {
     points: [usize; 3],
     normals: Option<[usize; 3]>,
     calculated_normal: usize,
@@ -46,12 +49,10 @@ pub type Normals = Vec<Normal>;
 
 impl Mesh {
     pub fn as_buffers(&mut self) -> (Vertices, Indices, Normals) {
-        let mut indices: Indices = vec![];
+        let uvs: Vec<Vertex> = vec![Vertex{ x: 0., y: 0., z: 0. }];
 
-        for triangle in &self.triangles {
-            indices.extend(triangle.points.iter().map(|x| *x as u16));
-        }
-        (self.vertices.clone(), indices, self.calculated.clone())
+        let (vp, uv, nm, faces) = solve_indices(&self.vertices, &uvs, &self.normals, &self.triangles);
+        (vp, faces.iter().map(|x| *x as u16).collect(), nm)
     }
 
     fn parse_face_point(&self, point : &str) -> Option<(usize, Option<usize>, Option<usize>)> {

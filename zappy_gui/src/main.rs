@@ -166,7 +166,7 @@ fn model(app: &App) -> Model {
     let fs_mod = device.create_shader_module(&fs_desc);
 
     let mut mesh: Mesh = Mesh::new();
-    let status = mesh.parse_obj("./.objs/cube.obj");
+    let status = mesh.parse_obj("./.objs/bat.obj");
 
     let buffers = mesh.as_buffers();
     for vertex in buffers.0.clone() {
@@ -376,7 +376,7 @@ fn view(_app: &App, model: &Model, frame: Frame) {
     render_pass.set_bind_group(0, &g.bind_group, &[]);
     render_pass.set_pipeline(&g.render_pipeline);
     render_pass.set_vertex_buffer(0, g.vertex_buffer.slice(..));
-    render_pass.set_vertex_buffer(1, g.normal_buffer.slice(0..1));
+    render_pass.set_vertex_buffer(1, g.normal_buffer.slice(..));
     render_pass.set_index_buffer(g.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
     render_pass.draw_indexed( 0..model.buffers.1.len() as u32, 0, 0..1);
 }
