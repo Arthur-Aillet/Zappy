@@ -29,7 +29,7 @@ impl Triangle {
     fn new() -> Triangle {
         Triangle {
             points: [0; 3],
-            normals: None,
+            normals: Some([3;3]),
             calculated_normal: 0,
             textures: None,
         }
@@ -72,7 +72,6 @@ impl Mesh {
             };
         } else { return None }
         if let Some(str) = iter.next() {
-        //texture
         } else { return None }
         if let Some(str) = iter.next() {
             if str.is_empty() {
@@ -81,14 +80,14 @@ impl Mesh {
                 match str.parse::<usize>() {
                     Ok(x) => {
                         if self.normals.len() >= x && x > 0 {
-                            normal = Some(x - 1)
+                            normal = Some(x - 1);
                         } else { return None }
                     }
                     Err(_) => { return None }
                 }
             }
         } else { return None }
-        return Some((position, texture, normal));
+        Some((position, texture, normal))
     }
 
     fn normal_from_indexes(&self, triangle: &Triangle) -> Normal {
@@ -139,26 +138,27 @@ impl Mesh {
 
     fn parse_face(&mut self, line : String) -> bool {
         let points: Vec<&str> = line.split_ascii_whitespace()
-            .filter(|&x| !x.is_empty())
             .skip(1)
             .collect();
         let len = points.len();
         if len < 3 || len > 4 { return false }
         let mut fst_triangle = Triangle::new();
+        fst_triangle.normals = Some([0; 3]);
+        fst_triangle.textures = Some([0; 3]);
         for i in 0..3 {
             if let Some(point) = self.parse_face_point(points[i]) {
                 fst_triangle.points[i] = point.0;
 
-                if let Some(mut texture) = fst_triangle.textures {
+                if let Some(ref mut texture) = fst_triangle.textures {
                     match point.1 {
                         Some(valid_point) => { texture[i] = valid_point }
                         None => {fst_triangle.textures = None}
                     }
                 }
-                if let Some(mut normal) = fst_triangle.normals {
+                if let Some(ref mut normal) = fst_triangle.normals {
                     match point.2 {
                         Some(valid_point) => { normal[i] = valid_point }
-                        None => {fst_triangle.textures = None}
+                        None => {fst_triangle.normals = None}
                     }
                 }
             } else { return false }

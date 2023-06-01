@@ -2,25 +2,25 @@ use crate::{Vertex, Normal};
 use crate::obj_parser::Triangle;
 
 #[derive(Clone)]
-struct vert_binding {
+struct VertBinding {
     pub idx : usize,
     pub vp : usize,
-    pub nm : usize,
     pub uv : usize,
+    pub nm : usize,
 }
 
-fn binding_find(binding : & mut Vec<Vec<vert_binding>>, idx : usize, vp : usize, uv : usize, nm : usize) -> (bool, usize) {
+fn binding_find(binding : & mut Vec<Vec<VertBinding>>, idx : usize, vp : usize, uv : usize, nm : usize) -> (bool, usize) {
     for corner in &binding[vp] {
         if corner.uv == uv && corner.nm == nm {
             return (true, corner.idx);
         }
     }
 
-    binding[vp].push(vert_binding{
+    binding[vp].push(VertBinding{
         idx,
         vp,
-        nm,
         uv,
+        nm,
     });
 
     (false, idx)
@@ -30,7 +30,7 @@ fn binding_find(binding : & mut Vec<Vec<vert_binding>>, idx : usize, vp : usize,
     let mut out_vp : Vec<Vertex> = Vec::new();
     let mut out_nm : Vec<Normal> = Vec::new();
     let mut out_uv : Vec<Vertex> = Vec::new();
-    let mut binding : Vec<Vec<vert_binding>> = vec![Vec::new(); pos.len()];
+    let mut binding : Vec<Vec<VertBinding>> = vec![Vec::new(); pos.len()];
 
     let mut out_faces : Vec<usize> = Vec::new();
 
