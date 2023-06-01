@@ -319,6 +319,14 @@ fn event(_app: &App, model: &mut Model, event: Event) {
                             .max(min_pitch)
                     }
                 }
+            } else if let winit::event::DeviceEvent::MouseMotion { delta } = event {
+                let sensitivity = 0.004;
+                model.camera.yaw -= (delta.0 * sensitivity) as f32;
+                let max_pitch = std::f32::consts::PI * 0.5 - 0.0001;
+                let min_pitch = -max_pitch;
+                model.camera.pitch = (model.camera.pitch + (-delta.1 * sensitivity) as f32)
+                    .min(max_pitch)
+                    .max(min_pitch);
             }
         }
     }
