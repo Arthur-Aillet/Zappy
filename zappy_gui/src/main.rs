@@ -2,16 +2,16 @@ use nannou::prelude::*;
 use nannou::winit;
 use std::cell::RefCell;
 use std::ops::Sub;
-use std::process::exit;
-use crate::obj_parser::Mesh;
+use crate::obj_parser::{Mesh, Vertices, Indices, Normals};
 
-mod data;
 mod obj_parser;
 
 struct Model {
     camera_is_active: bool,
     graphics: RefCell<Graphics>,
     camera: Camera,
+    mesh: Mesh,
+    buffers: (Vertices, Indices, Normals),
 }
 
 struct Graphics {
@@ -180,8 +180,8 @@ fn model(app: &App) -> Model {
     }
     // Create the vertex, normal and index buffers.
     let vertices_bytes = vertices_as_bytes(&buffers.0);
-    let normals_bytes = normals_as_bytes(&buffers.2);
     let indices_bytes = indices_as_bytes(&buffers.1);
+    let normals_bytes = normals_as_bytes(&buffers.2);
     let vertex_usage = wgpu::BufferUsages::VERTEX;
     let index_usage = wgpu::BufferUsages::INDEX;
     let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
@@ -249,6 +249,8 @@ fn model(app: &App) -> Model {
         camera_is_active,
         graphics,
         camera,
+        mesh,
+        buffers,
     }
 }
 
@@ -372,7 +374,7 @@ fn view(_app: &App, model: &Model, frame: Frame) {
     render_pass.set_vertex_buffer(0, g.vertex_buffer.slice(..));
     render_pass.set_vertex_buffer(1, g.normal_buffer.slice(..));
     render_pass.set_index_buffer(g.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
-    let index_range = 0..data::INDICES.len() as u32;
+    let index_range = 0..model.buffers.1.len() as u32;
     let start_vertex = 0;
     let instance_range = 0..1;
     render_pass.draw_indexed(index_range, start_vertex, instance_range);

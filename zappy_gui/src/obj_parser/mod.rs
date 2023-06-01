@@ -40,9 +40,9 @@ pub struct Mesh {
     vertices : Vertices,
 }
 
-type Vertices = Vec<Vertex>;
-type Indices = Vec<u16>;
-type Normals = Vec<Normal>;
+pub type Vertices = Vec<Vertex>;
+pub type Indices = Vec<u16>;
+pub type Normals = Vec<Normal>;
 
 impl Mesh {
     pub fn as_buffers(&mut self) -> (Vertices, Indices, Normals) {
@@ -232,7 +232,6 @@ impl Mesh {
                         }
                         s if s.starts_with("vn ") => {
                             if let Some(normal) = self.parse_normal(s) {
-                                println!("New Evaluated normal :D");
                                 self.normals.push(normal);
                             } else {
                                 println!("Invalid normal in \"{}\" !", file_name);
