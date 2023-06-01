@@ -7,6 +7,7 @@
 
 use std::fs::OpenOptions;
 use std::io::{BufRead, BufReader};
+use nannou::mesh::vertices;
 use crate::{Vertex, Normal};
 
 #[derive(Clone, Debug)]
@@ -32,7 +33,7 @@ impl Triangle {
     }
 }
 
-struct Mesh {
+pub struct Mesh {
     triangles : Vec<Triangle>,
     normals : Vec<Normal>,
     calculated : Vec<Normal>,
@@ -62,40 +63,30 @@ impl Mesh {
         if let Some(str) = iter.next() {
             match str.parse::<usize>() {
                 Ok(x) => {
-                    if self.vertices.len() < x {
-                        position = x
-                    } else {
-                        return None
-                    }
+                    if self.vertices.len() >= x && x > 0 {
+                        position = x - 1
+                    } else { return None }
                 }
                 Err(_) => { return None }
             };
-        } else {
-            return None
-        }
+        } else { return None }
         if let Some(str) = iter.next() {
         //texture
-        } else {
-            return None
-        }
+        } else { return None }
         if let Some(str) = iter.next() {
             if str.is_empty() {
                 return Some((position, None, None));
             } else {
                 match str.parse::<usize>() {
                     Ok(x) => {
-                        if self.normals.len() < x {
-                            normal = Some(x)
-                        } else {
-                            return None
-                        }
+                        if self.normals.len() >= x && x > 0 {
+                            normal = Some(x - 1)
+                        } else { return None }
                     }
                     Err(_) => { return None }
                 }
             }
-        } else {
-            return None
-        }
+        } else { return None }
         return Some((position, texture, normal));
     }
 
@@ -133,9 +124,7 @@ impl Mesh {
                 }
                 None => { normals = None }
             }
-        } else {
-            return None
-        }
+        } else { return None }
         let calculated_normal = self.calculated.len();
         let snd_triangle = Triangle {
             points,
@@ -147,18 +136,16 @@ impl Mesh {
         Some(snd_triangle)
     }
 
-    pub fn parse_face(&mut self, line : String, vertices : &Vec<Vertex>) -> bool {
+    fn parse_face(&mut self, line : String) -> bool {
         let points: Vec<&str> = line.split_ascii_whitespace()
             .filter(|&x| !x.is_empty())
             .skip(1)
             .collect();
         let len = points.len();
-        if len < 3 || len > 4 {
-            return false
-        }
+        if len < 3 || len > 4 { return false }
         let mut fst_triangle = Triangle::new();
         for i in 0..3 {
-            if let Some(point) =  self.parse_face_point(points[i]) {
+            if let Some(point) = self.parse_face_point(points[i]) {
                 fst_triangle.points[i] = point.0;
 
                 if let Some(mut texture) = fst_triangle.textures {
@@ -173,11 +160,10 @@ impl Mesh {
                         None => {fst_triangle.textures = None}
                     }
                 }
-            } else {
-                return false
-            }
+            } else { return false }
         }
         fst_triangle.calculated_normal = self.calculated.len();
+
         self.calculated.push(self.normal_from_indexes(&fst_triangle));
         if len == 4 {
             if let Some(snd_face) = self.get_second_face(&fst_triangle, points[4]) {
@@ -185,29 +171,25 @@ impl Mesh {
             } else { return false }
         }
         self.triangles.push(fst_triangle);
-        return true
+        true
     }
 
-    pub fn parse_vertex(&mut self, line: String) -> Option<Vertex> {
-        let new_vertex: Vertex = Vertex { x: 0.0, y: 0.0, z: 0.0, };
+    fn parse_vertex(&mut self, line: String) -> Option<Vertex> {
+        let mut new_vertex: Vertex = Vertex { x: 0.0, y: 0.0, z: 0.0, };
         let mut iter = line.split_ascii_whitespace().filter(|&x| !x.is_empty());
 
         iter.next();
-        for coord in [new_vertex.x, new_vertex.y, new_vertex.z].iter_mut() {
+        for coord in [&mut new_vertex.x, &mut new_vertex.y, &mut new_vertex.z].iter_mut() {
             if let Some(point) = iter.next() {
                 if let Ok(point) = point.parse::<f32>() {
-                    *coord = point as f32;
-                } else {
-                    return None;
-                };
-            } else {
-                return None;
-            }
+                    **coord = point as f32;
+                } else { return None };
+            } else { return None }
         }
         Some(new_vertex)
     }
 
-    pub fn parse_normal(&mut self, line: String) -> Option<Normal> {
+    fn parse_normal(&mut self, line: String) -> Option<Normal> {
         let mut new_normal_asv = self.parse_vertex(line);
         if let Some(normal_vertex) = new_normal_asv {
             Some(Normal::from(normal_vertex.normalize()))
@@ -216,12 +198,19 @@ impl Mesh {
         }
     }
 
-    pub fn parse_obj(&mut self, file_name: &str) {
+    pub fn new() -> Mesh {
+        Mesh {
+            triangles: vec![],
+            normals: vec![],
+            calculated: vec![],
+            vertices: vec![],
+        }
+    }
+
+    pub fn parse_obj(&mut self, file_name: &str) -> bool {
         let file = OpenOptions::new().read(true).open(file_name);
 
         if let Ok(obj) = file {
-            let mut vertexes: Vec<Vertex> = Vec::new();
-
             for option_line in BufReader::new(obj).lines() {
                 match option_line {
                     Err(why) => panic!("{:?}", why),
@@ -231,32 +220,34 @@ impl Mesh {
                         s if s.starts_with("o ") => { continue; }
                         s if s.starts_with("vt ") => { continue; }
                         s if s.starts_with("s ") => { continue; }
+                        s if s.starts_with("usemtl ") => { continue; }
                         s if s.starts_with("mtllib ") => { continue; }
                         s if s.starts_with("v ") => {
                             if let Some(vertex) = self.parse_vertex(s) {
-                                vertexes.push(vertex);
+                                self.vertices.push(vertex);
                             } else {
                                 println!("Invalid vertexes in \"{}\" !", file_name);
-                                return;
+                                return false;
                             }
                         }
                         s if s.starts_with("vn ") => {
-                            if let Some(vertex) = self.parse_vertex(s) {
-                                vertexes.push(vertex);
+                            if let Some(normal) = self.parse_normal(s) {
+                                println!("New Evaluated normal :D");
+                                self.normals.push(normal);
                             } else {
-                                println!("Invalid vertexes in \"{}\" !", file_name);
-                                return;
+                                println!("Invalid normal in \"{}\" !", file_name);
+                                return false;
                             }
                         }
                         s if s.starts_with("f ") => {
-                            if !self.parse_face(s, &vertexes) {
+                            if !self.parse_face(s) {
                                 println!("Invalid face in \"{}\" !", file_name);
-                                return;
+                                return false;
                             }
                         }
-                        _ => {
-                            println!("Invalid \"{}\" mesh file!", file_name);
-                            return;
+                        other => {
+                            println!("Invalid \"{file_name}\" mesh file!, \"{other}\" string not supported");
+                            return false;
                         }
                     }
                 }
@@ -264,5 +255,6 @@ impl Mesh {
         } else {
             println!("Cant open \"{}\" mesh file!", file_name);
         }
+        true
     }
 }

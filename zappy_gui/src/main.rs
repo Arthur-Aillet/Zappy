@@ -2,6 +2,8 @@ use nannou::prelude::*;
 use nannou::winit;
 use std::cell::RefCell;
 use std::ops::Sub;
+use std::process::exit;
+use crate::obj_parser::Mesh;
 
 mod data;
 mod obj_parser;
@@ -97,7 +99,7 @@ impl Vertex {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Normal {
     x: f32, //offset
     y: f32, //height
@@ -163,10 +165,23 @@ fn model(app: &App) -> Model {
     let vs_mod = device.create_shader_module(&vs_desc);
     let fs_mod = device.create_shader_module(&fs_desc);
 
+    let mut mesh: Mesh = Mesh::new();
+    let status = mesh.parse_obj("./.objs/cube.obj");
+
+    let buffers = mesh.as_buffers();
+    for vertex in buffers.0.clone() {
+        println!("vertex => {:?}",vertex)
+    }
+    for index in buffers.1.clone() {
+        println!("index => {}",index)
+    }
+    for normal in buffers.2.clone() {
+        println!("normal => {:?}",normal)
+    }
     // Create the vertex, normal and index buffers.
-    let vertices_bytes = vertices_as_bytes(&data::VERTICES);
-    let normals_bytes = normals_as_bytes(&data::NORMALS);
-    let indices_bytes = indices_as_bytes(&data::INDICES);
+    let vertices_bytes = vertices_as_bytes(&buffers.0);
+    let normals_bytes = normals_as_bytes(&buffers.2);
+    let indices_bytes = indices_as_bytes(&buffers.1);
     let vertex_usage = wgpu::BufferUsages::VERTEX;
     let index_usage = wgpu::BufferUsages::INDEX;
     let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
