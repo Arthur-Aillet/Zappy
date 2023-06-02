@@ -41,6 +41,7 @@ pub struct Mesh {
     normals : Vec<Normal>,
     calculated : Vec<Normal>,
     vertices : Vertices,
+    uvs : Vertices,
 }
 
 pub type Vertices = Vec<Vertex>;
@@ -48,18 +49,16 @@ pub type Indices = Vec<u16>;
 pub type Normals = Vec<Normal>;
 
 impl Mesh {
-    pub fn as_buffers(&mut self) -> (Vertices, Indices, Normals) {
-        let uvs: Vec<Vertex> = vec![Vertex{ x: 0., y: 0., z: 0. }];
-
-        let (vp, uv, nm, faces) = solve_indices(&self.vertices, &uvs, &self.normals, &self.triangles);
-        (vp, faces.iter().map(|x| *x as u16).collect(), nm)
+    pub fn as_buffers(&mut self) -> (Indices, Vertices, Vertices, Normals) {
+        let (vp, uv, nm, faces) = solve_indices(&self.vertices, &self.uvs, &self.normals, &self.triangles);
+        (faces.iter().map(|x| *x as u16).collect(), vp, uv, nm)
     }
 
     fn parse_face_point(&self, point : &str) -> Option<(usize, Option<usize>, Option<usize>)> {
         let iter = &mut point.split('/');
         let mut position = 0;
         let mut normal: Option<usize> = None;
-        let texture: Option<usize> = None;
+        let mut texture: Option<usize> = None;
 
         if let Some(str) = iter.next() {
             match str.parse::<usize>() {
@@ -71,8 +70,23 @@ impl Mesh {
                 Err(_) => { return None }
             };
         } else { return None }
+
         if let Some(str) = iter.next() {
+            if str.is_empty() {
+                return Some((position, None, None));
+            } else {
+                match str.parse::<usize>() {
+                    Ok(x) => {
+                        if self.uvs.len() >= x && x > 0 {
+                            texture = Some(x - 1);
+                            println!("UV IDX = {}", x - 1);
+                        } else { return None }
+                    }
+                    Err(_) => { return None }
+                }
+            }
         } else { return None }
+
         if let Some(str) = iter.next() {
             if str.is_empty() {
                 return Some((position, None, None));
@@ -190,6 +204,21 @@ impl Mesh {
         Some(new_vertex)
     }
 
+    fn parse_uvw(&mut self, line: String) -> Option<Vertex> {
+        let mut new_vertex: Vertex = Vertex { x: 0.0, y: 0.0, z: 0.0, };
+        let mut iter = line.split_ascii_whitespace().filter(|&x| !x.is_empty());
+
+        iter.next();
+        for coord in [&mut new_vertex.x, &mut new_vertex.y, &mut new_vertex.z].iter_mut() {
+            if let Some(point) = iter.next() {
+                if let Ok(point) = point.parse::<f32>() {
+                    **coord = point as f32;
+                } else { return None };
+            }
+        }
+        Some(new_vertex)
+    }
+
     fn parse_normal(&mut self, line: String) -> Option<Normal> {
         let mut new_normal_asv = self.parse_vertex(line);
         if let Some(normal_vertex) = new_normal_asv {
@@ -205,6 +234,7 @@ impl Mesh {
             normals: vec![],
             calculated: vec![],
             vertices: vec![],
+            uvs: vec![],
         }
     }
 
@@ -219,7 +249,6 @@ impl Mesh {
                         s if s.chars().all(|x| x.is_ascii_whitespace()) => { continue; }
                         s if s.starts_with('#') => { continue; }
                         s if s.starts_with("o ") => { continue; }
-                        s if s.starts_with("vt ") => { continue; }
                         s if s.starts_with("s ") => { continue; }
                         s if s.starts_with("usemtl ") => { continue; }
                         s if s.starts_with("mtllib ") => { continue; }
@@ -228,6 +257,14 @@ impl Mesh {
                                 self.vertices.push(vertex);
                             } else {
                                 println!("Invalid vertexes in \"{}\" !", file_name);
+                                return false;
+                            }
+                        }
+                        s if s.starts_with("vt ") => {
+                            if let Some(vertex) = self.parse_uvw(s) {
+                                self.uvs.push(vertex);
+                            } else {
+                                println!("Invalid uv in \"{}\" !", file_name);
                                 return false;
                             }
                         }

@@ -11,11 +11,12 @@ struct Model {
     graphics: RefCell<Graphics>,
     camera: Camera,
     mesh: Mesh,
-    buffers: (Vertices, Indices, Normals),
+    buffers: (Indices, Vertices, Vertices, Normals),
 }
 
 struct Graphics {
     vertex_buffer: wgpu::Buffer,
+    uv_buffer: wgpu::Buffer,
     normal_buffer: wgpu::Buffer,
     index_buffer: wgpu::Buffer,
     uniform_buffer: wgpu::Buffer,
@@ -169,28 +170,42 @@ fn model(app: &App) -> Model {
     let status = mesh.parse_obj("./.objs/bat.obj");
 
     let buffers = mesh.as_buffers();
-    for vertex in buffers.0.clone() {
-        println!("vertex => {:?}",vertex)
-    }
-    for index in buffers.1.clone() {
-        println!("index => {}",index)
-    }
-    let normals_vec = buffers.2.clone();
-    for i in 0..1 {
-        println!("i = {i}")
-    }
-    for i in 0..normals_vec.len() {
-        println!("normal{i} => {:?}",normals_vec[i])
+
+    { /*
+        for index in buffers.0.clone() {
+            println!("index => {}", index)
+        }
+        for vertex in buffers.1.clone() {
+            println!("vertex => {:?}", vertex)
+        }
+        for i in 0..1 {
+            println!("i = {i}")
+        }
+        let uvs_vec = buffers.2.clone();
+        for i in 0..uvs_vec.len() {
+            println!("uv{i} => {:?}", uvs_vec[i])
+        }
+        let normals_vec = buffers.1.clone();
+        for i in 0..normals_vec.len() {
+            println!("normal{i} => {:?}", normals_vec[i])
+        }
+        // */
     }
     // Create the vertex, normal and index buffers.
-    let vertices_bytes = vertices_as_bytes(&buffers.0);
-    let indices_bytes = indices_as_bytes(&buffers.1);
-    let normals_bytes = normals_as_bytes(&buffers.2);
+    let indices_bytes = indices_as_bytes(&buffers.0);
+    let vertices_bytes = vertices_as_bytes(&buffers.1);
+    let uvs_bytes = vertices_as_bytes(&buffers.2);
+    let normals_bytes = normals_as_bytes(&buffers.3);
     let vertex_usage = wgpu::BufferUsages::VERTEX;
     let index_usage = wgpu::BufferUsages::INDEX;
     let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
         label: None,
         contents: vertices_bytes,
+        usage: vertex_usage,
+    });
+    let uv_buffer = device.create_buffer_init(&BufferInitDescriptor {
+        label: None,
+        contents: uvs_bytes,
         usage: vertex_usage,
     });
     let normal_buffer = device.create_buffer_init(&BufferInitDescriptor {
@@ -236,6 +251,7 @@ fn model(app: &App) -> Model {
 
     let graphics = RefCell::new(Graphics {
         vertex_buffer,
+        uv_buffer,
         normal_buffer,
         index_buffer,
         uniform_buffer,
@@ -383,10 +399,11 @@ fn view(_app: &App, model: &Model, frame: Frame) {
         .begin(&mut encoder);
     render_pass.set_bind_group(0, &g.bind_group, &[]);
     render_pass.set_pipeline(&g.render_pipeline);
-    render_pass.set_vertex_buffer(0, g.vertex_buffer.slice(..));
-    render_pass.set_vertex_buffer(1, g.normal_buffer.slice(..));
     render_pass.set_index_buffer(g.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
-    render_pass.draw_indexed( 0..model.buffers.1.len() as u32, 0, 0..1);
+    render_pass.set_vertex_buffer(0, g.vertex_buffer.slice(..));
+    render_pass.set_vertex_buffer(1, g.uv_buffer.slice(..));
+    render_pass.set_vertex_buffer(2, g.normal_buffer.slice(..));
+    render_pass.draw_indexed( 0..model.buffers.0.len() as u32, 0, 0..1);
 }
 
 fn create_uniforms([w, h]: [u32; 2], view: Mat4) -> Uniforms {
@@ -462,6 +479,7 @@ fn create_render_pipeline(
         .alpha_blend(wgpu::BlendComponent::REPLACE)
         .add_vertex_buffer::<Vertex>(&wgpu::vertex_attr_array![0 => Float32x3])
         .add_vertex_buffer::<Normal>(&wgpu::vertex_attr_array![1 => Float32x3])
+        .add_vertex_buffer::<Vertex>(&wgpu::vertex_attr_array![2 => Float32x3])
         .depth_format(depth_format)
         .sample_count(sample_count)
         .build(device)
