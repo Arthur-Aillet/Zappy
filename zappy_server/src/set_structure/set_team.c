@@ -20,10 +20,10 @@ team_t set_team(char *team_name, size_t slot)
     return team;
 }
 
+//TODO - free players
 void free_all_teams(team_t *teams, size_t nbr_teams)
 {
     for (size_t i = 0; i < nbr_teams; i++) {
-        //TODO - free players
         free(teams[i].name);
     }
     free(teams);

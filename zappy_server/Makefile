@@ -10,6 +10,7 @@ LIB		=	src/my_str_to_word_array.c		\
 SRC		=	src/listening_socket.c			\
 			src/parser.c					\
 			src/parse_client_data.c			\
+			src/error_handling.c			\
 			src/set_structure/set_common.c	\
 			src/set_structure/set_gui.c		\
 			src/set_structure/set_ia.c		\

@@ -11,10 +11,8 @@
 client_t * set_clients(client_t *client)
 {
     client = malloc(sizeof(client_t) * MAX_CLIENTS);
-    if (client == NULL) {
-        fprintf(stderr, "%sMalloc error: Set clients%s\n", RED, NEUTRE);
-        exit(84);
-    }
+    if (client == NULL)
+        exit(error("Malloc error: Set clients", 84));
     client_t cli;
     for (size_t i = 0; i < MAX_CLIENTS; i++) {
         cli.socket = 0;

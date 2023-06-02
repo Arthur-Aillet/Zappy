@@ -25,21 +25,18 @@ static void set_sockaddr(server_t *server, int port)
 
 static int set_server(int port, server_t *server)
 {
-    if ((server->socket = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-        fprintf(stderr, "%sCouldn't create server socket%s\n", RED, NEUTRE);
-        return 0;
-    }
+    if ((server->socket = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+        return error("Couldn't create server socket", 0);
+    printf("%sServer socket created%s\n", GREEN, NEUTRE);
     set_sockaddr(server, port);
     server->maxsd = server->socket;
     if (bind(server->socket, (struct sockaddr *)&server->addr,
-    server->size) < 0) {
-        fprintf(stderr, "%sCouldn't bind: Use a good port%s\n", RED, NEUTRE);
-        return 0;
-    }
-    if (listen(server->socket, MAX_CLIENTS) < 0) {
-        fprintf(stderr, "%sCouldn't listen%s\n", RED, NEUTRE);
-        return 0;
-    }
+    server->size) < 0)
+        return error("Couldn't bind: Use a good port", 0);
+    printf("%sServer bind%s\n", GREEN, NEUTRE);
+    if (listen(server->socket, MAX_CLIENTS) < 0)
+        return error("Couldn't listen", 0);
+    printf("%sServer listen port%s %d%s\n", GREEN, BLUE, port, NEUTRE);
     FD_ZERO(&server->read_fd);
     FD_SET(server->socket, &server->read_fd);
     return 1;

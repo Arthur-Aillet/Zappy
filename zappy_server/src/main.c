@@ -39,7 +39,6 @@ static void set_new_loop(server_t *server, client_t *cli)
 }
 
 //TODO - create a function for checking the Ctrl-D (exit the program)
-
 int main(int ac, char *av[])
 {
     common_t com = set_common(ac, av);
