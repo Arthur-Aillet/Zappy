@@ -12,11 +12,11 @@
 static int create_new_client(int acc, client_t *client, server_t *server)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        if (client[i].socket == 0) {
-            client[i].socket = acc;
+        if (SOCKET(i) == 0) {
+            SOCKET(i) = acc;
             FD_SET(acc, &server->read_fd);
             server->maxsd = (acc > server->maxsd) ? acc : server->maxsd;
-            printf("%sCreate client: %d%s\n", GREEN, client[i].socket, NEUTRE);
+            printf("%sCreate client: %s%d%s\n", GREEN, RED, SOCKET(i), NEUTRE);
             return 1;
         }
     }

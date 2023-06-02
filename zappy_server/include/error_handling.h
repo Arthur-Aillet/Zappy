@@ -12,7 +12,6 @@
     #define RED     "\e[1;31m"
     #define PURPLE  "\e[1;35m"
     #define BLUE    "\e[1;34m"
-    #define ORANGE  "\e[1;34m"
     #define YELLOW  "\e[1;33m"
     #define NEUTRE  "\e[0;m"
 
