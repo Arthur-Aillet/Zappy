@@ -12,7 +12,7 @@ client_t * set_clients(client_t *client)
 {
     client = malloc(sizeof(client_t) * MAX_CLIENTS);
     if (client == NULL) {
-        fprintf(stderr, "Malloc error when you want to set a client\n");
+        fprintf(stderr, "%sMalloc error: Set clients%s\n", RED, NEUTRE);
         exit(84);
     }
     client_t cli;

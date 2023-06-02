@@ -26,18 +26,18 @@ static void set_sockaddr(server_t *server, int port)
 static int set_server(int port, server_t *server)
 {
     if ((server->socket = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-        fprintf(stderr, "Couldn't create server socket\n");
+        fprintf(stderr, "%sCouldn't create server socket%s\n", RED, NEUTRE);
         return 0;
     }
     set_sockaddr(server, port);
     server->maxsd = server->socket;
     if (bind(server->socket, (struct sockaddr *)&server->addr,
     server->size) < 0) {
-        fprintf(stderr, "Couldn't bind: You must used a good port\n");
+        fprintf(stderr, "%sCouldn't bind: Use a good port%s\n", RED, NEUTRE);
         return 0;
     }
     if (listen(server->socket, MAX_CLIENTS) < 0) {
-        fprintf(stderr, "Couldn't listen\n");
+        fprintf(stderr, "%sCouldn't listen%s\n", RED, NEUTRE);
         return 0;
     }
     FD_ZERO(&server->read_fd);
@@ -59,7 +59,7 @@ common_t set_common(int ac, char *av[])
     com.freq = parser->freq;
     com.client = set_clients(com.client);
     com.nb_teams = parser->nb_teams;
-    if (!set_server(com.port, &com.server)) { //FIXME - if != 1
+    if (!set_server(com.port, &com.server)) {
         free_parser(parser);
         free_common(&com);
         exit(84);

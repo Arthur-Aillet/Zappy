@@ -9,27 +9,27 @@
 #include <errno.h>
 #include <sys/select.h>
 
-static int create_new_client(int acc, client_t **client, server_t *server)
+static int create_new_client(int acc, client_t *client, server_t *server)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        if (client[i]->socket > 0) {
-            client[i]->socket = acc;
+        if (client[i].socket == 0) {
+            client[i].socket = acc;
             FD_SET(acc, &server->read_fd);
             server->maxsd = (acc > server->maxsd) ? acc : server->maxsd;
             return 1;
         }
     }
-    fprintf(stderr, "Error: array of client is full\n");
+    fprintf(stderr, "%sError: array of client is full%s\n", RED, NEUTRE);
     return 0;
 }
 
-static int new_client(server_t *server, client_t **client)
+static int new_client(server_t *server, client_t *client)
 {
     struct sockaddr_in a_cli;
     int acc = accept(server->socket, (struct sockaddr *)&a_cli, &server->size);
     if (acc < 0) {
         if (errno != EWOULDBLOCK && errno != EAGAIN) {
-            fprintf(stderr, "accept() failed\n");
+            fprintf(stderr, "%saccept() failed%n\n", RED, NEUTRE);
             return 0;
         }
         return 1;
@@ -52,7 +52,7 @@ static int check_incoming_data(common_t *com) //NOTE - Transforms this function 
 void listening_sockets(common_t *com)
 {
     if (FD_ISSET(PS_SOCKET, &PS_READ))
-        check_error_output(com, new_client(&com->server, &com->client), NULL);
+        check_error_output(com, new_client(&com->server, com->client), NULL);
     else
         check_error_output(com, check_incoming_data(com), NULL);
 }

@@ -9,6 +9,7 @@
     #define IA_H_
 
     #include "common.h"
+    #include "error_handling.h"
 
     #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
