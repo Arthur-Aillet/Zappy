@@ -10,6 +10,7 @@
 
     #include "map.h"
     #include "common.h"
+    #include "error_handling.h"
 
 typedef struct gui_s {
     msg_queue_t *msg_queue;
@@ -75,5 +76,6 @@ static const client_gui_t COMMAND_GESTION_CLIENT_GUI[] = {
 };
 
 gui_t *set_gui(void);
+void free_gui(gui_t *gui);
 
 #endif /* !GUI_H_ */

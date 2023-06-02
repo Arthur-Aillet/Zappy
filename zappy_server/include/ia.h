@@ -9,6 +9,7 @@
     #define IA_H_
 
     #include "common.h"
+    #include "error_handling.h"
 
 typedef struct ia_s {
     uint8_t **arg;
@@ -40,5 +41,6 @@ static const client_ia_t COMMAND_GESTION_IA[] = {
 };
 
 ia_t *set_ia(void);
+void free_ia(ia_t *ia);
 
 #endif /* !IA_H_ */

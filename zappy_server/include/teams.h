@@ -38,12 +38,14 @@ typedef struct player_s {
 } player_t;
 
 typedef struct team_s {
-    uint8_t name;
+    char *name;
     size_t nb_slot;         //NOTE - max number of player in this team (can be increased with an egg)
     size_t actif_player;
     player_t *players;
 } team_t;
 
 team_t set_team(char *team_name, size_t slot);
+void free_team(team_t* team);
+void free_all_teams(team_t* teams, size_t nbr_teams);
 
 #endif /* !TEAMS_H_ */

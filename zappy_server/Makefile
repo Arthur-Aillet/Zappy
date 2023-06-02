@@ -6,6 +6,9 @@
 ##
 
 SRC		=	src/listening_socket.c							\
+			src/parser.c									\
+			src/set_structure/set_client.c					\
+			src/set_structure/set_team.c					\
 			src/set_structure/set_common.c					\
 			src/set_structure/set_gui.c						\
 			src/set_structure/set_ia.c						\

@@ -56,5 +56,4 @@ typedef struct error_handling_s {
     uint8_t *msg_error;
 } error_handling_t;
 
-
 #endif /* !COMMON_H_ */

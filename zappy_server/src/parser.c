@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <getopt.h>
+#include <stdlib.h>
 
 
 static void set_teams_name(parser_t *p, int ac, char *av[])
@@ -25,7 +26,7 @@ static void set_teams_name(parser_t *p, int ac, char *av[])
     p->teams_name[p->nb_teams] = NULL;
 }
 
-static get_one_parametes(parser_t *p, int opt, int ac, char *av[])
+static void get_one_parametes(parser_t *p, int opt, int ac, char *av[])
 {
     switch (opt) {
         case 'p':
