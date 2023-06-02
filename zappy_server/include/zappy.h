@@ -12,6 +12,8 @@
     #include "gui.h"
     #include "team.h"
 
+    #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
+
 typedef struct common_s {
     gui_t *gui;
     ia_t *ia;
