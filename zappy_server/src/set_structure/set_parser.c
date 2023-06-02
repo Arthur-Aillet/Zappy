@@ -21,3 +21,9 @@ parser_t *set_parser(void)
 
     return parser;
 }
+
+void free_parser(parser_t *parser)
+{
+    free(parser->teams_name);
+    free(parser);
+}

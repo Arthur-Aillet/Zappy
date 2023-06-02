@@ -60,18 +60,18 @@ common_t set_common(int ac, char *av[])
     com.client = set_clients(com.client);
     com.nb_teams = parser->nb_teams;
     if (!set_server(com.port, &com.server)) { //FIXME - if != 1
-        free(parser);
+        free_parser(parser);
         free_common(&com);
         exit(84);
     }
-    free(parser);
+    free_parser(parser);
     return com;
 }
 
 void free_common(common_t *com)
 {
-    free_clients(com->client, &com->server);
-    free_all_teams(com->teams, com->nb_teams);
     free_gui(com->gui);
     free_ia(com->ia);
+    free_all_teams(com->teams, com->nb_teams);
+    free_clients(com->client, &com->server);
 }

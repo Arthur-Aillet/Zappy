@@ -20,6 +20,7 @@ typedef struct parser_s {
 } parser_t;
 
 parser_t *set_parser(void);
+void free_parser(parser_t *parser);
 
 void get_parameters(int ac, char *av[], parser_t *parser);
 
