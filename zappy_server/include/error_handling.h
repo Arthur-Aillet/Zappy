@@ -15,6 +15,8 @@
     #define YELLOW  "\e[1;33m"
     #define NEUTRE  "\e[0;m"
 
+    #include <stdio.h>
+
 int error(char *message, int ret);
 
 #endif /* !ERROR_HANDLING_H_ */
