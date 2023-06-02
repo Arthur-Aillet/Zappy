@@ -71,4 +71,6 @@ void check_error_output(common_t *com, int output, char *error);
 
 void listening_sockets(common_t *com);
 
+uint8_t *get_message(server_t *server, client_t *client);
+
 #endif /* !ZAPPY_H_ */

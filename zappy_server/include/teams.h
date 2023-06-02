@@ -45,7 +45,6 @@ typedef struct team_s {
 } team_t;
 
 team_t set_team(char *team_name, size_t slot);
-void free_team(team_t* team);
 void free_all_teams(team_t* teams, size_t nbr_teams);
 
 #endif /* !TEAMS_H_ */

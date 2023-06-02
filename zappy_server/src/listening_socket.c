@@ -43,7 +43,7 @@ static int check_incoming_data(common_t *com) //NOTE - Transforms this function 
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (PC_SOCKET(i) > 0 && FD_ISSET(PC_SOCKET(i), &PS_READ)) {
-            printf("data for the client socket: %d\n", PC_SOCKET(i));
+           printf("Read command from socket %d\n", PC_SOCKET(i));
         }
     }
     return 1;

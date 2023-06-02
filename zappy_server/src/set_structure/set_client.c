@@ -37,7 +37,7 @@ void free_clients(client_t *cli, server_t *server)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (cli[i].socket != 0) {
-            close_client(cli[i].socket, server);
+            cli[i].socket = close_client(cli[i].socket, server);
         }
     }
     free(cli);

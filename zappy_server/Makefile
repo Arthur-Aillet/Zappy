@@ -5,14 +5,19 @@
 ## Makefile
 ##
 
-SRC		=	src/listening_socket.c	\
+LIB		=	src/my_str_to_word_array.c		\
+
+SRC		=	src/listening_socket.c			\
+			src/parser.c					\
+			src/parse_client_data.c			\
 			src/set_structure/set_common.c	\
 			src/set_structure/set_gui.c		\
 			src/set_structure/set_ia.c		\
-			src/set_structure/set_client.c		\
+			src/set_structure/set_client.c	\
 			src/set_structure/set_parser.c	\
 			src/set_structure/set_team.c	\
-			src/parser.c					\
+
+SRC +=	$(LIB)
 
 MAIN	=	src/main.c \
 

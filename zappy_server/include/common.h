@@ -56,4 +56,10 @@ typedef struct error_handling_s {
     uint8_t *msg_error;
 } error_handling_t;
 
+//------------ LIB -------------------------------------------------//
+
+char **my_str_to_word_array(char *str, char **seg, char c);
+void free_array(char **arr);
+
+//-----------------------------------------------------------------//
 #endif /* !COMMON_H_ */
