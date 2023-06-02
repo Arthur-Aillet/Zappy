@@ -29,7 +29,7 @@ static int new_client(server_t *server, client_t *client)
     int acc = accept(server->socket, (struct sockaddr *)&a_cli, &server->size);
     if (acc < 0) {
         if (errno != EWOULDBLOCK && errno != EAGAIN) {
-            fprintf(stderr, "%saccept() failed%n\n", RED, NEUTRE);
+            fprintf(stderr, "%saccept() failed%s\n", RED, NEUTRE);
             return 0;
         }
         return 1;
