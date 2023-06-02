@@ -12,8 +12,6 @@
     #include "common.h"
     #include "error_handling.h"
 
-    #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
-
 typedef struct gui_s {
     msg_queue_t *msg_queue;
     map_t map;
@@ -52,12 +50,21 @@ typedef struct server_gui_s {
 //     {"sbp", funct_server_sbp},
 // };
 
-typedef struct client_gui_s {
-    const uint8_t *comd;
-    void (*handler)(uint8_t **args);
-} client_gui_t;
+// typedef struct client_gui_s {
+//     const uint8_t *comd;
+//     void (*handler)(gui_t *gui);
+// } client_gui_t;
 
-// static const client_gui_t COMMAND_GESTION[] = {
+// void funct_client_msz(gui_t *gui);
+// void funct_client_mct(gui_t *gui);
+// void funct_client_tna(gui_t *gui);
+// void funct_client_ppo(gui_t *gui);
+// void funct_client_plv(gui_t *gui);
+// void funct_client_pin(gui_t *gui);
+// void funct_client_sgt(gui_t *gui);
+// void funct_client_sst(gui_t *gui);
+
+// static const client_gui_t COMMAND_GESTION_CLIENT_GUI[] = {
 //     {"msz", funct_client_msz},
 //     {"mct", funct_client_mct},
 //     {"tna", funct_client_tna},

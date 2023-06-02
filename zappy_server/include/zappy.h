@@ -40,6 +40,8 @@ typedef struct client_s {
     struct sockaddr_in addr;
 } client_t;
 
+    #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
+
 typedef struct common_s {
     gui_t *gui;
     ia_t *ia;
@@ -71,6 +73,6 @@ void check_error_output(common_t *com, int output, char *error);
 
 void listening_sockets(common_t *com);
 
-uint8_t *get_message(server_t *server, client_t *client);
+uint8_t **get_message(server_t *server, client_t *client);
 
 #endif /* !ZAPPY_H_ */

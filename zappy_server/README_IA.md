@@ -38,7 +38,7 @@ When a client connects to the server:
 
 | Action  | Command    | time limite | response  |
 | :------ |:----------:|:-----------:| :-------: |
-|move up one title | "Forward" | 7/f | ok |
+| move up one title | "Forward" | 7/f | ok |
 | turn 90° right | "Right" | 7/f | ok |
 | tunr 90° left | "Left" | 7/f | ok |
 | look around | "Look" | 7/f | [tile1, tile2, ...] |
