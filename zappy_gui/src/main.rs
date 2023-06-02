@@ -1,10 +1,26 @@
-use nannou::prelude::*;
+// use nannou::prelude::*;
 use nannou::winit;
+use nannou::wgpu;
+use nannou::glam;
+
+
+use nannou::Frame;
+use nannou::time::DurationF64;
+use nannou::event::Update;
+use nannou::event::Key;
+use nannou::event::Event;
+use nannou::math::Mat4LookTo;
+
+use glam::Mat4;
+use glam::Vec3;
+use wgpu::util::DeviceExt;
+
 use std::cell::RefCell;
 use std::ops::Sub;
 use crate::obj_parser::{Mesh, Vertices, Indices, Normals};
 
 mod obj_parser;
+mod rend_ox;
 
 struct Model {
     camera_is_active: bool,
@@ -29,7 +45,7 @@ struct Graphics {
 // A simple first person camera.
 struct Camera {
     // The position of the camera.
-    eye: Point3,
+    eye: Vec3,
     // Rotation around the x axis.
     pitch: f32,
     // Rotation around the y axis.
@@ -136,14 +152,14 @@ fn pitch_yaw_to_direction(pitch: f32, yaw: f32) -> Vec3 {
     let x = - xz_unit_len * yaw.cos();
     let y = - xz_unit_len * (yaw).sin();
     let z = pitch.sin();
-    vec3(x, y, z)
+    Vec3::new(x, y, z)
 }
 
 fn main() {
     nannou::app(model).event(event).update(update).run();
 }
 
-fn model(app: &App) -> Model {
+fn model(app: &nannou::App) -> Model {
     let w_id = app
         .new_window()
         .size(1024, 576)
@@ -198,22 +214,22 @@ fn model(app: &App) -> Model {
     let normals_bytes = normals_as_bytes(&buffers.3);
     let vertex_usage = wgpu::BufferUsages::VERTEX;
     let index_usage = wgpu::BufferUsages::INDEX;
-    let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
+    let vertex_buffer = device.create_buffer_init(&wgpu::BufferInitDescriptor {
         label: None,
         contents: vertices_bytes,
         usage: vertex_usage,
     });
-    let uv_buffer = device.create_buffer_init(&BufferInitDescriptor {
+    let uv_buffer = device.create_buffer_init(&wgpu::BufferInitDescriptor {
         label: None,
         contents: uvs_bytes,
         usage: vertex_usage,
     });
-    let normal_buffer = device.create_buffer_init(&BufferInitDescriptor {
+    let normal_buffer = device.create_buffer_init(&wgpu::BufferInitDescriptor {
         label: None,
         contents: normals_bytes,
         usage: vertex_usage,
     });
-    let index_buffer = device.create_buffer_init(&BufferInitDescriptor {
+    let index_buffer = device.create_buffer_init(&wgpu::BufferInitDescriptor {
         label: None,
         contents: indices_bytes,
         usage: index_usage,
@@ -222,7 +238,7 @@ fn model(app: &App) -> Model {
     let depth_texture = create_depth_texture(device, [win_w, win_h], DEPTH_FORMAT, msaa_samples);
     let depth_texture_view = depth_texture.view().build();
 
-    let eye = Point3::new(0.0, 0.0, 0.0);
+    let eye = Vec3::new(0.0, 0.0, 0.0);
     let pitch = 0.0;
     let yaw = std::f32::consts::PI * 0.5;
     let camera = Camera { eye, pitch, yaw };
@@ -230,7 +246,7 @@ fn model(app: &App) -> Model {
     let uniforms = create_uniforms([win_w, win_h], camera.view());
     let uniforms_bytes = uniforms_as_bytes(&uniforms);
     let usage = wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST;
-    let uniform_buffer = device.create_buffer_init(&BufferInitDescriptor {
+    let uniform_buffer = device.create_buffer_init(&wgpu::BufferInitDescriptor {
         label: None,
         contents: uniforms_bytes,
         usage,
@@ -275,7 +291,7 @@ fn model(app: &App) -> Model {
 }
 
 // Move the camera based on the current key pressed and its current direction.
-fn update(app: &App, model: &mut Model, update: Update) {
+fn update(app: &nannou::App, model: &mut Model, update: Update) {
     const CAM_SPEED_HZ: f64 = 0.1;
     if model.camera_is_active {
         let velocity = (update.since_last.secs() * CAM_SPEED_HZ) as f32;
@@ -318,7 +334,7 @@ fn update(app: &App, model: &mut Model, update: Update) {
 
 // Use raw device motion event for camera pitch and yaw.
 // TODO: Check device ID for mouse here - not sure if possible with winit currently.
-fn event(_app: &App, model: &mut Model, event: Event) {
+fn event(_app: &nannou::App, model: &mut Model, event: nannou::Event) {
     if model.camera_is_active {
         if let Event::DeviceEvent(_device_id, event) = event {
             if let winit::event::DeviceEvent::Motion { axis, value } = event {
@@ -349,7 +365,7 @@ fn event(_app: &App, model: &mut Model, event: Event) {
 }
 
 // Toggle cursor grabbing and hiding on Space key.
-fn key_pressed(app: &App, model: &mut Model, key: Key) {
+fn key_pressed(app: &nannou::App, model: &mut Model, key: Key) {
     if let Key::Space = key {
         let window = app.main_window();
         if !model.camera_is_active {
@@ -365,7 +381,7 @@ fn key_pressed(app: &App, model: &mut Model, key: Key) {
     }
 }
 
-fn view(_app: &App, model: &Model, frame: Frame) {
+fn view(_app: &nannou::App, model: &Model, frame: Frame) {
     let mut g = model.graphics.borrow_mut();
 
     // If the window has changed size, recreate our depth texture to match.
@@ -384,7 +400,7 @@ fn view(_app: &App, model: &Model, frame: Frame) {
     let uniforms_size = std::mem::size_of::<Uniforms>() as wgpu::BufferAddress;
     let uniforms_bytes = uniforms_as_bytes(&uniforms);
     let usage = wgpu::BufferUsages::COPY_SRC;
-    let new_uniform_buffer = device.create_buffer_init(&BufferInitDescriptor {
+    let new_uniform_buffer = device.create_buffer_init(&wgpu::BufferInitDescriptor {
         label: None,
         contents: uniforms_bytes,
         usage,
