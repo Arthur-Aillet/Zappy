@@ -1,3 +1,5 @@
+from connect import connect
+
 def fowards():
     return
 
@@ -56,6 +58,7 @@ def loop(switch, spiral_len):
             pick_up();
 
 def main():
+    client_num, map_x, map_y = connect()
     switch = 0;
     spiral_len = 1;
     while True:
