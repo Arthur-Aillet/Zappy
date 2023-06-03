@@ -1,7 +1,6 @@
 // use nannou::prelude::*;
 use nannou::winit;
 use nannou::wgpu;
-use nannou::glam;
 
 use nannou::Frame;
 use nannou::time::DurationF64;
@@ -211,7 +210,7 @@ fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> 
 
     let depth_texture_view = depth_texture.view().build();
 
-    let uniforms = create_uniforms(window_size, camera.view());
+    let uniforms = create_uniforms(window_size, camera.calc_view_matrix());
     let uniforms_bytes = uniforms_as_bytes(&uniforms);
     let usage = wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST;
     let uniform_buffer = device.create_buffer_init(&wgpu::BufferInitDescriptor {
@@ -345,17 +344,21 @@ fn view(_app: &nannou::App, model: &Model, frame: Frame) {
 
     // If the window has changed size, recreate our depth texture to match.
     let depth_size = g.depth_texture.size();
-    let frame_size = frame.texture_size();
     let device = frame.device_queue_pair().device();
+    let frame_size = frame.texture_size();
     if frame_size != depth_size {
-        let depth_format = g.depth_texture.format();
         let sample_count = frame.texture_msaa_samples();
-        g.depth_texture = create_depth_texture(device, frame_size, depth_format, sample_count);
+        g.depth_texture = wgpu::TextureBuilder::new()
+            .size(frame_size)
+            .format(g.depth_texture.format())
+            .usage(wgpu::TextureUsages::RENDER_ATTACHMENT)
+            .sample_count(sample_count)
+            .build(device);
         g.depth_texture_view = g.depth_texture.view().build();
     }
 
     // Update the uniforms (rotate around the teapot).
-    let uniforms = create_uniforms(frame_size, model.camera.view());
+    let uniforms = create_uniforms(frame_size.into(), model.camera.calc_view_matrix().into());
     let uniforms_size = std::mem::size_of::<Uniforms>() as wgpu::BufferAddress;
     let uniforms_bytes = uniforms_as_bytes(&uniforms);
     let usage = wgpu::BufferUsages::COPY_SRC;
@@ -381,14 +384,14 @@ fn view(_app: &nannou::App, model: &Model, frame: Frame) {
     render_pass.draw_indexed( 0..model.buffers.0.len() as u32, 0, 0..1);
 }
 
-fn create_uniforms(size: UVec2, view: Mat4) -> Uniforms {
-    let rotation = Mat4::from_rotation_y(0f32);
+fn create_uniforms(size: UVec2, view: glam::Mat4) -> Uniforms {
+    let rotation = glam::Mat4::from_rotation_y(0f32);
     let aspect_ratio = size.x as f32 / size.y as f32;
     let fov_y = std::f32::consts::FRAC_PI_2;
     let near = 0.0001;
     let far = 100.0;
-    let proj = Mat4::perspective_rh_gl(fov_y, aspect_ratio, near, far);
-    let scale = Mat4::from_scale(Vec3::splat(0.01));
+    let proj = glam::Mat4::perspective_rh_gl(fov_y, aspect_ratio, near, far);
+    let scale = glam::Mat4::from_scale(Vec3::splat(0.01));
     Uniforms {
         world: rotation,
         view: (view * scale).into(),
