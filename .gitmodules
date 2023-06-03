@@ -1,0 +1,3 @@
+[submodule "zappy_gui/src/rend_ox"]
+	path = zappy_gui/src/rend_ox
+	url = git@github.com:Iddeko/Rend-ox.git

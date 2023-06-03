@@ -20,7 +20,6 @@ use std::ops::Sub;
 use crate::obj_parser::{Mesh, Vertices, Indices, Normals};
 
 mod obj_parser;
-mod rend_ox;
 
 struct Model {
     camera_is_active: bool,
