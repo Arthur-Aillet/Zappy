@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 nannou = "0.18.1"
 nannou_egui = "0.5.0"
+rend_ox = { path = "src/rend_ox" }

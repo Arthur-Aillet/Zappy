@@ -19,6 +19,8 @@ use std::cell::RefCell;
 use std::ops::Sub;
 use crate::obj_parser::{Mesh, Vertices, Indices, Normals};
 
+use rend_ox::debug::print_debug;
+
 mod obj_parser;
 
 struct Model {
@@ -155,6 +157,7 @@ fn pitch_yaw_to_direction(pitch: f32, yaw: f32) -> Vec3 {
 }
 
 fn main() {
+    print_debug();
     nannou::app(model).event(event).update(update).run();
 }
 
