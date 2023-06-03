@@ -274,29 +274,19 @@ fn update(app: &nannou::App, model: &mut Model, update: Update) {
         }
 
         if app.keys.down.contains(&Key::Q) {
-            let pitch = 0.0;
-            let yaw = model.camera.yaw - std::f32::consts::PI * 0.5;
-            let direction = pitch_yaw_to_direction(pitch, yaw);
-            model.camera.eye -= direction * velocity;
+            model.camera.move_right(-velocity)
         }
 
         if app.keys.down.contains(&Key::D) {
-            let pitch = 0.0;
-            let yaw = model.camera.yaw - std::f32::consts::PI * 0.5;
-            let direction = pitch_yaw_to_direction(pitch, yaw);
-            model.camera.eye += direction * velocity;
+            model.camera.move_right(velocity)
         }
-        // Float down on Q.
+
         if app.keys.down.contains(&Key::A) {
-            let pitch = model.camera.pitch - std::f32::consts::PI * 0.5;
-            let direction = pitch_yaw_to_direction(pitch, model.camera.yaw);
-            model.camera.eye += direction * velocity;
+            model.camera.move_up(-velocity)
         }
-        // Float up on E.
+
         if app.keys.down.contains(&Key::E) {
-            let pitch = model.camera.pitch + std::f32::consts::PI * 0.5;
-            let direction = pitch_yaw_to_direction(pitch, model.camera.yaw);
-            model.camera.eye += direction * velocity;
+            model.camera.move_up(velocity)
         }
     }
 }
