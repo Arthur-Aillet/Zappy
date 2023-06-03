@@ -3,7 +3,6 @@ use nannou::winit;
 use nannou::wgpu;
 use nannou::glam;
 
-
 use nannou::Frame;
 use nannou::time::DurationF64;
 use nannou::event::Update;
@@ -13,20 +12,21 @@ use nannou::math::Mat4LookTo;
 
 use glam::Mat4;
 use glam::Vec3;
+use glam::UVec2;
 use wgpu::util::DeviceExt;
 
 use std::cell::RefCell;
 use std::ops::Sub;
-use crate::obj_parser::{Mesh, Vertices, Indices, Normals};
+use glam::Vec3A;
 
-use rend_ox::debug::print_debug;
+use crate::obj_parser::{Mesh, Vertices, Indices, Normals};
 
 mod obj_parser;
 
 struct Model {
     camera_is_active: bool,
     graphics: RefCell<Graphics>,
-    camera: Camera,
+    camera: rend_ox::camera::Camera,
     mesh: Mesh,
     buffers: (Indices, Vertices, Vertices, Normals),
 }
@@ -41,16 +41,6 @@ struct Graphics {
     depth_texture_view: wgpu::TextureView,
     bind_group: wgpu::BindGroup,
     render_pipeline: wgpu::RenderPipeline,
-}
-
-// A simple first person camera.
-struct Camera {
-    // The position of the camera.
-    eye: Vec3,
-    // Rotation around the x axis.
-    pitch: f32,
-    // Rotation around the y axis.
-    yaw: f32,
 }
 
 // The vertex type that we will use to represent a point on our triangle.
@@ -132,52 +122,45 @@ pub struct Uniforms {
     proj: Mat4,
 }
 
-const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
-
-impl Camera {
-    // Calculate the direction vector from the pitch and yaw.
-    fn direction(&self) -> Vec3 {
-        pitch_yaw_to_direction(self.pitch, self.yaw)
-    }
-
-    // The camera's "view" matrix.
-    fn view(&self) -> Mat4 {
-        let direction = self.direction();
-        let up = Vec3::Z;
-        Mat4::look_to_rh(self.eye, direction, up)
-    }
-}
-
-fn pitch_yaw_to_direction(pitch: f32, yaw: f32) -> Vec3 {
-    let xz_unit_len = pitch.cos();
-    let x = - xz_unit_len * yaw.cos();
-    let y = - xz_unit_len * (yaw).sin();
-    let z = pitch.sin();
-    Vec3::new(x, y, z)
-}
-
 fn main() {
-    print_debug();
     nannou::app(model).event(event).update(update).run();
 }
 
 fn model(app: &nannou::App) -> Model {
-    let w_id = app
+    match create_model(app) {
+        Ok(model) => model,
+        Err(E) => {
+            eprintln!("Failed to create Model: {E}");
+            std::process::exit(84)
+        }
+    }
+}
+
+fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> {
+    let w_id = match app
         .new_window()
         .size(1024, 576)
         .key_pressed(key_pressed)
         .view(view)
-        .build()
-        .unwrap();
+        .build() {
+            Ok(val) => val,
+            Err(err) => { return Err(Box::new(rend_ox::error::RendError::new("Window Builder failed"))) }
+    };
 
-    let window = app.window(w_id).unwrap();
+    let window = match app.window(w_id) {
+        None => return Err(Box::new(rend_ox::error::RendError::new("Invalid window id found"))),
+        Some(val) => val,
+    };
     let camera_is_active = true;
-    window.set_cursor_grab(true).unwrap();
+    match window.set_cursor_grab(true) {
+        Err(error) => return Err(Box::new(rend_ox::error::RendError::new("Cursor can't be grabbed"))),
+        _ => {}
+    }
     window.set_cursor_visible(false);
     let device = window.device();
     let format = Frame::TEXTURE_FORMAT;
     let msaa_samples = window.msaa_samples();
-    let (win_w, win_h) = window.inner_size_pixels();
+    let window_size : glam::UVec2 = window.inner_size_pixels().into();
 
     let vs_desc = wgpu::include_wgsl!("shaders/vs.wgsl");
     let fs_desc = wgpu::include_wgsl!("shaders/fs.wgsl");
@@ -189,26 +172,6 @@ fn model(app: &nannou::App) -> Model {
 
     let buffers = mesh.as_buffers();
 
-    { /*
-        for index in buffers.0.clone() {
-            println!("index => {}", index)
-        }
-        for vertex in buffers.1.clone() {
-            println!("vertex => {:?}", vertex)
-        }
-        for i in 0..1 {
-            println!("i = {i}")
-        }
-        let uvs_vec = buffers.2.clone();
-        for i in 0..uvs_vec.len() {
-            println!("uv{i} => {:?}", uvs_vec[i])
-        }
-        let normals_vec = buffers.1.clone();
-        for i in 0..normals_vec.len() {
-            println!("normal{i} => {:?}", normals_vec[i])
-        }
-        // */
-    }
     // Create the vertex, normal and index buffers.
     let indices_bytes = indices_as_bytes(&buffers.0);
     let vertices_bytes = vertices_as_bytes(&buffers.1);
@@ -237,15 +200,18 @@ fn model(app: &nannou::App) -> Model {
         usage: index_usage,
     });
 
-    let depth_texture = create_depth_texture(device, [win_w, win_h], DEPTH_FORMAT, msaa_samples);
+    let camera = rend_ox::camera::Camera::new();
+
+    let depth_texture = wgpu::TextureBuilder::new()
+        .size([window_size.x , window_size.y])
+        .format(wgpu::TextureFormat::Depth32Float)
+        .usage(wgpu::TextureUsages::RENDER_ATTACHMENT)
+        .sample_count(msaa_samples)
+        .build(device);
+
     let depth_texture_view = depth_texture.view().build();
 
-    let eye = Vec3::new(0.0, 0.0, 0.0);
-    let pitch = 0.0;
-    let yaw = std::f32::consts::PI * 0.5;
-    let camera = Camera { eye, pitch, yaw };
-
-    let uniforms = create_uniforms([win_w, win_h], camera.view());
+    let uniforms = create_uniforms(window_size, camera.view());
     let uniforms_bytes = uniforms_as_bytes(&uniforms);
     let usage = wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST;
     let uniform_buffer = device.create_buffer_init(&wgpu::BufferInitDescriptor {
@@ -263,11 +229,11 @@ fn model(app: &nannou::App) -> Model {
         &vs_mod,
         &fs_mod,
         format,
-        DEPTH_FORMAT,
+        wgpu::TextureFormat::Depth32Float,
         msaa_samples,
     );
 
-    let graphics = RefCell::new(Graphics {
+    let graphics = RefCell::new(Graphics{
         vertex_buffer,
         uv_buffer,
         normal_buffer,
@@ -283,36 +249,37 @@ fn model(app: &nannou::App) -> Model {
     println!("Use the mouse to orient the pitch and yaw of the camera.");
     println!("Press the `Space` key to toggle camera mode.");
 
-    Model {
+    Ok(Model {
         camera_is_active,
         graphics,
         camera,
         mesh,
         buffers,
-    }
+    })
 }
 
 // Move the camera based on the current key pressed and its current direction.
 fn update(app: &nannou::App, model: &mut Model, update: Update) {
     const CAM_SPEED_HZ: f64 = 0.1;
+
     if model.camera_is_active {
         let velocity = (update.since_last.secs() * CAM_SPEED_HZ) as f32;
-        // Go forwards on W.
+
         if app.keys.down.contains(&Key::Z) {
-            model.camera.eye += model.camera.direction() * velocity;
+            model.camera.move_forward(velocity);
         }
-        // Go backwards on S.
+
         if app.keys.down.contains(&Key::S) {
-            model.camera.eye -= model.camera.direction() * velocity;
+            model.camera.move_forward(-velocity);
         }
-        // Strafe left on A.
+
         if app.keys.down.contains(&Key::Q) {
             let pitch = 0.0;
             let yaw = model.camera.yaw - std::f32::consts::PI * 0.5;
             let direction = pitch_yaw_to_direction(pitch, yaw);
             model.camera.eye -= direction * velocity;
         }
-        // Strafe right on D.
+
         if app.keys.down.contains(&Key::D) {
             let pitch = 0.0;
             let yaw = model.camera.yaw - std::f32::consts::PI * 0.5;
@@ -424,9 +391,9 @@ fn view(_app: &nannou::App, model: &Model, frame: Frame) {
     render_pass.draw_indexed( 0..model.buffers.0.len() as u32, 0, 0..1);
 }
 
-fn create_uniforms([w, h]: [u32; 2], view: Mat4) -> Uniforms {
+fn create_uniforms(size: UVec2, view: Mat4) -> Uniforms {
     let rotation = Mat4::from_rotation_y(0f32);
-    let aspect_ratio = w as f32 / h as f32;
+    let aspect_ratio = size.x as f32 / size.y as f32;
     let fov_y = std::f32::consts::FRAC_PI_2;
     let near = 0.0001;
     let far = 100.0;
@@ -437,20 +404,6 @@ fn create_uniforms([w, h]: [u32; 2], view: Mat4) -> Uniforms {
         view: (view * scale).into(),
         proj: proj.into(),
     }
-}
-
-fn create_depth_texture(
-    device: &wgpu::Device,
-    size: [u32; 2],
-    depth_format: wgpu::TextureFormat,
-    sample_count: u32,
-) -> wgpu::Texture {
-    wgpu::TextureBuilder::new()
-        .size(size)
-        .format(depth_format)
-        .usage(wgpu::TextureUsages::RENDER_ATTACHMENT)
-        .sample_count(sample_count)
-        .build(device)
 }
 
 fn create_bind_group_layout(device: &wgpu::Device) -> wgpu::BindGroupLayout {
