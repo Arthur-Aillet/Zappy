@@ -180,8 +180,9 @@ impl Mesh {
         fst_triangle.calculated_normal = self.calculated.len();
 
         self.calculated.push(self.normal_from_indexes(&fst_triangle));
+        println!("len = {len}");
         if len == 4 {
-            if let Some(snd_face) = self.get_second_face(&fst_triangle, points[4]) {
+            if let Some(snd_face) = self.get_second_face(&fst_triangle, points[3]) {
                 self.triangles.push(snd_face);
             } else { return false }
         }
