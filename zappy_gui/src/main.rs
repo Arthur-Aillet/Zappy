@@ -176,11 +176,9 @@ fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> 
     let indices_bytes = indices_as_bytes_copy(&buffers.0);
     let test = indices_as_bytes(&buffers.0);
 
-    println!("wrong = {indices_bytes:?}\n good = {test:?}");
     let vertices_bytes = vertices_as_bytes_copy(&buffers.1);
     let uvs_bytes = vertices_as_bytes_copy(&buffers.2);
     let normals_bytes = vertices_as_bytes_copy(&buffers.3);
-
 
 
     let vertex_usage = wgpu::BufferUsages::VERTEX;
