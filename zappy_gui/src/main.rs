@@ -12,11 +12,13 @@ use nannou::math::Mat4LookTo;
 use glam::Mat4;
 use glam::Vec3;
 use glam::UVec2;
+use glam::Vec3A;
+
 use wgpu::util::DeviceExt;
 
 use std::cell::RefCell;
-use std::ops::Sub;
-use glam::Vec3A;
+use std::convert::Infallible;
+use std::ops::{Index, Sub};
 
 use crate::obj_parser::{Mesh, Vertices, Indices, Normals};
 
@@ -44,7 +46,7 @@ struct Graphics {
 
 // The vertex type that we will use to represent a point on our triangle.
 #[repr(C)]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, bytemuck::Pod, bytemuck::Zeroable)]
 pub struct Vertex {
     x: f32, //offset
     y: f32, //height
@@ -116,9 +118,9 @@ pub struct Normal {
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct Uniforms {
-    world: Mat4,
-    view: Mat4,
-    proj: Mat4,
+    world: glam::Mat4,
+    view: glam::Mat4,
+    proj: glam::Mat4,
 }
 
 fn main() {
@@ -128,8 +130,8 @@ fn main() {
 fn model(app: &nannou::App) -> Model {
     match create_model(app) {
         Ok(model) => model,
-        Err(E) => {
-            eprintln!("Failed to create Model: {E}");
+        Err(err) => {
+            eprintln!("Failed to create Model: {err}");
             std::process::exit(84)
         }
     }
@@ -171,31 +173,36 @@ fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> 
 
     let buffers = mesh.as_buffers();
 
-    // Create the vertex, normal and index buffers.
-    let indices_bytes = indices_as_bytes(&buffers.0);
-    let vertices_bytes = vertices_as_bytes(&buffers.1);
-    let uvs_bytes = vertices_as_bytes(&buffers.2);
-    let normals_bytes = normals_as_bytes(&buffers.3);
+    let indices_bytes = indices_as_bytes_copy(&buffers.0);
+    let test = indices_as_bytes(&buffers.0);
+
+    println!("wrong = {indices_bytes:?}\n good = {test:?}");
+    let vertices_bytes = vertices_as_bytes_copy(&buffers.1);
+    let uvs_bytes = vertices_as_bytes_copy(&buffers.2);
+    let normals_bytes = vertices_as_bytes_copy(&buffers.3);
+
+
+
     let vertex_usage = wgpu::BufferUsages::VERTEX;
     let index_usage = wgpu::BufferUsages::INDEX;
     let vertex_buffer = device.create_buffer_init(&wgpu::BufferInitDescriptor {
         label: None,
-        contents: vertices_bytes,
+        contents: &*vertices_bytes,
         usage: vertex_usage,
     });
     let uv_buffer = device.create_buffer_init(&wgpu::BufferInitDescriptor {
         label: None,
-        contents: uvs_bytes,
+        contents: &*uvs_bytes,
         usage: vertex_usage,
     });
     let normal_buffer = device.create_buffer_init(&wgpu::BufferInitDescriptor {
         label: None,
-        contents: normals_bytes,
+        contents: &*normals_bytes,
         usage: vertex_usage,
     });
     let index_buffer = device.create_buffer_init(&wgpu::BufferInitDescriptor {
         label: None,
-        contents: indices_bytes,
+        contents: &*indices_bytes,
         usage: index_usage,
     });
 
@@ -451,16 +458,48 @@ fn create_render_pipeline(
 
 // See the `nannou::wgpu::bytes` documentation for why the following are necessary.
 
-fn vertices_as_bytes(data: &[Vertex]) -> &[u8] {
-    unsafe { wgpu::bytes::from_slice(data) }
+fn bytes_vector_to_array<const N: usize>(bytes: Vec<u8>) -> Box<[u8]> {
+    match bytes.try_into() {
+        Ok(value) => value,
+        Err(e) => panic!("Conversion to bytes failed")
+    }
 }
 
-fn normals_as_bytes(data: &[Normal]) -> &[u8] {
-    unsafe { wgpu::bytes::from_slice(data) }
+fn vertices_as_bytes_copy(data: &Vec<glam::Vec3A>) -> Vec<u8> {
+    let mut final_bytes: Vec<u8> = vec![];
+    for elem in data {
+        for i in 0..3 {
+            final_bytes.extend(elem.index(i).to_le_bytes());
+        }
+    }
+    final_bytes
+}
+
+impl From<[f32; 3]> for Vertex {
+    fn from(a: [f32; 3]) -> Self {
+        Vertex {x:a[0], y:a[1], z:a[2]}
+    }
+}
+
+fn vertices_as_bytes_working(data: &Vec<glam::Vec3A>) -> Vec<u8> {
+    let vect : Vec<Vertex>= data.iter().map(|x | {
+        let val : [f32;3] = (*x).into();
+        Vertex::from(val)}
+    ).collect();
+    bytemuck::cast_slice(&vect).to_vec()
 }
 
 fn indices_as_bytes(data: &[u16]) -> &[u8] {
-    unsafe { wgpu::bytes::from_slice(data) }
+    bytemuck::cast_slice(data)
+}
+
+fn indices_as_bytes_copy(data: &Vec<u16>) -> Vec<u8>  {
+    let mut final_bytes: Vec<u8> = vec![];
+    for elem in data {
+        final_bytes.push(*elem as u8);
+        final_bytes.push((*elem >> 8) as u8);
+    }
+    final_bytes
 }
 
 fn uniforms_as_bytes(uniforms: &Uniforms) -> &[u8] {
