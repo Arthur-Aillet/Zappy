@@ -18,27 +18,44 @@ typedef struct ia_s {
 } ia_t;
 
 typedef struct server_ia_s {
-    const uint8_t *cmd_name;
-    void (*handler)(ia_t *ia); //FIXME - same question that in struct gui_t
+    const uint8_t *comd;
+    void (*handler)(ia_t *ia);
 } server_ia_t;
 
-// static const client_ia_t COMMAND_GESTION_IA[] = {
-    // {"Forward", funct_client_msz},
-    // {"Right", funct_client_mct},
-    // {"Left", funct_client_tna},
-    // {"Look", funct_client_ppo},
-    // {"Inventory", funct_client_plv},
-    // {"Broadcast", funct_client_pin},
-    // {"message", funct_client_sgt},
-    // {"Connect_nbr", funct_client_sst},
-    // {"Fork", funct_client_sst},
-    // {"Eject", funct_client_sst},
-    // {"death", funct_client_sst},
-    // {"Take object", funct_client_sst},
-    // {"Set object", funct_client_sst},
-    // {"Incantation", funct_client_sst},
-    // {"Connect_nbr", funct_client_sst},
-// };
+void funct_client_ia_msz(ia_t *ia);
+void funct_client_ia_mct(ia_t *ia);
+void funct_client_ia_tna(ia_t *ia);
+void funct_client_ia_ppo(ia_t *ia);
+void funct_client_ia_plv(ia_t *ia);
+void funct_client_ia_pin(ia_t *ia);
+void funct_client_ia_sgt(ia_t *ia);
+void funct_client_ia_sst(ia_t *ia);
+void funct_client_ia_fork(ia_t *ia);
+void funct_client_ia_eject(ia_t *ia);
+void funct_client_ia_death(ia_t *ia);
+void funct_client_ia_take_obj(ia_t *ia);
+void funct_client_ia_set_obj(ia_t *ia);
+void funct_client_ia_incantation(ia_t *ia);
+void funct_client_ia_connect_bar(ia_t *ia);
+
+
+static const server_ia_t COMMAND_GESTION_IA[] = {
+    {"Forward", funct_client_ia_msz},
+    {"Right", funct_client_ia_mct},
+    {"Left", funct_client_ia_tna},
+    {"Look", funct_client_ia_ppo},
+    {"Inventory", funct_client_ia_plv},
+    {"Broadcast", funct_client_ia_pin},
+    {"message", funct_client_ia_sgt},
+    {"Connect_nbr", funct_client_ia_sst},
+    {"Fork", funct_client_ia_fork},
+    {"Eject", funct_client_ia_eject},
+    {"death", funct_client_ia_death},
+    {"Take object", funct_client_ia_take_obj},
+    {"Set object", funct_client_ia_set_obj},
+    {"Incantation", funct_client_ia_incantation},
+    {"Connect_nbr", funct_client_ia_connect_bar},
+};
 
 ia_t *set_ia(void);
 void free_ia(ia_t *ia);

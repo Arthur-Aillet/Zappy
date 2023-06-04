@@ -50,30 +50,30 @@ typedef struct server_gui_s {
 //     {"sbp", funct_server_sbp},
 // };
 
-// typedef struct client_gui_s {
-//     const uint8_t *comd;
-//     void (*handler)(gui_t *gui);
-// } client_gui_t;
+typedef struct client_gui_s {
+    const uint8_t *comd;
+    void (*handler)(gui_t *gui);
+} client_gui_t;
 
-// void funct_client_msz(gui_t *gui);
-// void funct_client_mct(gui_t *gui);
-// void funct_client_tna(gui_t *gui);
-// void funct_client_ppo(gui_t *gui);
-// void funct_client_plv(gui_t *gui);
-// void funct_client_pin(gui_t *gui);
-// void funct_client_sgt(gui_t *gui);
-// void funct_client_sst(gui_t *gui);
+void funct_client_msz(gui_t *gui);
+void funct_client_mct(gui_t *gui);
+void funct_client_tna(gui_t *gui);
+void funct_client_ppo(gui_t *gui);
+void funct_client_plv(gui_t *gui);
+void funct_client_pin(gui_t *gui);
+void funct_client_sgt(gui_t *gui);
+void funct_client_sst(gui_t *gui);
 
-// static const client_gui_t COMMAND_GESTION_CLIENT_GUI[] = {
-//     {"msz", funct_client_msz},
-//     {"mct", funct_client_mct},
-//     {"tna", funct_client_tna},
-//     {"ppo", funct_client_ppo},
-//     {"plv", funct_client_plv},
-//     {"pin", funct_client_pin},
-//     {"sgt", funct_client_sgt},
-//     {"sst", funct_client_sst},
-// };
+static const client_gui_t COMMAND_GESTION_CLIENT_GUI[] = {
+    {"msz", funct_client_msz},
+    {"mct", funct_client_mct},
+    {"tna", funct_client_tna},
+    {"ppo", funct_client_ppo},
+    {"plv", funct_client_plv},
+    {"pin", funct_client_pin},
+    {"sgt", funct_client_sgt},
+    {"sst", funct_client_sst},
+};
 
 gui_t *set_gui(void);
 void free_gui(gui_t *gui);
