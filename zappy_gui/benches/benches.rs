@@ -1,5 +1,5 @@
 use std::thread::sleep;
-use zappy_gui::obj_parser::Mesh;
+use rend_ox::obj_parser::Mesh;
 
 use criterion::{
     black_box,

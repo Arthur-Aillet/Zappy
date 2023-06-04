@@ -20,9 +20,7 @@ use std::cell::RefCell;
 use std::convert::Infallible;
 use std::ops::{Index, Sub};
 
-use crate::obj_parser::{Mesh, Vertices, Indices, Normals};
-
-mod obj_parser;
+use rend_ox::obj_parser::{Mesh, Vertices, Indices, Normals};
 
 struct Model {
     camera_is_active: bool,
@@ -174,8 +172,6 @@ fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> 
     let buffers = mesh.as_buffers();
 
     let indices_bytes = indices_as_bytes_copy(&buffers.0);
-    let test = indices_as_bytes(&buffers.0);
-
     let vertices_bytes = vertices_as_bytes_copy(&buffers.1);
     let uvs_bytes = vertices_as_bytes_copy(&buffers.2);
     let normals_bytes = vertices_as_bytes_copy(&buffers.3);
