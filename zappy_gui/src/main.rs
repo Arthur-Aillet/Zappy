@@ -42,77 +42,6 @@ struct Graphics {
     render_pipeline: wgpu::RenderPipeline,
 }
 
-// The vertex type that we will use to represent a point on our triangle.
-#[repr(C)]
-#[derive(Clone, Copy, Debug, bytemuck::Pod, bytemuck::Zeroable)]
-pub struct Vertex {
-    x: f32, //offset
-    y: f32, //height
-    z: f32, //depth
-}
-
-impl From<Vertex> for Normal {
-    fn from(vertex: Vertex) -> Self {
-        Normal {
-            x: vertex.x,
-            y: vertex.y,
-            z: vertex.z,
-        }
-    }
-}
-
-impl From<Normal> for Vertex {
-    fn from(normal: Normal) -> Self {
-        Vertex {
-            x: normal.x,
-            y: normal.y,
-            z: normal.z,
-        }
-    }
-}
-
-impl Sub<Vertex> for Vertex {
-    type Output = Vertex;
-    fn sub(self, other: Vertex) -> Vertex {
-        Vertex {
-            x: self.x - other.x,
-            y: self.y - other.y,
-            z: self.z - other.z,
-        }
-    }
-}
-
-impl Vertex {
-    pub fn cross_product (&self, other: Vertex) -> Vertex {
-        Vertex {
-            x: self.y * other.z - self.z * other.y,
-            y: self.z * other.x - self.x * other.z,
-            z: self.x * other.y - self.y * other.x
-        }
-    }
-
-    pub fn len(self) -> f32 {
-        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
-    }
-
-    pub fn normalize(&self) -> Self {
-        let len = self.len();
-        Vertex {
-            x: self.x / len,
-            y: self.y / len,
-            z: self.z / len,
-        }
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone, Debug)]
-pub struct Normal {
-    x: f32, //offset
-    y: f32, //height
-    z: f32, //depth
-}
-
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct Uniforms {
@@ -442,21 +371,12 @@ fn create_render_pipeline(
         .color_format(dst_format)
         .color_blend(wgpu::BlendComponent::REPLACE)
         .alpha_blend(wgpu::BlendComponent::REPLACE)
-        .add_vertex_buffer::<Vertex>(&wgpu::vertex_attr_array![0 => Float32x3])
-        .add_vertex_buffer::<Normal>(&wgpu::vertex_attr_array![1 => Float32x3])
-        .add_vertex_buffer::<Vertex>(&wgpu::vertex_attr_array![2 => Float32x3])
+        .add_vertex_buffer::<glam::Vec3>(&wgpu::vertex_attr_array![0 => Float32x3])
+        .add_vertex_buffer::<glam::Vec3>(&wgpu::vertex_attr_array![1 => Float32x3])
+        .add_vertex_buffer::<glam::Vec3>(&wgpu::vertex_attr_array![2 => Float32x3])
         .depth_format(depth_format)
         .sample_count(sample_count)
         .build(device)
-}
-
-// See the `nannou::wgpu::bytes` documentation for why the following are necessary.
-
-fn bytes_vector_to_array<const N: usize>(bytes: Vec<u8>) -> Box<[u8]> {
-    match bytes.try_into() {
-        Ok(value) => value,
-        Err(e) => panic!("Conversion to bytes failed")
-    }
 }
 
 fn vertices_as_bytes_copy(data: &Vec<glam::Vec3A>) -> Vec<u8> {
@@ -467,24 +387,6 @@ fn vertices_as_bytes_copy(data: &Vec<glam::Vec3A>) -> Vec<u8> {
         }
     }
     final_bytes
-}
-
-impl From<[f32; 3]> for Vertex {
-    fn from(a: [f32; 3]) -> Self {
-        Vertex {x:a[0], y:a[1], z:a[2]}
-    }
-}
-
-fn vertices_as_bytes_working(data: &Vec<glam::Vec3A>) -> Vec<u8> {
-    let vect : Vec<Vertex>= data.iter().map(|x | {
-        let val : [f32;3] = (*x).into();
-        Vertex::from(val)}
-    ).collect();
-    bytemuck::cast_slice(&vect).to_vec()
-}
-
-fn indices_as_bytes(data: &[u16]) -> &[u8] {
-    bytemuck::cast_slice(data)
 }
 
 fn indices_as_bytes_copy(data: &Vec<u16>) -> Vec<u8>  {
