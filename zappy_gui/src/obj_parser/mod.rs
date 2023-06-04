@@ -10,7 +10,7 @@ mod solver;
 use std::fs::OpenOptions;
 use std::io::{BufRead, BufReader};
 use nannou::mesh::vertices;
-use crate::{Vertex, Normal};
+use glam::Vec3A;
 use crate::obj_parser::solver::solve_indices;
 
 #[derive(Clone, Debug)]
@@ -22,8 +22,8 @@ pub struct Triangle {
 }
 
 impl Triangle {
-    fn normal_from_points(point_a: Vertex, point_b: Vertex, point_c: Vertex) -> Normal {
-        (point_a - point_b).cross_product(point_a - point_c).normalize().into()
+    fn normal_from_points(point_a: Vec3A, point_b: Vec3A, point_c: Vec3A) -> Vec3A {
+        (point_a - point_b).cross(point_a - point_c).normalize().into()
     }
 
     fn new() -> Triangle {
@@ -38,15 +38,15 @@ impl Triangle {
 
 pub struct Mesh {
     triangles : Vec<Triangle>,
-    normals : Vec<Normal>,
-    calculated : Vec<Normal>,
+    normals : Vec<Vec3A>,
+    calculated : Vec<Vec3A>,
     vertices : Vertices,
     uvs : Vertices,
 }
 
-pub type Vertices = Vec<Vertex>;
+pub type Vertices = Vec<Vec3A>;
 pub type Indices = Vec<u16>;
-pub type Normals = Vec<Normal>;
+pub type Normals = Vec<Vec3A>;
 
 impl Mesh {
     pub fn as_buffers(&mut self) -> (Indices, Vertices, Vertices, Normals) {
@@ -79,7 +79,6 @@ impl Mesh {
                     Ok(x) => {
                         if self.uvs.len() >= x && x > 0 {
                             texture = Some(x - 1);
-                            println!("UV IDX = {}", x - 1);
                         } else { return None }
                     }
                     Err(_) => { return None }
@@ -104,7 +103,7 @@ impl Mesh {
         Some((position, texture, normal))
     }
 
-    fn normal_from_indexes(&self, triangle: &Triangle) -> Normal {
+    fn normal_from_indexes(&self, triangle: &Triangle) -> Vec3A {
         Triangle::normal_from_points(self.vertices[triangle.points[0]], self.vertices[triangle.points[1]], self.vertices[triangle.points[2]])
     }
 
@@ -180,7 +179,6 @@ impl Mesh {
         fst_triangle.calculated_normal = self.calculated.len();
 
         self.calculated.push(self.normal_from_indexes(&fst_triangle));
-        println!("len = {len}");
         if len == 4 {
             if let Some(snd_face) = self.get_second_face(&fst_triangle, points[3]) {
                 self.triangles.push(snd_face);
@@ -190,40 +188,40 @@ impl Mesh {
         true
     }
 
-    fn parse_vertex(&mut self, line: String) -> Option<Vertex> {
-        let mut new_vertex: Vertex = Vertex { x: 0.0, y: 0.0, z: 0.0, };
+    fn parse_vertex(&mut self, line: String) -> Option<Vec3A> {
+        let mut new_vertex: Vec3A = Vec3A::ZERO;
         let mut iter = line.split_ascii_whitespace().filter(|&x| !x.is_empty());
 
         iter.next();
-        for coord in [&mut new_vertex.x, &mut new_vertex.y, &mut new_vertex.z].iter_mut() {
+        for i in 0..3 {
             if let Some(point) = iter.next() {
                 if let Ok(point) = point.parse::<f32>() {
-                    **coord = point as f32;
+                    new_vertex[i] = point as f32;
                 } else { return None };
             } else { return None }
         }
         Some(new_vertex)
     }
 
-    fn parse_uvw(&mut self, line: String) -> Option<Vertex> {
-        let mut new_vertex: Vertex = Vertex { x: 0.0, y: 0.0, z: 0.0, };
+    fn parse_uvw(&mut self, line: String) -> Option<Vec3A> {
+        let mut new_vertex: Vec3A = Vec3A::ZERO;
         let mut iter = line.split_ascii_whitespace().filter(|&x| !x.is_empty());
 
         iter.next();
-        for coord in [&mut new_vertex.x, &mut new_vertex.y, &mut new_vertex.z].iter_mut() {
+        for i in 0..3 {
             if let Some(point) = iter.next() {
                 if let Ok(point) = point.parse::<f32>() {
-                    **coord = point as f32;
+                    new_vertex[i] = point as f32;
                 } else { return None };
             }
         }
         Some(new_vertex)
     }
 
-    fn parse_normal(&mut self, line: String) -> Option<Normal> {
+    fn parse_normal(&mut self, line: String) -> Option<Vec3A> {
         let mut new_normal_asv = self.parse_vertex(line);
         if let Some(normal_vertex) = new_normal_asv {
-            Some(Normal::from(normal_vertex.normalize()))
+            Some(Vec3A::from(normal_vertex.normalize()))
         } else {
             None
         }

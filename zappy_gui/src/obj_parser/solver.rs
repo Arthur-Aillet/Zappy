@@ -1,5 +1,5 @@
-use crate::{Vertex, Normal};
 use crate::obj_parser::Triangle;
+use glam::Vec3A;
 
 #[derive(Clone)]
 struct VertBinding {
@@ -26,10 +26,10 @@ fn binding_find(binding : & mut Vec<Vec<VertBinding>>, idx : usize, vp : usize, 
     (false, idx)
 }
 
- pub(crate) fn solve_indices(pos : &Vec<Vertex>, uvs : &Vec<Vertex>, normals : &Vec<Normal>, faces : &Vec<Triangle>) -> (Vec<Vertex>, Vec<Vertex>, Vec<Normal>, Vec<usize>) {
-    let mut out_vp : Vec<Vertex> = Vec::new();
-    let mut out_nm : Vec<Normal> = Vec::new();
-    let mut out_uv : Vec<Vertex> = Vec::new();
+ pub(crate) fn solve_indices(pos : &Vec<Vec3A>, uvs : &Vec<Vec3A>, normals : &Vec<Vec3A>, faces : &Vec<Triangle>) -> (Vec<Vec3A>, Vec<Vec3A>, Vec<Vec3A>, Vec<usize>) {
+    let mut out_vp : Vec<Vec3A> = Vec::new();
+    let mut out_nm : Vec<Vec3A> = Vec::new();
+    let mut out_uv : Vec<Vec3A> = Vec::new();
     let mut binding : Vec<Vec<VertBinding>> = vec![Vec::new(); pos.len()];
 
     let mut out_faces : Vec<usize> = Vec::new();
