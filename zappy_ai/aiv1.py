@@ -1,5 +1,6 @@
 from connect import connect
 from sys import stderr
+
 RETRY = 5
 
 def send_server(client, message):
@@ -7,7 +8,7 @@ def send_server(client, message):
     trys = 0
     while answer == b'ko\n' and trys < RETRY:
         trys += 1
-        client.send(bytes(message, "utf-8"))
+        client.send(bytes(message + "\n", "utf-8"))
         answer = client.recv(1024)
     if answer == b'ko\n':
         stderr.write("ko on " + str(answer) + "\n")
@@ -38,7 +39,9 @@ def look(client):
     return 1
 
 def pick_up(client):
-    return
+    if send_server(client, "Take object") == b'ok\n':
+        return True
+    return False
 
 def look_arround():
     found_obj = -1
