@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-void funct_client_ia_death(ia_t *ia)
+void funct_client_ia_death(ia_t *ia, uint8_t **args)
 {
     printf("rentrer dans la funct_client_ia_death");
 }

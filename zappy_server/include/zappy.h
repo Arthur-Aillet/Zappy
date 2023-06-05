@@ -29,7 +29,7 @@
     #include "server.h"
 
 typedef struct common_s {
-    gui_t *gui;
+    gui_t gui;
     ia_t *ia;
     size_t nb_teams;
     team_t *teams;

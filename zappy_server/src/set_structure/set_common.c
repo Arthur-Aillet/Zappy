@@ -47,7 +47,7 @@ common_t set_common(int ac, char *av[])
     parser_t *parser = set_parser();
     get_parameters(ac, av, parser);
     common_t com;
-    com.gui = set_gui();
+    set_gui(&com.gui);
     com.ia = set_ia();
     com.teams = malloc(sizeof(team_t) * parser->nb_teams);
     for (size_t i = 0; i < parser->nb_teams; i++)
