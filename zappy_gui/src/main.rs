@@ -1,26 +1,21 @@
 // use nannou::prelude::*;
-use nannou::winit;
 use nannou::wgpu;
+use nannou::winit;
 
-use nannou::Frame;
-use nannou::time::DurationF64;
-use nannou::event::Update;
-use nannou::event::Key;
 use nannou::event::Event;
-use nannou::math::Mat4LookTo;
+use nannou::event::Key;
+use nannou::event::Update;
+use nannou::time::DurationF64;
+use nannou::Frame;
 
-use glam::Mat4;
-use glam::Vec3;
 use glam::UVec2;
-use glam::Vec3A;
+use glam::Vec3;
 
 use wgpu::util::DeviceExt;
 
 use std::cell::RefCell;
-use std::convert::Infallible;
-use std::ops::{Index, Sub};
 
-use rend_ox::obj::{Mesh, Vertices, Indices, Normals};
+use rend_ox::obj::{Indices, Mesh, Normals, Vertices};
 
 struct Model {
     camera_is_active: bool,
@@ -70,25 +65,38 @@ fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> 
         .size(1024, 576)
         .key_pressed(key_pressed)
         .view(view)
-        .build() {
-            Ok(val) => val,
-            Err(err) => { return Err(Box::new(rend_ox::error::RendError::new("Window Builder failed"))) }
+        .build()
+    {
+        Ok(val) => val,
+        Err(err) => {
+            return Err(Box::new(rend_ox::error::RendError::new(
+                "Window Builder failed",
+            )))
+        }
     };
 
     let window = match app.window(w_id) {
-        None => return Err(Box::new(rend_ox::error::RendError::new("Invalid window id found"))),
+        None => {
+            return Err(Box::new(rend_ox::error::RendError::new(
+                "Invalid window id found",
+            )))
+        }
         Some(val) => val,
     };
     let camera_is_active = true;
     match window.set_cursor_grab(true) {
-        Err(error) => return Err(Box::new(rend_ox::error::RendError::new("Cursor can't be grabbed"))),
+        Err(error) => {
+            return Err(Box::new(rend_ox::error::RendError::new(
+                "Cursor can't be grabbed",
+            )))
+        }
         _ => {}
     }
     window.set_cursor_visible(false);
     let device = window.device();
     let format = Frame::TEXTURE_FORMAT;
     let msaa_samples = window.msaa_samples();
-    let window_size : glam::UVec2 = window.inner_size_pixels().into();
+    let window_size: glam::UVec2 = window.inner_size_pixels().into();
 
     let vs_desc = wgpu::include_wgsl!("shaders/vs.wgsl");
     let fs_desc = wgpu::include_wgsl!("shaders/fs.wgsl");
@@ -104,7 +112,6 @@ fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> 
     let vertices_bytes = vertices_as_bytes_copy(&buffers.1);
     let uvs_bytes = vertices_as_bytes_copy(&buffers.2);
     let normals_bytes = vertices_as_bytes_copy(&buffers.3);
-
 
     let vertex_usage = wgpu::BufferUsages::VERTEX;
     let index_usage = wgpu::BufferUsages::INDEX;
@@ -132,7 +139,7 @@ fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> 
     let camera = rend_ox::camera::Camera::new();
 
     let depth_texture = wgpu::TextureBuilder::new()
-        .size([window_size.x , window_size.y])
+        .size([window_size.x, window_size.y])
         .format(wgpu::TextureFormat::Depth32Float)
         .usage(wgpu::TextureUsages::RENDER_ATTACHMENT)
         .sample_count(msaa_samples)
@@ -162,7 +169,7 @@ fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> 
         msaa_samples,
     );
 
-    let graphics = RefCell::new(Graphics{
+    let graphics = RefCell::new(Graphics {
         vertex_buffer,
         uv_buffer,
         normal_buffer,
@@ -252,7 +259,6 @@ fn event(_app: &nannou::App, model: &mut Model, event: nannou::Event) {
     }
 }
 
-// Toggle cursor grabbing and hiding on Space key.
 fn key_pressed(app: &nannou::App, model: &mut Model, key: Key) {
     if let Key::Space = key {
         let window = app.main_window();
@@ -311,7 +317,7 @@ fn view(_app: &nannou::App, model: &Model, frame: Frame) {
     render_pass.set_vertex_buffer(0, g.vertex_buffer.slice(..));
     render_pass.set_vertex_buffer(1, g.uv_buffer.slice(..));
     render_pass.set_vertex_buffer(2, g.normal_buffer.slice(..));
-    render_pass.draw_indexed( 0..model.buffers.0.len() as u32, 0, 0..1);
+    render_pass.draw_indexed(0..model.buffers.0.len() as u32, 0, 0..1);
 }
 
 fn create_uniforms(size: UVec2, view: glam::Mat4) -> Uniforms {
@@ -383,13 +389,13 @@ fn vertices_as_bytes_copy(data: &Vec<glam::Vec3A>) -> Vec<u8> {
     let mut final_bytes: Vec<u8> = vec![];
     for elem in data {
         for i in 0..3 {
-            final_bytes.extend(elem.index(i).to_le_bytes());
+            final_bytes.extend(elem[i].to_le_bytes());
         }
     }
     final_bytes
 }
 
-fn indices_as_bytes_copy(data: &Vec<u16>) -> Vec<u8>  {
+fn indices_as_bytes_copy(data: &Vec<u16>) -> Vec<u8> {
     let mut final_bytes: Vec<u8> = vec![];
     for elem in data {
         final_bytes.push(*elem as u8);
