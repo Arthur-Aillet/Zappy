@@ -1,18 +1,38 @@
 from connect import connect
+from sys import stderr
+RETRY = 5
 
-def fowards():
-    return
+def send_server(client, message):
+    answer = b'ko\n'
+    trys = 0
+    while answer == b'ko\n' and trys < RETRY:
+        trys += 1
+        client.send(message)
+        answer = client.recv(1024)
+    if answer == b'ko\n':
+        stderr.write("ko on " + str(answer) + "\n")
+    return answer
 
-def left():
-    return
+def fowards(client):
+    if send_server(client, "Forward") == b'ok\n':
+        return True
+    return False
 
-def right():
-    return
+def left(client):
+    if send_server(client, "Left") == b'ok\n':
+        return True
+    return False
 
-def look():
-    return 1;
+def right(client):
+    if send_server(client, "Right") == b'ok\n':
+        return True
+    return False
 
-def pick_up():
+def look(client):
+    answer = send_server(client, "Look")
+    return 1
+
+def pick_up(client):
     return
 
 def look_arround():

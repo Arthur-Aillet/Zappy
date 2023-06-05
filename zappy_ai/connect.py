@@ -20,6 +20,4 @@ def connect(ip, port, team_name):
     print("clientnum x y", client_num, x, y)
     if (client_num >= 1):
         return client_num, x, y
-    return 0, x, y
-
-print("final result", connect("127.0.0.1", 4242, b"gigatest"))
+    return client, 0, x, y
