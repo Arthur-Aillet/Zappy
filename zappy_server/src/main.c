@@ -62,8 +62,7 @@ int main(int ac, char *av[])
         if (select(S_MAX + 1, &S_READ, NULL, NULL, &timeout) < 0
         && (errno != EINTR)) {
             free_common(&com);
-            fprintf(stderr, "%sSelect failed%s\n", RED, NEUTRE);
-            exit(84);
+            exit(error("Select failed", 84));
         }
         listening_sockets(&com);
     }

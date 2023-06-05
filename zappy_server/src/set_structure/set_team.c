@@ -8,6 +8,32 @@
 #include "teams.h"
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
+
+egg_t set_egg(int x, int y)
+{
+    egg_t new;
+    new.x = x;
+    new.y = y;
+    return new;
+}
+
+player_t set_player(size_t x, size_t y)
+{
+    srand(time(NULL));
+    player_t new;
+    new.x = x;
+    new.y = y;
+    new.orientation = 1 + rand() % 5;
+    new.level = 1;
+    new.life = 10;
+    new.satiety = 10;
+    new.egg = set_egg(-1, -1);
+    new.inventory = malloc(sizeof(size_t) * 7);
+    for (size_t i = 0; i < 7; i++)
+        new.inventory[i] = 0;
+    return new;
+}
 
 team_t set_team(char *team_name, size_t slot)
 {
@@ -16,7 +42,7 @@ team_t set_team(char *team_name, size_t slot)
     team.name = malloc(sizeof(char) * (strlen(team_name) + 1));
     strcpy(team.name, team_name);
     team.actif_player = 0;
-    team.players = NULL;
+    team.players = malloc(sizeof(player_t) * MAX_PLAYER);
     return team;
 }
 

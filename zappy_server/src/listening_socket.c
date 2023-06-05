@@ -37,7 +37,6 @@ static int new_client(server_t *server, client_t *client)
     return 1;
 }
 
-//NOTE - Transforms this function for create threads
 static int check_incoming_data(common_t *com)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {

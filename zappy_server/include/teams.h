@@ -8,6 +8,7 @@
 #ifndef TEAMS_H_
     #define TEAMS_H_
 
+    #define MAX_PLAYER     20
     #include "common.h"
 
     #include <stdio.h>
