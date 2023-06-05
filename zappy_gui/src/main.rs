@@ -21,7 +21,7 @@ struct Model {
     camera_is_active: bool,
     graphics: RefCell<Graphics>,
     camera: rend_ox::camera::Camera,
-    mesh: Mesh,
+    _mesh: Mesh,
     buffers: (Indices, Vertices, Vertices, Normals),
 }
 
@@ -68,7 +68,7 @@ fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> 
         .build()
     {
         Ok(val) => val,
-        Err(err) => {
+        Err(_err) => {
             return Err(Box::new(rend_ox::error::RendError::new(
                 "Window Builder failed",
             )))
@@ -85,7 +85,7 @@ fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> 
     };
     let camera_is_active = true;
     match window.set_cursor_grab(true) {
-        Err(error) => {
+        Err(_err) => {
             return Err(Box::new(rend_ox::error::RendError::new(
                 "Cursor can't be grabbed",
             )))
@@ -104,7 +104,11 @@ fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> 
     let fs_mod = device.create_shader_module(&fs_desc);
 
     let mut mesh: Mesh = Mesh::new();
-    let status = mesh.parse_obj("./.objs/bat.obj");
+    if !mesh.parse_obj("./.objs/bat.obj") {
+        return Err(Box::new(rend_ox::error::RendError::new(
+            "Invalid or non supported obj file!",
+        )));
+    }
 
     let buffers = mesh.as_buffers();
 
@@ -189,7 +193,7 @@ fn create_model(app: &nannou::App) -> Result<Model, Box<dyn std::error::Error>> 
         camera_is_active,
         graphics,
         camera,
-        mesh,
+        _mesh: mesh,
         buffers,
     })
 }
