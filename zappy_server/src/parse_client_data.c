@@ -20,7 +20,7 @@ uint8_t **convert_arr_to_unit8(char **arr)
     uint8_t **res = malloc(sizeof(uint8_t *) * (size + 1));
     for (size_t i = 0; i < size; i++) {
         res[i] = malloc(sizeof(uint8_t) * (strlen(arr[i]) + 1));
-        strcat((char*)res[i], arr[i]);
+        strcpy((char*)res[i], arr[i]);
     }
     res[size] = NULL;
     return res;
@@ -31,7 +31,8 @@ uint8_t **get_message(server_t *server, client_t *client)
     char data[200];
     bzero(data, sizeof(data));
     if (read(client->socket, data, sizeof(data)) == 0) {
-        printf("%sRead error: closed connection%s\n", RED, NEUTRE);
+        printf("%sRead error: closed connection with %s%d%s\n",
+        RED, BLUE, client->socket, NEUTRE);
         client->socket = close_client(client->socket, server);
         return NULL;
     }

@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <getopt.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 static void set_teams_name(parser_t *p, int ac, char *av[])
@@ -50,6 +51,19 @@ static void get_one_parametes(parser_t *p, int opt, int ac, char *av[])
     }
 }
 
+static void default_teams(parser_t *parser)
+{
+    parser->nb_teams = 4;
+    parser->teams_name = malloc(sizeof(char *) * (parser->nb_teams + 1));
+    for (size_t i = 0; i < parser->nb_teams; i++) {
+        parser->teams_name[i] = malloc(sizeof(char) * 6);
+    }
+    strcpy(parser->teams_name[0], "Team1");
+    strcpy(parser->teams_name[1], "Team2");
+    strcpy(parser->teams_name[2], "Team3");
+    strcpy(parser->teams_name[3], "Team4");
+}
+
 void get_parameters(int ac, char *av[], parser_t *parser)
 {
     int opt;
@@ -57,6 +71,8 @@ void get_parameters(int ac, char *av[], parser_t *parser)
     while ((opt = getopt(ac, av, "p:x:y:n:c:f:")) != -1) {
         get_one_parametes(parser, opt, ac, av);
     }
+    if (parser->nb_teams == 0)
+        default_teams(parser);
     if (parser->port == 0 || parser->height == 0 || parser->width == 0
     || parser->client_nb == 0 || parser->freq == 0) {
         fprintf(stderr, "Bad argument for one flag.\n");

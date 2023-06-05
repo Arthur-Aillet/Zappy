@@ -33,7 +33,7 @@ void set_gui(gui_t *gui)
 static void free_map(map_t *map)
 {
     for (size_t i = 0; i < map->height; i++) {
-        for (int j = 0; map->width; j++) {
+        for (size_t j = 0; j < map->width; j++) {
             free(map->tiles[i][j].ressources);
         }
         free(map->tiles[i]);
@@ -41,7 +41,8 @@ static void free_map(map_t *map)
     free(map->tiles);
 }
 
-void free_gui(gui_t gui)
+//FIXME - segmentation fault when we could free the map
+void free_gui(gui_t *gui)
 {
-    free_map(&gui.map);
+    // free_map(&gui->map);
 }

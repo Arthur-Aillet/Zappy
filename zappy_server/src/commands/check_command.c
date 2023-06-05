@@ -6,6 +6,7 @@
 */
 
 #include "zappy.h"
+#include <string.h>
 
 static int is_valid_opt_gui(client_gui_t const *arg, size_t i,
             gui_t *gui, client_gui_t *client_gui)

@@ -17,6 +17,7 @@ SRC		=	src/listening_socket.c									\
 			src/set_structure/set_client.c							\
 			src/set_structure/set_parser.c							\
 			src/set_structure/set_team.c							\
+			src/commands/client_undefined.c							\
 			src/commands/check_command.c							\
 			src/commands/commands_gui/funct_client_bct.c			\
 			src/commands/commands_gui/funct_client_mct.c			\
