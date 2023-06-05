@@ -7,11 +7,16 @@ def send_server(client, message):
     trys = 0
     while answer == b'ko\n' and trys < RETRY:
         trys += 1
-        client.send(message)
+        client.send(bytes(message, "utf-8"))
         answer = client.recv(1024)
     if answer == b'ko\n':
         stderr.write("ko on " + str(answer) + "\n")
     return answer
+
+def broadcast(client, text):
+    if send_server(client, "Broadcast " + text) == b'ok\n':
+        return True
+    return False
 
 def fowards(client):
     if send_server(client, "Forward") == b'ok\n':
