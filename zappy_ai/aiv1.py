@@ -36,7 +36,7 @@ def pick_up(client):
     return
 
 def look_arround():
-    found_obj = -1;
+    found_obj = -1
     for i in range(4):
         found_obj = look
         if (found_obj != -1):
@@ -45,15 +45,15 @@ def look_arround():
 
 def spiral(i):
     while i > 0:
-        i -= 1;
-        fowards();
+        i -= 1
+        fowards()
         if look() != -1:
-            return True;
+            return True
     right()
     return False
 
 def go_to(i):
-    row_max = 1;
+    row_max = 1
     while i < row_max :
         i -= row_max
         row_max += 2
@@ -67,19 +67,19 @@ def go_to(i):
     return
 
 def loop(switch, spiral_len):
-    switch += 1;
+    switch += 1
     if switch % 2 == 0:
-        spiral_len += 1;
+        spiral_len += 1
     if spiral(spiral_len):
         go_to(look)
         pick_up()
         while look_arround != -1:
-            go_to(look_arround);
-            pick_up();
+            go_to(look_arround)
+            pick_up()
 
 def main():
     client_num, map_x, map_y = connect()
-    switch = 0;
-    spiral_len = 1;
+    switch = 0
+    spiral_len = 1
     while True:
-        loop();
+        loop()
