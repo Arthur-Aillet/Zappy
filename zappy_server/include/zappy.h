@@ -37,6 +37,7 @@ typedef struct common_s {
     client_t *client;
     size_t port;
     size_t freq; //NOTE: - time unit
+    time_t timer;
 } common_t;
 
 

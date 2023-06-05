@@ -56,6 +56,7 @@ common_t set_common(int ac, char *av[])
     com.freq = parser->freq;
     com.client = set_clients(com.client);
     com.nb_teams = parser->nb_teams;
+    com.timer = time(NULL);
     if (!set_server(com.port, &com.server)) {
         free_parser(parser);
         free_common(&com);

@@ -10,7 +10,7 @@
 
 ia_t *set_ia(void)
 {
-    ia_t *ia = malloc(sizeof(ia_t));
+    ia_t *ia = malloc(sizeof(ia_t) * MAX_PLAYER);
     return ia;
 }
 
