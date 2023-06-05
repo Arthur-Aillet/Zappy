@@ -17,6 +17,14 @@
 - `clientsNb`: is the number of authorized clients per team
 - `freq`: is the reciprocal of time unit for execution of actions
 
+### Default parameters
+`port`: 4242
+`width`: 10
+`height`: 10
+`nameX`: "Team1" "Team2" "Team3" "Team4"
+`clientNB`: 2
+`freq`: 100
+
 ### Connection:
 
 When a client connects to the server:
