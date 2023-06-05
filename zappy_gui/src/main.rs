@@ -20,7 +20,7 @@ use std::cell::RefCell;
 use std::convert::Infallible;
 use std::ops::{Index, Sub};
 
-use rend_ox::obj_parser::{Mesh, Vertices, Indices, Normals};
+use rend_ox::obj::{Mesh, Vertices, Indices, Normals};
 
 struct Model {
     camera_is_active: bool,
