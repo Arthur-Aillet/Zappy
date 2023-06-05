@@ -8,22 +8,20 @@
 #include "zappy.h"
 
 static int is_valid_opt_gui(client_gui_t const *arg, size_t i,
-            client_gui_t *client_gui, gui_t *gui)
+            gui_t *gui, client_gui_t *client_gui)
 {
     if (strcmp((const char *)client_gui->comd[0], arg->comd) == 0) {
         COMMAND_GESTION_CLIENT_GUI[i].handler(gui);
-        bufferedSocket->bufferRead.used = true;
         return 1;
     }
     return 0;
 }
 
-static int is_valid_opt_ia(client_ia_t const *arg, size_t i,
-            server_ia_t *server_ia, ia_t *ia)
+static int is_valid_opt_ia(server_ia_t const *arg, size_t i,
+            ia_t *ia, server_ia_t *server_ia)
 {
-    if (strcmp((const char *)server_ia->cmd_name[0], arg->comd) == 0) {
+    if (strcmp((const char *)server_ia->comd[0], arg->comd) == 0) {
         COMMAND_GESTION_IA[i].handler(ia);
-        bufferedSocket->bufferRead.used = true;
         return 1;
     }
     return 0;
