@@ -18,6 +18,7 @@ SRC		=	src/listening_socket.c									\
 			src/set_structure/set_parser.c							\
 			src/set_structure/set_team.c							\
 			src/commands/check_command.c							\
+			src/commands/commands_gui/funct_client_bct.c			\
 			src/commands/commands_gui/funct_client_mct.c			\
 			src/commands/commands_gui/funct_client_msz.c			\
 			src/commands/commands_gui/funct_client_pin.c			\
@@ -26,6 +27,31 @@ SRC		=	src/listening_socket.c									\
 			src/commands/commands_gui/funct_client_sgt.c			\
 			src/commands/commands_gui/funct_client_sst.c			\
 			src/commands/commands_gui/funct_client_tna.c			\
+			src/commands/responses_gui/funct_server_all_bct.c		\
+			src/commands/responses_gui/funct_server_bct.c			\
+			src/commands/responses_gui/funct_server_ebo.c			\
+			src/commands/responses_gui/funct_server_edi.c			\
+			src/commands/responses_gui/funct_server_enw.c			\
+			src/commands/responses_gui/funct_server_msz.c			\
+			src/commands/responses_gui/funct_server_pbc.c			\
+			src/commands/responses_gui/funct_server_pdi.c			\
+			src/commands/responses_gui/funct_server_pdr.c			\
+			src/commands/responses_gui/funct_server_pex.c			\
+			src/commands/responses_gui/funct_server_pfk.c			\
+			src/commands/responses_gui/funct_server_pgt.c			\
+			src/commands/responses_gui/funct_server_pic.c			\
+			src/commands/responses_gui/funct_server_pie.c			\
+			src/commands/responses_gui/funct_server_pin.c			\
+			src/commands/responses_gui/funct_server_plv.c			\
+			src/commands/responses_gui/funct_server_pnw.c			\
+			src/commands/responses_gui/funct_server_ppo.c			\
+			src/commands/responses_gui/funct_server_sbp.c			\
+			src/commands/responses_gui/funct_server_seg.c			\
+			src/commands/responses_gui/funct_server_sgt.c			\
+			src/commands/responses_gui/funct_server_smg.c			\
+			src/commands/responses_gui/funct_server_sst.c			\
+			src/commands/responses_gui/funct_server_suc.c			\
+			src/commands/responses_gui/funct_server_tna.c			\
 			src/commands/commands_ia/funct_client_ia_connect_bar.c	\
 			src/commands/commands_ia/funct_client_ia_death.c		\
 			src/commands/commands_ia/funct_client_ia_eject.c		\

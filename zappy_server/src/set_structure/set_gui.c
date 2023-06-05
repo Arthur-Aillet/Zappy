@@ -24,11 +24,10 @@ static map_t set_map(int height, int width)
     return map;
 }
 
-gui_t *set_gui(void)
+void set_gui(gui_t *gui)
 {
-    gui_t *gui = malloc(sizeof(gui_t));
+    gui = malloc(sizeof(gui_t));
     gui->map = set_map(0, 0);
-    return gui;
 }
 
 static void free_map(map_t *map)
@@ -42,8 +41,7 @@ static void free_map(map_t *map)
     free(map->tiles);
 }
 
-void free_gui(gui_t *gui)
+void free_gui(gui_t gui)
 {
-    free_map(&gui->map);
-    free(gui);
+    free_map(&gui.map);
 }
