@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ##
 ## EPITECH PROJECT, 2023
 ## zappy
@@ -11,11 +12,14 @@ def connect(ip, port, team_name):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect((ip, port))
     print("server message:", client.recv(1024))
-    client.send(team_name + '\n')
+    client.send(team_name + b'\n')
 
-    client_num = client.recv(1024)
-    x, y = client.recv(1024).strip()
-    x, y = int(x), int(y)
+    client_num, x, y = client.recv(1024).replace(b'\n', b' ').split()
+    print("server message 2:", client_num, x, y)
+    client_num, x, y = int(client_num), int(x), int(y)
+    print("clientnum x y", client_num, x, y)
     if (client_num >= 1):
         return client_num, x, y
     return 0, x, y
+
+print("final result", connect("127.0.0.1", 4242, b"gigatest"))
