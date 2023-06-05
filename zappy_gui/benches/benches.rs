@@ -1,5 +1,5 @@
 use std::thread::sleep;
-use rend_ox::obj_parser::Mesh;
+use rend_ox::obj::Mesh;
 use nannou::wgpu;
 
 use criterion::{
@@ -8,7 +8,7 @@ use criterion::{
     criterion_group,
     Criterion
 };
-use glam::{Vec3, Vec3A};
+use glam::{Vec3A};
 
 fn indices_as_bytes_copy(data: &Vec<u16>) -> Vec<u8>  {
     let mut final_bytes: Vec<u8> = vec![];
@@ -46,10 +46,10 @@ fn bench_buffer_copy(c: &mut Criterion) {
 
     let mut group = c.benchmark_group("buffer copy");
     group.bench_function("cast", |b| b.iter(|| {
-        unsafe { let a = nannou_indices_as_bytes(&buffers.0); }
-        unsafe { let b = nannou_vertices_as_bytes(&buffers.1); }
-        unsafe { let c = nannou_vertices_as_bytes(&buffers.2); }
-        unsafe { let d = nannou_vertices_as_bytes(&buffers.3); }
+        unsafe { let _a = nannou_indices_as_bytes(&buffers.0); }
+        unsafe { let _b = nannou_vertices_as_bytes(&buffers.1); }
+        unsafe { let _c = nannou_vertices_as_bytes(&buffers.2); }
+        unsafe { let _d = nannou_vertices_as_bytes(&buffers.3); }
 
     }));
     group.bench_function("copy", |b| b.iter(|| {
