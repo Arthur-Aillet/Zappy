@@ -23,6 +23,8 @@
 
     #define SOCKET(i)       client[i].socket
 
+    #define TEAM(i)         com->teams[i]
+
     #include "ia.h"
     #include "gui.h"
     #include "teams.h"
@@ -53,5 +55,6 @@ void check_error_output(common_t *com, int output, char *error);
 void listening_sockets(common_t *com);
 
 uint8_t **get_message(server_t *server, client_t *client);
+int undefined_client_command(uint8_t **command, common_t *com, int idx);
 
 #endif /* !ZAPPY_H_ */

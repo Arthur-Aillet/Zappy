@@ -8,15 +8,22 @@
 #include "zappy.h"
 #include <stdlib.h>
 
-client_t * set_clients(client_t *client)
+static client_t set_client(void)
 {
-    client = malloc(sizeof(client_t) * MAX_CLIENTS);
+    client_t cli;
+    cli.socket = 0;
+    cli.type = -1;
+    cli.struct_client = NULL;
+    return cli;
+}
+
+client_t *set_all_clients(void)
+{
+    client_t *client = malloc(sizeof(client_t) * (MAX_CLIENTS + 1));
     if (client == NULL)
         exit(error("Malloc error: Set clients", 84));
-    client_t cli;
-    for (size_t i = 0; i < MAX_CLIENTS; i++) {
-        cli.socket = 0;
-        client[i] = cli;
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        client[i] = set_client();
     }
     return client;
 }

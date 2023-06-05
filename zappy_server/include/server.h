@@ -13,6 +13,7 @@
         #include <sys/types.h>
         #include <netinet/in.h>
         #include <unistd.h>
+        #include "teams.h"
 
 enum client_type {
     IA,
@@ -31,9 +32,10 @@ typedef struct client_s {
     int type;
     int socket;
     struct sockaddr_in addr;
+    void *struct_client;
 } client_t;
 
-client_t *set_clients(client_t *client);
+client_t *set_all_clients(void);
 int close_client(int client_socket, server_t *server);
 void free_clients(client_t *cli, server_t *server);
 

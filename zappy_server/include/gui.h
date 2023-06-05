@@ -73,6 +73,6 @@ static const client_gui_t COMMAND_GESTION_CLIENT_GUI[] = {
 };
 
 void set_gui(gui_t *gui);
-void free_gui(gui_t gui);
+void free_gui(gui_t *gui);
 
 #endif /* !GUI_H_ */
