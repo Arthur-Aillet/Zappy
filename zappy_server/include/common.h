@@ -15,6 +15,8 @@
     #include <netinet/in.h>
     #include <sys/select.h>
     #include <sys/time.h>
+    #include <stdio.h>
+    #include <stdlib.h>
 
 enum resources {
     FOOD,

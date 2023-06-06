@@ -7,7 +7,9 @@
 
 #include "zappy.h"
 
-void funct_server_pie(uint8_t **args, gui_t *gui)
+//voir avec ludo!!!!!
+
+void funct_server_pie(uint8_t **args, gui_t *gui, common_t *common)
 {
     printf("rentrer dans la fonctions funct_server_pie\n");
 }
