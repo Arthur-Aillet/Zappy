@@ -1,4 +1,69 @@
 #!/usr/bin/env python3
+##
+## EPITECH PROJECT, 2023
+## zappy
+## File description:
+## zappy_ai
+##
+
+from connect import connect
+from server_get import *
+from server_action import *
+from sys import stderr
+
+def look_arround():
+    found_obj = -1
+    for i in range(4):
+        found_obj = look
+        if (found_obj != -1):
+            return found_obj
+    return found_obj
+
+def spiral(i):
+    while i > 0:
+        i -= 1
+        fowards()
+        if look() != -1:
+            return True
+    right()
+    return False
+
+def go_to(i):
+    row_max = 1
+    while i < row_max :
+        i -= row_max
+        row_max += 2
+    if (row_max / 2 < i):
+        left()
+    if (row_max / 2 > i):
+        right()
+    for n in range(abs(row_max - (i))):
+        fowards()
+    pick_up()
+    return
+
+def loop(switch, spiral_len):
+    switch += 1
+    if switch % 2 == 0:
+        spiral_len += 1
+    if spiral(spiral_len):
+        go_to(look)
+        pick_up()
+        while look_arround != -1:
+            go_to(look_arround)
+            pick_up()
+
+# def main():
+#     client_num, map_x, map_y = connect()
+#     switch = 0
+#     spiral_len = 1
+#     while True:
+#         loop()
 
 if __name__ == "__main__":
-    print("Hello world!")
+    client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 4242, "gigateam")
+    if nb == 0:
+        stderr.write("ko: no places in the team\n")
+        exit(84)
+    print(look(client))
+    print(inventory(client))

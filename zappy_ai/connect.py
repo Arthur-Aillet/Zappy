@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 ##
 ## EPITECH PROJECT, 2023
 ## zappy
@@ -7,6 +6,9 @@
 ##
 
 import socket
+from sys import stderr
+
+RETRY = 5
 
 def connect(ip, port, team_name):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -25,3 +27,14 @@ def connect(ip, port, team_name):
     if (client_num >= 1):
         return client, client_num, x, y
     return client, 0, x, y
+
+def send_server(client, message):
+    answer = b'ko\n'
+    trys = 0
+    while answer == b'ko\n' and trys < RETRY:
+        trys += 1
+        client.send(bytes(message + "\n", "utf-8"))
+        answer = client.recv(1024)
+    if answer == b'ko\n':
+        stderr.write("ko on " + str(answer) + "\n")
+    return answer

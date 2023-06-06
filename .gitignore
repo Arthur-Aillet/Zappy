@@ -3,3 +3,6 @@
 .vscode
 .clion
 .idea
+*.swp
+__pycache__
+zappy_ai/zappy_server
