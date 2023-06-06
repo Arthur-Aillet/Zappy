@@ -49,11 +49,14 @@ def look(client):
 def inventory(client):
     answer = send_server(client, "Inventory")
     if len(answer) < 5:
-        return [] # FIXME - faudrait avoir un dict de taille fixe rempli de 0
-    answer = answer[2:-3].replace(',', '').split()
+        return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
+    answer = str(answer)[4:-5].replace(',', '').split()
+    if len(answer) % 2 != 0:
+        return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
+    output = {}
     for i in range(0, len(answer), 2):
-        pass
-    return answer
+        output[answer[i]] = int(answer[i + 1])
+    return output
 
 def pick_up(client):
     if send_server(client, "Take object") == b'ok\n':
@@ -110,7 +113,7 @@ def main():
         loop()
 
 if __name__ == "__main__":
-    client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 4242, "gigatest")
+    client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 4242, "gigateam")
     if nb == 0:
         stderr.write("ko: no places in the team\n")
         exit(84)
