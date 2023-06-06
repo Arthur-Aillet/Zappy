@@ -43,8 +43,10 @@ def right(client):
     return False
 
 def look(client):
-    answer = send_server(client, "Look")
-    return 1
+    answer = str(send_server(client, "Look"))[4:-6].split(", ")
+    for i in range(len(answer)):
+        answer[i] = answer[i].split()
+    return answer
 
 def inventory(client):
     answer = send_server(client, "Inventory")
@@ -117,4 +119,5 @@ if __name__ == "__main__":
     if nb == 0:
         stderr.write("ko: no places in the team\n")
         exit(84)
+    print(look(client))
     print(inventory(client))
