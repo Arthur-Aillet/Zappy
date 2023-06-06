@@ -11,17 +11,17 @@ SRC		=	src/listening_socket.c										\
 			src/parser.c												\
 			src/parse_client_data.c										\
 			src/error_handling.c										\
-			src/update_map.c										\
+			src/update_map.c											\
+			src/update_life.c											\
 			src/set_structure/set_common.c								\
 			src/set_structure/set_gui.c									\
 			src/set_structure/set_ia.c									\
 			src/set_structure/set_client.c								\
 			src/set_structure/set_parser.c								\
 			src/set_structure/set_team.c								\
+			src/commands/client_undefined.c								\
 
-
-COMMAND	=	src/commands/client_undefined.c								\
-			src/commands/check_command.c								\
+COMMAND	=	src/commands/check_command.c								\
 			src/commands/commands_gui/funct_client_bct.c				\
 			src/commands/commands_gui/funct_client_mct.c				\
 			src/commands/commands_gui/funct_client_msz.c				\
@@ -98,7 +98,10 @@ MAINOBJ = $(MAIN:.c=.o)
 NAME = zappy_server
 CPPFLAGS = -I include/
 #LDLIBS =
-CFLAGS += -Wall -Wextra -g3
+CFLAGS += -Wall -Wextra
+
+debug:	fclean $(OBJ) $(MAINOBJ)
+	$(CC) -o $(NAME) $(OBJ) $(MAINOBJ) $(CFLAGS) -g3 $(LDFLAGS) $(LDLIBS)
 
 all: $(NAME)
 

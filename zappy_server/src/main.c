@@ -66,6 +66,7 @@ int main(int ac, char *av[])
         }
         listening_sockets(&com);
         update_map(&com.gui.map);
+        update_life(com.client, &com.server, com.freq);
     }
     free_common(&com);
     return 0;

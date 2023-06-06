@@ -53,7 +53,7 @@ common_t set_common(int ac, char *av[])
     com.nb_teams = parser->nb_teams;
     com.timer = time(NULL);
     for (size_t i = 0; i < parser->nb_teams; i++)
-        com.teams[i] = set_team(parser->teams_name[i], parser->client_nb);
+        com.teams[i] = set_team(parser->teams_name[i], parser->client_nb, parser->freq);
     com.client = set_all_clients();
     com.gui = set_gui(parser->height, parser->width, parser->freq);
     com.ia = set_ia();

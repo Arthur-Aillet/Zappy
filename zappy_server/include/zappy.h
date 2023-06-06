@@ -9,7 +9,6 @@
     #define ZAPPY_H_
 
     #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
-    #define MAX_CLIENTS     MAX_PLAYER
 
     #define S_SOCKET        com.server.socket
     #define S_READ          com.server.read_fd

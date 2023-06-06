@@ -19,16 +19,18 @@ egg_t set_egg(int x, int y)
     return new;
 }
 
-player_t set_player(size_t x, size_t y)
+player_t set_player(size_t x, size_t y, size_t freq)
 {
     srand(time(NULL));
     player_t new;
     new.x = x;
     new.y = y;
+    new.id = 0; //FIXME - add unique pid
     new.orientation = 1 + rand() % 5;
-    new.level = 1;
     new.life = 10;
     new.satiety = 10;
+    new.start = time(NULL);
+    new.time = 126 / freq;
     new.egg = set_egg(-1, -1);
     new.inventory = malloc(sizeof(size_t) * 7);
     for (size_t i = 0; i < 7; i++)
@@ -36,16 +38,17 @@ player_t set_player(size_t x, size_t y)
     return new;
 }
 
-team_t set_team(char *team_name, size_t slot)
+team_t set_team(char *team_name, size_t slot, size_t freq)
 {
     team_t team;
     team.nb_slot = slot;
+    team.level = 1;
     team.name = malloc(sizeof(char) * (strlen(team_name) + 1));
     strcpy(team.name, team_name);
     team.actif_player = 0;
     team.players = malloc(sizeof(player_t) * MAX_PLAYER);
     for (int i = 0; i < MAX_PLAYER; i++)
-        team.players[i] = set_player(-1, -1);
+        team.players[i] = set_player(-1, -1, freq);
     return team;
 }
 

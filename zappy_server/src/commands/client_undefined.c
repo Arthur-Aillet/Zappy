@@ -33,10 +33,10 @@ static int add_new_player(team_t *team, int default_x, int default_y)
             team->players[i].x = x;
             team->players[i].y = y;
             team->actif_player++;
-            return 1;
+            return i;
         }
     }
-    return 0;
+    return -1;
 }
 
 static int check_teams_name(const char *team_name, common_t *com, int idx)
@@ -49,10 +49,15 @@ static int check_teams_name(const char *team_name, common_t *com, int idx)
             break;
         }
         if (strcmp(TEAM(i).name, team_name) == 0) {
+            int res = add_new_player(&TEAM(i), com->gui.map.height / 2, com->gui.map.width / 2);
+            if (res < 0) {
+                fprintf(stderr, "%sThe team: %s%s%s is full%s\n",
+                RED, BLUE,TEAM(i).name, RED, NEUTRE);
+                break;
+            }
             printf("%sThe client %s%d%s has been registered in the team %s%s%s\n",
                 GREEN, BLUE, com->client[idx].socket, GREEN, BLUE, TEAM(i).name, NEUTRE);
-            add_new_player(&TEAM(i), com->gui.map.height / 2, com->gui.map.width / 2);
-            com->client[idx].struct_client = (player_t*) &(TEAM(i).players[TEAM(i).actif_player]);
+            com->client[idx].struct_client = (player_t*) &(TEAM(i).players[res]);
             com->client[idx].type = IA;
             return 1;
         }
