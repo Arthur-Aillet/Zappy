@@ -17,9 +17,13 @@ typedef struct tile_s {
 } tile_t;
 
 typedef struct map_s {
+    time_t start;
+    double time;
     size_t width;
     size_t height;
     tile_t **tiles;
 } map_t;
+
+void update_map(map_t *map);
 
 #endif /* !MAP_H_ */

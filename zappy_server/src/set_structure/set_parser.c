@@ -7,6 +7,8 @@
 
 #include "parser.h"
 #include <stdlib.h>
+#include "error_handling.h"
+#include "common.h"
 
 parser_t *set_parser(void)
 {
@@ -24,6 +26,7 @@ parser_t *set_parser(void)
 
 void free_parser(parser_t *parser)
 {
-    free(parser->teams_name);
+    free_array((void**)parser->teams_name);
     free(parser);
+    basic_log("Free parser", BLUE, 0);
 }

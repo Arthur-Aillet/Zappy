@@ -62,6 +62,7 @@ static void default_teams(parser_t *parser)
     strcpy(parser->teams_name[1], "Team2");
     strcpy(parser->teams_name[2], "Team3");
     strcpy(parser->teams_name[3], "Team4");
+    parser->teams_name[4] = NULL;
 }
 
 void get_parameters(int ac, char *av[], parser_t *parser)

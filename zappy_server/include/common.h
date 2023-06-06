@@ -62,7 +62,7 @@ typedef struct error_handling_s {
 //------------ LIB -------------------------------------------------//
 
 char **my_str_to_word_array(char *str, char **seg, char c);
-void free_array(char **arr);
+void free_array(void **arr);
 
 //-----------------------------------------------------------------//
 #endif /* !COMMON_H_ */

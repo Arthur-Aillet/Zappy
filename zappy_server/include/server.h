@@ -15,7 +15,10 @@
         #include <unistd.h>
         #include "teams.h"
 
+        #define MAX_CLIENTS     MAX_PLAYER
+
 enum client_type {
+    UNDEFINED,
     IA,
     GUI,
 };
@@ -38,5 +41,7 @@ typedef struct client_s {
 client_t *set_all_clients(void);
 int close_client(int client_socket, server_t *server);
 void free_clients(client_t *cli, server_t *server);
+
+void update_life(client_t *client, server_t *server,size_t freq);
 
 #endif /* !SERVER_H_ */

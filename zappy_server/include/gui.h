@@ -47,7 +47,7 @@ static const client_gui_t COMMAND_GESTION_CLIENT_GUI[] = {
     {"sst", funct_client_sst},
 };
 
-void set_gui(gui_t *gui);
+gui_t set_gui(int height, int wigth, int freq);
 void free_gui(gui_t *gui);
 
 #endif /* !GUI_H_ */

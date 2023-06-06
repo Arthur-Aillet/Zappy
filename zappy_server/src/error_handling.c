@@ -20,3 +20,15 @@ int error(char *message, int ret)
     free(msg);
     return ret;
 }
+
+int basic_log(char *message, char *color, int ret)
+{
+    char *msg = malloc(sizeof(char) * (strlen(message) + strlen(color) + 10));
+    strcpy(msg, "%s");
+    strcat(msg, message);
+    strcat(msg, "%s\n");
+    fprintf(stderr, msg, color, NEUTRE);
+    free(msg);
+    return ret;
+
+}

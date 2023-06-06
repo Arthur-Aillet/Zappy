@@ -9,13 +9,14 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/select.h>
+#include <stdlib.h>
 
 static int create_new_client(int acc, client_t *client, server_t *server)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (SOCKET(i) == 0) {
             SOCKET(i) = acc;
-            client[i].type = -1;
+            client[i].type = UNDEFINED;
             FD_SET(acc, &server->read_fd);
             server->maxsd = (acc > server->maxsd) ? acc : server->maxsd;
             write(client->socket, "WELCOME\n", 8);
@@ -60,7 +61,9 @@ static int check_incoming_data(common_t *com)
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (PC_SOCKET(i) > 0 && FD_ISSET(PC_SOCKET(i), &PS_READ)) {
             uint8_t **command = get_message(&com->server, &com->client[i]);
-            return check_command(command, com, i);
+            int response = check_command(command, com, i);
+            free_array((void**)command);
+            return response;
         }
     }
     return 1;

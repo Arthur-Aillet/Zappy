@@ -22,16 +22,17 @@ enum orientation {
 
 typedef struct egg_s {
     int egg_id;
-    size_t x;
-    size_t y;
+    int x;
+    int y;
 } egg_t;
 
 typedef struct player_s {
     int id;
-    size_t x;
-    size_t y;
+    int x;
+    int y;
+    time_t start;
+    double time;
     size_t orientation;
-    size_t level;
     size_t life;
     size_t satiety;         //NOTE - if satiety == 0 then decrease life
     size_t *inventory;
@@ -40,13 +41,17 @@ typedef struct player_s {
 
 typedef struct team_s {
     char *name;
+    size_t level;
     size_t nb_slot;         //NOTE - max number of player in this team (can be increased with an egg)
     size_t actif_player;
     player_t *players;
 } team_t;
 
-player_t set_player(size_t x, size_t y);
-team_t set_team(char *team_name, size_t slot);
+player_t set_player(size_t x, size_t y, size_t freq);
+team_t set_team(char *team_name, size_t slot, size_t freq);
+
 void free_all_teams(team_t* teams, size_t nbr_teams);
+
+void reset_player(player_t *player, size_t freq);
 
 #endif /* !TEAMS_H_ */
