@@ -65,6 +65,7 @@ int main(int ac, char *av[])
             exit(error("Select failed", 84));
         }
         listening_sockets(&com);
+        update_map(&com.gui.map);
     }
     free_common(&com);
     return 0;

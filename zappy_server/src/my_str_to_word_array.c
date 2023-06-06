@@ -59,8 +59,10 @@ char **my_str_to_word_array(char *str, char **seg, char c)
     return seg;
 }
 
-void free_array(char **arr)
+void free_array(void **arr)
 {
+    if (arr == NULL)
+        return;
     for (int i = 0; arr[i] != NULL; i++)
         free(arr[i]);
     free(arr);

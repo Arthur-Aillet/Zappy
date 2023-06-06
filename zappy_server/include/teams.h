@@ -22,14 +22,14 @@ enum orientation {
 
 typedef struct egg_s {
     int egg_id;
-    size_t x;
-    size_t y;
+    int x;
+    int y;
 } egg_t;
 
 typedef struct player_s {
     int id;
-    size_t x;
-    size_t y;
+    int x;
+    int y;
     size_t orientation;
     size_t level;
     size_t life;

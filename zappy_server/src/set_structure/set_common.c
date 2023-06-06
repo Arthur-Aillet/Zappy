@@ -47,16 +47,16 @@ common_t set_common(int ac, char *av[])
     parser_t *parser = set_parser();
     get_parameters(ac, av, parser);
     common_t com;
-    set_gui(&com.gui);
-    com.ia = set_ia();
-    com.teams = malloc(sizeof(team_t) * parser->nb_teams);
-    for (size_t i = 0; i < parser->nb_teams; i++)
-        com.teams[i] = set_team(parser->teams_name[i], parser->client_nb);
     com.port = parser->port;
     com.freq = parser->freq;
-    com.client = set_all_clients();
+    com.teams = malloc(sizeof(team_t) * parser->nb_teams);
     com.nb_teams = parser->nb_teams;
     com.timer = time(NULL);
+    for (size_t i = 0; i < parser->nb_teams; i++)
+        com.teams[i] = set_team(parser->teams_name[i], parser->client_nb);
+    com.client = set_all_clients();
+    com.gui = set_gui(parser->height, parser->width, parser->freq);
+    com.ia = set_ia();
     if (!set_server(com.port, &com.server)) {
         free_parser(parser);
         free_common(&com);

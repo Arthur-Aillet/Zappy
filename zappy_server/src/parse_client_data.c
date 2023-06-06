@@ -10,9 +10,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-//NOTE - size of the data buffer is 200 because you can receive a message
-// with the command "Broadcast"
-
 uint8_t **convert_arr_to_unit8(char **arr)
 {
     size_t size = 0;
@@ -26,6 +23,8 @@ uint8_t **convert_arr_to_unit8(char **arr)
     return res;
 }
 
+//NOTE - size of the data buffer is 200 because you can receive a message
+// with the command "Broadcast"
 uint8_t **get_message(server_t *server, client_t *client)
 {
     char data[200];
@@ -40,6 +39,6 @@ uint8_t **get_message(server_t *server, client_t *client)
     char **arr = NULL;
     arr = my_str_to_word_array(data, arr, ' ');
     uint8_t **res = convert_arr_to_unit8(arr);
-    free_array(arr);
+    free_array((void**)arr);
     return res;
 }

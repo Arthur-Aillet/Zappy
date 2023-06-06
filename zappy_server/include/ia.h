@@ -40,23 +40,23 @@ void funct_client_ia_set_obj(ia_t *ia, uint8_t **args);
 void funct_client_ia_incantation(ia_t *ia, uint8_t **args);
 void funct_client_ia_connect_bar(ia_t *ia, uint8_t **args);
 
-static const server_ia_t COMMAND_GESTION_IA[] = {
-    {"Forward", funct_client_ia_msz},
-    {"Right", funct_client_ia_mct},
-    {"Left", funct_client_ia_tna},
-    {"Look", funct_client_ia_ppo},
-    {"Inventory", funct_client_ia_plv},
-    {"Broadcast", funct_client_ia_pin},
-    {"message", funct_client_ia_sgt},
-    {"Connect_nbr", funct_client_ia_sst},
-    {"Fork", funct_client_ia_fork},
-    {"Eject", funct_client_ia_eject},
-    {"death", funct_client_ia_death},
-    {"Take object", funct_client_ia_take_obj},
-    {"Set object", funct_client_ia_set_obj},
-    {"Incantation", funct_client_ia_incantation},
-    {"Connect_nbr", funct_client_ia_connect_bar},
-};
+// static const server_ia_t COMMAND_GESTION_IA[] = {
+//     {"Forward", funct_client_ia_msz},
+//     {"Right", funct_client_ia_mct},
+//     {"Left", funct_client_ia_tna},
+//     {"Look", funct_client_ia_ppo},
+//     {"Inventory", funct_client_ia_plv},
+//     {"Broadcast", funct_client_ia_pin},
+//     {"message", funct_client_ia_sgt},
+//     {"Connect_nbr", funct_client_ia_sst},
+//     {"Fork", funct_client_ia_fork},
+//     {"Eject", funct_client_ia_eject},
+//     {"death", funct_client_ia_death},
+//     {"Take object", funct_client_ia_take_obj},
+//     {"Set object", funct_client_ia_set_obj},
+//     {"Incantation", funct_client_ia_incantation},
+//     {"Connect_nbr", funct_client_ia_connect_bar},
+// };
 
 ia_t *set_ia(void);
 void free_ia(ia_t *ia);

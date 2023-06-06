@@ -16,6 +16,7 @@
         #include "teams.h"
 
 enum client_type {
+    UNDEFINED,
     IA,
     GUI,
 };

@@ -18,5 +18,6 @@
     #include <stdio.h>
 
 int error(char *message, int ret);
+int basic_log(char *message, char *color, int ret);
 
 #endif /* !ERROR_HANDLING_H_ */
