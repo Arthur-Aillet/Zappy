@@ -34,6 +34,7 @@ typedef struct player_s {
     double time;
     size_t orientation;
     size_t life;
+    size_t level;
     size_t satiety;         //NOTE - if satiety == 0 then decrease life
     size_t *inventory;
     egg_t egg;
