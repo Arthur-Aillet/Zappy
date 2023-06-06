@@ -60,17 +60,17 @@ void funct_client_pin(gui_t *gui, uint8_t **args);
 void funct_client_sgt(gui_t *gui, uint8_t **args);
 void funct_client_sst(gui_t *gui, uint8_t **args);
 
-// static const client_gui_t COMMAND_GESTION_CLIENT_GUI[] = {
-//     {"msz", funct_client_msz},
-//     {"bct", funct_client_bct},
-//     {"mct", funct_client_mct},
-//     {"tna", funct_client_tna},
-//     {"ppo", funct_client_ppo},
-//     {"plv", funct_client_plv},
-//     {"pin", funct_client_pin},
-//     {"sgt", funct_client_sgt},
-//     {"sst", funct_client_sst},
-// };
+static const client_gui_t COMMAND_GESTION_CLIENT_GUI[] = {
+    {"msz", funct_client_msz},
+    {"bct", funct_client_bct},
+    {"mct", funct_client_mct},
+    {"tna", funct_client_tna},
+    {"ppo", funct_client_ppo},
+    {"plv", funct_client_plv},
+    {"pin", funct_client_pin},
+    {"sgt", funct_client_sgt},
+    {"sst", funct_client_sst},
+};
 
 gui_t set_gui(int height, int wigth, int freq);
 void free_gui(gui_t *gui);
