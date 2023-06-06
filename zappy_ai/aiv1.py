@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+##
+## EPITECH PROJECT, 2023
+## zappy
+## File description:
+## aiv1.py
+##
+
 from connect import connect
 from sys import stderr
 
@@ -37,6 +45,15 @@ def right(client):
 def look(client):
     answer = send_server(client, "Look")
     return 1
+
+def inventory(client):
+    answer = send_server(client, "Inventory")
+    if len(answer) < 5:
+        return [] # FIXME - faudrait avoir un dict de taille fixe rempli de 0
+    answer = answer[2:-3].replace(',', '').split()
+    for i in range(0, len(answer), 2):
+        pass
+    return answer
 
 def pick_up(client):
     if send_server(client, "Take object") == b'ok\n':
@@ -91,3 +108,10 @@ def main():
     spiral_len = 1
     while True:
         loop()
+
+if __name__ == "__main__":
+    client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 4242, "gigatest")
+    if nb == 0:
+        stderr.write("ko: no places in the team\n")
+        exit(84)
+    print(inventory(client))
