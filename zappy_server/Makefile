@@ -13,6 +13,7 @@ SRC		=	src/listening_socket.c										\
 			src/error_handling.c										\
 			src/update_map.c											\
 			src/update_life.c											\
+			src/find_ia.c												\
 			src/set_structure/set_common.c								\
 			src/set_structure/set_gui.c									\
 			src/set_structure/set_ia.c									\

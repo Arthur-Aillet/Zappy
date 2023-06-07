@@ -9,7 +9,10 @@
 
 //voir avec ludo!!!!!
 
-void funct_server_pie(uint8_t **args, gui_t *gui, common_t *common)
+void funct_server_pie(uint8_t **args, void *info, common_t *common)
 {
+    (void)args;
+    (void)info;
+    (void)common;
     printf("rentrer dans la fonctions funct_server_pie\n");
 }

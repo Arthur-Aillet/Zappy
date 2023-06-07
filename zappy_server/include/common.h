@@ -45,15 +45,6 @@ typedef struct buffered_socket_s {
     sock_t sock;
 } buffered_socket_t;
 
-typedef struct msg_queue_s {
-    size_t time;
-    time_t start;
-    uint8_t **msg;
-    void (*handler)(uint8_t **args, buffered_socket_t *client, void *info); //FIXME - check arguments
-    //NOTE - pointeur sur fonctione qu'on doit executer
-    struct msg_queue_s *next_msg;
-} msg_queue_t;
-
 typedef struct error_handling_s {
     int error_code;
     uint8_t *msg_error;

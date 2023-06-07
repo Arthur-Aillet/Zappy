@@ -7,11 +7,12 @@
 
 #include "zappy.h"
 
-void funct_server_all_bct(uint8_t **args, gui_t *gui, common_t *common)
+void funct_server_all_bct(uint8_t **args, void *info, common_t *common)
 {
+    (void)common;
     char buffer_x[256];
     char buffer_y[256];
-
+    gui_t *gui = (gui_t *)info;
     gui->buffer.bufferWrite.usedSize = 1;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets, sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
             if (gui->buffer.bufferWrite.octets == NULL) {
@@ -19,32 +20,32 @@ void funct_server_all_bct(uint8_t **args, gui_t *gui, common_t *common)
                 return;
             }
     gui->buffer.bufferWrite.octets[0] = '\0';
-    for (int nbr_tiles_width = 0; nbr_tiles_width < gui->map.width; nbr_tiles_width++) {
-        for (int nbr_tiles_height = 0; nbr_tiles_height < gui->map.height; nbr_tiles_height++) {
-            sprintf(buffer_x, "%d", nbr_tiles_width);
-            sprintf(buffer_y, "%d", nbr_tiles_height);
+    for (size_t nbr_tiles_width = 0; nbr_tiles_width < gui->map.width; nbr_tiles_width++) {
+        for (size_t nbr_tiles_height = 0; nbr_tiles_height < gui->map.height; nbr_tiles_height++) {
+            sprintf(buffer_x, "%ld", nbr_tiles_width);
+            sprintf(buffer_y, "%ld", nbr_tiles_height);
             gui->buffer.bufferWrite.usedSize += 6 + strlen(buffer_x) + strlen(buffer_y);
             gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets, sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
             if (gui->buffer.bufferWrite.octets == NULL) {
                 //error
                 return;
             }
-            strcat(gui->buffer.bufferWrite.octets, "bct");
-            strcat(gui->buffer.bufferWrite.octets, " ");
-            strcat(gui->buffer.bufferWrite.octets, buffer_x);
-            strcat(gui->buffer.bufferWrite.octets, " ");
-            strcat(gui->buffer.bufferWrite.octets, buffer_y);
-            strcat(gui->buffer.bufferWrite.octets, " ");
+            strcat((char*)gui->buffer.bufferWrite.octets, "bct");
+            strcat((char*)gui->buffer.bufferWrite.octets, " ");
+            strcat((char*)gui->buffer.bufferWrite.octets, buffer_x);
+            strcat((char*)gui->buffer.bufferWrite.octets, " ");
+            strcat((char*)gui->buffer.bufferWrite.octets, buffer_y);
+            strcat((char*)gui->buffer.bufferWrite.octets, " ");
             for (int i = 0; i < 7; i++) {
-                sprintf(buffer_x, "%d", gui->map.tiles[atoi(args[0])][atoi(args[1])].ressources[i]);
+                sprintf(buffer_x, "%ld", gui->map.tiles[atoi((char*)args[0])][atoi((char*)args[1])].ressources[i]);
                 gui->buffer.bufferWrite.usedSize += strlen(buffer_x) + 1;
                 gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets, sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
                 if (gui->buffer.bufferWrite.octets == NULL) {
                     //error
                     return;
                 }
-                strcat(gui->buffer.bufferWrite.octets, buffer_x);
-                strcat(gui->buffer.bufferWrite.octets, " ");
+                strcat((char*)gui->buffer.bufferWrite.octets, buffer_x);
+                strcat((char*)gui->buffer.bufferWrite.octets, " ");
             }
             gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize] = '\n';
         }

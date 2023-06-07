@@ -10,6 +10,8 @@
 void funct_client_ia_take_obj(ia_t *ia, uint8_t **args)
 {
     msg_queue_t new_msg;
+    (void)args;
+    (void)new_msg;
 
     new_msg.time = 7;
     new_msg.handler = &funct_response_ia_take_obj;

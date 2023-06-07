@@ -58,7 +58,7 @@ When a client connects to the server:
 | eject players from this tile | "Eject" | 7/f | ok/ko |
 | death of a player | - | - | dead |
 | take object | "Take object" | 7/f | ok/ko |
-| set object down | "Set object" | 7/f | ok/ko |
+| set object down | "Set **'name object'**" | 7/f | ok/ko |
 | start incantation | "Incantation" | 300/f | Elevation underway current level `k` / ko |
 
 ##### Fork command:

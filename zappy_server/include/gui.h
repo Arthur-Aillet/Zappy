@@ -12,6 +12,7 @@
     #include "common.h"
     #include "error_handling.h"
 
+typedef struct msg_queue_s msg_queue_t;
 typedef struct gui_s {
     msg_queue_t *msg_queue;
     buffered_socket_t buffer;
@@ -36,18 +37,18 @@ void funct_client_sgt(gui_t *gui, uint8_t **args);
 void funct_client_sst(gui_t *gui, uint8_t **args);
 
 static const client_gui_t COMMAND_GESTION_CLIENT_GUI[] = {
-    {"msz", funct_client_msz},
-    {"bct", funct_client_bct},
-    {"mct", funct_client_mct},
-    {"tna", funct_client_tna},
-    {"ppo", funct_client_ppo},
-    {"plv", funct_client_plv},
-    {"pin", funct_client_pin},
-    {"sgt", funct_client_sgt},
-    {"sst", funct_client_sst},
+    {(const uint8_t*)"msz", NULL, funct_client_msz},
+    {(const uint8_t*)"bct", NULL, funct_client_bct},
+    {(const uint8_t*)"mct", NULL, funct_client_mct},
+    {(const uint8_t*)"tna", NULL, funct_client_tna},
+    {(const uint8_t*)"ppo", NULL, funct_client_ppo},
+    {(const uint8_t*)"plv", NULL, funct_client_plv},
+    {(const uint8_t*)"pin", NULL, funct_client_pin},
+    {(const uint8_t*)"sgt", NULL, funct_client_sgt},
+    {(const uint8_t*)"sst", NULL, funct_client_sst},
 };
 
-gui_t set_gui(int height, int wigth, int freq);
+gui_t *set_gui(int height, int wigth, int freq);
 void free_gui(gui_t *gui);
 
 #endif /* !GUI_H_ */

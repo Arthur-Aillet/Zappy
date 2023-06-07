@@ -49,7 +49,7 @@ static int check_teams_name(const char *team_name, common_t *com, int idx)
             break;
         }
         if (strcmp(TEAM(i).name, team_name) == 0) {
-            int res = add_new_player(&TEAM(i), com->gui.map.height / 2, com->gui.map.width / 2);
+            int res = add_new_player(&TEAM(i), com->gui->map.height / 2, com->gui->map.width / 2);
             if (res < 0) {
                 fprintf(stderr, "%sThe team: %s%s%s is full%s\n",
                 RED, BLUE,TEAM(i).name, RED, NEUTRE);

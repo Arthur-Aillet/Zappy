@@ -39,6 +39,7 @@ void reset_player(player_t *player, size_t freq)
 
 void update_life(client_t *client, server_t *server, size_t freq)
 {
+    (void)server;
     int res = 1;
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (client->type == IA) {

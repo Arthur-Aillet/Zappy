@@ -9,23 +9,24 @@
 
 void funct_client_pin(gui_t *gui, uint8_t **args)
 {
-    msg_queue_t new_msg;
+    msg_queue_t *new_msg = malloc(sizeof(msg_queue_t));
 
-    new_msg.time = 0;
-    new_msg.msg = malloc(sizeof(u_int8_t *) * 2);
-    if (new_msg.msg == NULL) {
+    new_msg->time = 0;
+    new_msg->msg = malloc(sizeof(u_int8_t *) * 2);
+    if (new_msg->msg == NULL) {
         //error
-        return NULL;
+        return;
     }
-    new_msg.msg[0] = malloc(sizeof(u_int8_t) *
-                    (strlen(args[0]) + 1));
-    if (new_msg.msg[0] == NULL) {
+    new_msg->msg[0] = malloc(sizeof(u_int8_t) *
+                    (strlen((char*)args[0]) + 1));
+    if (new_msg->msg[0] == NULL) {
         //error
-        return NULL;
+        return;
     }
-    new_msg.msg[0][0] = '\0';
-    new_msg.msg[0] = strcat(new_msg.msg[0], args[0]);
-    new_msg.handler = &funct_server_pin;
-    new_msg.next_msg = gui->msg_queue;
+    new_msg->msg[0][0] = '\0';
+    new_msg->msg[0] = (uint8_t*)strcat((char*)new_msg->msg[0], (char*)args[0]);
+    new_msg->handler = &funct_server_pin;
+    new_msg->next_msg = gui->msg_queue;
+    gui->msg_queue = new_msg;
     printf("rentrer dans la funct_client_pin\n");
 }

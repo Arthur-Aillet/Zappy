@@ -7,7 +7,10 @@
 
 #include "zappy.h"
 
-void funct_response_ia_right(ia_t *ia, uint8_t **args)
+void funct_response_ia_right(uint8_t **args, void *info, common_t *com)
 {
+    (void)args;
+    (void)info;
+    (void)com;
     printf("rentrer dans la fonctions funct_response_ia_right\n");
 }

@@ -41,10 +41,10 @@ static map_t set_map(int height, int width, int freq)
     return map;
 }
 
-gui_t set_gui(int height, int width, int freq)
+gui_t *set_gui(int height, int width, int freq)
 {
-    gui_t gui;
-    gui.map = set_map(height, width, freq);
+    gui_t *gui = malloc(sizeof(gui_t));
+    gui->map = set_map(height, width, freq);
     return gui;
 }
 
@@ -63,4 +63,6 @@ void free_gui(gui_t *gui)
 {
     free_map(&gui->map);
     basic_log("Map free", BLUE, 0);
+    free(gui);
+    basic_log("GUI free", BLUE, 0);
 }
