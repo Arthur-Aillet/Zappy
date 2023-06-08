@@ -53,17 +53,15 @@ def loop(switch, spiral_len):
             go_to(look_arround)
             pick_up()
 
-# def main():
-#     client_num, map_x, map_y = connect()
-#     switch = 0
-#     spiral_len = 1
-#     while True:
-#         loop()
+def mainloop(): # mainloop peut return True si elle est enfant de fork / false si stop
+    return
 
 if __name__ == "__main__":
-    client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 4242, "gigateam")
-    if nb == 0:
-        stderr.write("ko: no places in the team\n")
-        exit(84)
-    print(look(client))
-    print(inventory(client))
+    run = True
+    while (run):
+        print("start")
+        client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 4242, "gigateam")
+        if nb == 0:
+            stderr.write("ko: no places in the team\n")
+            exit(84)
+        run = mainloop()

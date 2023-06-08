@@ -31,3 +31,9 @@ def pick_up(client):
     if send_server(client, "Take object") == b'ok\n':
         return True
     return False
+
+# si fork_ai return true la mainloop doit fork et l'enfant mainloop doit return True
+def fork_ai(client):
+    if send_server(client, "Fork") == b'ok\n':
+        return True
+    return False
