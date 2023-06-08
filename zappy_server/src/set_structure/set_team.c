@@ -16,6 +16,7 @@ egg_t set_egg(int x, int y)
     egg_t new;
     new.x = x;
     new.y = y;
+    new.egg_id = rand();
     return new;
 }
 
@@ -25,7 +26,7 @@ player_t set_player(size_t x, size_t y, size_t freq)
     player_t new;
     new.x = x;
     new.y = y;
-    new.id = 0; //FIXME - add unique pid
+    new.id = rand();
     new.orientation = 1 + rand() % 5;
     new.life = 10;
     new.satiety = 10;
