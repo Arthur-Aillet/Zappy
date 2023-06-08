@@ -1,8 +1,8 @@
-use nannou::wgpu;
-use rend_ox::obj::Mesh;
+use rend_ox::mesh::Mesh;
+use rend_ox::Vec3;
+use rend_ox::wgpu;
 
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use glam::Vec3A;
 
 fn indices_as_bytes_copy(data: &Vec<u16>) -> Vec<u8> {
     let mut final_bytes: Vec<u8> = vec![];
@@ -13,7 +13,7 @@ fn indices_as_bytes_copy(data: &Vec<u16>) -> Vec<u8> {
     final_bytes
 }
 
-fn vertices_as_bytes_copy(data: &Vec<glam::Vec3A>) -> Vec<u8> {
+fn vertices_as_bytes_copy(data: &Vec<Vec3>) -> Vec<u8> {
     let mut final_bytes: Vec<u8> = vec![];
     for elem in data {
         for i in 0..3 {
@@ -27,7 +27,7 @@ unsafe fn nannou_indices_as_bytes(data: &[u16]) -> &[u8] {
     wgpu::bytes::from_slice(data)
 }
 
-unsafe fn nannou_vertices_as_bytes(data: &[Vec3A]) -> &[u8] {
+unsafe fn nannou_vertices_as_bytes(data: &[Vec3]) -> &[u8] {
     wgpu::bytes::from_slice(data)
 }
 
