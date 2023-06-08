@@ -22,7 +22,9 @@ fn zappy_update(
     let ctx = egui.begin_frame();
 
     egui::Window::new("Settings").show(&ctx, |ui| {
+        ui.label("Camera:");
         ui.add(egui::Slider::new(&mut zappy.camera.speed, 0.1..=10.0).text("Speed:"));
+        ui.add(egui::Slider::new(&mut zappy.camera.fov, 60.0..=150.0).text("FOV:"));
     });
 }
 
