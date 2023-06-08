@@ -22,19 +22,7 @@ fn zappy_update(
     let ctx = egui.begin_frame();
 
     egui::Window::new("Settings").show(&ctx, |ui| {
-        // Resolution slider
-        ui.label("Resolution:");
-
-        // Scale slider
-        ui.label("Scale:");
-
-        // Rotation slider
-        ui.label("Rotation:");
-
-        // Random color button
-        let clicked = ui.button("Random color").clicked();
-
-        if clicked {}
+        ui.add(egui::Slider::new(&mut zappy.camera.speed, 0.1..=10.0).text("Speed:"));
     });
 }
 
