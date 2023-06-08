@@ -51,6 +51,6 @@ void update_map(map_t *map)
         map->start = time(NULL);
         update_tiles_ressources(map);
         if (map->time >= 0.2)
-            basic_log("update map resources", GREEN, 0);
+            basic_log("update map resources", G, 0);
     }
 }

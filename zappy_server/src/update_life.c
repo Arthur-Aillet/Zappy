@@ -43,11 +43,11 @@ void update_life(client_t *client, server_t *server, size_t freq)
     int res = 1;
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (client->type == IA) {
-            res = update_player_life((player_t *)client->struct_client);
+            res = update_player_life((player_t *)client->str_cli);
         }
         if (client->type == IA && res == 0) {
             res = 1;
-            reset_player((player_t *)client->struct_client, freq);
+            reset_player((player_t *)client->str_cli, freq);
             //FIXME close_client(client->socket, server);
         }
     }

@@ -42,7 +42,6 @@ typedef struct player_s {
 
 typedef struct team_s {
     char *name;
-    size_t level;
     size_t nb_slot;         //NOTE - max number of player in this team (can be increased with an egg)
     size_t actif_player;
     player_t *players;

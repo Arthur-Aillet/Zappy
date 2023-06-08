@@ -31,7 +31,7 @@ uint8_t **get_message(server_t *server, client_t *client)
     bzero(data, sizeof(data));
     if (read(client->socket, data, sizeof(data)) == 0) {
         printf("%sRead error: closed connection with %s%d%s\n",
-        RED, BLUE, client->socket, NEUTRE);
+        R, B, client->socket, N);
         client->socket = close_client(client->socket, server);
         return NULL;
     }

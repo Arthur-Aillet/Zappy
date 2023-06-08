@@ -17,7 +17,7 @@ typedef struct ia_s {
     player_t *player;
     buffered_socket_t buffer;
     msg_queue_t *msg_queue;
-    error_handling_t *error; //FIXME - chaque protocole à sa propre error handlig ? ou on crrer une seul error handling (on devra rajouter un pointeur) ?
+    error_handling_t *error;
 } ia_t;
 
 typedef struct common_s common_t;

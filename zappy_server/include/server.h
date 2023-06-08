@@ -35,7 +35,7 @@ typedef struct client_s {
     int type;
     int socket;
     struct sockaddr_in addr;
-    void *struct_client;
+    void *str_cli;
 } client_t;
 
 client_t *set_all_clients(void);

@@ -155,7 +155,7 @@ lt=&lt;&lt;&lt;-
 int type
 int socket;
 struct sockaddr_in addr;
-void *struct_client
+void *str_cli
 
 bg=yellow
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>910</x><y>280</y><w>60</w><h>230</h></coordinates><panel_attributes>fg=yellow

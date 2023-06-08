@@ -20,7 +20,7 @@ static int create_new_client(int acc, client_t *client, server_t *server)
             FD_SET(acc, &server->read_fd);
             server->maxsd = (acc > server->maxsd) ? acc : server->maxsd;
             write(client->socket, "WELCOME\n", 8);
-            printf("%sCreate client: %s%d%s\n", GREEN, RED, SOCKET(i), NEUTRE);
+            printf("%sCreate client: %s%d%s\n", G, R, SOCKET(i), N);
             return 1;
         }
     }
@@ -46,11 +46,11 @@ static int check_command(uint8_t **command, common_t *com, int i)
     if (command == NULL || command[0] == NULL)
         return 1;
     if (com->client[i].type == IA) {
-        printf("%sCheck in IA Command%s\n", BLUE, NEUTRE);
+        printf("%sCheck in IA Command%s\n", B, N);
     } else if (com->client[i].type == GUI) {
-        printf("%sCheck in GUI Command%s\n", BLUE, NEUTRE);
+        printf("%sCheck in GUI Command%s\n", B, N);
     } else {
-        printf("%sCheck in Command for unknown client type%s\n", BLUE, NEUTRE);
+        printf("%sCheck in Command for unknown client type%s\n", B, N);
         undefined_client_command(command, com, i);
     }
     return 1;

@@ -16,7 +16,7 @@ int error(char *message, int ret)
     strcpy(msg, "%s");
     strcat(msg, message);
     strcat(msg, "%s\n");
-    fprintf(stderr, msg, RED, NEUTRE);
+    fprintf(stderr, msg, R, N);
     free(msg);
     return ret;
 }
@@ -27,7 +27,7 @@ int basic_log(char *message, char *color, int ret)
     strcpy(msg, "%s");
     strcat(msg, message);
     strcat(msg, "%s\n");
-    fprintf(stderr, msg, color, NEUTRE);
+    fprintf(stderr, msg, color, N);
     free(msg);
     return ret;
 

@@ -27,19 +27,35 @@ static int set_server(int port, server_t *server)
 {
     if ((server->socket = socket(AF_INET, SOCK_STREAM, 0)) == -1)
         return error("Couldn't create server socket", 0);
-    printf("%sServer socket created%s\n", GREEN, NEUTRE);
+    printf("%sServer socket created%s\n", G, N);
     set_sockaddr(server, port);
     server->maxsd = server->socket;
     if (bind(server->socket, (struct sockaddr *)&server->addr,
     server->size) < 0)
         return error("Couldn't bind: Use a good port", 0);
-    printf("%sServer bind%s\n", GREEN, NEUTRE);
+    printf("%sServer bind%s\n", G, N);
     if (listen(server->socket, MAX_CLIENTS) < 0)
         return error("Couldn't listen", 0);
-    printf("%sServer listen port%s %d%s\n", GREEN, BLUE, port, NEUTRE);
+    printf("%sServer listen port%s %d%s\n", G, B, port, N);
     FD_ZERO(&server->read_fd);
     FD_SET(server->socket, &server->read_fd);
     return 1;
+}
+
+static void set_structures(common_t *com, parser_t *parser)
+{
+    com->teams = malloc(sizeof(team_t) * parser->nb_teams);
+    for (size_t i = 0; i < parser->nb_teams; i++)
+        com->teams[i] = set_team(parser->teams_name[i],
+                        parser->client_nb, parser->freq);
+    com->client = set_all_clients();
+    com->gui = set_gui(parser->height, parser->width, parser->freq);
+    com->ia = set_ia();
+    if (!set_server(com->port, &com->server)) {
+        free_parser(parser);
+        free_common(com);
+        exit(84);
+    }
 }
 
 common_t set_common(int ac, char *av[])
@@ -49,19 +65,9 @@ common_t set_common(int ac, char *av[])
     common_t com;
     com.port = parser->port;
     com.freq = parser->freq;
-    com.teams = malloc(sizeof(team_t) * parser->nb_teams);
     com.nb_teams = parser->nb_teams;
     com.timer = time(NULL);
-    for (size_t i = 0; i < parser->nb_teams; i++)
-        com.teams[i] = set_team(parser->teams_name[i], parser->client_nb, parser->freq);
-    com.client = set_all_clients();
-    com.gui = set_gui(parser->height, parser->width, parser->freq);
-    com.ia = set_ia();
-    if (!set_server(com.port, &com.server)) {
-        free_parser(parser);
-        free_common(&com);
-        exit(84);
-    }
+    set_structures(&com, parser);
     free_parser(parser);
     return com;
 }

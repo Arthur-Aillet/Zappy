@@ -62,7 +62,7 @@ static void free_map(map_t *map)
 void free_gui(gui_t *gui)
 {
     free_map(&gui->map);
-    basic_log("Map free", BLUE, 0);
+    basic_log("Map free", B, 0);
     free(gui);
-    basic_log("GUI free", BLUE, 0);
+    basic_log("GUI free", B, 0);
 }

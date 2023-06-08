@@ -50,7 +50,7 @@ typedef struct msg_queue_s {
     size_t time;
     time_t start;
     uint8_t **msg;
-    void (*handler)(uint8_t **args, void *info, common_t *com); //FIXME - check arguments
+    void (*handler)(uint8_t **args, void *info, common_t *com);
     //NOTE - pointeur sur fonctione qu'on doit executer
     struct msg_queue_s *next_msg;
 } msg_queue_t;
@@ -97,5 +97,6 @@ void listening_sockets(common_t *com);
 
 uint8_t **get_message(server_t *server, client_t *client);
 int undefined_client_command(uint8_t **command, common_t *com, int idx);
+int check_slot_and_create_player(common_t *com, int team_idx,int client_idx);
 
 #endif /* !ZAPPY_H_ */

@@ -28,5 +28,5 @@ void free_parser(parser_t *parser)
 {
     free_array((void**)parser->teams_name);
     free(parser);
-    basic_log("Free parser", BLUE, 0);
+    basic_log("Free parser", B, 0);
 }

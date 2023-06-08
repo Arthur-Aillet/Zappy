@@ -20,5 +20,5 @@ ia_t *set_ia(void)
 void free_ia(ia_t *ia)
 {
     free(ia);
-    basic_log("IA free", BLUE, 0);
+    basic_log("IA free", B, 0);
 }

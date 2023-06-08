@@ -20,6 +20,7 @@ SRC		=	src/listening_socket.c										\
 			src/set_structure/set_client.c								\
 			src/set_structure/set_parser.c								\
 			src/set_structure/set_team.c								\
+			src/set_structure/set_new_player.c							\
 			src/commands/client_undefined.c								\
 
 COMMAND	=	src/commands/check_command.c								\

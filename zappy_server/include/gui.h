@@ -17,7 +17,7 @@ typedef struct gui_s {
     msg_queue_t *msg_queue;
     buffered_socket_t buffer;
     map_t map;
-    error_handling_t *error; //FIXME - chaque protocole à sa propre error handlig ? ou on crrer une seul error handling (on devra rajouter un pointeur) ?
+    error_handling_t *error;
 } gui_t;
 
 typedef struct client_gui_s {

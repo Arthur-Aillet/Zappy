@@ -13,7 +13,7 @@ static client_t set_client(void)
     client_t cli;
     cli.socket = 0;
     cli.type = -1;
-    cli.struct_client = NULL;
+    cli.str_cli = NULL;
     return cli;
 }
 

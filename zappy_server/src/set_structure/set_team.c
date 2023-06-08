@@ -42,7 +42,6 @@ team_t set_team(char *team_name, size_t slot, size_t freq)
 {
     team_t team;
     team.nb_slot = slot;
-    team.level = 1;
     team.name = malloc(sizeof(char) * (strlen(team_name) + 1));
     strcpy(team.name, team_name);
     team.actif_player = 0;
@@ -60,7 +59,7 @@ void free_all_players(team_t * team)
         if (team->players[i].inventory != NULL)
             free(team->players[i].inventory);
     free(team->players);
-    basic_log("Players free", BLUE, 0);
+    basic_log("Players free", B, 0);
 }
 
 void free_all_teams(team_t *teams, size_t nbr_teams)
@@ -70,5 +69,5 @@ void free_all_teams(team_t *teams, size_t nbr_teams)
         free(teams[i].name);
     }
     free(teams);
-    basic_log("Teams free", BLUE, 0);
+    basic_log("Teams free", B, 0);
 }
