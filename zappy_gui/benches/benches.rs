@@ -1,8 +1,9 @@
-use nannou::wgpu;
+use rend_ox::nannou::wgpu;
 use rend_ox::obj::Mesh;
 
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use glam::Vec3A;
+use rend_ox::glam;
+use rend_ox::glam::Vec3A;
 
 fn indices_as_bytes_copy(data: &Vec<u16>) -> Vec<u8> {
     let mut final_bytes: Vec<u8> = vec![];
