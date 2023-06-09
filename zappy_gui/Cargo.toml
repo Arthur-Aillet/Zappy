@@ -7,6 +7,8 @@ edition = "2021"
 
 [dependencies]
 rend_ox = { path = "src/rend_ox" }
+getopts = "0.2"
+regex = "1"
 
 [dev-dependencies]
 criterion = "0.5.1"
