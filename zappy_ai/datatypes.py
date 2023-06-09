@@ -9,6 +9,7 @@
 from connect import connect
 from server_action import *
 from server_get import *
+import uuid
 
 class Types: #enum
     max = 1 # update with the max value of the enum
@@ -31,6 +32,8 @@ class Session:
         self.type = type
         self.pos = pos
         self.direction = direction
+        self.msg_nb = 0
+        self.id = uuid.uuid1() # s'assurer que c'est unique malgré les forks
 
     def broadcast(self, text):
         return broadcast(self.client, text)
