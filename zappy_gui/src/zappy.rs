@@ -31,25 +31,29 @@ pub(crate) fn zappy_update(
     egui.set_elapsed_time(update.since_start);
     let ctx = egui.begin_frame();
 
-    egui::Window::new("Settings").show(&ctx, |ui| {
-        ui.label("Camera:");
-        ui.add(egui::Slider::new(&mut zappy.camera.speed, 0.1..=10.0).text("Speed:"));
-        ui.add(egui::Slider::new(&mut zappy.camera.fov, 60.0..=150.0).text("FOV:"));
-        ui.add(egui::Slider::new(&mut zappy.camera.sensitivity, 0.1..=10.0).text("Sensivity:"));
-    });
-    egui::Window::new("Communications").show(&ctx, |ui| {
-        egui::ScrollArea::vertical()
-            .auto_shrink([false; 2])
-            .max_height(100.0)
-            .stick_to_bottom()
-            .show(ui, |ui| {
-                ui.label("Test");
-                ui.label("Test");
-                ui.label("Test");
-                ui.label("Test");
-                ui.label("Test");
-                ui.label("Test");
-                ui.label("Test");
-            });
-    });
+    egui::Window::new("Settings")
+        .enabled(!zappy.camera_is_active)
+        .show(&ctx, |ui| {
+            ui.label("Camera:");
+            ui.add(egui::Slider::new(&mut zappy.camera.speed, 0.1..=10.0).text("Speed:"));
+            ui.add(egui::Slider::new(&mut zappy.camera.fov, 60.0..=150.0).text("FOV:"));
+            ui.add(egui::Slider::new(&mut zappy.camera.sensitivity, 0.1..=10.0).text("Sensivity:"));
+        });
+    egui::Window::new("Communications")
+        .enabled(!zappy.camera_is_active)
+        .show(&ctx, |ui| {
+            egui::ScrollArea::vertical()
+                .auto_shrink([false; 2])
+                .max_height(100.0)
+                .stick_to_bottom()
+                .show(ui, |ui| {
+                    ui.label("Test");
+                    ui.label("Test");
+                    ui.label("Test");
+                    ui.label("Test");
+                    ui.label("Test");
+                    ui.label("Test");
+                    ui.label("Test");
+                });
+        });
 }
