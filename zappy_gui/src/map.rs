@@ -1,17 +1,9 @@
-use super::zappy::Zappy;
-use super::zappy::ServerConn;
-
 pub struct Map {
-
+    pub size: [usize; 2],
 }
 
 impl Map {
     pub fn new() -> Map {
-        Map {
-
-        }
+        Map { size: [8, 8] }
     }
-    // pub fn update(&mut self, &mut server: &mut ServerConn) {}
-
-    // pub fn draw<T>(&self, &mut app: &mut Zappy) {}
 }
