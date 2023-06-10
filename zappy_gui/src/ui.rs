@@ -1,4 +1,4 @@
-use rend_ox::nannou_egui::{egui::{self, CtxRef, Ui}, Egui};
+use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
 
 pub(crate) struct ZappyUi {
     pub selected_tile: Option<[usize; 2]>,
@@ -45,21 +45,31 @@ impl ZappyUi {
     }
 
     fn tile_buttons(&mut self, ui: &mut Ui, map: &crate::map::Map) -> Option<[usize; 2]> {
-        let mut tile_clicked: Option<[usize; 2]> = None;
+        let mut tile_clicked: Option<[usize; 2]> = self.selected_tile;
         let mut has_been_clicked = false;
 
         for x in 0..map.size[0] {
             for y in 0..map.size[1] {
-                let mut clicked = false;
+                let mut clicked_last_frame = false;
 
                 match self.selected_tile {
-                    Some(tile) => clicked = has_been_clicked == false && tile[0] == x && tile[1] == y,
+                    Some(tile) => clicked_last_frame = has_been_clicked == false && tile[0] == x && tile[1] == y,
                     None => (),
                 }
-                ui.checkbox(&mut clicked, "");
-                if clicked == true {
-                    has_been_clicked = true;
-                    tile_clicked = Some([x, y]);
+                let button : egui::Button;
+                if clicked_last_frame {
+                    button = egui::Button::new("   ").fill(egui::Color32::from_rgb(200, 200, 200));
+                } else {
+                    button = egui::Button::new("   ");
+                }
+
+                if ui.add(button).clicked() {
+                    if clicked_last_frame {
+                        tile_clicked = None;
+                    } else {
+                        has_been_clicked = true;
+                        tile_clicked = Some([x, y]);
+                    }
                 }
             }
             ui.end_row();
@@ -74,7 +84,7 @@ impl ZappyUi {
                 ui.label("Tiles:");
                 egui::Grid::new("my_grid")
                     .num_columns(map.size[0] as usize)
-                    .spacing([0., 0.])
+                    .spacing([-21., 2.])
                     .striped(true)
                     .show(ui, |ui_grid| {
                         self.selected_tile = self.tile_buttons(ui_grid, map);
