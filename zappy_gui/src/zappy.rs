@@ -34,6 +34,9 @@ pub(crate) fn zappy_update(
         .user
         .ui
         .settings(&mut zappy.camera, zappy.camera_is_active);
-    zappy.user.ui.communications(zappy.camera_is_active);
+    zappy
+        .user
+        .ui
+        .communications(zappy.camera_is_active, &zappy.user.server.commands);
     zappy.user.ui.tiles(&zappy.user.map, zappy.camera_is_active);
 }

@@ -13,18 +13,19 @@ impl ZappyUi {
         }
     }
 
-    pub(crate) fn settings(&mut self, camera: &mut rend_ox::camera::Camera, is_active: bool) {      
-        egui::Window::new("Settings")
-            .enabled(!is_active)
-            .show(&self.ctx.clone().expect("Ctx not set"), |ui| {
+    pub(crate) fn settings(&mut self, camera: &mut rend_ox::camera::Camera, is_active: bool) {
+        egui::Window::new("Settings").enabled(!is_active).show(
+            &self.ctx.clone().expect("Ctx not set"),
+            |ui| {
                 ui.label("Camera:");
                 ui.add(egui::Slider::new(&mut camera.speed, 0.1..=10.0).text("Speed:"));
                 ui.add(egui::Slider::new(&mut camera.fov, 60.0..=150.0).text("FOV:"));
                 ui.add(egui::Slider::new(&mut camera.sensitivity, 0.1..=10.0).text("Sensivity:"));
-            });
+            },
+        );
     }
 
-    pub(crate) fn communications(&mut self, is_active: bool) {
+    pub(crate) fn communications(&mut self, is_active: bool, messages: &Vec<String>) {
         egui::Window::new("Communications")
             .enabled(!is_active)
             .show(&self.ctx.clone().expect("Ctx not set"), |ui| {
@@ -33,13 +34,9 @@ impl ZappyUi {
                     .max_height(100.)
                     .stick_to_bottom()
                     .show(ui, |ui| {
-                        ui.label("Test");
-                        ui.label("Test");
-                        ui.label("Test");
-                        ui.label("Test");
-                        ui.label("Test");
-                        ui.label("Test");
-                        ui.label("Test");
+                        for message in messages.iter() {
+                            ui.label(message);
+                        }
                     });
             });
     }
@@ -53,10 +50,13 @@ impl ZappyUi {
                 let mut clicked_last_frame = false;
 
                 match self.selected_tile {
-                    Some(tile) => clicked_last_frame = has_been_clicked == false && tile[0] == x && tile[1] == y,
+                    Some(tile) => {
+                        clicked_last_frame =
+                            has_been_clicked == false && tile[0] == x && tile[1] == y
+                    }
                     None => (),
                 }
-                let button : egui::Button;
+                let button: egui::Button;
                 if clicked_last_frame {
                     button = egui::Button::new("   ").fill(egui::Color32::from_rgb(200, 200, 200));
                 } else {
@@ -78,9 +78,9 @@ impl ZappyUi {
     }
 
     pub(crate) fn tiles(&mut self, map: &crate::map::Map, is_active: bool) {
-        egui::Window::new("Map")
-            .enabled(!is_active)
-            .show(&self.ctx.clone().expect("Ctx not set"), |ui| {
+        egui::Window::new("Map").enabled(!is_active).show(
+            &self.ctx.clone().expect("Ctx not set"),
+            |ui| {
                 ui.label("Tiles:");
                 egui::Grid::new("my_grid")
                     .num_columns(map.size[0] as usize)
@@ -89,6 +89,11 @@ impl ZappyUi {
                     .show(ui, |ui_grid| {
                         self.selected_tile = self.tile_buttons(ui_grid, map);
                     });
-            });
+                if self.selected_tile.is_some() {
+                    ui.add(egui::Separator::default());
+                    ui.label("Tile:");
+                }
+            },
+        );
     }
 }
