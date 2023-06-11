@@ -30,9 +30,9 @@ impl ServerConn {
         stream
     }
 
-    //NOTE - Read the connexion flux and return a string or an error.
-    // If the string is empty, it's because the read is non blocking and he just read nothing.
-    // The string return is NOT parsed.
+    // NOTE - Read the connexion flux and return a string or an error.
+    //  If the string is empty, it's because the read is non blocking and he just read nothing.
+    //  The string return is NOT parsed.
     pub fn recv_from_server(&mut self) -> Result<String, io::Error> {
         let mut buffer = vec![0; 1024];
         let mut result = String::new();
@@ -57,7 +57,7 @@ impl ServerConn {
         Ok(result)
     }
 
-    //NOTE - This function takes as parameters a TcpStream to send the message to the server,
+    //NOTE - This function takes the message to send to the server,
     //       the command to be sent, and two optional integers.
     //       These are required for certain commands.
     //       If you don't need them, set the value to negative
