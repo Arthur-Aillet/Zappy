@@ -10,9 +10,10 @@
 void funct_server_all_bct(uint8_t **args, void *info, common_t *common)
 {
     (void)common;
+    gui_t *gui = (gui_t *)info;
     char buffer_x[256];
     char buffer_y[256];
-    gui_t *gui = (gui_t *)info;
+
     gui->buffer.bufferWrite.usedSize = 1;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets, sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
             if (gui->buffer.bufferWrite.octets == NULL) {

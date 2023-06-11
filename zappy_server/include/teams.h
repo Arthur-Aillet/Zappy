@@ -14,9 +14,9 @@
     #include <stdio.h>
 
 enum orientation {
-    Nord = 1,
-    Est = 2,
-    Sud = 3,
+    North = 1,
+    Right = 2,
+    Left = 3,
     West = 4,
 };
 

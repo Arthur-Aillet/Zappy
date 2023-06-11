@@ -7,6 +7,8 @@
 
 #include "zappy.h"
 
+//cette fonction ne sert a rien
+
 void funct_response_ia_msg(uint8_t **args, void *info, common_t *com)
 {
     (void)args;
