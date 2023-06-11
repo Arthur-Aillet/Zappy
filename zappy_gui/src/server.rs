@@ -1,3 +1,4 @@
+use core::panic;
 use getopts::Options;
 use regex::Regex;
 use std::env;
@@ -22,9 +23,9 @@ impl ServerConn {
         let (port, machine) = Self::parse_arguments();
         let connect = format!("{}:{}", machine, port);
 
-        let stream = TcpStream::connect(connect)
-            .expect("Couldn't connect to the server...");
-        stream.set_nonblocking(true)
+        let stream = TcpStream::connect(connect).expect("Couldn't connect to the server...");
+        stream
+            .set_nonblocking(true)
             .expect("Couldn't set nonblocking mode");
         stream
     }
@@ -32,12 +33,12 @@ impl ServerConn {
     //NOTE - Read the connexion flux and return a string or an error.
     // If the string is empty, it's because the read is non blocking and he just read nothing.
     // The string return is NOT parsed.
-    pub fn recv_from_server(&mut self, mut stream: &TcpStream) -> Result<String, io::Error> {
+    pub fn recv_from_server(&mut self) -> Result<String, io::Error> {
         let mut buffer = vec![0; 1024];
         let mut result = String::new();
 
         loop {
-            match stream.read(&mut buffer) {
+            match self.stream.read(&mut buffer) {
                 Ok(size) if size > 0 => {
                     let tmp = String::from_utf8_lossy(&buffer[..size]);
                     result.push_str(&tmp);
@@ -60,7 +61,7 @@ impl ServerConn {
     //       the command to be sent, and two optional integers.
     //       These are required for certain commands.
     //       If you don't need them, set the value to negative
-    pub fn send_to_server(mut stream: &TcpStream, s: &str, x: i32, y: i32) {
+    pub fn send_to_server(&mut self, s: &str, x: i32, y: i32) {
         let concatenated_string: String;
 
         if x < 0 && y < 0 {
@@ -72,18 +73,18 @@ impl ServerConn {
         } else {
             concatenated_string = format!("{} {}", s, y);
         }
-        write!(stream, "{}\n", concatenated_string).expect("Could't send message to server");
+        write!(self.stream, "{}\n", concatenated_string).expect("Could't send message to server");
     }
 
     //NOTE - Close the socket flux
-    pub fn shutdown_stream(stream: &TcpStream) {
-        stream
+    pub fn shutdown_stream(&mut self) {
+        self.stream
             .shutdown(Shutdown::Both)
             .expect("Couldn't shut down connection");
     }
 
     fn is_ip_address(s: &str) -> bool {
-        let regex_ip = Regex::new(r"^(\d{1,3}\.){3}\d{1,3}$").unwrap();
+        let regex_ip = Regex::new(r"^(\d{1,3}\.){3}\d{1,3}$").expect("Invalid regex expression");
         regex_ip.is_match(s)
     }
 
