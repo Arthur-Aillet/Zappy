@@ -1,13 +1,15 @@
 use rend_ox::app::App;
 
-pub use crate::map::Map;
+use crate::map::Map;
 pub use crate::server::ServerConn;
-pub use crate::tantorian::Tantorian;
+use crate::tantorian::Tantorian;
+use crate::ui::ZappyUi;
 
 pub struct Zappy {
     pub(crate) map: Map,
     pub(crate) players: Vec<Tantorian>,
     pub(crate) server: ServerConn,
+    pub(crate) ui: ZappyUi,
 }
 
 impl Zappy {
@@ -16,6 +18,7 @@ impl Zappy {
             map: Map::new(),
             players: vec![],
             server: ServerConn::new(),
+            ui: ZappyUi::new(),
         }
     }
 }
@@ -26,7 +29,14 @@ pub(crate) fn zappy_update(
     update: rend_ox::nannou::event::Update,
 ) {
     zappy.egui_instance.set_elapsed_time(update.since_start);
-    let ctx = zappy.egui_instance.begin_frame();
-    crate::ui::settings(&ctx, &mut zappy.camera, zappy.camera_is_active);
-    crate::ui::communications(&ctx, zappy.camera_is_active);
+    zappy.user.ui.ctx = Some(zappy.egui_instance.begin_frame().context());
+    zappy
+        .user
+        .ui
+        .settings(&mut zappy.camera, zappy.camera_is_active);
+    zappy
+        .user
+        .ui
+        .communications(zappy.camera_is_active, &zappy.user.server.commands);
+    zappy.user.ui.tiles(&zappy.user.map, zappy.camera_is_active);
 }
