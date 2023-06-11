@@ -6,12 +6,14 @@ use std::net::{Shutdown, TcpStream};
 
 pub struct ServerConn {
     pub commands: Vec<String>,
+    pub stream: TcpStream,
 }
 
 impl ServerConn {
     pub fn new() -> ServerConn {
         ServerConn {
             commands: Vec::new(),
+            stream: Self::set_tcp_stream(),
         }
     }
 
