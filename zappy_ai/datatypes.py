@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+## @package server_action
+# This module defines zappy classes
+
 ##
 ## EPITECH PROJECT, 2022
 ## zappy [WSL: Ubuntu]
@@ -11,15 +13,21 @@ from server_action import *
 from server_get import *
 import uuid
 
+# Enum to define the differents roles an AI can take
 class Types: #enum
     max = 1 # update with the max value of the enum
     BASIC = 0
     ATTACK = 1
 
+# Holds the size of the map (x,y)
 class Map:
     size_x = 10
     size_y = 10
 
+# The Session class holds data about the current AI: it's socket client,
+# type (role), relative position, direction, number of messages sents, id.
+# It also holds aliases for client to server functions to use directly with the
+# AI socket client.
 class Session:
     def __init__(self, client, type=Types.BASIC, pos=[0,0], direction=0):
         assert len(pos) == 2, "Session pos parameter should be of type [int,int]"

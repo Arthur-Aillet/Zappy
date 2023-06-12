@@ -13,6 +13,8 @@
 import socket
 from sys import stderr
 
+
+## Number of times to retry on connexion break
 RETRY = 5
 
 def connect(ip, port, team_name):
@@ -52,7 +54,7 @@ def connect(ip, port, team_name):
 
 def send_server(client, message):
     """!
-    This function sends a message to a server and retries a certain number of times if it receives a
+    This function sends a message to a server and retries a RETRY number of times if it receives a
     'ko' response.
 
     @param client The client parameter is a socket object that represents a connection to a
