@@ -78,10 +78,10 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
 
 if __name__ == "__main__":
     run = True
-    while (run):
+    while (run): ## point de retour en cas de fork
         print("start")
         client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 4242, "gigateam")
         if nb == 0:
             stderr.write("ko: no places in the team\n")
             exit(84)
-        run = mainloop()
+        run = mainloop() # boucle principale (return en cas de fork)
