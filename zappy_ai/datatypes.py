@@ -1,4 +1,4 @@
-## @package server_action
+## @package datatypes
 # This module defines zappy classes
 
 ##
