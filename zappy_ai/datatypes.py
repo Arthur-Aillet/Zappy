@@ -11,6 +11,7 @@
 from connect import connect
 from server_action import *
 from server_get import *
+from communication import *
 import uuid
 
 # Enum to define the differents roles an AI can take
@@ -43,8 +44,12 @@ class Session:
         self.msg_nb = 0
         self.id = uuid.uuid1() # s'assurer que c'est unique malgré les forks
 
+    # server_action :
+
     def broadcast(self, text):
-        return broadcast(self.client, text)
+        output = broadcast(self.client, text)
+        self.msg_nb += 1
+        return output
     def fowards(self):
         return fowards(self.client)
     def left(self):
@@ -54,7 +59,20 @@ class Session:
     def pick_up(self):
         return pick_up(self.client)
 
+    # server_get :
+
     def look(self):
         return look(self.client)
     def inventory(self):
         return inventory(self.client)
+
+    # communication :
+
+    def call_all(self):
+        output = call_all(self.client, self.id, self.msg_nb)
+        self.msg_nb += 1
+        return output
+    def say_type(self):
+        output = say_type(self.client, self.id, self.nb)
+        self.msg_nb += 1
+        return output
