@@ -37,14 +37,15 @@ typedef struct player_s {
     size_t level;
     size_t satiety;         //NOTE - if satiety == 0 then decrease life
     size_t *inventory;
-    egg_t egg;
 } player_t;
 
 typedef struct team_s {
     char *name;
     size_t nb_slot;         //NOTE - max number of player in this team (can be increased with an egg)
     size_t actif_player;
+    size_t nb_eggs;
     player_t *players;
+    egg_t *egg;
 } team_t;
 
 player_t set_player(size_t x, size_t y, size_t freq);

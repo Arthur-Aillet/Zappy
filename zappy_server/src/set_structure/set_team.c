@@ -32,7 +32,6 @@ player_t set_player(size_t x, size_t y, size_t freq)
     new.satiety = 10;
     new.start = time(NULL);
     new.time = 126 / freq;
-    new.egg = set_egg(-1, -1);
     new.inventory = malloc(sizeof(size_t) * 7);
     for (size_t i = 0; i < 7; i++)
         new.inventory[i] = 0;
@@ -43,6 +42,8 @@ team_t set_team(char *team_name, size_t slot, size_t freq)
 {
     team_t team;
     team.nb_slot = slot;
+    team.egg = NULL;
+    team.nb_eggs = 0;
     team.name = malloc(sizeof(char) * (strlen(team_name) + 1));
     strcpy(team.name, team_name);
     team.actif_player = 0;
