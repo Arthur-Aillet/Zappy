@@ -7,36 +7,75 @@
 
 #include "zappy.h"
 
-int choose_ia_command(uint8_t **cmd, common_t *com, int i)
+//NOTE - functions return 1 if successful and 0 otherwise
+
+static int command_ia_part_ones(uint8_t **cmd, common_t *com, int i)
 {
     if (strcmp((char*)cmd[0], "Forward") == 0) {
         printf("Forward\n");
-    } else if (strcmp((char*)cmd[0], "Right") == 0) {
+        return 1;
+    }
+    if (strcmp((char*)cmd[0], "Right") == 0) {
         printf("Right\n");
-    } else if (strcmp((char*)cmd[0], "Left") == 0) {
+        return 1;
+    }
+    if (strcmp((char*)cmd[0], "Left") == 0) {
         printf("Left\n");
-    } else if (strcmp((char*)cmd[0], "Look") == 0) {
+        return 1;
+    }
+    if (strcmp((char*)cmd[0], "Look") == 0) {
         printf("Look\n");
-    } else if (strcmp((char*)cmd[0], "Inventory") == 0) {
+        return 1;
+    }
+    if (strcmp((char*)cmd[0], "Inventory") == 0) {
         printf("Inventory\n");
-    } else if (strcmp((char*)cmd[0], "Broadcast") == 0) {
+        return 1;
+    }
+    if (strcmp((char*)cmd[0], "Broadcast") == 0) {
         printf("Broadcast\n");
-    } else if (strcmp((char*)cmd[0], "Connect_nbr") == 0) {
-        printf("Connect_nbr\n");
-    } else if (strcmp((char*)cmd[0], "Fork") == 0) {
+        return 1;
+    }
+    return 0;
+}
+
+static int command_ia_part_two(uint8_t **cmd, common_t *com, int i)
+{
+    if (strcmp((char*)cmd[0], "Fork") == 0) {
         printf("Fork\n");
-    } else if (strcmp((char*)cmd[0], "Eject") == 0) {
+        return 1;
+    }
+    if (strcmp((char*)cmd[0], "Eject") == 0) {
         printf("Eject\n");
-    } else if (strcmp((char*)cmd[0], "Take") == 0) {
+        return 1;
+    }
+    if (strcmp((char*)cmd[0], "Take") == 0) {
         printf("Take\n");
-    } else if (strcmp((char*)cmd[0], "Set") == 0) {
+        return 1;
+    }
+    if (strcmp((char*)cmd[0], "Set") == 0) {
         printf("Set\n");
-    } else if (strcmp((char*)cmd[0], "Incantation") == 0) {
+        return 1;
+    }
+    if (strcmp((char*)cmd[0], "Incantation") == 0) {
         printf("Incantation\n");
+        return 1;
+    }
+    if (strcmp((char*)cmd[0], "Connect_nbr") == 0) {
+        printf("Connect_nbr\n");
+        return 1;
+    }
+    return 0;
+}
+
+int choose_ia_command(uint8_t **cmd, common_t *com, int i)
+{
+    if (command_ia_part_ones(cmd, com, i) == 1) {
+        return 1;
+    } else if (command_ia_part_two(cmd, com, i) == 1) {
+        return 1;
     } else {
         return error("Unknown command", 0);
     }
-    return 1;
 }
 
 int choose_graphic_command(uint8_t **cmd, common_t *com, int i)
@@ -59,8 +98,7 @@ int choose_graphic_command(uint8_t **cmd, common_t *com, int i)
         printf("sgt\n");
     } else if (strcmp((char*)cmd[0], "sst") == 0) {
         printf("sst\n");
-    } else {
+    } else
         return error("Unknown command", 0);
-    }
     return 1;
 }
