@@ -11,14 +11,6 @@ pub struct ServerConn {
     stream: TcpStream,
 }
 
-pub(crate) fn loop_server(server_access : Arc<Mutex<ServerConn>>) {
-    let mut server_lock = server_access.lock().expect("Mutex Poisoned");
-
-    server_lock.recv_from_server().expect("Error received for welcome"); // Welcome
-    server_lock.send_to_server("GRAPHIC", -1, -1);
-    println!("{:?}", server_lock.recv_from_server().expect("Error received for welcome").lines()); // Welcome
-}
-
 impl ServerConn {
     pub fn new() -> ServerConn {
         ServerConn {
