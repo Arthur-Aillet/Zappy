@@ -9,9 +9,9 @@ use crate::zappy::Zappy;
 use rend_ox::app::{app, App};
 
 fn zappy_app(nannou_app: &rend_ox::nannou::App) -> App<Zappy> {
-    let zappy = Zappy::new();
-
-    return app(nannou_app, zappy, zappy::zappy_update);
+    let mut app = app(nannou_app, Zappy::new(), zappy::zappy_update);
+    Zappy::load(&mut app);
+    app
 }
 
 fn main() {
