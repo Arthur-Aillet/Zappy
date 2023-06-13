@@ -4,10 +4,19 @@ use regex::Regex;
 use std::env;
 use std::io::{self, Read, Write};
 use std::net::{Shutdown, TcpStream};
+use std::sync::{Arc, Mutex};
 
 pub struct ServerConn {
     pub commands: Vec<String>,
-    pub stream: TcpStream,
+    stream: TcpStream,
+}
+
+pub(crate) fn loop_server(server_access : Arc<Mutex<ServerConn>>) {
+    let mut server_lock = server_access.lock().expect("Mutex Poisoned");
+
+    server_lock.recv_from_server().expect("Error received for welcome"); // Welcome
+    server_lock.send_to_server("GRAPHIC", -1, -1);
+    println!("{:?}", server_lock.recv_from_server().expect("Error received for welcome").lines()); // Welcome
 }
 
 impl ServerConn {
@@ -24,9 +33,9 @@ impl ServerConn {
         let connect = format!("{}:{}", machine, port);
 
         let stream = TcpStream::connect(connect).expect("Couldn't connect to the server...");
-        stream
+        /*stream
             .set_nonblocking(true)
-            .expect("Couldn't set nonblocking mode");
+            .expect("Couldn't set nonblocking mode");*/
         stream
     }
 

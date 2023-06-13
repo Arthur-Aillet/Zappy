@@ -22,7 +22,7 @@ impl ZappyUi {
                 ui.label("Camera:");
                 ui.add(egui::Slider::new(&mut camera.speed, 0.1..=10.0).text("Speed:"));
                 ui.add(egui::Slider::new(&mut camera.fov, 60.0..=150.0).text("FOV:"));
-                ui.add(egui::Slider::new(&mut camera.sensitivity, 0.1..=10.0).text("Sensivity:"));
+                ui.add(egui::Slider::new(&mut camera.sensitivity, 0.1..=10.0).text("Sensitivity:"));
             },
         );
     }
