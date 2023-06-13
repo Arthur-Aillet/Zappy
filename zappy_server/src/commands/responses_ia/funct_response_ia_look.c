@@ -22,7 +22,7 @@ void funct_response_ia_look(uint8_t **args, void *info, common_t *com)
 //        return;
 //    }
 //    ia->buffer.bufferWrite.octets[0] = '\0';
-//    strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
+//    strcat((char*)ia->buffer.bufferWrite.octets, "ok\n\0");
     write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets, ia->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_response_ia_look\n");
 }

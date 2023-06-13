@@ -7,6 +7,15 @@
 
 #include "zappy.h"
 
+static void response(ia_t *ia, int idx)
+{
+    if (ia->player->inventory[idx] > 0) {
+        ia->player->inventory[idx] -= 1;
+        strcat((char*)ia->buffer.bufferWrite.octets, "ok\n\0");
+    }
+    strcat((char*)ia->buffer.bufferWrite.octets, "ko\n\0");
+}
+
 void funct_response_ia_set_obj(uint8_t **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
@@ -19,56 +28,24 @@ void funct_response_ia_set_obj(uint8_t **args, void *info, common_t *com)
     if (ia->buffer.bufferWrite.octets == NULL) {
         //error
         return;
-    } else if (strcmp(args[0], "FOOD")) {
-        if (ia->player->inventory[0] > 0) {
-            ia->player->inventory[0] -= 1;
-            strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
-        }
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
-    } else if (strcmp(args[0], "LINEMATE")) {
-        if (ia->player->inventory[1] > 0) {
-            ia->player->inventory[1] -= 1;
-            strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
-        }
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
-    } else if (strcmp(args[0], "DERAUMERE")) {
-        if (ia->player->inventory[2] > 0) {
-            ia->player->inventory[2] -= 1;
-            strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
-        }
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
-    } else if (strcmp(args[0], "SIBUR")) {
-        if (ia->player->inventory[3] > 0) {
-            ia->player->inventory[3] -= 1;
-            strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
-        }
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
-    } else if (strcmp(args[0], "MENDIANE")) {
-        if (ia->player->inventory[4] > 0) {
-            ia->player->inventory[4] -= 1;
-            strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
-        }
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
-    } else if (strcmp(args[0], "PHIRAS")) {
-        if (ia->player->inventory[5] > 0) {
-            ia->player->inventory[5] -= 1;
-            strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
-        }
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
-    } else if (strcmp(args[0], "THYSTAME")) {
-        if (ia->player->inventory[6] > 0) {
-            ia->player->inventory[6] -= 1;
-            strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
-        }
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
-    } else if (strcmp(args[0], "THYSTAME")) {
-        if (ia->player->inventory[7] > 0) {
-            ia->player->inventory[7] -= 1;
-            strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
-        }
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
+    } else if (strcmp((char*)args[0], "FOOD")) {
+        response(ia, 0);
+    } else if (strcmp((char*)args[0], "LINEMATE")) {
+        response(ia, 1);
+    } else if (strcmp((char*)args[0], "DERAUMERE")) {
+        response(ia, 2);
+    } else if (strcmp((char*)args[0], "SIBUR")) {
+        response(ia, 3);
+    } else if (strcmp((char*)args[0], "MENDIANE")) {
+        response(ia, 4);
+    } else if (strcmp((char*)args[0], "PHIRAS")) {
+        response(ia, 5);
+    } else if (strcmp((char*)args[0], "THYSTAME")) {
+        response(ia, 6);
+    } else if (strcmp((char*)args[0], "THYSTAME")) {
+        response(ia, 7);
     } else {
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
+        strcat((char*)ia->buffer.bufferWrite.octets, "ko\n\0");
     }
     write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets, ia->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_response_ia_set_obj\n");
