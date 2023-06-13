@@ -47,8 +47,10 @@ static int check_command(uint8_t **command, common_t *com, int i)
         return 1;
     if (com->client[i].type == IA) {
         printf("%sCheck in IA Command%s\n", B, N);
+        choose_ia_command(command, com, i);
     } else if (com->client[i].type == GUI) {
         printf("%sCheck in GUI Command%s\n", B, N);
+        choose_graphic_command(command, com, i);
     } else {
         printf("%sCheck in Command for unknown client type%s\n", B, N);
         undefined_client_command(command, com, i);

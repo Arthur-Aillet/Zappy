@@ -99,4 +99,7 @@ uint8_t **get_message(server_t *server, client_t *client);
 int undefined_client_command(uint8_t **command, common_t *com, int idx);
 int check_slot_and_create_player(common_t *com, int team_idx,int client_idx);
 
+int choose_graphic_command(uint8_t **cmd, common_t *com, int i);
+int choose_ia_command(uint8_t **cmd, common_t *com, int i);
+
 #endif /* !ZAPPY_H_ */

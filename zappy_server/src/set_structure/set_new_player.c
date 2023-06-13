@@ -17,7 +17,7 @@ static void egg_position(int *x, int *y, team_t *team)
         int idx = rand() % team->nb_eggs;
         *x = team->egg[idx].x;
         *y = team->egg[idx].y;
-        for (int i = idx; i < team->nb_eggs; i++) {
+        for (size_t i = idx; i < team->nb_eggs; i++) {
             team->egg[i].x = team->egg[i + 1].x;
             team->egg[i].y = team->egg[i + 1].y;
         }
@@ -34,7 +34,7 @@ static int add_new_player(team_t *team, size_t max_x, size_t max_y)
     srand(time(NULL));
     int x = rand() % max_x;
     int y = rand() % max_y;
-    egg_position(&x, &y, team->players);
+    egg_position(&x, &y, team);
     for (int i = 0; i < MAX_PLAYER; i++) {
         if (team->players[i].x == -1 && team->players[i].y == -1) {
             team->players[i].x = x;
