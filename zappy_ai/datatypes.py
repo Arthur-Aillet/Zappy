@@ -25,6 +25,15 @@ class Map:
     size_x = 10
     size_y = 10
 
+# Enum to define the last action made
+class ActionType: #enum
+    max = 4
+    NONE = 0
+    OK_ACTION = 1 # simple action just asking for an ok
+    LOOK = 2
+    INVENTORY  = 3
+    CALL_ALL = 4
+
 # The Session class holds data about the current AI: it's socket client,
 # type (role), relative position, direction, number of messages sents, id.
 # It also holds aliases for client to server functions to use directly with the

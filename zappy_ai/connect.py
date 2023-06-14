@@ -67,12 +67,6 @@ def send_server(client, message):
     constant. If the maximum number of retries is reached and the answer is still 'ko\\n', an error
     message will be printed to the standard error output.
     """
-    answer = b'ko\n'
-    trys = 0
-    while answer == b'ko\n' and trys < RETRY:
-        trys += 1
-        client.send(bytes(message + "\n", "utf-8"))
-        answer = client.recv(1024)
-    if answer == b'ko\n':
-        stderr.write("ko on " + str(answer) + "\n")
-    return answer
+    client.send(bytes(message + "\n", "utf-8"))
+
+    return ActionType
