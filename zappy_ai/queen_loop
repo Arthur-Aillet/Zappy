@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+##
+## EPITECH PROJECT, 2023
+## zappy
+## File description:
+## warrior behaviour
+##
+
+from connect import connect
+from server_get import *
+from server_action import *
+from sys import stderr
+
+def parrot():
+    talk
+
+def queen_loop():
+    static i = 0;
+    i++;
+    i %= 20;
+    static time_to_ritual = -1
+    if time_to_ritual == 0:
+        start ritual
+    if time_to_ritual >= 0
+        time_to_ritual -= 1;
+    if food < 10:
+        if (is food in the floor):
+            pick up food
+        else:
+            request food
+    if pos != base_pos:
+        move_to(base_pos.x, base_pos.y)
+    if (i == 0) :
+        fork;
+        job status;
+        get responses;
+        if (percentages are not good)
+            take random people from too numerous groups and change their profession
+    if i == 5:
+        if (rocks on the floor are sufficient for next step (objective[0]))
+            if called == false
+                call the closest level apropriate people to base_pos. priority on butler then gatherers then warriors then babys then queen
+                objective += 1
+            else
+                if people on same tile == number required + 1
+                    ritual order
+    if (someone need info)
+        say infos
+    else ():
+        parrot();

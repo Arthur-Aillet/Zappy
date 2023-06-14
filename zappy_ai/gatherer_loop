@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+##
+## EPITECH PROJECT, 2023
+## zappy
+## File description:
+## warrior behaviour
+##
+
+from connect import connect
+from server_get import *
+from server_action import *
+from sys import stderr
+
+def gatherer_loop():
+    move()
+    if something in view:
+        while !something in view
+            go_to
+            pick_up
+    if objective is met:
+        return to base_pos
+        drop everything
+        pick up 20 20 food
+    if called to base:
+        go to base
+        drop everytjing
+    if enemy spotted:
+        message enemy spotted
+    if (food + 2) * 10 < distance to base():
+        return to base()
+        drop everything
+        pick up 20 food
