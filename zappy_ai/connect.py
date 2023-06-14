@@ -68,5 +68,3 @@ def send_server(client, message):
     message will be printed to the standard error output.
     """
     client.send(bytes(message + "\n", "utf-8"))
-
-    return ActionType

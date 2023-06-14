@@ -22,32 +22,20 @@ def broadcast(client, text):
 
     @return a boolean value (succes if sent, failure if so).
     """
-    if send_server(client, "Broadcast " + text) == b'ok\n':
-        return True
-    return False
+    send_server(client, "Broadcast " + text)
 
 def fowards(client):
-    if send_server(client, "Forward") == b'ok\n':
-        return True
-    return False
+    send_server(client, "Forward")
 
 def left(client):
-    if send_server(client, "Left") == b'ok\n':
-        return True
-    return False
+    send_server(client, "Left")
 
 def right(client):
-    if send_server(client, "Right") == b'ok\n':
-        return True
-    return False
+    send_server(client, "Right")
 
 def pick_up(client):
-    if send_server(client, "Take object") == b'ok\n':
-        return True
-    return False
+    send_server(client, "Take object")
 
 # si fork_ai return true la mainloop doit fork et l'enfant mainloop doit return True
 def fork_ai(client):
-    if send_server(client, "Fork") == b'ok\n':
-        return True
-    return False
+    send_server(client, "Fork")

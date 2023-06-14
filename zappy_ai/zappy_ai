@@ -56,14 +56,23 @@ def loop(switch, spiral_len):
 
 def mainloop(ai: Session): # mainloop peut return True si elle est enfant de fork / false si stop
     looping = True
-    last_action = ActionType.NONE # True = sent, waiting answer, False = nothing sent
+    last_actions = []
 
     while looping:
         message = ai.client.recv().decode() # peut être mettre un timeout pour éviter de rester perdu sur une interrupt de co
+        if (len(last_actions) == 0):
+            continue
+        if (last_actions[0] == ActionType.NONE):
+            last_actions.pop(0)
+            continue
+
+        # traitement de tous les cas de reception
         if message == "ok":
-            last_action = False
+            last_actions.pop(0)
         if message.startswith("Message"):
             pass # handle broadcast reception
+
+        # action, faite par l'algo
 
 
 
