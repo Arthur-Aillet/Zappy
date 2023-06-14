@@ -28,7 +28,10 @@ impl Zappy {
     }
     pub fn load(app: &mut App<Zappy>) {
         if let Ok(mut graphics) = app.graphics.try_borrow_mut() {
-            if let Ok(md) = graphics.load_mesh("./.objs/plane.obj") {
+            if let Ok(mut md) = graphics.load_mesh("./.objs/plane.obj") {
+                if let Ok(shader) = graphics.load_shader("./src/shaders/map.wgsl") {
+                    graphics.bind_shader_to_mesh(&mut md, &shader);
+                }
                 app.user.map.mesh = Some(md);
             }
             if let Ok(md) = graphics.load_mesh("./.objs/bat.obj") {
