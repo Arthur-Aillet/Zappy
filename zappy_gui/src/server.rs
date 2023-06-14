@@ -7,14 +7,22 @@ use std::net::{Shutdown, TcpStream};
 use std::sync::{Arc, Mutex};
 
 pub struct ServerConn {
-    pub commands: Vec<String>,
-    stream: TcpStream,
+    pub commands: Arc<Mutex<Vec<String>>>,
+    pub stream: TcpStream,
 }
 
+
 impl ServerConn {
+    pub(crate) fn access(&self) -> ServerConn {
+        ServerConn {
+            commands: Arc::clone(&self.commands),
+            stream: self.stream.try_clone().expect("stream wrongfully setup"),
+        }
+    }
+
     pub fn new() -> ServerConn {
         ServerConn {
-            commands: Vec::new(),
+            commands: Arc::new(Mutex::new(Vec::new())),
             stream: Self::set_tcp_stream(),
         }
     }
@@ -24,11 +32,7 @@ impl ServerConn {
         let (port, machine) = Self::parse_arguments();
         let connect = format!("{}:{}", machine, port);
 
-        let stream = TcpStream::connect(connect).expect("Couldn't connect to the server...");
-        /*stream
-            .set_nonblocking(true)
-            .expect("Couldn't set nonblocking mode");*/
-        stream
+        TcpStream::connect(connect).expect("Couldn't connect to the server...")
     }
 
     // NOTE - Read the connexion flux and return a string or an error.
@@ -54,7 +58,6 @@ impl ServerConn {
                 Err(err) => return Err(err),
             }
         }
-        self.commands.push(result.clone());
         Ok(result)
     }
 

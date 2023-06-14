@@ -2,7 +2,6 @@ use std::sync::{Arc, Mutex};
 use rend_ox::app::App;
 use rend_ox::{Vec3, Mat4};
 use rend_ox::mesh::MeshDescriptor;
-use rend_ox::nannou::color::chromatic_adaptation::AdaptInto;
 
 use crate::map::Map;
 pub use crate::server::ServerConn;
@@ -12,7 +11,7 @@ use crate::ui::ZappyUi;
 pub struct Zappy {
     pub(crate) map: Map,
     pub(crate) players: Vec<Tantorian>,
-    pub(crate) server: Option<Arc<Mutex<ServerConn>>>,
+    pub(crate) server: Option<ServerConn>,
     pub(crate) ui: ZappyUi,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
 }
@@ -41,7 +40,7 @@ impl Zappy {
         }
 
         // TODO : Allow skipping this in order to test things offline
-        app.user.server = Some(Arc::new(Mutex::new(ServerConn::new())));
+        app.user.server = Some(ServerConn::new());
 
         // TODO : Remove this default population
         for i in 0..4 {
@@ -82,7 +81,7 @@ pub(crate) fn zappy_update(
         zappy
             .user
             .ui
-            .communications(zappy.camera_is_active, &server.lock().expect("Lock poisoned").commands);
+            .communications(zappy.camera_is_active, &server.commands.lock().expect("Lock poisoned"));
         zappy.user.ui.tiles(&zappy.user.map, zappy.camera_is_active);
     }
 }
