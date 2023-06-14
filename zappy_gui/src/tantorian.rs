@@ -1,9 +1,9 @@
-use super::zappy::ServerConn;
-use super::zappy::Zappy;
+use rend_ox::glam::UVec2;
 use rend_ox::Vec3;
 
 pub struct Tantorian {
     pub pos: Vec3,
+    pub current_tile: UVec2,
     pub level: u32,
     pub orientation: u8,
     pub mesh_descriptor: u32,
@@ -16,6 +16,7 @@ impl Tantorian {
             level: 0,
             orientation: 0,
             mesh_descriptor: 0,
+            current_tile: UVec2::new(0, 0),
         }
     }
 

@@ -1,5 +1,7 @@
 use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
 
+use crate::tantorian::Tantorian;
+
 pub(crate) struct ZappyUi {
     pub selected_tile: Option<[usize; 2]>,
     pub ctx: Option<CtxRef>,
@@ -20,7 +22,7 @@ impl ZappyUi {
                 ui.label("Camera:");
                 ui.add(egui::Slider::new(&mut camera.speed, 0.1..=10.0).text("Speed:"));
                 ui.add(egui::Slider::new(&mut camera.fov, 60.0..=150.0).text("FOV:"));
-                ui.add(egui::Slider::new(&mut camera.sensitivity, 0.1..=10.0).text("Sensivity:"));
+                ui.add(egui::Slider::new(&mut camera.sensitivity, 0.1..=10.0).text("Sensitivity:"));
             },
         );
     }
@@ -95,5 +97,12 @@ impl ZappyUi {
                 }
             },
         );
+    }
+
+    pub(crate) fn players(&mut self, players: &Vec<Tantorian>, is_active: bool) {
+        egui::Window::new("Players")
+            .enabled(!is_active)
+            .show(&self.ctx.clone().expect("Ctx not set"), |ui| {});
+
     }
 }
