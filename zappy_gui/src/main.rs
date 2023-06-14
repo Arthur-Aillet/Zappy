@@ -4,6 +4,7 @@ mod tantorian;
 mod ui;
 mod network;
 mod zappy;
+mod interpreter;
 
 use std::cell::RefCell;
 use std::net::TcpStream;

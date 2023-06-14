@@ -2,6 +2,8 @@ use std::sync::{Arc, Mutex};
 use rend_ox::app::App;
 use rend_ox::{Vec3, Mat4};
 use rend_ox::mesh::MeshDescriptor;
+use crate::interpreter::{create_hash_function, ServerFunction};
+use std::collections::HashMap;
 
 use crate::map::Map;
 pub use crate::server::ServerConn;
@@ -14,6 +16,7 @@ pub struct Zappy {
     pub(crate) server: Option<ServerConn>,
     pub(crate) ui: ZappyUi,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
+    pub(crate) functions: HashMap<String, ServerFunction>,
 }
 
 impl Zappy {
@@ -24,6 +27,7 @@ impl Zappy {
             server: None, //ServerConn::new(),
             ui: ZappyUi::new(),
             tantorian_mesh: None,
+            functions: create_hash_function(),
         }
     }
     pub fn load(app: &mut App<Zappy>) {
@@ -67,6 +71,7 @@ pub(crate) fn zappy_update(
     update: rend_ox::nannou::event::Update,
 ) {
     Zappy::render(zappy);
+    zappy.user.interpret_commands();
     zappy.egui_instance.set_elapsed_time(update.since_start);
     zappy.user.ui.ctx = Some(zappy.egui_instance.begin_frame().context());
     zappy
