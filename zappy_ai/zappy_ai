@@ -60,19 +60,21 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
 
     while looping:
         message = ai.client.recv().decode() # peut être mettre un timeout pour éviter de rester perdu sur une interrupt de co
+
+        # gestion des envois inopinés du serveur
+        if message.startswith("Message "):
+            continue # traiter le maissage
+
+        # gestion des envois prévus du serveur (si une récéption est prévue)
         if (len(last_actions) == 0):
             continue
         if (last_actions[0] == ActionType.NONE):
             last_actions.pop(0)
             continue
 
-        # traitement de tous les cas de reception
-        if message == "ok":
-            last_actions.pop(0)
-        if message.startswith("Message"):
-            pass # handle broadcast reception
+        # traitement de tous les cas de reception en fonction de last_action[0]
 
-        # action, faite par l'algo
+        # action, faite par l'algo, qui devra append à last_actions
 
 
 
