@@ -18,27 +18,30 @@ impl Zappy {
         println!("Set :D");
     }
 
+    fn interpret_command(&mut self, raw_command : String) {
+        let command_split = raw_command.split("\n");
+
+        for command in command_split {
+            let command_name = command.split(" ").next().expect("invalid cmd");
+            let maybe_func = self.functions.get(command_name);
+
+            match maybe_func {
+                None => { println!("Command received unknown: {command_name}") }
+                Some(function) => { function(self, command.to_string()) }
+            }
+        }
+    }
+
     pub(crate) fn interpret_commands(&mut self) {
         let mut commands_access: Arc<Mutex<Vec<String>>>;
-        if let Some(server) = &mut self.server {
-            commands_access = Arc::clone(&server.commands);
-        } else {
-            return;
-        }
+        match &mut self.server {
+            None => {return}
+            Some(server) => {commands_access = Arc::clone(&server.commands);}
+        };
         let mut commands = commands_access.lock().expect("Mutex poisoned");
         for _ in 0..commands.len() {
             if let Some(command) = commands.pop() {
-                let command_splited = command.split("\n");
-
-                for command in command_splited {
-                    let command_name = command.split(" ").next().expect("invalid cmd");
-                    let maybe_func = self.functions.get(command_name);
-
-                    match maybe_func {
-                        None => { println!("Command received unknown: {command_name}") }
-                        Some(function) => { function(self, command.to_string()) }
-                    }
-                }
+                self.interpret_command(command);
             }
         }
     }
