@@ -96,7 +96,7 @@ impl ZappyUi {
     }
 
     pub(crate) fn tiles(&mut self, map: &crate::map::Map, is_active: bool) {
-        egui::Window::new("Map").enabled(!is_active).show(
+        egui::Window::new("Map").enabled(!is_active).auto_sized().show(
             &self.ctx.clone().expect("Ctx not set"),
             |ui| {
                 ui.add(egui::Label::new("Tiles:").heading());
@@ -108,9 +108,10 @@ impl ZappyUi {
                         self.selected_tile = self.tile_buttons(ui_grid, map);
                     });
                 if let Some(selected) = self.selected_tile {
-                    ui.add(egui::Separator::default());
+                    ui.add(egui::Label::new("__________________________________").strong());
+                    ui.add_space(10.);
 
-                    let mut title = format!("Tile {} {}: ", selected[0] + 1, selected[1] + 1);
+                    let mut title = format!("Tile {} {}: ", selected[0], selected[1]);
                     ui.add(egui::Label::new(title).heading());
                     egui::Grid::new("Tile")
                         .num_columns(2)
