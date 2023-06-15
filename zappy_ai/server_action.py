@@ -12,6 +12,8 @@
 ##
 
 from connect import send_server
+from datatypes import ActionType
+from os import fork
 
 def broadcast(client, text):
     """!
@@ -26,16 +28,21 @@ def broadcast(client, text):
 
 def fowards(client):
     send_server(client, "Forward")
+    return ActionType.OK_ACTION
 
 def left(client):
     send_server(client, "Left")
+    return ActionType.OK_ACTION
 
 def right(client):
     send_server(client, "Right")
+    return ActionType.OK_ACTION
 
 def pick_up(client):
     send_server(client, "Take object")
+    return ActionType.OK_ACTION
 
 # si fork_ai return true la mainloop doit fork et l'enfant mainloop doit return True
 def fork_ai(client):
     send_server(client, "Fork")
+    return fork()

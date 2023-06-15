@@ -27,12 +27,13 @@ class Map:
 
 # Enum to define the last action made
 class ActionType: #enum
-    max = 4
+    max = 5
     NONE = 0
     OK_ACTION = 1 # simple action just asking for an ok
     LOOK = 2
     INVENTORY  = 3
     CALL_ALL = 4
+    FORK = 5
 
 # The Session class holds data about the current AI: it's socket client,
 # type (role), relative position, direction, number of messages sents, id.
@@ -67,6 +68,8 @@ class Session:
         return right(self.client)
     def pick_up(self):
         return pick_up(self.client)
+    def pick_up(self):
+        return fork(self.client)
 
     # server_get :
 
