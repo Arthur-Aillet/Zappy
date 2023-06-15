@@ -1,4 +1,3 @@
-use std::sync::{Arc, Mutex};
 use rend_ox::app::App;
 use rend_ox::{Vec3, Mat4};
 use rend_ox::mesh::MeshDescriptor;

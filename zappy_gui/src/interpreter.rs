@@ -1,8 +1,5 @@
 use std::collections::HashMap;
-use std::num::ParseIntError;
 use std::sync::{Arc, Mutex};
-use rend_ox::nannou::prelude::real::Real;
-use crate::server::ServerConn;
 use crate::zappy::Zappy;
 
 pub type ServerFunction = fn(&mut Zappy, String);
@@ -54,7 +51,8 @@ impl Zappy {
     }
 
     pub(crate) fn interpret_commands(&mut self) {
-        let mut commands_access: Arc<Mutex<Vec<String>>>;
+        let commands_access: Arc<Mutex<Vec<String>>>;
+
         match &mut self.server {
             None => {return}
             Some(server) => {commands_access = Arc::clone(&server.commands);}

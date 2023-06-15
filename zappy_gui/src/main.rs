@@ -6,12 +6,9 @@ mod network;
 mod zappy;
 mod interpreter;
 
-use std::cell::RefCell;
-use std::net::TcpStream;
-use std::sync::{Arc, Mutex};
 use std::thread;
 
-use crate::zappy::{ServerConn, Zappy};
+use crate::zappy::Zappy;
 
 use rend_ox::app::{app, App};
 use crate::network::loop_server;
