@@ -1,5 +1,7 @@
 use std::collections::HashMap;
+use std::num::ParseIntError;
 use std::sync::{Arc, Mutex};
+use rend_ox::nannou::prelude::real::Real;
 use crate::server::ServerConn;
 use crate::zappy::Zappy;
 
@@ -15,7 +17,26 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
 
 impl Zappy {
     fn set_map_size(&mut self, command: String) {
-        println!("Set :D");
+        let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() == 3 {
+            let x: usize;
+            let x_result: Result<usize, _> = args[1].parse();
+            match x_result {
+                Ok(val) => {x = val}
+                Err(_) => {println!("width needs to be a unsigned integer"); return;}
+            }
+
+            let y: usize;
+            let y_result: Result<usize, _> = args[1].parse();
+            match y_result {
+                Ok(val) => {y = val}
+                Err(_) => {println!("height needs to be a unsigned integer"); return;}
+            }
+            self.map.size = [x, y];
+        } else {
+            println!("Invalid arguments to the size command received");
+        }
     }
 
     fn interpret_command(&mut self, raw_command : String) {
