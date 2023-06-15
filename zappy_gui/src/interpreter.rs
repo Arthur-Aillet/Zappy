@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
+use crate::map::Tile;
 use crate::zappy::Zappy;
 
 pub type ServerFunction = fn(&mut Zappy, String);
@@ -31,6 +32,7 @@ impl Zappy {
                 Err(_) => {println!("height needs to be a unsigned integer"); return;}
             }
             self.map.size = [x, y];
+            self.map.tiles.resize(x*y, Tile::new());
         } else {
             println!("Invalid arguments to the size command received");
         }
