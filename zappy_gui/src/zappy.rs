@@ -32,7 +32,7 @@ fn hsv_to_rgb(source: Vec3) -> Vec3
 impl Zappy {
     pub fn new() -> Zappy {
         Zappy {
-            map: Map::new(),
+            map: Map::new(0, 0),
             players: vec![],
             server: None, //ServerConn::new(),
             ui: ZappyUi::new(),
@@ -41,12 +41,16 @@ impl Zappy {
         }
     }
     pub fn load(app: &mut App<Zappy>) {
+        app.user.map.resize(8, 8);
         if let Ok(mut graphics) = app.graphics.try_borrow_mut() {
             if let Ok(mut md) = graphics.load_mesh("./.objs/plane.obj") {
                 if let Ok(shader) = graphics.load_shader("./src/shaders/map.wgsl") {
                     graphics.bind_shader_to_mesh(&mut md, &shader);
                 }
                 app.user.map.mesh = Some(md);
+            }
+            if let Ok(mut md) = graphics.load_mesh("./.objs/rock.obj") {
+                app.user.map.rock_mesh = Some(md);
             }
             if let Ok(md) = graphics.load_mesh("./.objs/bat.obj") {
                 println!("Zappy: loaded bat.obj");
@@ -65,19 +69,17 @@ impl Zappy {
             t.pos = Vec3::new(0., i as f32, 0.);
             t.color = hsv_to_rgb(Vec3::new(i as f32 / 5., 0.9, 0.9));
             app.user.players.push(t);
+            app.user.map.spawn_resource(i * 8654 % 8, i * 865 % 8, i);
         }
     }
     pub fn render(app: &mut App<Zappy>) {
-        if let Some(mesh) = &app.user.map.mesh {
-            let mat = Mat4::from_scale(Vec3::new(app.user.map.size[0] as f32, app.user.map.size[1] as f32, 1.0));
-            app.draw_instances(mesh, vec![mat], vec![app.user.map.color]);
-        }
         if let Some(mesh) = &app.user.tantorian_mesh {
             let mat = Mat4::from_scale(Vec3::new(1., 1., 0.75)) * Mat4::from_rotation_x(std::f32::consts::PI * 0.5);
             let instances : Vec<Mat4> = app.user.players.iter().map(|p| Mat4::from_translation(p.pos + Vec3::new(0., 0., 2.)) * mat).collect();
             let colors : Vec<Vec3> = app.user.players.iter().map(|p| p.color).collect();
             app.draw_instances(mesh, instances, colors);
         }
+        Map::render(app);
     }
 }
 
