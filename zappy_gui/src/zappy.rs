@@ -2,6 +2,7 @@ use std::sync::{Arc, Mutex};
 use rend_ox::app::App;
 use rend_ox::{Vec3, Mat4};
 use rend_ox::mesh::MeshDescriptor;
+use rend_ox::wgpu::Color;
 use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
 
@@ -17,6 +18,15 @@ pub struct Zappy {
     pub(crate) ui: ZappyUi,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
     pub(crate) functions: HashMap<String, ServerFunction>,
+}
+
+fn hsv_to_rgb(source: Vec3) -> Vec3
+{
+    let r = source.z * (source.y - 1. + source.y * (source.x * (2. * std::f32::consts::PI))).cos();
+    let g = source.z * (source.y - 1. + source.y * ((source.x - (1. / 3.)) * (2. * std::f32::consts::PI))).cos();
+    let b = source.z * (source.y - 1. + source.y * ((source.x - (2. / 3.)) * (2. * std::f32::consts::PI))).cos();
+
+    Vec3::new(r, g, b)
 }
 
 impl Zappy {
@@ -53,17 +63,20 @@ impl Zappy {
         for i in 0..4 {
             let mut t = Tantorian::new();
             t.pos = Vec3::new(0., i as f32, 0.);
+            t.color = hsv_to_rgb(Vec3::new(i as f32 / 5., 0.9, 0.9));
             app.user.players.push(t);
         }
     }
     pub fn render(app: &mut App<Zappy>) {
         if let Some(mesh) = &app.user.map.mesh {
-            app.draw_instances(mesh, vec![Mat4::from_scale(Vec3::new(app.user.map.size[0] as f32, app.user.map.size[1] as f32, 1.0))]);
+            let mat = Mat4::from_scale(Vec3::new(app.user.map.size[0] as f32, app.user.map.size[1] as f32, 1.0));
+            app.draw_instances(mesh, vec![mat], vec![app.user.map.color]);
         }
         if let Some(mesh) = &app.user.tantorian_mesh {
             let mat = Mat4::from_scale(Vec3::new(1., 1., 0.75)) * Mat4::from_rotation_x(std::f32::consts::PI * 0.5);
             let instances : Vec<Mat4> = app.user.players.iter().map(|p| Mat4::from_translation(p.pos + Vec3::new(0., 0., 2.)) * mat).collect();
-            app.draw_instances(mesh, instances);
+            let colors : Vec<Vec3> = app.user.players.iter().map(|p| p.color).collect();
+            app.draw_instances(mesh, instances, colors);
         }
     }
 }

@@ -3,6 +3,7 @@ use rend_ox::Vec3;
 
 pub struct Tantorian {
     pub pos: Vec3,
+    pub color: Vec3,
     pub current_tile: UVec2,
     pub level: u32,
     pub orientation: u8,
@@ -13,6 +14,7 @@ impl Tantorian {
     pub fn new() -> Tantorian {
         Tantorian {
             pos: Vec3::new(0., 0., 0.),
+            color: Vec3::new(1., 1., 1.),
             level: 0,
             orientation: 0,
             mesh_descriptor: 0,
