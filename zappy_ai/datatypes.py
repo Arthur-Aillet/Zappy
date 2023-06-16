@@ -14,11 +14,32 @@ from server_get import *
 from communication import *
 import uuid
 
-# Enum to define the differents roles an AI can take
-class Types: #enum
-    max = 1 # update with the max value of the enum
-    BASIC = 0
-    ATTACK = 1
+
+# class for a creature
+class Creature:
+    # Enum to define the differents roles an AI can take
+    class Types: #enum
+        max = 4 # update with the max value of the enum
+        QUEEN = 0
+        BABY = 1
+        BUTLER = 2
+        GATHERER = 3
+        WARRIOR = 4
+
+    def __init__(self):
+        self.type = Creature.Types.QUEEN
+        self.spawn_pos_x = 0
+        self.spawn_pos_y = 0
+        self.pos_x = 0
+        self.pos_y = 0
+        self.map = Map
+        self.strvar = "Qu'est-ce que c'est? Hey, mais c'est les minables!"
+        self.var = 0
+        self.time_to_ritual = -1
+        self.food = 10
+        self.id = 0
+        self.orientation = 0
+
 
 # Holds the size of the map (x,y)
 class Map:

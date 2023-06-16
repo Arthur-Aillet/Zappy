@@ -10,7 +10,11 @@ from connect import connect
 from server_get import *
 from server_action import *
 from sys import stderr
-from datatypes import Session, ActionType
+from datatypes import Session, ActionType, Creature
+from gatherer_loop import gatherer_loop
+from queen_loop import queen_loop
+from warrior_loop import warrior_loop
+from butler_loop import butler_loop
 
 def look_arround():
     found_obj = -1
@@ -20,28 +24,6 @@ def look_arround():
             return found_obj
     return found_obj
 
-def spiral(i):
-    while i > 0:
-        i -= 1
-        fowards()
-        if look() != -1:
-            return True
-    right()
-    return False
-
-def go_to(i):
-    row_max = 1
-    while i < row_max :
-        i -= row_max
-        row_max += 2
-    if (row_max / 2 < i):
-        left()
-    if (row_max / 2 > i):
-        right()
-    for n in range(abs(row_max - (i))):
-        fowards()
-    pick_up()
-    return
 
 def loop(switch, spiral_len):
     switch += 1
@@ -57,12 +39,14 @@ def loop(switch, spiral_len):
 def mainloop(ai: Session): # mainloop peut return True si elle est enfant de fork / false si stop
     looping = True
     last_actions = []
+    creature = Creature()
 
     while looping:
         message = ai.client.recv().decode() # peut être mettre un timeout pour éviter de rester perdu sur une interrupt de co
 
         # gestion des envois inopinés du serveur
         if message.startswith("Message "):
+            creature.strvar = message
             continue # traiter le maissage
 
         # gestion des envois prévus du serveur (si une récéption est prévue)
@@ -72,6 +56,18 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
             last_actions.pop(0)
             continue
 
+        if creature.time_to_ritual == 0:
+            send_server(ai.client, "Incantation\n")
+        if creature.time_to_ritual >= 0 :
+            creature.time_to_ritual -= 1;
+        if (creature.type == Creature.Types.QUEEN) :
+            queen_loop(creature, last_actions)
+        if (creature.type == Creature.Types.BUTLER) :
+            butler_loop(creature, last_actions)
+        if (creature.type == Creature.Types.GATHERER) :
+            gatherer_loop(creature, last_actions)
+        if (creature.type == Creature.Types.WARRIOR) :
+            warrior_loop(creature, last_actions)
         # traitement de tous les cas de reception en fonction de last_action[0]
 
         # action, faite par l'algo, qui devra append à last_actions
