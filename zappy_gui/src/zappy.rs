@@ -16,6 +16,7 @@ pub struct Zappy {
     pub(crate) ui: ZappyUi,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
     pub(crate) functions: HashMap<String, ServerFunction>,
+    pub(crate) time_unit: f32,
 }
 
 impl Zappy {
@@ -27,6 +28,7 @@ impl Zappy {
             ui: ZappyUi::new(),
             tantorian_mesh: None,
             functions: create_hash_function(),
+            time_unit: 100.,
         }
     }
     pub fn load(app: &mut App<Zappy>) {

@@ -16,7 +16,6 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
 
 impl Zappy {
     fn tile_content(&mut self, command: String) {
-        println!("{}", command);
         let mut invalid = false;
         let args: Vec<usize> = command.split(" ").skip(1).map(|x| -> usize {
             return match x.parse() {
