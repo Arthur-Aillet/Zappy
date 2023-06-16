@@ -1,4 +1,6 @@
 use rend_ox::mesh::MeshDescriptor;
+use rend_ox::Vec3;
+
 
 #[derive(Clone)]
 pub struct Tile {
@@ -28,7 +30,8 @@ impl Tile {
 pub struct Map {
     pub size: [usize; 2],
     pub tiles: Vec<Tile>,
-    pub mesh: Option<MeshDescriptor>
+    pub mesh: Option<MeshDescriptor>,
+    pub color: Vec3,
 }
 
 impl Map {
@@ -36,7 +39,8 @@ impl Map {
         Map {
             size: [8, 8],
             tiles: vec![Tile::new(); 8*8],
-            mesh: None
+            mesh: None,
+            color: Vec3::new(0.2, 0.9, 0.4),
         }
     }
 }
