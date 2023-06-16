@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use std::ffi::c_float;
+use std::num::ParseFloatError;
 use std::sync::{Arc, Mutex};
 use crate::map::Tile;
 use crate::zappy::Zappy;
@@ -10,11 +12,25 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
 
     functions.insert("msz".to_string(), Zappy::set_map_size);
     functions.insert("bct".to_string(), Zappy::tile_content);
+    functions.insert("sgt".to_string(), Zappy::set_time_unit);
     functions
 }
 
 
 impl Zappy {
+    fn set_time_unit(&mut self, command: String) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() != 2 {
+            println!("sgt: Too many arguments")
+        }
+        let result: Result<f32, _> = args[1].parse();
+        match result {
+            Ok(val) => {self.time_unit = val}
+            Err(_) => {println!("sgt: argument must be an int")}
+        }
+    }
+
     fn tile_content(&mut self, command: String) {
         let mut invalid = false;
         let args: Vec<usize> = command.split(" ").skip(1).map(|x| -> usize {
@@ -34,11 +50,11 @@ impl Zappy {
             println!("btc: wrong number of arguments");
             return;
         }
-        if args[1] > self.map.size[0] || args[0] > self.map.size[1] {
+        if args[0] > self.map.size[0] || args[1] > self.map.size[1] {
             println!("btc: tile outside of the map");
             return;
         }
-        let selected_tile = &mut self.map.tiles[args[1] + self.map.size[1] * args[0]];
+        let selected_tile = &mut self.map.tiles[args[0] + self.map.size[0] * args[1]];
         selected_tile.food = args[2];
         selected_tile.linemate = args[3];
         selected_tile.deraumere = args[4];
@@ -60,7 +76,7 @@ impl Zappy {
             }
 
             let y: usize;
-            let y_result: Result<usize, _> = args[1].parse();
+            let y_result: Result<usize, _> = args[2].parse();
             match y_result {
                 Ok(val) => {y = val}
                 Err(_) => {println!("height needs to be a unsigned integer"); return;}

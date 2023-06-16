@@ -11,7 +11,6 @@ pub struct ServerConn {
     pub stream: TcpStream,
 }
 
-
 impl ServerConn {
     pub(crate) fn access(&self) -> ServerConn {
         ServerConn {
