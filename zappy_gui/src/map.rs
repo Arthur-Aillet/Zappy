@@ -8,15 +8,15 @@ use crate::zappy::Zappy;
 
 #[derive(Clone, Debug)]
 pub struct Tile {
-    x: usize,
-    y: usize,
-    q0: Vec<Mat4>,
-    q1: Vec<Mat4>,
-    q2: Vec<Mat4>,
-    q3: Vec<Mat4>,
-    q4: Vec<Mat4>,
-    q5: Vec<Mat4>,
-    q6: Vec<Mat4>,
+    pub x: usize,
+    pub y: usize,
+    pub q0: Vec<Mat4>,
+    pub q1: Vec<Mat4>,
+    pub q2: Vec<Mat4>,
+    pub q3: Vec<Mat4>,
+    pub q4: Vec<Mat4>,
+    pub q5: Vec<Mat4>,
+    pub q6: Vec<Mat4>,
 }
 
 impl Tile {

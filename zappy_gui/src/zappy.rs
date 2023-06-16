@@ -1,4 +1,3 @@
-use std::sync::{Arc, Mutex};
 use rend_ox::app::App;
 use rend_ox::{Vec3, Mat4};
 use rend_ox::mesh::MeshDescriptor;
@@ -18,6 +17,7 @@ pub struct Zappy {
     pub(crate) ui: ZappyUi,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
     pub(crate) functions: HashMap<String, ServerFunction>,
+    pub(crate) time_unit: f32,
 }
 
 fn hsv_to_rgb(source: Vec3) -> Vec3
@@ -38,6 +38,7 @@ impl Zappy {
             ui: ZappyUi::new(),
             tantorian_mesh: None,
             functions: create_hash_function(),
+            time_unit: 100.,
         }
     }
     pub fn load(app: &mut App<Zappy>) {

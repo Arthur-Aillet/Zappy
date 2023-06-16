@@ -79,21 +79,47 @@ impl ZappyUi {
         tile_clicked
     }
 
+    fn display_stat(grid :&mut Ui, label: &str, value: usize) {
+        grid.add(egui::Label::new(format!("{label}:")).underline());
+        grid.add(egui::Label::new(format!("{}", value)));
+        grid.end_row();
+    }
+
+    fn tile_content(grid :&mut Ui, map: &crate::map::Map, selected: &[usize; 2]) {
+        ZappyUi::display_stat(grid,"Food", map.tiles[selected[0]][selected[1]].q0.len());
+        ZappyUi::display_stat(grid,"Linemate", map.tiles[selected[0]][selected[1]].q1.len());
+        ZappyUi::display_stat(grid,"Deraumere", map.tiles[selected[0]][selected[1]].q2.len());
+        ZappyUi::display_stat(grid,"Sibur", map.tiles[selected[0]][selected[1]].q3.len());
+        ZappyUi::display_stat(grid,"Mendiane", map.tiles[selected[0]][selected[1]].q4.len());
+        ZappyUi::display_stat(grid,"Phiras", map.tiles[selected[0]][selected[1]].q5.len());
+        ZappyUi::display_stat(grid,"Thystame", map.tiles[selected[0]][selected[1]].q6.len());
+    }
+
     pub(crate) fn tiles(&mut self, map: &crate::map::Map, is_active: bool) {
-        egui::Window::new("Map").enabled(!is_active).show(
+        egui::Window::new("Map").enabled(!is_active).auto_sized().show(
             &self.ctx.clone().expect("Ctx not set"),
             |ui| {
-                ui.label("Tiles:");
-                egui::Grid::new("my_grid")
+                ui.add(egui::Label::new("Tiles:").heading());
+                egui::Grid::new("Tiles")
                     .num_columns(map.size[0] as usize)
                     .spacing([-21., 2.])
                     .striped(true)
                     .show(ui, |ui_grid| {
                         self.selected_tile = self.tile_buttons(ui_grid, map);
                     });
-                if self.selected_tile.is_some() {
-                    ui.add(egui::Separator::default());
-                    ui.label("Tile:");
+                if let Some(selected) = self.selected_tile {
+                    ui.add(egui::Label::new("__________________________________").strong());
+                    ui.add_space(10.);
+
+                    let mut title = format!("Tile {} {}: ", selected[0], selected[1]);
+                    ui.add(egui::Label::new(title).heading());
+                    egui::Grid::new("Tile")
+                        .num_columns(2)
+                        .spacing([40.0, 4.0])
+                        .striped(true)
+                        .show(ui, |grid| {
+                            ZappyUi::tile_content(grid, map, &selected);
+                        });
                 }
             },
         );

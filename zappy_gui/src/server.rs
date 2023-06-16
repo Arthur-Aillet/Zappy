@@ -1,4 +1,3 @@
-use core::panic;
 use getopts::Options;
 use regex::Regex;
 use std::env;
