@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-//voir ce que la fonction doit faire
+//envoyer le message à tout les joueurs
 
 void funct_response_ia_broadcast(uint8_t **args, void *info, common_t *com)
 {

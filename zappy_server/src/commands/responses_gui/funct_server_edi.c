@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-//voir avec ludo!!!!!!
+//appeler si un oeuf est ejecter d'une case
 
 void funct_server_edi(uint8_t **args, void *info, common_t *common)
 {

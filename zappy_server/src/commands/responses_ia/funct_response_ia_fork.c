@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-//voir ce que cette fonction doit faire
+//creer un slot dans la team et je rajoute un oeuf à la position du joueur -> il vient de pondre l'oeuf
 
 void funct_response_ia_fork(uint8_t **args, void *info, common_t *com)
 {

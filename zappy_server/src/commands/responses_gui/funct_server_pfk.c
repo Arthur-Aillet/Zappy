@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-//voir avec ludo pour les oeufs comment ça se gere dans nos structures!!!
+//appeler si un oeuf est pondue par un joueur
 
 void funct_server_pfk(uint8_t **args, void *info, common_t *common)
 {

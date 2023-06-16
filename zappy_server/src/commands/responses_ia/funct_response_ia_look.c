@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-//voir avec ludo
+//voir les differentes evolution d'un joueur pour son champs de vision
 
 void funct_response_ia_look(uint8_t **args, void *info, common_t *com)
 {

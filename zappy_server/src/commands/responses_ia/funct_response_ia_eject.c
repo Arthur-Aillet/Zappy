@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-//voir comment move les joueurs sur la plaques
+//voir comment move les joueurs sur la plaques -> regarder l'orientation du joueur qui pousse et ejecter les autres une case dans l'autre sens et detruire les oeufs
 
 static int find_ia_post(common_t *com, ia_t *ia)
 {

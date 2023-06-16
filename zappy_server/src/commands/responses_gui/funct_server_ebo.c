@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-//voir avec ludo!!!!
+//mettre le e dans args ou dans info
 
 void funct_server_ebo(uint8_t **args, void *info, common_t *common)
 {
