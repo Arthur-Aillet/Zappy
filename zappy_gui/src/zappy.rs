@@ -13,6 +13,7 @@ use crate::ui::ZappyUi;
 pub struct Zappy {
     pub(crate) map: Map,
     pub(crate) players: Vec<Tantorian>,
+    pub(crate) team_names: Vec<String>,
     pub(crate) server: Option<ServerConn>,
     pub(crate) ui: ZappyUi,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
@@ -34,6 +35,7 @@ impl Zappy {
         Zappy {
             map: Map::new(),
             players: vec![],
+            team_names: vec![],
             server: None, //ServerConn::new(),
             ui: ZappyUi::new(),
             tantorian_mesh: None,
@@ -68,6 +70,7 @@ impl Zappy {
             app.user.players.push(t);
         }
     }
+
     pub fn render(app: &mut App<Zappy>) {
         if let Some(mesh) = &app.user.map.mesh {
             let mat = Mat4::from_scale(Vec3::new(app.user.map.size[0] as f32, app.user.map.size[1] as f32, 1.0));

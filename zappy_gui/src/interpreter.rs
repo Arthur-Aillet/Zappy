@@ -13,21 +13,33 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     functions.insert("msz".to_string(), Zappy::set_map_size);
     functions.insert("bct".to_string(), Zappy::tile_content);
     functions.insert("sgt".to_string(), Zappy::set_time_unit);
+    functions.insert("tna".to_string(), Zappy::add_team_name);
     functions
 }
 
 
 impl Zappy {
+    fn add_team_name(&mut self, command: String) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() != 2 {
+            println!("tna: Too many arguments");
+        } else {
+            self.team_names.push(args[1].to_string())
+        }
+    }
+
     fn set_time_unit(&mut self, command: String) {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
-            println!("sgt: Too many arguments")
-        }
-        let result: Result<f32, _> = args[1].parse();
-        match result {
-            Ok(val) => {self.time_unit = val}
-            Err(_) => {println!("sgt: argument must be an int")}
+            println!("sgt: Too many arguments");
+        } else {
+            let result: Result<f32, _> = args[1].parse();
+            match result {
+                Ok(val) => { self.time_unit = val }
+                Err(_) => { println!("sgt: argument must be an int") }
+            }
         }
     }
 
@@ -89,15 +101,15 @@ impl Zappy {
     }
 
     fn interpret_command(&mut self, raw_command : String) {
-        let command_split = raw_command.split("\n");
+        let command_split = raw_command.split("\n").filter(|&x| !x.is_empty());
 
         for command in command_split {
             let command_name = command.split(" ").next().expect("invalid cmd");
             let maybe_func = self.functions.get(command_name);
 
             match maybe_func {
-                None => { println!("Command received unknown: {command_name}") }
                 Some(function) => { function(self, command.to_string()) }
+                None => { println!("Command received unknown: \"{command}\"") }
             }
         }
     }
