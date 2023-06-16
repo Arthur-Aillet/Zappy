@@ -1,4 +1,6 @@
+use std::fmt::Display;
 use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
+use rend_ox::nannou_egui::egui::CollapsingHeader;
 
 use crate::tantorian::Tantorian;
 
@@ -79,10 +81,10 @@ impl ZappyUi {
         tile_clicked
     }
 
-    fn display_stat(grid :&mut Ui, label: &str, value: usize) {
-        grid.add(egui::Label::new(format!("{label}:")).underline());
-        grid.add(egui::Label::new(format!("{}", value)));
-        grid.end_row();
+    fn display_stat(ui :&mut Ui, label: &str, value: impl Display) {
+        ui.add(egui::Label::new(format!("{label}:")).underline());
+        ui.add(egui::Label::new(format!("{}", value)));
+        ui.end_row();
     }
 
     fn tile_content(grid :&mut Ui, map: &crate::map::Map, selected: &[usize; 2]) {
@@ -125,10 +127,28 @@ impl ZappyUi {
         );
     }
 
-    pub(crate) fn players(&mut self, players: &Vec<Tantorian>, is_active: bool) {
+    pub(crate) fn team(ui :&mut Ui, players: &Vec<Tantorian>, team_name: &String) {
+        for player in players.iter().filter(|x| {x.team_name == *team_name}) {
+            CollapsingHeader::new(player.number)
+                .default_open(false)
+                .show(ui, |col| {
+                    ZappyUi::display_stat(col, "Number:", player.number);
+                });
+        }
+    }
+
+    pub(crate) fn players(&mut self, players: &Vec<Tantorian>, teams: &Vec<String>, is_active: bool) {
         egui::Window::new("Players")
             .enabled(!is_active)
-            .show(&self.ctx.clone().expect("Ctx not set"), |ui| {});
+            .show(&self.ctx.clone().expect("Ctx not set"), |ui| {
+                for team in teams {
+                    CollapsingHeader::new(team)
+                        .default_open(false)
+                        .show(ui, |col| {
+                            ZappyUi::team(col, players, team);
+                        });
+                }
+            });
 
     }
 }

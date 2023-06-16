@@ -101,7 +101,7 @@ pub(crate) fn zappy_update(
     zappy
         .user
         .ui
-        .players(&zappy.user.players, zappy.camera_is_active);
+        .players(&zappy.user.players, &zappy.user.team_names, zappy.camera_is_active);
     if let Some(server) = &zappy.user.server {
         zappy
             .user
