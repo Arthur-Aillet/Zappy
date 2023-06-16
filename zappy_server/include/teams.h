@@ -15,8 +15,8 @@
 
 enum orientation {
     North = 1,
-    Right = 2,
-    Left = 3,
+    Est = 2,
+    Sud = 3,
     West = 4,
 };
 
