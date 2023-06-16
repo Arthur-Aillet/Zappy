@@ -100,6 +100,29 @@ impl Map {
         ).is_some()
     }
 
+    pub fn update_resources(&mut self, x: usize, y: usize, q: usize, n:usize) {
+        let tile = &mut self.tiles[x][y];
+        let resource = match q {
+            0 => { &mut tile.q0}
+            1 => { &mut tile.q1}
+            2 => { &mut tile.q2}
+            3 => { &mut tile.q3}
+            4 => { &mut tile.q4}
+            5 => { &mut tile.q5}
+            6 => { &mut tile.q6}
+            _ => { return }
+        };
+        let diff = n as i32 - resource.len() as i32;
+        if diff > 0 {
+            for i in 0..diff {
+                tile.spawn_resource(q);
+            }
+        } else {
+            resource.truncate(n);
+        }
+    }
+
+
     pub fn render(app: &mut App<Zappy>) {
         let map = &app.user.map;
         if let Some(mesh) = &app.user.map.mesh {

@@ -39,16 +39,8 @@ impl Zappy {
             return;
         }
         for i in 0..7 {
-            // self.map.update_resources(x, y, i, args[2 + i]);
+            self.map.update_resources(args[0], args[1], i, args[2 + i]);
         }
-        // let selected_tile = &mut self.map.tiles[args[1] + self.map.size[1] * args[0]];
-        // selected_tile.food = args[2];
-        // selected_tile.linemate = args[3];
-        // selected_tile.deraumere = args[4];
-        // selected_tile.sibur = args[5];
-        // selected_tile.mendiane = args[6];
-        // selected_tile.phiras = args[7];
-        // selected_tile.thystame = args[8];
     }
 
     fn set_map_size(&mut self, command: String) {
