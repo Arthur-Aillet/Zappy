@@ -3,6 +3,7 @@ use regex::Regex;
 use std::env;
 use std::io::{self, Read, Write};
 use std::net::{Shutdown, TcpStream};
+use std::process::exit;
 use std::sync::{Arc, Mutex};
 
 pub struct ServerConn {
@@ -31,7 +32,14 @@ impl ServerConn {
         let (port, machine) = Self::parse_arguments();
         let connect = format!("{}:{}", machine, port);
 
-        TcpStream::connect(connect).expect("Couldn't connect to the server...")
+        match TcpStream::connect(connect) {
+            Ok(stream) => {stream}
+            Err(_) => {
+                println!("Connection to selected server refused");
+                exit(84);
+            }
+        }
+
     }
 
     // NOTE - Read the connexion flux and return a string or an error.
