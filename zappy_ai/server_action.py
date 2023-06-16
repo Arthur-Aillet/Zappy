@@ -26,23 +26,50 @@ def broadcast(client, text):
     """
     send_server(client, "Broadcast " + text)
 
+
 def fowards(client):
+    """!
+    Send the forward command to the server.
+
+    @param client Ai socket client
+    """
     send_server(client, "Forward")
     return ActionType.OK_ACTION
 
 def left(client):
+    """!
+    Send the left command to the server.
+
+    @param client Ai socket client
+    """
     send_server(client, "Left")
     return ActionType.OK_ACTION
 
 def right(client):
+    """!
+    Send the right command to the server.
+
+    @param client Ai socket client
+    """
     send_server(client, "Right")
     return ActionType.OK_ACTION
 
 def pick_up(client):
+    """!
+    Send the pick up command to the server.
+
+    @param client Ai socket client
+    """
     send_server(client, "Take object")
     return ActionType.OK_ACTION
 
 # si fork_ai return true la mainloop doit fork et l'enfant mainloop doit return True
 def fork_ai(client):
+    """!
+    Send the fork command to the server.
+
+    @param client Ai socket client
+    @return Returns the PID given by the fork() function. (0 = child)
+    """
     send_server(client, "Fork")
     return fork()

@@ -9,7 +9,7 @@
 ##
 
 from connect import connect
-from server_action import *
+import server_action
 from server_get import *
 from communication import *
 import uuid
@@ -61,15 +61,15 @@ class Session:
         self.msg_nb += 1
         return output
     def fowards(self):
-        return fowards(self.client)
+        return server_action.fowards(self.client)
     def left(self):
-        return left(self.client)
+        return server_action.left(self.client)
     def right(self):
-        return right(self.client)
+        return server_action.right(self.client)
     def pick_up(self):
-        return pick_up(self.client)
+        return server_action.pick_up(self.client)
     def pick_up(self):
-        return fork(self.client)
+        return server_action.fork(self.client)
 
     # server_get :
 

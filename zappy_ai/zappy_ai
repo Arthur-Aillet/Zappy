@@ -86,4 +86,7 @@ if __name__ == "__main__":
         if nb == 0:
             stderr.write("ko: no places in the team\n")
             exit(84)
-        run = mainloop() # boucle principale (return en cas de fork)
+        session = Session(client)
+        client.inventory()
+        print(session.client.recv().decode())
+        # run = mainloop() # boucle principale (return en cas de fork)
