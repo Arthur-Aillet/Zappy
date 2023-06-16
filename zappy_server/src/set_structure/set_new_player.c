@@ -11,16 +11,19 @@
 
 //NOTE - If an egg is find the player take its position and delete the egg
 // ! An egg is deleted when these positions are in x= -1 and y= -1
-static void egg_position(int *x, int *y, player_t *player)
+static void egg_position(int *x, int *y, team_t *team)
 {
-    for (int i = 0; i < MAX_PLAYER; i++) {
-        if (player[i].egg.x != -1 && player[i].egg.y != -1) {
-            *x = player[i].egg.x;
-            *y = player[i].egg.y;
-            player[i].egg.x = -1;
-            player[i].egg.y = -1;
-            break;
+    if (team->nb_eggs > 0) {
+        int idx = rand() % team->nb_eggs;
+        *x = team->egg[idx].x;
+        *y = team->egg[idx].y;
+        for (size_t i = idx; i < team->nb_eggs; i++) {
+            team->egg[i].x = team->egg[i + 1].x;
+            team->egg[i].y = team->egg[i + 1].y;
         }
+        team->egg[team->nb_eggs - 1].x = -1;
+        team->egg[team->nb_eggs - 1].y = -1;
+        team->nb_eggs--;
     }
 }
 
@@ -31,7 +34,7 @@ static int add_new_player(team_t *team, size_t max_x, size_t max_y)
     srand(time(NULL));
     int x = rand() % max_x;
     int y = rand() % max_y;
-    egg_position(&x, &y, team->players);
+    egg_position(&x, &y, team);
     for (int i = 0; i < MAX_PLAYER; i++) {
         if (team->players[i].x == -1 && team->players[i].y == -1) {
             team->players[i].x = x;

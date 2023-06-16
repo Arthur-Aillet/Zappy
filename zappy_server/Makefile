@@ -22,6 +22,7 @@ SRC		=	src/listening_socket.c										\
 			src/set_structure/set_team.c								\
 			src/set_structure/set_new_player.c							\
 			src/commands/client_undefined.c								\
+			src/commands/choose_command.c								\
 
 COMMAND	=	src/commands/check_command.c								\
 			src/commands/commands_gui/funct_client_bct.c				\

@@ -35,9 +35,9 @@ void funct_response_ia_eject(uint8_t **args, void *info, common_t *com)
     }
     ia->buffer.bufferWrite.octets[0] = '\0';
     if (find_ia_post(com, ia) == 0) {
-        strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
+        strcat((char*)ia->buffer.bufferWrite.octets, "ok\n\0");
     } else {
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
+        strcat((char*)ia->buffer.bufferWrite.octets, "ko\n\0");
     }
     write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets, ia->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_response_ia_eject\n");
