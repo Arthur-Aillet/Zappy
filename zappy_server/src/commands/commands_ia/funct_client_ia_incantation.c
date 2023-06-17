@@ -7,15 +7,18 @@
 
 #include "zappy.h"
 
-//voir fonction après
+//voir avec ludo comment faire pour appeler la fonction enfin la partie du gui qu'il faut
+// et voir si on verifie dans la fonction ici ou dans le pic pour les besoins de l'incantation
 
-void funct_client_ia_incantation(ia_t *ia, uint8_t **args)
+void funct_client_ia_incantation(ia_t *ia, uint8_t **args, common_t *com)
 {
     msg_queue_t new_msg;
 
+    (void)com;
     new_msg.time = 300;
     new_msg.handler = &funct_response_ia_incantation;
     new_msg.next_msg = ia->msg_queue;
+    //funct_server_pic();
     printf("rentrer dans la funct_client_ia_incantation");
     (void)ia;
     (void)args;

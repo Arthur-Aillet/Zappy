@@ -86,6 +86,7 @@ void funct_server_sbp(uint8_t **args, void *info, common_t *common);
 //-------------- Common Functions --------------------------------//
 
 common_t set_common(int ac, char *av[]);
+egg_t set_egg(int x, int y);
 void free_common(common_t *com);
 ia_t *to_find_ia(uint8_t *n, common_t *common);
 
@@ -101,5 +102,7 @@ int check_slot_and_create_player(common_t *com, int team_idx,int client_idx);
 
 int choose_graphic_command(uint8_t **cmd, common_t *com, int i);
 int choose_ia_command(uint8_t **cmd, common_t *com, int i);
+
+void update_life(client_t *client, server_t *server, size_t freq, common_t *com);
 
 #endif /* !ZAPPY_H_ */

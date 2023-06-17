@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-//voir comment faire les incantations
+//voir avec ludo pour l'incantation
 
 void funct_response_ia_incantation(uint8_t **args, void *info, common_t *com)
 {

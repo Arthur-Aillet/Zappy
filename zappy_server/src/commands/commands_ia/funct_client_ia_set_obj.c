@@ -7,11 +7,12 @@
 
 #include "zappy.h"
 
-void funct_client_ia_set_obj(ia_t *ia, uint8_t **args)
+void funct_client_ia_set_obj(ia_t *ia, uint8_t **args, common_t *com)
 {
     msg_queue_t new_msg;
     (void)ia;
     (void)args;
+    (void)com;
     new_msg.time = 7;
     new_msg.handler = &funct_response_ia_set_obj;
     new_msg.next_msg = ia->msg_queue;

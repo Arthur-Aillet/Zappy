@@ -12,6 +12,7 @@
     #include "teams.h"
     #include "error_handling.h"
 
+typedef struct common_s common_t;
 typedef struct msg_queue_s msg_queue_t;
 typedef struct ia_s {
     player_t *player;
@@ -40,23 +41,23 @@ void funct_response_ia_connect_bar(uint8_t **args, void *info, common_t *com);
 typedef struct server_ia_s {
     const uint8_t *comd;
     uint8_t **args;
-    void (*handler)(ia_t *ia, uint8_t **args);
+    void (*handler)(ia_t *ia, uint8_t **args, common_t *com);
 } server_ia_t;
 
-void funct_client_ia_forward(ia_t *ia, uint8_t **args);
-void funct_client_ia_right(ia_t *ia, uint8_t **args);
-void funct_client_ia_left(ia_t *ia, uint8_t **args);
-void funct_client_ia_look(ia_t *ia, uint8_t **args);
-void funct_client_ia_inventory(ia_t *ia, uint8_t **args);
-void funct_client_ia_broadcast(ia_t *ia, uint8_t **args);
-void funct_client_ia_msg(ia_t *ia, uint8_t **args);
-void funct_client_ia_connect_nbr(ia_t *ia, uint8_t **args);
-void funct_client_ia_fork(ia_t *ia, uint8_t **args);
-void funct_client_ia_eject(ia_t *ia, uint8_t **args);
-void funct_client_ia_take_obj(ia_t *ia, uint8_t **args);
-void funct_client_ia_set_obj(ia_t *ia, uint8_t **args);
-void funct_client_ia_incantation(ia_t *ia, uint8_t **args);
-void funct_client_ia_connect_bar(ia_t *ia, uint8_t **args);
+void funct_client_ia_forward(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_right(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_left(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_look(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_inventory(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_broadcast(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_msg(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_connect_nbr(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_fork(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_eject(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_take_obj(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_set_obj(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_incantation(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_connect_bar(ia_t *ia, uint8_t **args, common_t *com);
 
 static const server_ia_t COMMAND_GESTION_IA[] = {
     {(const uint8_t*)"Forward", NULL, funct_client_ia_forward},

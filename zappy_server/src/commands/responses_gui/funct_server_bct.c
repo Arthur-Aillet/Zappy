@@ -25,7 +25,7 @@ void funct_server_bct(uint8_t **args, void *info, common_t *common)
     strcat((char*)gui->buffer.bufferWrite.octets, " ");
     strcat((char*)gui->buffer.bufferWrite.octets, (char*)args[1]);
     strcat((char*)gui->buffer.bufferWrite.octets, " ");
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 6; i++) {
         sprintf(buffer_x, "%ld", gui->map.tiles[atoi((char*)args[0])][atoi((char*)args[1])].ressources[i]);
         gui->buffer.bufferWrite.usedSize += strlen(buffer_x) + 1;
         gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets, sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));

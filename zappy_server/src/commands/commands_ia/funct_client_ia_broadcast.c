@@ -8,10 +8,11 @@
 #include "zappy.h"
 #include <string.h>
 
-void funct_client_ia_broadcast(ia_t *ia, uint8_t **args)
+void funct_client_ia_broadcast(ia_t *ia, uint8_t **args, common_t *com)
 {
     msg_queue_t new_msg;
 
+    (void)com;
     new_msg.time = 7;
     new_msg.msg = malloc(sizeof(u_int8_t *) * 2);
     if (new_msg.msg == NULL) {

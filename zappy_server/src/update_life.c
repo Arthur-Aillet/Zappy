@@ -5,13 +5,29 @@
 ** update_life.c
 */
 
-#include "teams.h"
-#include "server.h"
-#include "error_handling.h"
 #include <stdlib.h>
 
-static int update_player_life(player_t *player)
+#include "zappy.h"
+#include "error_handling.h"
+
+static ia_t *to_find_ia_int(int id, common_t *common)
 {
+    for (size_t i = 0; i < common->nb_ia; i++) {
+        if (id == common->ia[i].player->id) {
+            return &common->ia[i];
+        }
+    }
+    return NULL;
+}
+
+static int update_player_life(player_t *player, common_t *com)
+{
+    u_int8_t **args = malloc(sizeof(u_int8_t *) * 2);
+    char buffer_args[256];
+
+    if (args == NULL) {
+        //error
+    }
     if (player->x == -1 && player->y == -1)
         return 1;
     time_t now = time(NULL);
@@ -21,7 +37,15 @@ static int update_player_life(player_t *player)
         else
             player->inventory[FOOD]--;
         if (player->life == 0) {
-            //TODO - send death message
+            sprintf(buffer_args, "%d", player->id);
+            args[0] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
+            if (args[0] == NULL) {
+                //error
+            }
+            args[0][0] = '\0';
+            strcat((char*)args[0], buffer_args);
+            funct_server_pdi(args, com->gui, com);
+            funct_response_ia_death(args, to_find_ia_int(player->id, com), com);
             //FIXME il faut que le player est accès à la structure client via un pointeur
             return 0;
         }
@@ -37,13 +61,13 @@ void reset_player(player_t *player, size_t freq)
     *player = set_player(-1, -1, freq);
 }
 
-void update_life(client_t *client, server_t *server, size_t freq)
+void update_life(client_t *client, server_t *server, size_t freq, common_t *com)
 {
     (void)server;
     int res = 1;
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (client->type == IA) {
-            res = update_player_life((player_t *)client->str_cli);
+            res = update_player_life((player_t *)client->str_cli, com);
         }
         if (client->type == IA && res == 0) {
             res = 1;

@@ -7,10 +7,11 @@
 
 #include "zappy.h"
 
-void funct_client_ia_take_obj(ia_t *ia, uint8_t **args)
+void funct_client_ia_take_obj(ia_t *ia, uint8_t **args, common_t *com)
 {
     msg_queue_t new_msg;
     (void)args;
+    (void)com;
     (void)new_msg;
 
     new_msg.time = 7;

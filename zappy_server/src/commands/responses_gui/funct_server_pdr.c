@@ -7,6 +7,8 @@
 
 #include "zappy.h"
 
+//voir avec ludo se qu'il reste sur cette fonction je pense notament à la mort
+
 void funct_server_pdr(uint8_t **args, void *info, common_t *common)
 {
     ia_t *tmp_ia = to_find_ia(args[0], common);

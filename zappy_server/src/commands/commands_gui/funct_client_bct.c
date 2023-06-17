@@ -7,10 +7,11 @@
 
 #include "zappy.h"
 
-void funct_client_bct(gui_t *gui, uint8_t **args)
+void funct_client_bct(gui_t *gui, uint8_t **args, common_t *com)
 {
     msg_queue_t new_msg;
 
+    (void)com;
     new_msg.time = 0;
     new_msg.msg = malloc(sizeof(u_int8_t *) * 3);
     if (new_msg.msg == NULL) {

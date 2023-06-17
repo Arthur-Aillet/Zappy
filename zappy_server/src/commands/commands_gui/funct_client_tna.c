@@ -7,9 +7,10 @@
 
 #include "zappy.h"
 
-void funct_client_tna(gui_t *gui, uint8_t **args)
+void funct_client_tna(gui_t *gui, uint8_t **args, common_t *com)
 {
     (void)args;
+    (void)com;
     msg_queue_t *new_msg = malloc(sizeof(msg_queue_t));
 
     new_msg->time = 0;

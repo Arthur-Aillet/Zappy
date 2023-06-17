@@ -7,10 +7,11 @@
 
 #include "zappy.h"
 
-void funct_client_ia_eject(ia_t *ia, uint8_t **args)
+void funct_client_ia_eject(ia_t *ia, uint8_t **args, common_t *com)
 {
     msg_queue_t new_msg;
 
+    (void)com;
     new_msg.time = 7;
     new_msg.handler = &funct_response_ia_eject;
     new_msg.next_msg = ia->msg_queue;

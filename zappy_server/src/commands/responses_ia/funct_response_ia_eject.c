@@ -7,8 +7,6 @@
 
 #include "zappy.h"
 
-//voir comment move les joueurs sur la plaques -> regarder l'orientation du joueur qui pousse et ejecter les autres une case dans l'autre sens et detruire les oeufs
-
 static egg_t *remove_egg(egg_t egg, egg_t *old_eggs, size_t nb_eggs, common_t *com)
 {
     egg_t *new_eggs = malloc(sizeof(egg_t) * (nb_eggs - 1));

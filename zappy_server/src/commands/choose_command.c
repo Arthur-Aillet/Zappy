@@ -11,6 +11,8 @@
 
 static int command_ia_part_ones(uint8_t **cmd, common_t *com, int i)
 {
+    (void)com;
+    (void)i;
     if (strcmp((char*)cmd[0], "Forward") == 0) {
         printf("Forward\n");
         return 1;
@@ -40,6 +42,8 @@ static int command_ia_part_ones(uint8_t **cmd, common_t *com, int i)
 
 static int command_ia_part_two(uint8_t **cmd, common_t *com, int i)
 {
+    (void)com;
+    (void)i;
     if (strcmp((char*)cmd[0], "Fork") == 0) {
         printf("Fork\n");
         return 1;
@@ -80,6 +84,8 @@ int choose_ia_command(uint8_t **cmd, common_t *com, int i)
 
 int choose_graphic_command(uint8_t **cmd, common_t *com, int i)
 {
+    (void)com;
+    (void)i;
     if (strcmp((char*)cmd[0], "msz") == 0) {
         printf("msz\n");
     } else if (strcmp((char*)cmd[0], "bct") == 0) {
