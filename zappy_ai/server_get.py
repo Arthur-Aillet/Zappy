@@ -10,7 +10,7 @@
 ## File description:
 ## server_get.py
 ##
-
+from datatypes import ActionType
 from connect import send_server
 
 def look(client):
@@ -40,7 +40,11 @@ def inventory(client):
     @return Return a dict representing the inventory of the AI for each type of ressource,
     conformed to the Zappy documentation.
     """
-    answer = send_server(client, "Inventory")
+    send_server(client, "Inventory")
+    return ActionType.INVENTORY
+
+def parse_inventory(answer):
+    answer = str(answer)[4:-6].split(", ")
     if len(answer) < 5:
         return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
     answer = str(answer)[4:-5].replace(',', '').split()
