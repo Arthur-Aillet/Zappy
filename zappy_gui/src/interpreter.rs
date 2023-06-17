@@ -4,7 +4,7 @@ use crate::zappy::Zappy;
 use regex::Regex;
 use rend_ox::nannou::draw::properties::spatial::orientation;
 use std::collections::HashMap;
-use std::num::ParseFloatError;
+use std::num::{ParseFloatError, ParseIntError};
 use std::sync::{Arc, Mutex};
 
 pub type ServerFunction = fn(&mut Zappy, String);
@@ -17,6 +17,7 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     functions.insert("sgt".to_string(), Zappy::set_time_unit);
     functions.insert("tna".to_string(), Zappy::add_team_name);
     functions.insert("pnw".to_string(), Zappy::connect_new_player);
+    functions.insert("pdi".to_string(), Zappy::death_of_player);
     functions
 }
 
@@ -38,6 +39,27 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn death_of_player(&mut self, command: String) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() != 2 {
+            println!("pdi: Too many arguments");
+        } else {
+            let maybe_number : Result<i64, _> = args[1].to_string().parse();
+
+            match maybe_number {
+                Ok(number) => {
+                    for player in &mut self.players {
+                        if player.number == number {
+                            player.alive = false;
+                        }
+                    }
+                }
+                Err(_) => {println!("pdi: invalid player number");}
+            }
+        }
+    }
+
     fn connect_new_player(&mut self, command: String) {
         let re = Regex::new(r"^pnw (-?\d+) (\d+) (\d+) ([1-4]) ([0-8]) (\w+)$")
             .expect("Invalid regex");

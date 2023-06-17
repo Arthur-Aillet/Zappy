@@ -132,7 +132,15 @@ impl ZappyUi {
             CollapsingHeader::new(player.number)
                 .default_open(false)
                 .show(ui, |col| {
-                    ZappyUi::display_stat(col, "Number:", player.number);
+                    ZappyUi::display_stat(col, "Number", player.number);
+
+                    let state: &str;
+                    if player.alive {
+                        state = "alive";
+                    } else  {
+                        state = "dead";
+                    }
+                    ZappyUi::display_stat(col, "Status", state);
                 });
         }
     }
@@ -140,6 +148,7 @@ impl ZappyUi {
     pub(crate) fn players(&mut self, players: &Vec<Tantorian>, teams: &Vec<String>, is_active: bool) {
         egui::Window::new("Players")
             .enabled(!is_active)
+            .resizable(true)
             .show(&self.ctx.clone().expect("Ctx not set"), |ui| {
                 for team in teams {
                     CollapsingHeader::new(team)

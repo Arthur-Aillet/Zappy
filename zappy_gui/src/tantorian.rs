@@ -30,6 +30,7 @@ pub struct Tantorian {
     pub level: u32,
     pub orientation: Orientation,
     pub mesh_descriptor: u32,
+    pub alive: bool,
 }
 
 impl Tantorian {
@@ -43,6 +44,7 @@ impl Tantorian {
             orientation: Orientation::N,
             mesh_descriptor: 0,
             current_tile: UVec2::new(0, 0),
+            alive: true,
         }
     }
 
@@ -74,6 +76,7 @@ impl Tantorian {
             orientation,
             mesh_descriptor: 0,
             current_tile: UVec2::new(x as u32, y as u32),
+            alive: true,
         })
     }
 
