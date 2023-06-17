@@ -8,6 +8,19 @@ pub enum Orientation {
     W = 4,
 }
 
+impl Orientation {
+    pub fn from_usize(value: usize) -> Orientation {
+        match value {
+            1 => Orientation::N,
+            2 => Orientation::E,
+            3 => Orientation::S,
+            4 => Orientation::W,
+            _ => panic!("Orientation: Unknown value: {}", value),
+        }
+    }
+}
+
+
 pub struct Tantorian {
     pub team_name: String,
     pub number: i64,

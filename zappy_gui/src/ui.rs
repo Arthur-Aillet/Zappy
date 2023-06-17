@@ -113,7 +113,7 @@ impl ZappyUi {
                     ui.add(egui::Label::new("_______________________________").strong());
                     ui.add_space(10.);
 
-                    let mut title = format!("Tile {} {}: ", selected[0], selected[1]);
+                    let title = format!("Tile {} {}: ", selected[0], selected[1]);
                     ui.add(egui::Label::new(title).heading());
                     egui::Grid::new("Tile")
                         .num_columns(2)
