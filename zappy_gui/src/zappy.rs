@@ -86,11 +86,13 @@ impl Zappy {
 }
 
 pub(crate) fn zappy_update(
-    _nannou_app: &rend_ox::nannou::App,
+    nannou_app: &rend_ox::nannou::App,
     zappy: &mut App<Zappy>,
-    _update: rend_ox::nannou::event::Update,
+    update: rend_ox::nannou::event::Update,
     ctx: CtxRef
 ) {
+    rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
+
     Zappy::render(zappy);
     zappy.user.interpret_commands();
     zappy.user.ui.ctx = Some(ctx);
