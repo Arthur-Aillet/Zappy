@@ -85,7 +85,7 @@ impl Zappy {
                 team_name,
                 &self.team_names,
                 &self.map.size,
-                &self.players,
+                &mut self.players,
             ) {
                 self.players.push(new_player)
             }

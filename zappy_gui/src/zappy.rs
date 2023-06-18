@@ -4,6 +4,7 @@ use rend_ox::mesh::MeshDescriptor;
 use rend_ox::wgpu::Color;
 use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
+use rend_ox::nannou_egui::egui::CtxRef;
 
 use crate::map::Map;
 pub use crate::server::ServerConn;
@@ -89,11 +90,11 @@ pub(crate) fn zappy_update(
     _nannou_app: &rend_ox::nannou::App,
     zappy: &mut App<Zappy>,
     update: rend_ox::nannou::event::Update,
+    ctx: CtxRef
 ) {
     Zappy::render(zappy);
     zappy.user.interpret_commands();
-    zappy.egui_instance.set_elapsed_time(update.since_start);
-    zappy.user.ui.ctx = Some(zappy.egui_instance.begin_frame().context());
+    zappy.user.ui.ctx = Some(ctx);
     zappy
         .user
         .ui
