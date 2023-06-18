@@ -1,17 +1,17 @@
+mod interpreter;
 mod map;
+mod network;
 mod server;
 mod tantorian;
 mod ui;
-mod network;
 mod zappy;
-mod interpreter;
 
 use std::thread;
 
 use crate::zappy::Zappy;
 
-use rend_ox::app::{app, App};
 use crate::network::loop_server;
+use rend_ox::app::{app, App};
 
 fn zappy_app(nannou_app: &rend_ox::nannou::App) -> App<Zappy> {
     let mut app = app(nannou_app, Zappy::new(), zappy::zappy_update);

@@ -48,7 +48,7 @@ impl Tantorian {
         }
     }
 
-    pub fn new_from_command(number: i64, x: usize, y: usize, orientation: Orientation, level : u32, team_name: String, teams: &Vec<String>, map_size: &[usize; 2], players: &Vec<Tantorian>) -> Option<Tantorian> {
+    pub fn new_from_command(number: i64, x: usize, y: usize, orientation: Orientation, level : u32, team_name: String, teams: &Vec<String>, map_size: &[usize; 2], players: &mut Vec<Tantorian>) -> Option<Tantorian> {
         if !teams.contains(&team_name) {
             println!("New player team name does not exist!");
             return None;
@@ -62,8 +62,19 @@ impl Tantorian {
             return None;
         }
         for player in players {
-            if player.team_name == team_name && player.number == number {
+            if player.team_name == team_name && player.number == number && player.alive == true {
                 println!("New player number already attributed!");
+                return None;
+            } else if player.team_name == team_name && player.number == number {
+                player.team_name = team_name;
+                player.number = number;
+                player.pos = Vec3::new(x as f32, y as f32, 0.);
+                player.color = player.color;
+                player.level = level;
+                player.orientation = orientation;
+                player.mesh_descriptor = 0;
+                player.current_tile = UVec2::new(x as u32, y as u32);
+                player.alive = true;
                 return None;
             }
         }
