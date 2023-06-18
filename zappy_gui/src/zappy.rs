@@ -4,6 +4,7 @@ use rend_ox::mesh::MeshDescriptor;
 use rend_ox::wgpu::Color;
 use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
+use std::cmp::{max, min};
 
 use crate::map::Map;
 pub use crate::server::ServerConn;
@@ -22,9 +23,38 @@ pub struct Zappy {
 
 fn hsv_to_rgb(source: Vec3) -> Vec3
 {
-    let r = source.z * (source.y - 1. + source.y * (source.x * (2. * std::f32::consts::PI))).cos();
-    let g = source.z * (source.y - 1. + source.y * ((source.x - (1. / 3.)) * (2. * std::f32::consts::PI))).cos();
-    let b = source.z * (source.y - 1. + source.y * ((source.x - (2. / 3.)) * (2. * std::f32::consts::PI))).cos();
+    let mut r = ((source.x) * 1. * std::f32::consts::PI).cos();
+    let mut g = ((source.x - (1. / 3.)) * 1. * std::f32::consts::PI).cos();
+    let mut b = ((source.x - (2. / 3.)) * 1. * std::f32::consts::PI).cos();
+
+    // r = source.y * r + source.y - 1.;
+    // g = source.y * g + source.y - 1.;
+    // b = source.y * b + source.y - 1.;
+
+    r = source.z * r;
+    g = source.z * g;
+    b = source.z * b;
+
+    // ((source.x) * 2. * std::f32::consts::PI).cos();
+    // ((source.x - (1. / 3.)) * 2. * std::f32::consts::PI).cos();
+    // ((source.x - (2. / 3.)) * 2. * std::f32::consts::PI).cos();
+
+
+    Vec3::new(r, g, b)
+}
+
+fn hsv2rgb(source: Vec3) -> Vec3/* h,s,v) */ {
+    let mut r = ((((source.x + (3. / 3.)) % 1.) * 2. - 1.).abs() * 3. - 1.).clamp(0., 1.);
+    let mut g = ((((source.x + (5. / 3.)) % 1.) * 2. - 1.).abs() * 3. - 1.).clamp(0., 1.);
+    let mut b = ((((source.x + (4. / 3.)) % 1.) * 2. - 1.).abs() * 3. - 1.).clamp(0., 1.);
+
+    r = source.y * r + 1. - source.y;
+    g = source.y * g + 1. - source.y;
+    b = source.y * b + 1. - source.y;
+
+    r = source.z * r;
+    g = source.z * g;
+    b = source.z * b;
 
     Vec3::new(r, g, b)
 }
@@ -65,10 +95,11 @@ impl Zappy {
         app.user.server = Some(ServerConn::new());
 
         // TODO : Remove this default population
-        for i in 0..4 {
+        let player_count = 16;
+        for i in 0..player_count {
             let mut t = Tantorian::new();
             t.pos = Vec3::new(0., i as f32, 0.);
-            t.color = hsv_to_rgb(Vec3::new(i as f32 / 5., 0.9, 0.9));
+            t.color = hsv2rgb(Vec3::new(i as f32 / (player_count as f32), 0.9, 0.7));
             app.user.players.push(t);
             app.user.map.spawn_resource(i * 8654 % 8, i * 865 % 8, i);
         }
@@ -78,7 +109,7 @@ impl Zappy {
             let mat = Mat4::from_scale(Vec3::new(1., 1., 0.75)) * Mat4::from_rotation_x(std::f32::consts::PI * 0.5);
             let instances : Vec<Mat4> = app.user.players.iter().map(|p| Mat4::from_translation(p.pos + Vec3::new(0., 0., 2.)) * mat).collect();
             let colors : Vec<Vec3> = app.user.players.iter().map(|p| p.color).collect();
-            app.draw_instances(mesh, instances, colors);
+            app.draw_instances(mesh, instances.clone(), colors.clone());
         }
         Map::render(app);
     }
