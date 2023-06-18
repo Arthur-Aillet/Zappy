@@ -2,9 +2,7 @@ use crate::map::Tile;
 use crate::tantorian::{Orientation, Tantorian};
 use crate::zappy::Zappy;
 use regex::Regex;
-use rend_ox::nannou::draw::properties::spatial::orientation;
 use std::collections::HashMap;
-use std::num::{ParseFloatError, ParseIntError};
 use std::sync::{Arc, Mutex};
 
 pub type ServerFunction = fn(&mut Zappy, String);

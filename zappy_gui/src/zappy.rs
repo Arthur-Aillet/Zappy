@@ -1,7 +1,6 @@
 use rend_ox::app::App;
 use rend_ox::{Vec3, Mat4};
 use rend_ox::mesh::MeshDescriptor;
-use rend_ox::wgpu::Color;
 use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
 use rend_ox::nannou_egui::egui::CtxRef;
@@ -89,7 +88,7 @@ impl Zappy {
 pub(crate) fn zappy_update(
     _nannou_app: &rend_ox::nannou::App,
     zappy: &mut App<Zappy>,
-    update: rend_ox::nannou::event::Update,
+    _update: rend_ox::nannou::event::Update,
     ctx: CtxRef
 ) {
     Zappy::render(zappy);
