@@ -22,7 +22,6 @@ egg_t set_egg(int x, int y)
 
 player_t set_player(size_t x, size_t y, size_t freq)
 {
-    srand(time(NULL));
     player_t new;
     new.x = x;
     new.y = y;

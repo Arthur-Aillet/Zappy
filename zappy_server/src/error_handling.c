@@ -30,5 +30,4 @@ int basic_log(char *message, char *color, int ret)
     fprintf(stderr, msg, color, N);
     free(msg);
     return ret;
-
 }

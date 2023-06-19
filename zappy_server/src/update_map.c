@@ -26,7 +26,6 @@ static size_t *new_ressource(int height, int width)
 
 static void random_resource_position(map_t *map, int resource)
 {
-    srand(time(NULL));
     int x = rand() % map->height;
     int y = rand() % map->width;
     map->tiles[x][y].ressources[resource]++;
