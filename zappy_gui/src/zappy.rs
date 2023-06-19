@@ -86,7 +86,7 @@ impl Zappy {
             if let Ok(mut md) = graphics.load_mesh("./obj/rock.obj") {
                 app.user.map.rock_mesh = Some(md);
             }
-            if let Ok(md) = graphics.load_mesh("./obj/bat.obj") {
+            if let Ok(md) = graphics.load_mesh("./obj/batgnome.obj") {
                 println!("Zappy: loaded bat.obj");
                 app.user.tantorian_mesh = Some(md);
             } else {
@@ -110,7 +110,7 @@ impl Zappy {
 
     pub fn render(app: &mut App<Zappy>) {
         if let Some(mesh) = &app.user.tantorian_mesh {
-            let mat = Mat4::from_scale(Vec3::new(1., 1., 0.75)) * Mat4::from_rotation_x(std::f32::consts::PI * 0.5);
+            let mat = Mat4::from_rotation_x(std::f32::consts::PI * 0.5);
             let instances : Vec<Mat4> = app.user.players.iter().map(|p| Mat4::from_translation(p.pos + Vec3::new(0., 0., 2.)) * mat).collect();
             let colors : Vec<Vec3> = app.user.players.iter().map(|p| p.color).collect();
             app.draw_instances(mesh, instances.clone(), colors.clone());
