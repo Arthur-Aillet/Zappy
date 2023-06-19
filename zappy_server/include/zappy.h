@@ -103,7 +103,8 @@ int check_slot_and_create_player(common_t *com, int team_idx,int client_idx);
 int choose_graphic_command(uint8_t **cmd, common_t *com, int i);
 int choose_ia_command(uint8_t **cmd, common_t *com, int i);
 
-void update_life(client_t *client, server_t *server, size_t freq, common_t *com);
+void update_life(client_t *client, server_t *server,
+                size_t freq, common_t *com);
 
 void malloc_nbr_args(msg_queue_t *new_msg, size_t nbr_args);
 team_t *to_find_team_by_uint8_t(uint8_t *n, common_t *common);

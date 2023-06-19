@@ -31,98 +31,73 @@ static int egg_position(int *x, int *y, team_t *team)
     return 0;
 }
 
-static bool add_new_player(team_t *team, size_t max_x, size_t max_y, common_t *com)
+static void send_to_gui_buffer(int num, char *value, uint8_t *arg)
 {
-    u_int8_t **args;
     char buffer_args[256];
-    int status;
+
+    if (value == NULL)
+        sprintf(buffer_args, "%d", num);
+    else
+        sprintf(buffer_args, "%s", value);
+    arg = malloc(sizeof(u_int8_t) * strlen(buffer_args));
+    if (arg == NULL)
+        error("Memory allocation failed", 0);
+    arg[0] = '\0';
+    strcat((char*)arg, buffer_args);
+}
+
+static void send_to_gui(int status, common_t *com, team_t *team, int i)
+{
+    uint8_t **args;
+
+    if (status != 0) {
+        args = malloc(sizeof(u_int8_t *) * 1);
+        if (args == NULL)
+            error("Memory allocation failed", 0);
+        send_to_gui_buffer(status, NULL, args[0]);
+        funct_server_ebo(args, com->gui, com);
+    } else {
+        args = malloc(sizeof(u_int8_t *) * 6);
+        if (args == NULL)
+            error("Memory allocation failed", 0);
+        send_to_gui_buffer(team->players[i].id, NULL, args[0]);
+        send_to_gui_buffer(team->players[i].x, NULL, args[1]);
+        send_to_gui_buffer(team->players[i].y, NULL, args[2]);
+        send_to_gui_buffer(team->players[i].orientation, NULL, args[3]);
+        send_to_gui_buffer(team->players[i].level, NULL, args[4]);
+        send_to_gui_buffer(0, team->name, args[5]);
+        funct_server_pnw(args, com->gui, com);
+    }
+}
+
+static bool add_new_player(team_t *team, size_t max_x, size_t max_y,
+                            common_t *com)
+{
     bool ret = false;
     int i = 0;
-
-    if (team->nb_slot == team->actif_player)
-        return -1;
-    srand(time(NULL));
+    int status;
     int x = rand() % max_x;
     int y = rand() % max_y;
-    int o = rand() % 4;
+
+    if (team->nb_slot == team->actif_player)
+        return false;
     status = egg_position(&x, &y, team);
     for (; i < MAX_PLAYER; i++) {
         if (team->players[i].x == -1 && team->players[i].y == -1) {
             team->players[i].x = x;
             team->players[i].y = y;
-            team->players[i].orientation = (size_t)o;
+            team->players[i].orientation = rand() % 4;
             team->actif_player++;
             ret = true;
             break;
         }
     }
-    if (status != 0) {
-        args = malloc(sizeof(u_int8_t *) * 1);
-        if (args == NULL) {
-            //error
-        }
-        sprintf(buffer_args, "%d", status);
-        args[0] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
-        if (args[0] == NULL) {
-            //error
-        }
-        args[0][0] = '\0';
-        strcat((char*)args[0], buffer_args);
-        funct_server_ebo(args, com->gui, com);
-    } else {
-        args = malloc(sizeof(u_int8_t *) * 6);
-        if (args == NULL) {
-            //error
-        }
-        sprintf(buffer_args, "%d", team->players[i].id);
-        args[0] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
-        if (args[0] == NULL) {
-            //error
-        }
-        args[0][0] = '\0';
-        strcat((char*)args[0], buffer_args);
-        sprintf(buffer_args, "%d", team->players[i].x);
-        args[1] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
-        if (args[1] == NULL) {
-            //error
-        }
-        args[1][0] = '\0';
-        strcat((char*)args[1], buffer_args);
-        sprintf(buffer_args, "%d", team->players[i].y);
-        args[2] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
-        if (args[2] == NULL) {
-            //error
-        }
-        args[2][0] = '\0';
-        strcat((char*)args[2], buffer_args);
-        sprintf(buffer_args, "%ld", team->players[i].orientation);
-        args[3] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
-        if (args[3] == NULL) {
-            //error
-        }
-        args[3][0] = '\0';
-        strcat((char*)args[3], buffer_args);
-        sprintf(buffer_args, "%ld", team->players[i].level);
-        args[4] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
-        if (args[4] == NULL) {
-            //error
-        }
-        args[4][0] = '\0';
-        strcat((char*)args[4], buffer_args);
-        args[5] = malloc(sizeof(u_int8_t) * strlen(team->name));
-        if (args[5] == NULL) {
-            //error
-        }
-        args[5][0] = '\0';
-        strcat((char*)args[5], team->name);
-        funct_server_pnw(args, com->gui, com);
-    }
+    send_to_gui(status, com, team, i);
     return ret;
 }
 
 int check_slot_and_create_player(common_t *com, int t_idx,int client_idx)
 {
-    srand(time(NULL));
     bool res = add_new_player(&TEAM(t_idx), com->gui->map.height,
                             com->gui->map.width, com);
     if (res == false) {

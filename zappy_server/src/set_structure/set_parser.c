@@ -13,6 +13,7 @@
 parser_t *set_parser(void)
 {
     parser_t *parser = malloc(sizeof(parser_t));
+
     parser->teams_name = NULL;
     parser->nb_teams = 0;
     parser->client_nb = 2;

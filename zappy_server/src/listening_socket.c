@@ -60,9 +60,11 @@ static int check_command(uint8_t **command, common_t *com, int i)
 
 static int check_incoming_data(common_t *com)
 {
+    uint8_t **command;
+
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (PC_SOCKET(i) > 0 && FD_ISSET(PC_SOCKET(i), &PS_READ)) {
-            uint8_t **command = get_message(&com->server, &com->client[i]);
+            command = get_message(&com->server, &com->client[i]);
             int response = check_command(command, com, i);
             free_array((void**)command);
             return response;

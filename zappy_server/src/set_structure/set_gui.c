@@ -23,6 +23,7 @@ static size_t *set_ressources(void)
 static map_t set_map(int height, int width, int freq)
 {
     map_t map;
+
     map.height = height;
     map.width = width;
     map.start = time(NULL);
@@ -44,6 +45,7 @@ static map_t set_map(int height, int width, int freq)
 gui_t *set_gui(int height, int width, int freq)
 {
     gui_t *gui = malloc(sizeof(gui_t));
+
     gui->map = set_map(height, width, freq);
     return gui;
 }
