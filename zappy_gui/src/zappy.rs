@@ -102,23 +102,22 @@ pub(crate) fn zappy_update(
     ctx: &CtxRef
 ) {
     //rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
-
     Zappy::render(zappy);
     zappy.user.interpret_commands();
-    /* zappy
+    zappy
         .user
         .ui
-        .settings(&mut zappy.camera, zappy.camera_is_active);
-    /zappy
+        .settings(ctx, &mut zappy.camera, zappy.camera_is_active);
+    zappy
         .user
         .ui
-        .players(&zappy.user.players, &zappy.user.team_names, zappy.camera_is_active);
-    */if let Some(server) = &zappy.user.server {
-        /*zappy
+        .players(ctx, &zappy.user.players, &zappy.user.team_names, zappy.camera_is_active);
+    if let Some(server) = &zappy.user.server {
+        zappy
             .user
             .ui
-            .communications(zappy.camera_is_active, &server.commands.lock().expect("Lock poisoned"));*/
-        /*zappy.user.ui.tiles(&zappy.user.map, zappy.camera_is_active);*/
+            .communications(ctx, zappy.camera_is_active, &server.commands.lock().expect("Lock poisoned"));
+        zappy.user.ui.tiles(ctx, &zappy.user.map, zappy.camera_is_active);
         zappy.user.ui.network_status(ctx, zappy.camera_is_active, &mut zappy.user.port, &mut zappy.user.hostname);
     }
 }

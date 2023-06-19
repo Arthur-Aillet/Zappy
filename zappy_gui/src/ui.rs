@@ -7,21 +7,19 @@ use crate::tantorian::Tantorian;
 
 pub(crate) struct ZappyUi {
     pub selected_tile: Option<[usize; 2]>,
-    pub ctx: Option<CtxRef>,
 }
 
 impl ZappyUi {
     pub(crate) fn new() -> ZappyUi {
         ZappyUi {
-            ctx: None,
             selected_tile: None,
         }
     }
 
 
-    pub(crate) fn settings(&mut self, camera: &mut rend_ox::camera::Camera, is_active: bool) {
+    pub(crate) fn settings(&mut self, ctx: &CtxRef, camera: &mut rend_ox::camera::Camera, is_active: bool) {
         egui::Window::new("Settings").enabled(!is_active).show(
-            &self.ctx.clone().expect("Ctx not set"),
+            &ctx,
             |ui| {
                 ui.label("Camera:");
                 ui.add(egui::Slider::new(&mut camera.speed, 0.1..=10.0).text("Speed:"));
@@ -54,10 +52,10 @@ impl ZappyUi {
             });
     }
 
-    pub(crate) fn communications(&mut self, is_active: bool, messages: &Vec<String>) {
+    pub(crate) fn communications(&mut self, ctx: &CtxRef, is_active: bool, messages: &Vec<String>) {
         egui::Window::new("Communications")
             .enabled(!is_active)
-            .show(&self.ctx.clone().expect("Ctx not set"), |ui| {
+            .show(ctx, |ui| {
                 egui::ScrollArea::vertical()
                     .auto_shrink([false; 2])
                     .max_height(100.)
@@ -122,10 +120,9 @@ impl ZappyUi {
         ZappyUi::display_stat(grid,"Thystame", map.tiles[selected[0]][selected[1]].q6.len());
     }
 
-    pub(crate) fn tiles(&mut self, map: &crate::map::Map, is_active: bool) {
+    pub(crate) fn tiles(&mut self, ctx: &CtxRef, map: &crate::map::Map, is_active: bool) {
         egui::Window::new("Map").vscroll(true).enabled(!is_active).show(
-            &self.ctx.clone().expect("Ctx not set"),
-            |ui| {
+            ctx, |ui| {
                 ui.add(egui::Label::new("Tiles:").heading());
                 egui::Grid::new("Tiles")
                     .num_columns(map.size[0] as usize)
@@ -170,11 +167,11 @@ impl ZappyUi {
         }
     }
 
-    pub(crate) fn players(&mut self, players: &Vec<Tantorian>, teams: &Vec<String>, is_active: bool) {
+    pub(crate) fn players(&mut self, ctx: &CtxRef, players: &Vec<Tantorian>, teams: &Vec<String>, is_active: bool) {
         egui::Window::new("Players")
             .enabled(!is_active)
             .resizable(true)
-            .show(&self.ctx.clone().expect("Ctx not set"), |ui| {
+            .show(ctx, |ui| {
                 for team in teams {
                     CollapsingHeader::new(team)
                         .default_open(false)
