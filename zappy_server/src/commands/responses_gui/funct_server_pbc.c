@@ -11,8 +11,11 @@ void funct_server_pbc(uint8_t **args, void *info, common_t *common)
 {
     (void)common;
     gui_t *gui = (gui_t *)info;
-    gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) + strlen((char*)args[1]) + 7;
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets, sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
+
+    gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) +
+                                        strlen((char*)args[1]) + 7;
+    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
+                sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
         //error
         return;
@@ -23,6 +26,7 @@ void funct_server_pbc(uint8_t **args, void *info, common_t *common)
     strcat((char*)gui->buffer.bufferWrite.octets, " ");
     strcat((char*)gui->buffer.bufferWrite.octets, (char*)args[1]);
     strcat((char*)gui->buffer.bufferWrite.octets, "\n\0");
-    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets, gui->buffer.bufferWrite.usedSize);
+    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
+        gui->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_server_pbc\n");
 }

@@ -14,3 +14,27 @@ void malloc_nbr_args(msg_queue_t *new_msg, size_t nbr_args)
         //error
     }
 }
+
+static team_t *to_find_team_by_uint8_t_bis(size_t i, uint8_t *n,
+                                            common_t *common)
+{
+    for (size_t y = 0; y < common->teams[i].actif_player; y++) {
+        if (atoi((char*)n) == common->teams[i].players[y].id) {
+            return &common->teams[i];
+        }
+    }
+    return NULL;
+}
+
+team_t *to_find_team_by_uint8_t(uint8_t *n, common_t *common)
+{
+    team_t *tmp = NULL;
+
+    for (size_t i = 0; i < common->nb_teams; i++) {
+        tmp = to_find_team_by_uint8_t_bis(i, n , common);
+        if (tmp != NULL) {
+            return tmp;
+        }
+    }
+    return NULL;
+}

@@ -7,24 +7,13 @@
 
 #include "zappy.h"
 
-//"enw (e) (comment le trouver le e) n X Y\n"
-
-void funct_server_enw(uint8_t **args, void *info, common_t *common)
+static void funct_prepare_response(gui_t *gui, uint8_t **args,
+                                char *buffer_x, char *buffer_y)
 {
-    gui_t *gui = (gui_t *)info;
-    ia_t *tmp_ia = to_find_ia(args[0], common);
-    char buffer_x[256];
-    char buffer_y[256];
-
-    if (tmp_ia == NULL) {
-        //error
-        return;
-    }
-    tmp_ia->player->inventory[EGG] -= 1;
-    sprintf(buffer_x, "%d", tmp_ia->player->x);
-    sprintf(buffer_y, "%d", tmp_ia->player->y);
-    gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) + strlen((char*)args[1]) + strlen(buffer_x) + strlen(buffer_y) + 9;
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets, sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
+    gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) +
+    strlen((char*)args[1]) + strlen(buffer_x) + strlen(buffer_y) + 9;
+    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
+    sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
         //error
         return;
@@ -39,6 +28,24 @@ void funct_server_enw(uint8_t **args, void *info, common_t *common)
     strcat((char*)gui->buffer.bufferWrite.octets, " ");
     strcat((char*)gui->buffer.bufferWrite.octets, buffer_y);
     strcat((char*)gui->buffer.bufferWrite.octets, "\n\0");
-    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets, gui->buffer.bufferWrite.usedSize);
+}
+
+void funct_server_enw(uint8_t **args, void *info, common_t *common)
+{
+    gui_t *gui = (gui_t *)info;
+    ia_t *tmp_ia = to_find_ia(args[0], common);
+    char buffer_x[256];
+    char buffer_y[256];
+
+    if (tmp_ia == NULL || gui == NULL) {
+        //error
+        return;
+    }
+    tmp_ia->player->inventory[EGG] -= 1;
+    sprintf(buffer_x, "%d", tmp_ia->player->x);
+    sprintf(buffer_y, "%d", tmp_ia->player->y);
+    funct_prepare_response(gui, args, buffer_x, buffer_y);
+    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
+        gui->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_server_enw\n");
 }
