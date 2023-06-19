@@ -10,6 +10,7 @@ use rend_ox::nannou_egui::egui::CtxRef;
 use crate::map::Map;
 pub use crate::server::ServerConn;
 use crate::tantorian::Tantorian;
+use crate::ui;
 use crate::ui::ZappyUi;
 
 pub struct Zappy {
@@ -109,14 +110,21 @@ pub(crate) fn zappy_update(
         .user
         .ui
         .players(ctx, &zappy.user.players, &zappy.user.team_names, zappy.camera_is_active);
+    zappy.user.ui.tiles(ctx, &zappy.user.map, zappy.camera_is_active);
     if let Some(server) = &zappy.user.server {
         zappy
             .user
             .ui
             .communications(ctx, zappy.camera_is_active, &server.commands.lock().expect("Lock poisoned"));
-        zappy.user.ui.tiles(ctx, &zappy.user.map, zappy.camera_is_active);
-        if zappy.user.ui.network_status(ctx, zappy.camera_is_active, &mut zappy.user.port, &mut zappy.user.hostname) {
-            zappy.user.try_to_connect(update.since_start);
-        }
+    }
+    let state = zappy.user.ui.network_status(ctx, zappy.camera_is_active, &mut zappy.user.port, &mut zappy.user.hostname, zappy.user.server.is_some());
+    if state == ui::State::Connect {
+        zappy.user.try_to_connect(update.since_start);
+    }
+    if state == ui::State::Disconnect {
+        zappy.user.close_connection(update.since_start);
+    }
+    if state == ui::State::Reset {
+        //zappy.user.close_connection(update.since_start);
     }
 }

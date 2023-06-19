@@ -1,4 +1,5 @@
 use std::fmt::Display;
+use std::os::linux::raw::stat;
 use std::string::ToString;
 use std::time::Duration;
 use rend_ox::nannou::event::Update;
@@ -6,11 +7,20 @@ use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
 use rend_ox::nannou_egui::egui::CollapsingHeader;
 
 use crate::tantorian::Tantorian;
+use crate::ui::State::{Connect, Disconnect, Nothing};
 use crate::zappy::Zappy;
 
 pub(crate) struct ZappyUi {
     pub selected_tile: Option<[usize; 2]>,
     pub network_messages: Vec<(Duration, String)>,
+}
+
+#[derive(PartialEq)]
+pub(crate) enum State {
+    Nothing,
+    Connect,
+    Disconnect,
+    Reset,
 }
 
 impl ZappyUi {
@@ -34,21 +44,34 @@ impl ZappyUi {
         );
     }
 
-    pub(crate) fn network_status(&mut self, ctx: &CtxRef, is_active: bool, port: &mut String, hostname: &mut String) -> bool {
-        let mut connect = false;
+    pub(crate) fn network_status(&mut self, ctx: &CtxRef, is_active: bool, port: &mut String, hostname: &mut String, status: bool) -> State {
+        let mut state = Nothing;
+
         egui::Window::new("Network Status")
             .enabled(!is_active)
             .resizable(false)
             .show(ctx, |ui| {
                 ui.add(egui::TextEdit::singleline(port).hint_text("port"));
                 ui.add(egui::TextEdit::singleline(hostname).hint_text("hostname"));
-                if ui.add(egui::Button::new("Connect")).clicked() {
-                    connect = true;
+                if status {
+                    ui.add(egui::Label::new(format!("Current status: Connected")));
+                } else {
+                    ui.add(egui::Label::new(format!("Current status: Disconnected")));
                 }
+                ui.horizontal(|ui| {
+                    if ui.add(egui::Button::new("Disconnect")).clicked() {
+                        state = Disconnect;
+                    }
+                    if ui.add(egui::Button::new("Connect")).clicked() {
+                        state = Connect;
+                    }
+                    if ui.add(egui::Button::new("Reset")).clicked() {
+                        state = State::Reset;
+                    }
+                });
                 ui.add(egui::Label::new("________________________________________________").strong());
                 ui.add_space(10.);
                 egui::ScrollArea::vertical()
-                    //.auto_shrink([false; 2])
                     .max_height(100.)
                     .stick_to_bottom()
                     .show(ui, |ui| {
@@ -62,7 +85,7 @@ impl ZappyUi {
                             });
                     });
             });
-        connect
+        state
     }
 
     pub(crate) fn communications(&mut self, ctx: &CtxRef, is_active: bool, messages: &Vec<String>) {
