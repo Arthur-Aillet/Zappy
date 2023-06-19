@@ -14,6 +14,7 @@
 egg_t set_egg(int x, int y)
 {
     egg_t new;
+
     new.x = x;
     new.y = y;
     new.egg_id = rand();
@@ -23,6 +24,7 @@ egg_t set_egg(int x, int y)
 player_t set_player(size_t x, size_t y, size_t freq)
 {
     player_t new;
+
     new.x = x;
     new.y = y;
     new.id = rand();
@@ -40,6 +42,7 @@ player_t set_player(size_t x, size_t y, size_t freq)
 team_t set_team(char *team_name, size_t slot, size_t freq)
 {
     team_t team;
+
     team.nb_slot = slot;
     team.egg = NULL;
     team.nb_eggs = 0;

@@ -12,6 +12,7 @@
 ia_t *set_ia(void)
 {
     ia_t *ia = malloc(sizeof(ia_t) * MAX_PLAYER);
+
     if (ia == NULL)
         exit(error("Failed to allocate ia", 84));
     return ia;

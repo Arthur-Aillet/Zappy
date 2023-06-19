@@ -13,6 +13,9 @@
 int error(char *message, int ret)
 {
     char *msg = malloc(sizeof(char) * (strlen(message) + 10));
+
+    if (msg == NULL)
+        return error("Memory allocation failed", 0);
     strcpy(msg, "%s");
     strcat(msg, message);
     strcat(msg, "%s\n");
@@ -24,6 +27,9 @@ int error(char *message, int ret)
 int basic_log(char *message, char *color, int ret)
 {
     char *msg = malloc(sizeof(char) * (strlen(message) + strlen(color) + 10));
+
+    if (msg == NULL)
+        return error("Memory allocation failed", 0);
     strcpy(msg, "%s");
     strcat(msg, message);
     strcat(msg, "%s\n");

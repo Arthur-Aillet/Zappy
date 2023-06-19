@@ -15,6 +15,7 @@
 static void set_sockaddr(server_t *server, int port)
 {
     int flag = fcntl(server->socket, F_GETFL, 0);
+
     fcntl(server->socket,F_SETFL, flag | O_NONBLOCK);
     bzero(&server->addr, sizeof(server->addr));
     server->addr.sin_addr.s_addr = INADDR_ANY;
@@ -60,9 +61,10 @@ static void set_structures(common_t *com, parser_t *parser)
 
 common_t set_common(int ac, char *av[])
 {
-    parser_t *parser = set_parser();
-    get_parameters(ac, av, parser);
     common_t com;
+    parser_t *parser = set_parser();
+
+    get_parameters(ac, av, parser);
     com.port = parser->port;
     com.freq = parser->freq;
     com.nb_teams = parser->nb_teams;

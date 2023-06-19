@@ -34,6 +34,7 @@ static int egg_position(int *x, int *y, team_t *team)
 static void send_to_gui_buffer(int num, char *value, uint8_t *arg)
 {
     char buffer_args[256];
+
     if (value == NULL)
         sprintf(buffer_args, "%d", num);
     else
@@ -48,6 +49,7 @@ static void send_to_gui_buffer(int num, char *value, uint8_t *arg)
 static void send_to_gui(int status, common_t *com, team_t *team, int i)
 {
     uint8_t **args;
+
     if (status != 0) {
         args = malloc(sizeof(u_int8_t *) * 1);
         if (args == NULL)
@@ -73,11 +75,13 @@ static bool add_new_player(team_t *team, size_t max_x, size_t max_y,
 {
     bool ret = false;
     int i = 0;
-    if (team->nb_slot == team->actif_player)
-        return false;
+    int status;
     int x = rand() % max_x;
     int y = rand() % max_y;
-    int status = egg_position(&x, &y, team);
+
+    if (team->nb_slot == team->actif_player)
+        return false;
+    status = egg_position(&x, &y, team);
     for (; i < MAX_PLAYER; i++) {
         if (team->players[i].x == -1 && team->players[i].y == -1) {
             team->players[i].x = x;
