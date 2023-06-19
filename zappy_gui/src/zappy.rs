@@ -14,6 +14,7 @@ use crate::ui::ZappyUi;
 pub struct Zappy {
     pub(crate) map: Map,
     pub(crate) players: Vec<Tantorian>,
+    pub(crate) team_names: Vec<String>,
     pub(crate) server: Option<ServerConn>,
     pub(crate) ui: ZappyUi,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
@@ -35,6 +36,7 @@ impl Zappy {
         Zappy {
             map: Map::new(0, 0),
             players: vec![],
+            team_names: vec![],
             server: None, //ServerConn::new(),
             ui: ZappyUi::new(),
             tantorian_mesh: None,
@@ -74,6 +76,7 @@ impl Zappy {
             app.user.map.spawn_resource(i * 8654 % 8, i * 865 % 8, i);
         }
     }
+
     pub fn render(app: &mut App<Zappy>) {
         if let Some(mesh) = &app.user.tantorian_mesh {
             let mat = Mat4::from_scale(Vec3::new(1., 1., 0.75)) * Mat4::from_rotation_x(std::f32::consts::PI * 0.5);
@@ -86,11 +89,13 @@ impl Zappy {
 }
 
 pub(crate) fn zappy_update(
-    _nannou_app: &rend_ox::nannou::App,
+    nannou_app: &rend_ox::nannou::App,
     zappy: &mut App<Zappy>,
-    _update: rend_ox::nannou::event::Update,
-    ctx: CtxRef,
+    update: rend_ox::nannou::event::Update,
+    ctx: CtxRef
 ) {
+    rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
+
     Zappy::render(zappy);
     zappy.user.interpret_commands();
     zappy.user.ui.ctx = Some(ctx);
@@ -101,7 +106,7 @@ pub(crate) fn zappy_update(
     zappy
         .user
         .ui
-        .players(&zappy.user.players, zappy.camera_is_active);
+        .players(&zappy.user.players, &zappy.user.team_names, zappy.camera_is_active);
     if let Some(server) = &zappy.user.server {
         zappy
             .user

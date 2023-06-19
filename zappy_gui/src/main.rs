@@ -10,8 +10,8 @@ use std::thread;
 
 use crate::zappy::Zappy;
 
-use rend_ox::app::{app, App};
 use crate::network::loop_server;
+use rend_ox::app::{app, App};
 
 fn zappy_key_pressed(app: &rend_ox::nannou::App, model: &mut App<Zappy>, key: rend_ox::nannou::event::Key) {
     if let rend_ox::nannou::event::Key::Space = key {

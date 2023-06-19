@@ -1,32 +1,139 @@
+use crate::map::Tile;
+use crate::tantorian::{Orientation, Tantorian};
+use crate::zappy::Zappy;
+use regex::Regex;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
-use crate::map::Tile;
-use crate::zappy::Zappy;
 
 pub type ServerFunction = fn(&mut Zappy, String);
 
 pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
-    let mut functions : HashMap<String, ServerFunction> = HashMap::new();
+    let mut functions: HashMap<String, ServerFunction> = HashMap::new();
 
     functions.insert("msz".to_string(), Zappy::set_map_size);
     functions.insert("bct".to_string(), Zappy::tile_content);
+    functions.insert("sgt".to_string(), Zappy::set_time_unit);
+    functions.insert("tna".to_string(), Zappy::add_team_name);
+    functions.insert("pnw".to_string(), Zappy::connect_new_player);
+    functions.insert("pdi".to_string(), Zappy::death_of_player);
     functions
 }
 
+macro_rules! parse_capture {
+    ($typ:ty, $index:expr, $name:ident, $capture:expr, $message:expr) => {
+        let $name: $typ;
+        if let Some(matched) = $capture.get($index) {
+            if let Ok(found) = matched.as_str().to_string().parse() {
+                $name = found;
+            } else {
+                println!($message);
+                return;
+            }
+        } else {
+            println!($message);
+            return;
+        }
+    };
+}
 
 impl Zappy {
-    fn tile_content(&mut self, command: String) {
-        let mut invalid = false;
-        let args: Vec<usize> = command.split(" ").skip(1).map(|x| -> usize {
-            return match x.parse() {
-                Ok(val) => { val }
+    fn death_of_player(&mut self, command: String) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() != 2 {
+            println!("pdi: Too many arguments");
+        } else {
+            let maybe_number : Result<i64, _> = args[1].to_string().parse();
+
+            match maybe_number {
+                Ok(number) => {
+                    for player in &mut self.players {
+                        if player.number == number {
+                            player.alive = false;
+                        }
+                    }
+                }
+                Err(_) => {println!("pdi: invalid player number");}
+            }
+        }
+    }
+
+    fn connect_new_player(&mut self, command: String) {
+        let re = Regex::new(r"^pnw (-?\d+) (\d+) (\d+) ([1-4]) ([0-8]) (\w+)$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, number, capture, "pnw: invalid player number");
+            parse_capture!(usize, 2, x, capture, "pnw: invalid player x coordinate");
+            parse_capture!(usize, 3, y, capture, "pnw: invalid player y coordinate");
+            parse_capture!(usize, 4, orientation, capture, "pnw: invalid player orientation");
+            parse_capture!(u32, 5, level, capture, "pnw: invalid player level");
+            parse_capture!(String, 6, team_name, capture, "pnw: invalid player team name");
+
+            if orientation < 1 || orientation > 4 {
+                println!("pnw: invalid player orientation");
+                return;
+            }
+            if let Some(new_player) = Tantorian::new_from_command(
+                number,
+                x,
+                y,
+                Orientation::from_usize(orientation),
+                level,
+                team_name,
+                &self.team_names,
+                &self.map.size,
+                &mut self.players,
+            ) {
+                self.players.push(new_player)
+            }
+        } else {
+            println!("pnw: invalid command given")
+        }
+    }
+
+    fn add_team_name(&mut self, command: String) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() != 2 {
+            println!("tna: Too many arguments");
+        } else {
+            self.team_names.push(args[1].to_string())
+        }
+    }
+
+    fn set_time_unit(&mut self, command: String) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() != 2 {
+            println!("sgt: Too many arguments");
+        } else {
+            let result: Result<f32, _> = args[1].parse();
+            match result {
+                Ok(val) => self.time_unit = val,
                 Err(_) => {
-                    println!("bct: value needs to be a unsigned integers");
-                    invalid = true;
-                    0
+                    println!("sgt: argument must be an int")
                 }
             }
-        }).collect();
+        }
+    }
+
+    fn tile_content(&mut self, command: String) {
+        let mut invalid = false;
+        let args: Vec<usize> = command
+            .split(" ")
+            .skip(1)
+            .map(|x| -> usize {
+                return match x.parse() {
+                    Ok(val) => val,
+                    Err(_) => {
+                        println!("bct: value needs to be a unsigned integers");
+                        invalid = true;
+                        0
+                    }
+                };
+            })
+            .collect();
         if invalid == true {
             return;
         }
@@ -34,7 +141,7 @@ impl Zappy {
             println!("btc: wrong number of arguments");
             return;
         }
-        if args[1] > self.map.size[0] || args[0] > self.map.size[1] {
+        if args[0] > self.map.size[0] || args[1] > self.map.size[1] {
             println!("btc: tile outside of the map");
             return;
         }
@@ -50,15 +157,21 @@ impl Zappy {
             let x: usize;
             let x_result: Result<usize, _> = args[1].parse();
             match x_result {
-                Ok(val) => {x = val}
-                Err(_) => {println!("width needs to be a unsigned integer"); return;}
+                Ok(val) => x = val,
+                Err(_) => {
+                    println!("width needs to be a unsigned integer");
+                    return;
+                }
             }
 
             let y: usize;
-            let y_result: Result<usize, _> = args[1].parse();
+            let y_result: Result<usize, _> = args[2].parse();
             match y_result {
-                Ok(val) => {y = val}
-                Err(_) => {println!("height needs to be a unsigned integer"); return;}
+                Ok(val) => y = val,
+                Err(_) => {
+                    println!("height needs to be a unsigned integer");
+                    return;
+                }
             }
             self.map.resize(x, y);
         } else {
@@ -66,16 +179,18 @@ impl Zappy {
         }
     }
 
-    fn interpret_command(&mut self, raw_command : String) {
-        let command_split = raw_command.split("\n");
+    fn interpret_command(&mut self, raw_command: String) {
+        let command_split = raw_command.split("\n").filter(|&x| !x.is_empty());
 
         for command in command_split {
             let command_name = command.split(" ").next().expect("invalid cmd");
             let maybe_func = self.functions.get(command_name);
 
             match maybe_func {
-                None => { println!("Command received unknown: {command_name}") }
-                Some(function) => { function(self, command.to_string()) }
+                Some(function) => function(self, command.to_string()),
+                None => {
+                    println!("Command received unknown: \"{command}\"")
+                }
             }
         }
     }
@@ -84,8 +199,10 @@ impl Zappy {
         let commands_access: Arc<Mutex<Vec<String>>>;
 
         match &mut self.server {
-            None => {return}
-            Some(server) => {commands_access = Arc::clone(&server.commands);}
+            None => return,
+            Some(server) => {
+                commands_access = Arc::clone(&server.commands);
+            }
         };
         let mut commands = commands_access.lock().expect("Mutex poisoned");
         for _ in 0..commands.len() {
