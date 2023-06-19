@@ -108,5 +108,22 @@ void update_life(client_t *client, server_t *server,
 
 void malloc_nbr_args(msg_queue_t *new_msg, size_t nbr_args);
 team_t *to_find_team_by_uint8_t(uint8_t *n, common_t *common);
+team_t *to_find_team_by_int(int n, common_t *common);
+
+void remove_player(player_t *ennemy, player_t *ia, common_t *com);
+int find_post(common_t *com, ia_t *ia);
+egg_t *remove_egg(egg_t egg, egg_t *old_eggs, size_t nb_eggs, common_t *com);
+
+void inventory_mendiane(ia_t *ia);
+void inventory_sibur(ia_t *ia);
+void inventory_deraumere(ia_t *ia);
+void inventory_linemate(ia_t *ia);
+void inventory_food(ia_t *ia);
+
+void next_if_funct_set(ia_t *ia, common_t *com, uint8_t **args);
+void response_set(ia_t *ia, int idx, common_t *com);
+
+void next_if_funct_take(ia_t *ia, common_t *com, uint8_t **args);
+void response_take(ia_t *ia, int idx, common_t *com);
 
 #endif /* !ZAPPY_H_ */

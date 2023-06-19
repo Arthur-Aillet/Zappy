@@ -75,6 +75,9 @@ COMMAND	=	src/commands/check_command.c								\
 			src/commands/commands_ia/funct_client_ia_set_obj.c			\
 			src/commands/commands_ia/funct_client_ia_take_obj.c			\
 			src/commands/responses_ia/funct_response_ia_broadcast.c		\
+			src/commands/responses_ia/funct_remove_player.c				\
+			src/commands/responses_ia/funct_find_post.c					\
+			src/commands/responses_ia/funct_remove_egg.c				\
 			src/commands/responses_ia/funct_response_ia_connect_bar.c	\
 			src/commands/responses_ia/funct_response_ia_connect_nbr.c	\
 			src/commands/responses_ia/funct_response_ia_death.c			\
@@ -83,11 +86,14 @@ COMMAND	=	src/commands/check_command.c								\
 			src/commands/responses_ia/funct_response_ia_forward.c		\
 			src/commands/responses_ia/funct_response_ia_incantation.c	\
 			src/commands/responses_ia/funct_response_ia_inventory.c		\
+			src/commands/responses_ia/funct_response_ia_inventory_bis.c	\
 			src/commands/responses_ia/funct_response_ia_left.c			\
 			src/commands/responses_ia/funct_response_ia_look.c			\
 			src/commands/responses_ia/funct_response_ia_msg.c			\
 			src/commands/responses_ia/funct_response_ia_right.c			\
 			src/commands/responses_ia/funct_response_ia_set_obj.c		\
+			src/commands/responses_ia/funct_set_object_inventory.c		\
+			src/commands/responses_ia/funct_take_object_inventory.c		\
 			src/commands/responses_ia/funct_response_ia_take_obj.c		\
 
 

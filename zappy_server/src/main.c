@@ -64,13 +64,15 @@ int main_loop(common_t *com)
         timeout.tv_usec = 0;
         if (select(PS_MAX + 1, &PS_READ, NULL, NULL, &timeout) < 0
         && (errno != EINTR)) {
-            free_common(&com);
+            free_common(com);
             exit(error("Select failed", 84));
+            return -1;
         }
-        listening_sockets(&com);
+        listening_sockets(com);
         update_map(&com->gui->map);
-        update_life(com->client, &com->server, com->freq, &com);
+        update_life(com->client, &com->server, com->freq, com);
     }
+    return 0;
 }
 
 int main(int ac, char *av[])
