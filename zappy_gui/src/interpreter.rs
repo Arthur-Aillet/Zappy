@@ -50,6 +50,7 @@ impl Zappy {
                 println!("seg: invalid team name");
             } else {
                 self.close_connection(at);
+                self.reset_server_data();
             }
         }
     }

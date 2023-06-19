@@ -5,6 +5,7 @@ use rend_ox::wgpu::Color;
 use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
 use std::thread::JoinHandle;
+use rend_ox::nannou::event::Key::Z;
 use rend_ox::nannou_egui::egui::CtxRef;
 
 use crate::map::Map;
@@ -123,8 +124,6 @@ pub(crate) fn zappy_update(
     }
     if state == ui::State::Disconnect {
         zappy.user.close_connection(update.since_start);
-    }
-    if state == ui::State::Reset {
-        //zappy.user.close_connection(update.since_start);
+        zappy.user.reset_server_data();
     }
 }

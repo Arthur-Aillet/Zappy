@@ -55,20 +55,15 @@ impl ZappyUi {
                 ui.add(egui::TextEdit::singleline(hostname).hint_text("hostname"));
                 if status {
                     ui.add(egui::Label::new(format!("Current status: Connected")));
-                } else {
-                    ui.add(egui::Label::new(format!("Current status: Disconnected")));
-                }
-                ui.horizontal(|ui| {
                     if ui.add(egui::Button::new("Disconnect")).clicked() {
                         state = Disconnect;
                     }
+                } else {
+                    ui.add(egui::Label::new(format!("Current status: Disconnected")));
                     if ui.add(egui::Button::new("Connect")).clicked() {
                         state = Connect;
                     }
-                    if ui.add(egui::Button::new("Reset")).clicked() {
-                        state = State::Reset;
-                    }
-                });
+                }
                 ui.add(egui::Label::new("________________________________________________").strong());
                 ui.add_space(10.);
                 egui::ScrollArea::vertical()

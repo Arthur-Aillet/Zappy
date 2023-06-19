@@ -5,6 +5,13 @@ use crate::server::ServerConn;
 use crate::zappy::Zappy;
 
 impl Zappy {
+    pub(crate) fn reset_server_data(&mut self) {
+        self.team_names = vec![];
+        self.players = vec![];
+        self.time_unit = 100.0;
+        self.map.resize(0, 0);
+    }
+
     pub(crate) fn close_connection(&mut self, at: Duration) {
         self.ui.network_messages.push((at, format!("Closing connection to {}:{}", self.hostname, self.port)));
         if let Some(server) = &mut self.server {
@@ -20,6 +27,7 @@ impl Zappy {
     pub(crate) fn try_to_connect(&mut self, at: Duration) {
         if self.server.is_some() {
             self.close_connection(at);
+            self.reset_server_data();
         }
         self.ui.network_messages.push((at, format!("New connection tried to {}:{}", self.hostname, self.port)));
         self.server = ServerConn::new(&self.port, &self.hostname);
