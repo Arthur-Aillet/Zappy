@@ -47,16 +47,16 @@ impl Zappy {
     pub fn load(app: &mut App<Zappy>) {
         app.user.map.resize(8, 8);
         if let Ok(mut graphics) = app.graphics.try_borrow_mut() {
-            if let Ok(mut md) = graphics.load_mesh("./.objs/plane.obj") {
+            if let Ok(mut md) = graphics.load_mesh("./obj/plane.obj") {
                 if let Ok(shader) = graphics.load_shader("./src/shaders/map.wgsl") {
                     graphics.bind_shader_to_mesh(&mut md, &shader);
                 }
                 app.user.map.mesh = Some(md);
             }
-            if let Ok(mut md) = graphics.load_mesh("./.objs/rock.obj") {
+            if let Ok(mut md) = graphics.load_mesh("./obj/rock.obj") {
                 app.user.map.rock_mesh = Some(md);
             }
-            if let Ok(md) = graphics.load_mesh("./.objs/bat.obj") {
+            if let Ok(md) = graphics.load_mesh("./obj/bat.obj") {
                 println!("Zappy: loaded bat.obj");
                 app.user.tantorian_mesh = Some(md);
             } else {
