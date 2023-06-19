@@ -105,4 +105,6 @@ int choose_ia_command(uint8_t **cmd, common_t *com, int i);
 
 void update_life(client_t *client, server_t *server, size_t freq, common_t *com);
 
+void malloc_nbr_args(msg_queue_t *new_msg, size_t nbr_args);
+
 #endif /* !ZAPPY_H_ */

@@ -25,6 +25,7 @@ SRC		=	src/listening_socket.c										\
 			src/commands/choose_command.c								\
 
 COMMAND	=	src/commands/check_command.c								\
+			src/commands/common_functions.c								\
 			src/commands/commands_gui/funct_client_bct.c				\
 			src/commands/commands_gui/funct_client_mct.c				\
 			src/commands/commands_gui/funct_client_msz.c				\
