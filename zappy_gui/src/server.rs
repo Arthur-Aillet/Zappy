@@ -1,6 +1,3 @@
-use getopts::Options;
-use regex::Regex;
-use std::env;
 use std::io::{self, Read, Write};
 use std::net::{Shutdown, TcpStream};
 use std::process::exit;
@@ -21,29 +18,33 @@ impl ServerConn {
         }
     }
 
-    pub fn new() -> ServerConn {
-        ServerConn {
-            commands: Arc::new(Mutex::new(Vec::new())),
-            listening: Arc::new(Mutex::new(true)),
-            stream: Self::set_tcp_stream(),
+    pub fn new(port: &String, machine: &String) -> Option<ServerConn> {
+        let try_stream = ServerConn::set_tcp_stream(port, machine);
+
+        match try_stream {
+            None => {None}
+            Some(stream) => {
+                Some(ServerConn {
+                commands: Arc::new(Mutex::new(Vec::new())),
+                listening: Arc::new(Mutex::new(true)),
+                stream,
+                })
+            }
         }
     }
 
     //NOTE - Create the connection with the server and return the tcp connection
-    pub fn set_tcp_stream() -> TcpStream {
-        let (port, machine) = Self::parse_arguments();
+    pub fn set_tcp_stream(port: &String, machine: &String) -> Option<TcpStream> {
         let connect = format!("{}:{}", machine, port);
 
         let stream = match TcpStream::connect(connect) {
             Ok(stream) => {stream}
             Err(_) => {
-                println!("Connection to selected server refused");
-                exit(84);
+                return None;
             }
         };
-
         stream.set_nonblocking(true).expect("Non blocking refused");
-        stream
+        Some(stream)
     }
 
     // NOTE - Read the connexion flux and return a string or an error.
@@ -96,47 +97,5 @@ impl ServerConn {
         self.stream
             .shutdown(Shutdown::Both)
             .expect("Couldn't shut down connection");
-    }
-
-    fn is_ip_address(s: &str) -> bool {
-        let regex_ip = Regex::new(r"^(\d{1,3}\.){3}\d{1,3}$").expect("Invalid regex expression");
-        regex_ip.is_match(s)
-    }
-
-    fn parse_arguments() -> (String, String) {
-        let args: Vec<String> = env::args().collect();
-        let mut opts = Options::new();
-
-        opts.optopt("p", "", "port number", "PORT");
-        opts.optopt("h", "", "machine name", "MACHINE");
-
-        let matches = match opts.parse(&args[1..]) {
-            Ok(m) => m,
-            Err(_) => {
-                Self::print_usage();
-                std::process::exit(84);
-            }
-        };
-
-        let port = matches.opt_str("p").unwrap_or_else(|| {
-            Self::print_usage();
-            std::process::exit(84);
-        });
-
-        let machine = matches
-            .opt_str("h")
-            .unwrap_or_else(|| String::from("127.0.0.1"));
-        if !Self::is_ip_address(&machine) {
-            Self::print_usage();
-            std::process::exit(84);
-        }
-
-        (port, machine)
-    }
-
-    fn print_usage() {
-        println!("USAGE:\t./zappy_ai -p port -h machine");
-        println!("\tport\tis the port number");
-        println!("\tmachine\tis the name of the machine; localhost by default");
     }
 }

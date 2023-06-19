@@ -1,18 +1,23 @@
 use std::fmt::Display;
 use std::string::ToString;
+use std::time::Duration;
+use rend_ox::nannou::event::Update;
 use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
 use rend_ox::nannou_egui::egui::CollapsingHeader;
 
 use crate::tantorian::Tantorian;
+use crate::zappy::Zappy;
 
 pub(crate) struct ZappyUi {
     pub selected_tile: Option<[usize; 2]>,
+    pub network_messages: Vec<(Duration, String)>,
 }
 
 impl ZappyUi {
     pub(crate) fn new() -> ZappyUi {
         ZappyUi {
             selected_tile: None,
+            network_messages: vec![],
         }
     }
 
@@ -29,27 +34,35 @@ impl ZappyUi {
         );
     }
 
-    pub(crate) fn network_status(&mut self, ctx: &CtxRef, is_active: bool, port: &mut String, hostname: &mut String) {
+    pub(crate) fn network_status(&mut self, ctx: &CtxRef, is_active: bool, port: &mut String, hostname: &mut String) -> bool {
+        let mut connect = false;
         egui::Window::new("Network Status")
             .enabled(!is_active)
+            .resizable(false)
             .show(ctx, |ui| {
-                ui.add(
-                    egui::TextEdit::multiline(port)
-                        .text_style(egui::TextStyle::Monospace) // for cursor height
-                        .code_editor()
-                        .desired_rows(10)
-                        .lock_focus(true)
-                );
-                //egui::TextEdit::multiline(port).hint_text("Port").show(ui);
-                //ui.add(egui::TextEdit::singleline(hostname).hint_text("Hostname"));
-                /*ui.add(egui::Label::new("_______________________________").strong());
+                ui.add(egui::TextEdit::singleline(port).hint_text("port"));
+                ui.add(egui::TextEdit::singleline(hostname).hint_text("hostname"));
+                if ui.add(egui::Button::new("Connect")).clicked() {
+                    connect = true;
+                }
+                ui.add(egui::Label::new("________________________________________________").strong());
+                ui.add_space(10.);
                 egui::ScrollArea::vertical()
-                    .auto_shrink([false; 2])
+                    //.auto_shrink([false; 2])
                     .max_height(100.)
                     .stick_to_bottom()
                     .show(ui, |ui| {
-                    });*/
+                        egui::Grid::new("Network Messages")
+                            .num_columns(2)
+                            .striped(true)
+                            .show(ui, |grid| {
+                                for message in &self.network_messages {
+                                    ZappyUi::display_stat(grid, &*format!("<{:.4}s>", message.0.as_secs_f32()), &message.1);
+                                }
+                            });
+                    });
             });
+        connect
     }
 
     pub(crate) fn communications(&mut self, ctx: &CtxRef, is_active: bool, messages: &Vec<String>) {

@@ -5,8 +5,9 @@ use regex::Regex;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::thread::JoinHandle;
+use std::time::Duration;
 
-pub type ServerFunction = fn(&mut Zappy, String);
+pub type ServerFunction = fn(&mut Zappy, String, Duration);
 
 pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     let mut functions: HashMap<String, ServerFunction> = HashMap::new();
@@ -39,7 +40,7 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
-    fn end_of_game(&mut self, command: String) {
+    fn end_of_game(&mut self, command: String, at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
@@ -48,19 +49,12 @@ impl Zappy {
             if !self.team_names.contains(&args[1].to_string()) {
                 println!("seg: invalid team name");
             } else {
-                if let Some(server) = &mut self.server {
-                    {
-                        *server.listening.lock().expect("Mutex poisoned") = false;
-                    }
-                }
-                self.thread_handle.take().map(JoinHandle::join);
-                self.thread_handle = None;
-                self.server = None;
+                self.close_connection(at);
             }
         }
     }
 
-    fn death_of_player(&mut self, command: String) {
+    fn death_of_player(&mut self, command: String, at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
@@ -81,7 +75,7 @@ impl Zappy {
         }
     }
 
-    fn connect_new_player(&mut self, command: String) {
+    fn connect_new_player(&mut self, command: String, at: Duration) {
         let re = Regex::new(r"^pnw (-?\d+) (\d+) (\d+) ([1-4]) ([0-8]) (\w+)$")
             .expect("Invalid regex");
 
@@ -115,7 +109,7 @@ impl Zappy {
         }
     }
 
-    fn add_team_name(&mut self, command: String) {
+    fn add_team_name(&mut self, command: String, at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
@@ -129,7 +123,7 @@ impl Zappy {
         }
     }
 
-    fn set_time_unit(&mut self, command: String) {
+    fn set_time_unit(&mut self, command: String, at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
@@ -145,7 +139,7 @@ impl Zappy {
         }
     }
 
-    fn tile_content(&mut self, command: String) {
+    fn tile_content(&mut self, command: String, at: Duration) {
         let mut invalid = false;
         let args: Vec<usize> = command
             .split(" ")
@@ -177,7 +171,7 @@ impl Zappy {
         }
     }
 
-    fn set_map_size(&mut self, command: String) {
+    fn set_map_size(&mut self, command: String, at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() == 3 {
@@ -206,7 +200,7 @@ impl Zappy {
         }
     }
 
-    fn interpret_command(&mut self, raw_command: String) {
+    fn interpret_command(&mut self, raw_command: String, at: Duration) {
         let command_split = raw_command.split("\n").filter(|&x| !x.is_empty());
 
         for command in command_split {
@@ -214,7 +208,7 @@ impl Zappy {
             let maybe_func = self.functions.get(command_name);
 
             match maybe_func {
-                Some(function) => function(self, command.to_string()),
+                Some(function) => function(self, command.to_string(), at),
                 None => {
                     println!("Command received unknown: \"{command}\"")
                 }
@@ -222,7 +216,7 @@ impl Zappy {
         }
     }
 
-    pub(crate) fn interpret_commands(&mut self) {
+    pub(crate) fn interpret_commands(&mut self, at: Duration) {
         let commands_access: Arc<Mutex<Vec<String>>>;
 
         match &mut self.server {
@@ -234,7 +228,7 @@ impl Zappy {
         let mut commands = commands_access.lock().expect("Mutex poisoned");
         for _ in 0..commands.len() {
             if let Some(command) = commands.pop() {
-                self.interpret_command(command);
+                self.interpret_command(command, at);
             }
         }
     }

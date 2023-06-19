@@ -41,7 +41,7 @@ impl Zappy {
             map: Map::new(0, 0),
             players: vec![],
             team_names: vec![],
-            server: None, //ServerConn::new(),
+            server: None,
             ui: ZappyUi::new(),
             tantorian_mesh: None,
             functions: create_hash_function(),
@@ -71,9 +71,6 @@ impl Zappy {
             }
         }
 
-        // TODO : Allow skipping this in order to test things offline
-        app.user.server = Some(ServerConn::new());
-
         // TODO : Remove this default population
         for i in 0..4 {
             let mut t = Tantorian::new();
@@ -101,9 +98,9 @@ pub(crate) fn zappy_update(
     update: rend_ox::nannou::event::Update,
     ctx: &CtxRef
 ) {
-    //rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
+    rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
     Zappy::render(zappy);
-    zappy.user.interpret_commands();
+    zappy.user.interpret_commands(update.since_start);
     zappy
         .user
         .ui
@@ -118,6 +115,8 @@ pub(crate) fn zappy_update(
             .ui
             .communications(ctx, zappy.camera_is_active, &server.commands.lock().expect("Lock poisoned"));
         zappy.user.ui.tiles(ctx, &zappy.user.map, zappy.camera_is_active);
-        zappy.user.ui.network_status(ctx, zappy.camera_is_active, &mut zappy.user.port, &mut zappy.user.hostname);
+        if zappy.user.ui.network_status(ctx, zappy.camera_is_active, &mut zappy.user.port, &mut zappy.user.hostname) {
+            zappy.user.try_to_connect(update.since_start);
+        }
     }
 }
