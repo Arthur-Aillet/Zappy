@@ -22,6 +22,8 @@ pub struct Zappy {
     pub(crate) functions: HashMap<String, ServerFunction>,
     pub(crate) time_unit: f32,
     pub(crate) thread_handle: Option<JoinHandle<()>>,
+    pub(crate) port: String,
+    pub(crate) hostname: String,
 }
 
 fn hsv_to_rgb(source: Vec3) -> Vec3
@@ -45,6 +47,8 @@ impl Zappy {
             functions: create_hash_function(),
             time_unit: 100.,
             thread_handle: None,
+            port: "".to_string(),
+            hostname: "".to_string(),
         }
     }
     pub fn load(app: &mut App<Zappy>) {
@@ -95,26 +99,26 @@ pub(crate) fn zappy_update(
     nannou_app: &rend_ox::nannou::App,
     zappy: &mut App<Zappy>,
     update: rend_ox::nannou::event::Update,
-    ctx: CtxRef
+    ctx: &CtxRef
 ) {
-    rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
+    //rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
 
     Zappy::render(zappy);
     zappy.user.interpret_commands();
-    zappy.user.ui.ctx = Some(ctx);
-    zappy
+    /* zappy
         .user
         .ui
         .settings(&mut zappy.camera, zappy.camera_is_active);
-    zappy
+    /zappy
         .user
         .ui
         .players(&zappy.user.players, &zappy.user.team_names, zappy.camera_is_active);
-    if let Some(server) = &zappy.user.server {
-        zappy
+    */if let Some(server) = &zappy.user.server {
+        /*zappy
             .user
             .ui
-            .communications(zappy.camera_is_active, &server.commands.lock().expect("Lock poisoned"));
-        zappy.user.ui.tiles(&zappy.user.map, zappy.camera_is_active);
+            .communications(zappy.camera_is_active, &server.commands.lock().expect("Lock poisoned"));*/
+        /*zappy.user.ui.tiles(&zappy.user.map, zappy.camera_is_active);*/
+        zappy.user.ui.network_status(ctx, zappy.camera_is_active, &mut zappy.user.port, &mut zappy.user.hostname);
     }
 }

@@ -48,17 +48,14 @@ impl Zappy {
             if !self.team_names.contains(&args[1].to_string()) {
                 println!("seg: invalid team name");
             } else {
-                println!("1?");
                 if let Some(server) = &mut self.server {
-                    println!("2?");
                     {
                         *server.listening.lock().expect("Mutex poisoned") = false;
                     }
-                    println!("3?");
                 }
-                println!("4?");
                 self.thread_handle.take().map(JoinHandle::join);
-                println!("Network destroyed :D");
+                self.thread_handle = None;
+                self.server = None;
             }
         }
     }
