@@ -14,7 +14,6 @@ void funct_client_ia_take_obj(ia_t *ia, uint8_t **args, common_t *com)
     (void)args;
     (void)com;
     if (new_msg == NULL) {
-        //error
         return;
     }
     new_msg->time = 7;

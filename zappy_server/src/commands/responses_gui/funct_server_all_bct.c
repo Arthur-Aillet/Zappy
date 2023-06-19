@@ -18,7 +18,6 @@ static void funct_ressources_on_tiles(gui_t *gui, uint8_t **args,
         realloc(gui->buffer.bufferWrite.octets,
         sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
         if (gui->buffer.bufferWrite.octets == NULL) {
-            //error
             return;
         }
         strcat((char*)gui->buffer.bufferWrite.octets, buffer_x);
@@ -33,7 +32,6 @@ static void funct_post_tiles(char *buffer_x, char *buffer_y, gui_t *gui)
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
                     sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
     if (gui->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
     strcat((char*)gui->buffer.bufferWrite.octets, "bct");
@@ -72,7 +70,6 @@ void funct_server_all_bct(uint8_t **args, void *info, common_t *common)
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
                     sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
     if (gui->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
     gui->buffer.bufferWrite.octets[0] = '\0';

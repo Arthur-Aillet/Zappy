@@ -19,7 +19,6 @@ void inventory_food(ia_t *ia)
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
     sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
 }
@@ -36,7 +35,6 @@ void inventory_linemate(ia_t *ia)
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
     sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
 }
@@ -53,7 +51,6 @@ void inventory_deraumere(ia_t *ia)
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
     sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
 }
@@ -70,7 +67,6 @@ void inventory_sibur(ia_t *ia)
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
     sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
 }
@@ -87,7 +83,6 @@ void inventory_mendiane(ia_t *ia)
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
     sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
 }

@@ -16,7 +16,6 @@ void funct_server_pdi(uint8_t **args, void *info, common_t *common)
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
                 sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
     gui->buffer.bufferWrite.octets[0] = '\0';

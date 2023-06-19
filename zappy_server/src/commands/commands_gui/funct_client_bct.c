@@ -12,7 +12,6 @@ static void fill_args(msg_queue_t *new_msg, uint8_t **args)
     new_msg->msg[0] = malloc(sizeof(u_int8_t) *
                     (strlen((char*)args[0]) + 1));
     if (new_msg->msg[0] == NULL) {
-        //error
         return;
     }
     new_msg->msg[0][0] = '\0';
@@ -20,7 +19,6 @@ static void fill_args(msg_queue_t *new_msg, uint8_t **args)
     new_msg->msg[1] = malloc(sizeof(u_int8_t) *
                     (strlen((char*)args[1]) + 1));
     if (new_msg->msg[0] == NULL) {
-        //error
         return;
     }
     new_msg->msg[1][0] = '\0';
@@ -33,7 +31,6 @@ void funct_client_bct(gui_t *gui, uint8_t **args, common_t *com)
 
     (void)com;
     if (new_msg == NULL) {
-        //error
         return;
     }
     new_msg->time = 0;

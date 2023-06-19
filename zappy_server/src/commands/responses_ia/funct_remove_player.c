@@ -25,6 +25,15 @@ static void remove_finish_choose_player(player_t *ennemy, player_t *ia,
     }
 }
 
+static void remove_choose_player_est(player_t *ennemy, common_t *com)
+{
+    if (ennemy->y == 0) {
+        ennemy->y = com->gui->map.width;
+    } else {
+        ennemy->y -= 1;
+    }
+}
+
 static void remove_choose_player(player_t *ennemy, common_t *com,
                                 u_int8_t **args, player_t *ia)
 {
@@ -34,13 +43,8 @@ static void remove_choose_player(player_t *ennemy, common_t *com,
         } else {
             ennemy->x += 1;
         }
-    }
-    else if (ia->orientation == Est) {
-        if (ennemy->y == 0) {
-            ennemy->y = com->gui->map.width;
-        } else {
-            ennemy->y -= 1;
-        }
+    } else if (ia->orientation == Est) {
+        remove_choose_player_est(ennemy, com);
     } else {
         remove_finish_choose_player(ennemy, ia, com);
     }
@@ -53,12 +57,12 @@ void remove_player(player_t *ennemy, player_t *ia, common_t *com)
     char buffer_ennemy[256];
 
     if (args == NULL) {
-        //error
+        return;
     }
     sprintf(buffer_ennemy, "%d", ennemy->id);
     args[0] = malloc(sizeof(u_int8_t) * strlen(buffer_ennemy));
     if (args[0] == NULL) {
-        //error
+        return;
     }
     args[0][0] = '\0';
     strcat((char*)args[0], buffer_ennemy);

@@ -13,7 +13,6 @@ static void fill_args(msg_queue_t *new_msg, uint8_t **args)
     new_msg->msg[0] = malloc(sizeof(u_int8_t) *
                     ( + 1));
     if (new_msg->msg[0] == NULL) {
-        //error
         return;
     }
     new_msg->msg[0][0] = '\0';
@@ -27,7 +26,6 @@ void funct_client_ia_broadcast(ia_t *ia, uint8_t **args, common_t *com)
     (void)com;
     (void)ia;
     if (new_msg == NULL) {
-        //error
         return;
     }
     new_msg->time = 7;

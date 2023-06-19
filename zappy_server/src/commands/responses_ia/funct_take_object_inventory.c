@@ -15,14 +15,14 @@ static void funct_response_gui(ia_t *ia, int idx,
     sprintf(buffer_args, "%d", ia->player->id);
     args[0] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
     if (args[0] == NULL) {
-        //error
+        return;
     }
     args[0][0] = '\0';
     strcat((char*)args[0], buffer_args);
     sprintf(buffer_args, "%d", idx);
     args[1] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
     if (args[1] == NULL) {
-        //error
+        return;
     }
     args[1][0] = '\0';
     strcat((char*)args[1], buffer_args);
@@ -34,7 +34,7 @@ void response_take(ia_t *ia, int idx, common_t *com)
     u_int8_t **args = malloc(sizeof(u_int8_t *) * 2);
 
     if (args == NULL) {
-        //error
+        return;
     }
     if (ia->player->inventory[idx] > 0) {
         ia->player->inventory[idx] += 1;

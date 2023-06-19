@@ -18,7 +18,6 @@ void funct_response_ia_set_obj(uint8_t **args, void *info, common_t *com)
                     sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
     ia->buffer.bufferWrite.octets[0] = '\0';
     if (ia->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     } else if (strcmp((char*)args[0], "FOOD")) {
         response_set(ia, 0, com);

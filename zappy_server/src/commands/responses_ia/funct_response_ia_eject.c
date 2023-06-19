@@ -17,7 +17,6 @@ void funct_response_ia_eject(uint8_t **args, void *info, common_t *com)
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
                     sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
     ia->buffer.bufferWrite.octets[0] = '\0';

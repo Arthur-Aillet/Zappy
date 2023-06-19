@@ -8,14 +8,11 @@
 #include "zappy.h"
 #include <string.h>
 
-//toutes les données doivent etre envoyé dans args!!!! suit l'ordre dans le readme au niveau des arguments à renvoyer au gui
-
 static void funct_prepare_response(gui_t *gui, uint8_t **args)
 {
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
     sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
     gui->buffer.bufferWrite.octets[0] = '\0';

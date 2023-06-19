@@ -14,7 +14,6 @@ void funct_client_ia_right(ia_t *ia, uint8_t **args, common_t *com)
     (void)com;
     (void)args;
     if (new_msg == NULL) {
-        //error;
         return;
     }
     new_msg->time = 7;

@@ -14,7 +14,6 @@ static void funct_prepare_response(uint8_t **args, gui_t *gui)
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
                 sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
     gui->buffer.bufferWrite.octets[0] = '\0';
@@ -31,7 +30,6 @@ void funct_server_pdr(uint8_t **args, void *info, common_t *common)
     gui_t *gui = (gui_t *)info;
 
     if (tmp_ia == NULL) {
-        //error
         return;
     }
     tmp_ia->player->inventory[atoi((char*)args[1])] -= 1;

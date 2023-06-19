@@ -32,12 +32,12 @@ egg_t *remove_egg(egg_t egg, egg_t *old_eggs, size_t nb_eggs, common_t *com)
     char buffer_egg[256];
 
     if (args == NULL || new_eggs == NULL) {
-        //error
+        return NULL;
     }
     sprintf(buffer_egg, "%d", egg.egg_id);
     args[0] = malloc(sizeof(u_int8_t) * strlen(buffer_egg));
     if (args[0] == NULL) {
-        //error
+        return NULL;
     }
     args[0][0] = '\0';
     strcat((char*)args[0], buffer_egg);

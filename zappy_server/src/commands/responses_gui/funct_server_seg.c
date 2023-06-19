@@ -15,7 +15,6 @@ static void funct_prepare_response(gui_t *gui, common_t *common,
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
     sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
     common->freq = atoi((char*)args[0]);
@@ -31,7 +30,6 @@ void funct_server_seg(uint8_t **args, void *info, common_t *common)
     team_t *tmp_team = to_find_team_by_uint8_t(args[0], common);
 
     if (tmp_team == NULL) {
-        //error
         return;
     }
     funct_prepare_response(gui, common, tmp_team, args);

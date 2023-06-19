@@ -16,7 +16,6 @@ static void funct_finish_response(gui_t *gui)
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
                     sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
     if (gui->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
 }
@@ -31,7 +30,6 @@ static void funct_ressource_in_ia(gui_t *gui, ia_t *tmp_ia)
         gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets
         , sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
         if (gui->buffer.bufferWrite.octets == NULL) {
-            //error
             return;
         }
         strcat((char*)gui->buffer.bufferWrite.octets, str_ressource);
@@ -47,7 +45,6 @@ static void funct_prepare_response(gui_t *gui, ia_t *tmp_ia, uint8_t **args)
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
                         sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
     if (gui->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
     gui->buffer.bufferWrite.octets[0] = '\0';
@@ -69,7 +66,6 @@ void funct_server_pin(uint8_t **args, void *info, common_t *common)
     ia_t *tmp_ia = to_find_ia(args[0], common);
 
     if (tmp_ia == NULL) {
-        //error
         return;
     }
     funct_prepare_response(gui, tmp_ia, args);

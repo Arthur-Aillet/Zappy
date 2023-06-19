@@ -29,12 +29,11 @@ static void funct_prepare_response(gui_t *gui, uint8_t **args, ia_t *tmp_ia)
     sprintf(buffer_x, "%d", tmp_ia->player->x);
     sprintf(buffer_y, "%d", tmp_ia->player->y);
     sprintf(buffer_o, "%ld", tmp_ia->player->orientation);
-    gui->buffer.bufferWrite.usedSize =  + strlen(buffer_x) + strlen(buffer_y)
-    + strlen(buffer_o) + 9;
+    gui->buffer.bufferWrite.usedSize += (strlen(buffer_x) + strlen(buffer_y)
+    + strlen(buffer_o) + 9);
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
     sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
-        //error
         return;
     }
     gui->buffer.bufferWrite.octets[0] = '\0';
@@ -49,10 +48,10 @@ void funct_server_ppo(uint8_t **args, void *info, common_t *common)
     ia_t *tmp_ia = to_find_ia(args[0], common);
 
     if (tmp_ia == NULL) {
-        //error
         return;
     }
     funct_prepare_response(gui, args, tmp_ia);
-    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets, gui->buffer.bufferWrite.usedSize);
+    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
+        gui->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_server_ppo\n");
 }
