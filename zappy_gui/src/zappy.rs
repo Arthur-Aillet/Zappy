@@ -4,6 +4,7 @@ use rend_ox::mesh::MeshDescriptor;
 use rend_ox::wgpu::Color;
 use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
+use std::thread::JoinHandle;
 use rend_ox::nannou_egui::egui::CtxRef;
 
 use crate::map::Map;
@@ -20,6 +21,7 @@ pub struct Zappy {
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
     pub(crate) functions: HashMap<String, ServerFunction>,
     pub(crate) time_unit: f32,
+    pub(crate) thread_handle: Option<JoinHandle<()>>,
 }
 
 fn hsv_to_rgb(source: Vec3) -> Vec3
@@ -42,6 +44,7 @@ impl Zappy {
             tantorian_mesh: None,
             functions: create_hash_function(),
             time_unit: 100.,
+            thread_handle: None,
         }
     }
     pub fn load(app: &mut App<Zappy>) {

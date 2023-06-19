@@ -4,6 +4,7 @@ use crate::zappy::Zappy;
 use regex::Regex;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
+use std::thread::JoinHandle;
 
 pub type ServerFunction = fn(&mut Zappy, String);
 
@@ -16,6 +17,7 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     functions.insert("tna".to_string(), Zappy::add_team_name);
     functions.insert("pnw".to_string(), Zappy::connect_new_player);
     functions.insert("pdi".to_string(), Zappy::death_of_player);
+    functions.insert("seg".to_string(), Zappy::end_of_game);
     functions
 }
 
@@ -37,6 +39,30 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn end_of_game(&mut self, command: String) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() != 2 {
+            println!("seg: Too many arguments");
+        } else {
+            if !self.team_names.contains(&args[1].to_string()) {
+                println!("seg: invalid team name");
+            } else {
+                println!("1?");
+                if let Some(server) = &mut self.server {
+                    println!("2?");
+                    {
+                        *server.listening.lock().expect("Mutex poisoned") = false;
+                    }
+                    println!("3?");
+                }
+                println!("4?");
+                self.thread_handle.take().map(JoinHandle::join);
+                println!("Network destroyed :D");
+            }
+        }
+    }
+
     fn death_of_player(&mut self, command: String) {
         let args: Vec<&str> = command.split(" ").collect();
 
@@ -98,7 +124,11 @@ impl Zappy {
         if args.len() != 2 {
             println!("tna: Too many arguments");
         } else {
-            self.team_names.push(args[1].to_string())
+            if !self.team_names.contains(&args[1].to_string()) {
+                self.team_names.push(args[1].to_string())
+            } else {
+                println!("tna: Team name already given");
+            }
         }
     }
 

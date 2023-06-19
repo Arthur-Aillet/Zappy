@@ -8,6 +8,7 @@ use std::sync::{Arc, Mutex};
 
 pub struct ServerConn {
     pub commands: Arc<Mutex<Vec<String>>>,
+    pub listening: Arc<Mutex<bool>>,
     pub stream: TcpStream,
 }
 
@@ -15,6 +16,7 @@ impl ServerConn {
     pub(crate) fn access(&self) -> ServerConn {
         ServerConn {
             commands: Arc::clone(&self.commands),
+            listening: Arc::clone(&self.listening),
             stream: self.stream.try_clone().expect("stream wrongfully setup"),
         }
     }
@@ -22,6 +24,7 @@ impl ServerConn {
     pub fn new() -> ServerConn {
         ServerConn {
             commands: Arc::new(Mutex::new(Vec::new())),
+            listening: Arc::new(Mutex::new(true)),
             stream: Self::set_tcp_stream(),
         }
     }
@@ -31,14 +34,16 @@ impl ServerConn {
         let (port, machine) = Self::parse_arguments();
         let connect = format!("{}:{}", machine, port);
 
-        match TcpStream::connect(connect) {
+        let stream = match TcpStream::connect(connect) {
             Ok(stream) => {stream}
             Err(_) => {
                 println!("Connection to selected server refused");
                 exit(84);
             }
-        }
+        };
 
+        stream.set_nonblocking(true).expect("Non blocking refused");
+        stream
     }
 
     // NOTE - Read the connexion flux and return a string or an error.

@@ -30,15 +30,15 @@ fn zappy_key_pressed(app: &rend_ox::nannou::App, model: &mut App<Zappy>, key: re
 }
 
 fn zappy_app(nannou_app: &rend_ox::nannou::App) -> App<Zappy> {
-    let mut app = app(nannou_app, Zappy::new())
+    let mut app: App<Zappy> = app(nannou_app, Zappy::new())
         .update(zappy::zappy_update)
         .key_pressed(zappy_key_pressed);
     Zappy::load(&mut app);
     if let Some(server) = &mut app.user.server {
         let server_clone = server.access();
-        thread::spawn(move || {
+        app.user.thread_handle = Some(thread::spawn(move || {
             loop_server(server_clone);
-        });
+        }));
     }
     app
 }
