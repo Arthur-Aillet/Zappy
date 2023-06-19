@@ -12,15 +12,18 @@
 
 void funct_client_ia_incantation(ia_t *ia, uint8_t **args, common_t *com)
 {
-    msg_queue_t new_msg;
+    msg_queue_t *new_msg = malloc(sizeof(msg_queue_t));
 
     (void)com;
-    new_msg.time = 300;
-    new_msg.handler = &funct_response_ia_incantation;
-    new_msg.next_msg = ia->msg_queue;
+    (void)args;
+    if (new_msg == NULL) {
+        //error
+        return;
+    }
+    new_msg->time = 300;
+    new_msg->handler = &funct_response_ia_incantation;
+    new_msg->next_msg = ia->msg_queue;
+    ia->msg_queue = new_msg;
     //funct_server_pic();
     printf("rentrer dans la funct_client_ia_incantation");
-    (void)ia;
-    (void)args;
-    (void)new_msg;
 }
