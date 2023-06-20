@@ -31,6 +31,14 @@ impl ZappyUi {
         }
     }
 
+    pub(crate) fn win(&mut self, ctx: &CtxRef, team_name: &String, is_active: bool) {
+        egui::Window::new("Winner team found!").enabled(!is_active).show(
+            &ctx,
+            |ui| {
+                ui.heading(format!("Team {team_name} won!"));
+            },
+        );
+    }
 
     pub(crate) fn settings(&mut self, ctx: &CtxRef, camera: &mut rend_ox::camera::Camera, is_active: bool) {
         egui::Window::new("Settings").enabled(!is_active).show(

@@ -27,6 +27,7 @@ pub struct Zappy {
     pub(crate) thread_handle: Option<JoinHandle<()>>,
     pub(crate) port: String,
     pub(crate) hostname: String,
+    pub(crate) winner_team: Option<String>,
 }
 
 fn hsv_to_rgb(source: Vec3) -> Vec3
@@ -81,6 +82,7 @@ impl Zappy {
             thread_handle: None,
             port: "".to_string(),
             hostname: "".to_string(),
+            winner_team: None,
         }
     }
     pub fn load(app: &mut App<Zappy>) {
@@ -156,5 +158,8 @@ pub(crate) fn zappy_update(
     if state == ui::State::Disconnect {
         zappy.user.close_connection(update.since_start);
         zappy.user.reset_server_data();
+    }
+    if let Some(team) = &zappy.user.winner_team {
+        zappy.user.ui.win(ctx, team, zappy.camera_is_active);
     }
 }

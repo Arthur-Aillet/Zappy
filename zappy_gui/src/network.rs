@@ -10,6 +10,7 @@ impl Zappy {
         self.players = vec![];
         self.time_unit = 100.0;
         self.map.resize(0, 0);
+        self.winner_team = None;
     }
 
     pub(crate) fn close_connection(&mut self, at: Duration) {
