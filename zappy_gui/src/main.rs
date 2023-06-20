@@ -40,10 +40,10 @@ fn zappy_app(nannou_app: &rend_ox::nannou::App) -> App<Zappy> {
 
     app.user.hostname = hostname;
     app.user.port = port;
-    app.camera.position = Vec3::new(0.04, 0.04, 0.08);
-    app.camera.pitch = -PI/2.;
     Zappy::load(&mut app);
     app.user.try_to_connect(Duration::from_millis(0));
+    app.camera.position = Vec3::new(app.user.map.size[0] as f32 / 200., app.user.map.size[1] as f32 / 200., 0.08);
+    app.camera.pitch = -PI/2.;
     app
 }
 
