@@ -73,10 +73,12 @@ def go_to_base(creature: Creature, ia:Session, last_action: list):
 
 
 def drop_all_food(creature: Creature, last_actions: list, ia: Session):
-    inv = inventory(ia.client)
-    while (inv.food <= 10) :
+    last_actions.append(inventory(ia.client))
+    inv = parse_inventory(last_actions)
+    invfood = inv.get('food')
+    while (invfood >= 10) :
         last_actions.append(set_object(ia.client, "food"))
-        inv.food -= 1
+        invfood -= 1
     creature.food = 10
 
 
@@ -91,4 +93,5 @@ def butler_loop(creature: Creature, last_actions: list, ia: Session) :
     if (food_spotted != -1) :
         go_to(food_spotted)
         last_actions.append(pick_up(ia.client))
+    return False
     #ad queen order to return

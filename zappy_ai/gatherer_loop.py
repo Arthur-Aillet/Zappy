@@ -13,6 +13,38 @@ from sys import stderr
 from commun import *
 from datatypes import Creature, Session
 
+def objectives(i: int):
+    if (i == 0):
+        return {'food': 0, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
+    if (i == 1):
+        return {'food': 0, 'linemate': 1, 'deraumere': 1, 'sibur': 1, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
+    if (i == 2):
+        return {'food': 0, 'linemate': 2, 'deraumere': 0, 'sibur': 1, 'mendiane': 0, 'phiras': 2, 'thystame': 0}
+    if (i == 3):
+        return {'food': 0, 'linemate': 1, 'deraumere': 1, 'sibur': 2, 'mendiane': 0, 'phiras': 1, 'thystame': 0}
+    if (i == 4):
+        return {'food': 0, 'linemate': 1, 'deraumere': 2, 'sibur': 1, 'mendiane': 3, 'phiras': 0, 'thystame': 0}
+    if (i == 5):
+        return {'food': 0, 'linemate': 1, 'deraumere': 2, 'sibur': 3, 'mendiane': 0, 'phiras': 1, 'thystame': 0}
+    if (i == 6):
+        return {'food': 0, 'linemate': 2, 'deraumere': 2, 'sibur': 2, 'mendiane': 2, 'phiras': 2, 'thystame': 1}
+    return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
+
+def objective_met(i: int, inv: dict[str, int]):
+    current = objectives(i)
+    if inv.get("linemate") < current.get("linemate"):
+        return False
+    if inv.get("deraumere") < current.get("deraumere"):
+        return False
+    if inv.get("sibur") < current.get("sibur"):
+        return False
+    if inv.get("mendiane") < current.get("mendiane"):
+        return False
+    if inv.get("phiras") < current.get("phiras"):
+        return False
+    if inv.get("thystame") < current.get("thystame"):
+        return False
+    return True
 
 def go_to(i,creature: Creature, ia:Session, last_actions: list):
     row_max = 1
@@ -74,16 +106,33 @@ def go_to_base(creature: Creature, ia:Session, last_action: list):
 
 
 def drop_all(creature: Creature, last_actions: list, ia: Session):
-    inv = inventory(ia.client)
-    while (inv.food <= 10) :
+    last_actions.append(inventory(ia.client))
+    inv = parse_inventory(last_actions[0])
+
+    invfood = inv.get("food")
+    while (invfood >= 10) :
         last_actions.append(set_object(ia.client, "food"))
-        inv.food -= 1
+        invfood -= 1
     creature.food = 10
-    for item in inv :
-        
+    for key in inv :
+        if key != "food" :
+            for _ in inv[key]:
+                last_actions.append(set_object(ia.client, key))
 
 def closest_resource(creature: Creature, last_actions: list, ia: Session):
-    
+    feild = look(ia.client)
+    for item in feild:
+        if item == 'enemy':
+            last_actions.append(broadcast(ia.client, "enemy_spotted" + creature.pos_x + " " + creature.pos_y))
+        if item != "" and item != "player":
+            return item.index
+    return -1
+
+def check_food(creature: Creature, last_actions: list, ia: Session):
+    last_actions.append(inventory(ia.client))
+    inv = parse_inventory(last_actions[0])
+    if (inv.get('food') < distance_to_base(creature) * 8) :
+        creature.type = Creature.Types.BUTLER
 
 def gatherer_loop(creature: Creature, last_actions: list, ia: Session) :
     resource_spotted = -1
@@ -93,25 +142,17 @@ def gatherer_loop(creature: Creature, last_actions: list, ia: Session) :
         last_actions.append(left(ia.client))
         last_actions.append(fowards(ia.client))
         last_actions.append(right(ia.client))
-    resource_spotted = look_for(creature, last_actions, ia, "")
+    resource_spotted = closest_resource(creature, last_actions, ia, "")
     if (resource_spotted != -1) :
         go_to(resource_spotted)
         last_actions.append(pick_up(ia.client))
 
-    if something in view:
-        while !something in view
-            go_to
-            pick_up
-    if objective is met:
-        return to base_pos
-        drop everything
-        pick up 20 20 food
-    if called to base:
-        go to base
-        drop everytjing
-    if enemy spotted:
-        message enemy spotted
-    if (food + 2) * 10 < distance to base():
-        return to base()
-        drop everything
-        pick up 20 food
+    if creature.var % 20 == 0 :
+        last_actions.append(inventory(ia.client))
+        if objective_met(creature.level, parse_inventory(last_actions[0])):
+            go_to_base(creature, ia, last_actions)
+            drop_all(creature, last_actions, ia)
+
+    if creature.var % 20 == 10:
+        check_food(creature, last_actions, ia)
+    return False

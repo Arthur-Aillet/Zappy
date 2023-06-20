@@ -39,6 +39,7 @@ class Creature:
         self.food = 10
         self.id = 0
         self.orientation = 0
+        self.level = 0
 
 
 # Holds the size of the map (x,y)

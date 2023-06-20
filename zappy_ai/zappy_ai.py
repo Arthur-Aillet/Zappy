@@ -58,6 +58,7 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
 
         if creature.time_to_ritual == 0:
             send_server(ai.client, "Incantation\n")
+            creature.level += 1
         if creature.time_to_ritual >= 0 :
             creature.time_to_ritual -= 1;
         if (creature.type == Creature.Types.QUEEN) :

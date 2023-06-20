@@ -46,18 +46,20 @@ def spiral(i):
     return False
 
 def check_food(creature: Creature, last_actions: list, ia: Session):
-    inv = inventory(ia.client)
-    if (inv.food < 10) :
+    last_actions.append(inventory(ia.client))
+    inv = parse_inventory(last_actions[0])
+    if (inv.get('food') < 10) :
         creature.type = Creature.Types.GATHERER
 
 def warrior_loop(creature: Creature, last_actions: list, ia: Session):
     #add answer to messages
-    if (creature.var % 10 == 0)
+    if (creature.var % 10 == 0) :
         check_food()
     last_actions.append(fowards(ia.client))
-    enemypos = look_for(creature, last_actions, ia, "player")
+    enemypos = look_for(creature, last_actions, ia, "enemy")
     if (enemypos != -1):
     #or if message for enemy position received and near that position
         broadcast(ia.client, "enemy_spotted" + creature.pos_x + " " + creature.pos_y)
         go_to(enemypos)
     last_actions.append(fowards(ia.client))
+    return False
