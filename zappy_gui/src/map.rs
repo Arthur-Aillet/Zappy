@@ -78,7 +78,7 @@ impl Map {
             size: [x, y],
             mesh: None,
             rock_mesh: None,
-            color: Vec3::new(0.2, 0.9, 0.4),
+            color: Vec3::new(0.2, 0.95, 0.25),
             tiles: vec![vec![Tile::new();y]; x],
         }
     }

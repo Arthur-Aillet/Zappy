@@ -27,9 +27,10 @@ fn main(tx: Texel) -> [[location(0)]] vec4<f32> {
 //    let out_color = vec4<f32>(mix(vec3<f32>(0.), clamp(color, vec3<f32>(0.), vec3<f32>(1.)), vec3<f32>(brightness)), 1.0);
 //    return out_color;
 //    return vec4<f32>(tx.normal.xyz, 1.);
+    let darken_amount = 0.2;
     let dark1: i32 = i32((tx.pos.x)) % 2 - 1;
     let dark2: i32 = i32((tx.pos.y)) % 2 - 1;
-    let dark3 = 0.5 * f32(abs(dark1 - dark2)) + 0.5;
+    let dark3 = darken_amount * f32(abs(dark1 - dark2)) + 1.0 - darken_amount;
     let color = vec4<f32>((tx.normal.z * 0.5 + 0.5) * dark3 * tx.color, 1.0);
     return color;
 }
