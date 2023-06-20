@@ -14,6 +14,7 @@
 
 typedef struct tile_s {
     size_t *ressources;
+    size_t *nb_player_incantations;
 } tile_t;
 
 typedef struct map_s {

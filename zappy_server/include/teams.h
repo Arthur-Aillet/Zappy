@@ -20,6 +20,12 @@ enum orientation {
     West = 4,
 };
 
+enum incantation {
+    UNDEFINED = 0,
+    MASTER = 1,
+    FOLLOWER = 2,
+};
+
 typedef struct egg_s {
     int egg_id;
     int x;
@@ -33,6 +39,7 @@ typedef struct player_s {
     int y;
     time_t start;
     double time;
+    size_t incantation;
     size_t orientation;
     size_t life;
     size_t level;
