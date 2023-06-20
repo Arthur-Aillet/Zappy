@@ -5,11 +5,12 @@
 ** listening_socket.c
 */
 
-#include "zappy.h"
 #include <errno.h>
 #include <string.h>
 #include <sys/select.h>
 #include <stdlib.h>
+
+#include "zappy.h"
 
 static int create_new_client(int acc, client_t *client, server_t *server)
 {
@@ -43,14 +44,20 @@ static int new_client(server_t *server, client_t *client)
 
 static int check_command(uint8_t **command, common_t *com, int i)
 {
+    server_ia_t ia;
+    client_gui_t gui;
+
     if (command == NULL || command[0] == NULL)
         return 1;
     if (com->client[i].type == IA) {
         printf("%sCheck in IA Command%s\n", B, N);
-        choose_ia_command(command, com, i);
+        ia = create_struct_client_ia(command);
+        to_check_command_exist_ia(&ia,
+                to_find_ia_for_command(com, com->client[i]), com);
     } else if (com->client[i].type == GUI) {
         printf("%sCheck in GUI Command%s\n", B, N);
-        choose_graphic_command(command, com, i);
+        gui = create_struct_client_gui(command);
+        to_check_command_exist_gui(&gui, com->gui, com);
     } else {
         printf("%sCheck in Command for unknown client type%s\n", B, N);
         undefined_client_command(command, com, i);
