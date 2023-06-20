@@ -28,14 +28,13 @@ pub fn parse_arguments() -> (String, String) {
         }
     };
 
-    let port = matches.opt_str("p").unwrap_or_else(|| {
-        print_usage();
-        std::process::exit(84);
-    });
+    let port = matches
+        .opt_str("p")
+        .unwrap_or(String::from(""));
 
     let machine = matches
         .opt_str("h")
-        .unwrap_or_else(|| String::from("127.0.0.1"));
+        .unwrap_or(String::from("127.0.0.1"));
 
     if !is_ip_address(&machine) {
         print_usage();
