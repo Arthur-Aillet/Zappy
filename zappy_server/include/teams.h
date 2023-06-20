@@ -14,14 +14,14 @@
     #include <stdio.h>
 
 enum orientation {
-    North = 1,
-    Est = 2,
-    Sud = 3,
-    West = 4,
+    North = 0,
+    Est = 1,
+    Sud = 2,
+    West = 3,
 };
 
 enum incantation {
-    UNDEFINED = 0,
+    NO = 0,
     MASTER = 1,
     FOLLOWER = 2,
 };

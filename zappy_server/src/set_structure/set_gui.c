@@ -47,6 +47,13 @@ gui_t *set_gui(int height, int width, int freq)
     gui_t *gui = malloc(sizeof(gui_t));
 
     gui->map = set_map(height, width, freq);
+    gui->buffer.bufferRead.octets = NULL;
+    gui->buffer.bufferRead.usedSize = 0;
+    gui->buffer.bufferWrite.octets = NULL;
+    gui->buffer.bufferWrite.usedSize = 0;
+    gui->buffer.sock.sockfd = 0;
+    // gui->error->error_code = 0;
+    // gui->error->msg_error = NULL;
     return gui;
 }
 

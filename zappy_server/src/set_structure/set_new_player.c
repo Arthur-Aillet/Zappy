@@ -31,19 +31,21 @@ static int egg_position(int *x, int *y, team_t *team)
     return 0;
 }
 
-static void send_to_gui_buffer(int num, char *value, uint8_t *arg)
+static void send_to_gui_buffer(int num, char *value, uint8_t **arg)
 {
     char buffer_args[256];
-
+    printf("value = %s\n", value);
+    printf("num = %d\n", num);
     if (value == NULL)
         sprintf(buffer_args, "%d", num);
     else
         sprintf(buffer_args, "%s", value);
-    arg = malloc(sizeof(u_int8_t) * strlen(buffer_args));
-    if (arg == NULL)
+    printf("buffer: %s\n", buffer_args);
+    *arg = malloc(sizeof(u_int8_t) * (strlen(buffer_args) + 1));
+    if (*arg == NULL)
         error("Memory allocation failed", 0);
-    arg[0] = '\0';
-    strcat((char*)arg, buffer_args);
+    *arg[0] = '\0';
+    *arg = (uint8_t*)strcat((char*)*arg, buffer_args);
 }
 
 static void send_to_gui(int status, common_t *com, team_t *team, int i)
@@ -54,18 +56,18 @@ static void send_to_gui(int status, common_t *com, team_t *team, int i)
         args = malloc(sizeof(u_int8_t *) * 1);
         if (args == NULL)
             error("Memory allocation failed", 0);
-        send_to_gui_buffer(status, NULL, args[0]);
+        send_to_gui_buffer(status, NULL, &args[0]);
         funct_server_ebo(args, com->gui, com);
     } else {
         args = malloc(sizeof(u_int8_t *) * 6);
         if (args == NULL)
             error("Memory allocation failed", 0);
-        send_to_gui_buffer(team->players[i].id, NULL, args[0]);
-        send_to_gui_buffer(team->players[i].x, NULL, args[1]);
-        send_to_gui_buffer(team->players[i].y, NULL, args[2]);
-        send_to_gui_buffer(team->players[i].orientation, NULL, args[3]);
-        send_to_gui_buffer(team->players[i].level, NULL, args[4]);
-        send_to_gui_buffer(0, team->name, args[5]);
+        send_to_gui_buffer(team->players[i].id, NULL, &args[0]);
+        send_to_gui_buffer(team->players[i].x, NULL, &args[1]);
+        send_to_gui_buffer(team->players[i].y, NULL, &args[2]);
+        send_to_gui_buffer(team->players[i].orientation, NULL, &args[3]);
+        send_to_gui_buffer(team->players[i].level, NULL, &args[4]);
+        send_to_gui_buffer(0, team->name, &args[5]);
         funct_server_pnw(args, com->gui, com);
     }
 }

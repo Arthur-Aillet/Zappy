@@ -107,7 +107,7 @@ MAINOBJ = $(MAIN:.c=.o)
 
 NAME = zappy_server
 CPPFLAGS = -I include/
-#LDLIBS =
+LDLIBS = -lm
 CFLAGS += -Wall -Wextra
 
 debug:	fclean $(OBJ) $(MAINOBJ)

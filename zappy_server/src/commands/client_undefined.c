@@ -23,6 +23,8 @@ static int check_graphic(uint8_t **command, common_t *com, int idx)
         return 0;
     com->client[idx].type = GUI;
     com->client[idx].str_cli = (gui_t *) &(com->gui);
+    com->gui->buffer.sock.sockfd = com->client[idx].socket;
+    com->gui->buffer.sock.addr = com->client[idx].addr;
     return 1;
 }
 

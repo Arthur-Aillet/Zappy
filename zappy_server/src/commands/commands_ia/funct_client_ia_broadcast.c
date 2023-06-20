@@ -10,8 +10,7 @@
 
 static void fill_args(msg_queue_t *new_msg, uint8_t **args)
 {
-    new_msg->msg[0] = malloc(sizeof(u_int8_t) *
-                    ( + 1));
+    new_msg->msg[0] = malloc(sizeof(u_int8_t) * (strlen((char*)args[0]) + 1));
     if (new_msg->msg[0] == NULL) {
         return;
     }
@@ -28,7 +27,7 @@ void funct_client_ia_broadcast(ia_t *ia, uint8_t **args, common_t *com)
     if (new_msg == NULL) {
         return;
     }
-    new_msg->time = 7;
+    new_msg->time = 7 / com->freq;
     malloc_nbr_args(new_msg, 1);
     fill_args(new_msg, args);
     new_msg->handler = &funct_response_ia_broadcast;
