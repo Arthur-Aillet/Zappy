@@ -9,7 +9,7 @@ impl Zappy {
         self.team_names = vec![];
         self.players = vec![];
         self.time_unit = 100.0;
-        self.map.resize(0, 0);
+        self.map.resize(8, 8);
         self.winner_team = None;
         self.ui.selected_tile = None;
     }

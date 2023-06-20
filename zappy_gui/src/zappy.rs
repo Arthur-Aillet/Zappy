@@ -88,28 +88,23 @@ impl Zappy {
             if let Ok(mut md) = graphics.load_mesh("./obj/plane.obj") {
                 if let Ok(shader) = graphics.load_shader("./src/shaders/map.wgsl") {
                     graphics.bind_shader_to_mesh(&mut md, &shader);
+                } else {
+                    println!("Zappy: couldn't load map shader ");
                 }
                 app.user.map.mesh = Some(md);
+            } else {
+                println!("Zappy: couldn't load plane.obj");
             }
             if let Ok(md) = graphics.load_mesh("./obj/rock.obj") {
                 app.user.map.rock_mesh = Some(md);
+            } else {
+                println!("Zappy: couldn't load rock.obj");
             }
             if let Ok(md) = graphics.load_mesh("./obj/batgnome.obj") {
-                println!("Zappy: loaded bat.obj");
                 app.user.tantorian_mesh = Some(md);
             } else {
                 println!("Zappy: couldn't load bat.obj");
             }
-        }
-
-        // TODO : Remove this default population
-        let player_count = 16;
-        for i in 0..player_count {
-            let mut t = Tantorian::new();
-            t.pos = Vec3::new(0., i as f32, 0.);
-            t.color = hsv2rgb(Vec3::new(i as f32 / (player_count as f32), 0.9, 0.7));
-            app.user.players.push(t);
-            app.user.map.spawn_resource(i * 8654 % 8, i * 865 % 8, i);
         }
     }
 
