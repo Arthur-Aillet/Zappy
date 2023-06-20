@@ -30,10 +30,11 @@ def go_to(i,creature: Creature, ia:Session, last_actions: list):
         last_actions.append(fowards(ia.client))
 
 def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
-    feild = look(ia.client)
-    for item in feild:
-        if item.__contains__(target):
-            return item.index
+    last_actions.append(look(ia.client))
+    if creature.looked:
+        for item in creature.last_look:
+            if item.__contains__(target):
+                return item.index
     return -1
 
 def spiral(i, ia: Session, last_action: list):
@@ -73,14 +74,11 @@ def go_to_base(creature: Creature, ia:Session, last_action: list):
 
 
 def drop_all_food(creature: Creature, last_actions: list, ia: Session):
-    last_actions.append(inventory(ia.client))
-    inv = parse_inventory(last_actions)
-    invfood = inv.get('food')
+    invfood = creature.inventory.get('food')
     while (invfood >= 10) :
         last_actions.append(set_object(ia.client, "food"))
         invfood -= 1
     creature.food = 10
-
 
 def butler_loop(creature: Creature, last_actions: list, ia: Session) :
     food_spotted = 0

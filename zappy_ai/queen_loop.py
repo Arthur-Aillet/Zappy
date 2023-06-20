@@ -33,11 +33,13 @@ def objectives(i: int):
 def parrot(ia: Session, creature: Creature, last_action: list):
     last_action.append(broadcast(creature.strvar))
 
-def nearest_food(ia: Session):
-    items = look(ia.client)
-    for item in items :
-        if item.__contains__("food"):
-            return item.index
+def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
+    last_actions.append(look(ia.client))
+    if creature.looked:
+        for item in creature.last_look:
+            if item.__contains__(target):
+                return item.indexs
+    return -1
 
 def go_to_base(creature: Creature, ia:Session, last_action: list):
     while (distance_to_base(creature) != 0):
@@ -75,7 +77,7 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session):
         creature.type = Creature.Types.BUTLER
 
     if creature.food < 10:
-        if (nearest_food == 0):
+        if (look_for(creature, last_Action, ia, "food") == 0):
             last_Action.append(pick_up())
         else:
             parrot(ia, creature, last_Action)

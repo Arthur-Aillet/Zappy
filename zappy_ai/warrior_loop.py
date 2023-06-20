@@ -30,25 +30,15 @@ def go_to(i,creature: Creature, ia:Session, last_actions: list):
         last_actions.append(fowards(ia.client))
 
 def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
-    feild = look(ia.client)
-    for item in feild:
-        if item.__contains__(target):
-            return item.index
+    last_actions.append(look(ia.client))
+    if creature.looked:
+        for item in creature.last_look:
+            if item.__contains__(target):
+                return item.indexs
     return -1
 
-def spiral(i):
-    while i > 0:
-        i -= 1
-        fowards()
-        if look() != -1:
-            return True
-    right()
-    return False
-
 def check_food(creature: Creature, last_actions: list, ia: Session):
-    last_actions.append(inventory(ia.client))
-    inv = parse_inventory(last_actions[0])
-    if (inv.get('food') < 10) :
+    if (creature.inventory.get('food') < 10) :
         creature.type = Creature.Types.GATHERER
 
 def warrior_loop(creature: Creature, last_actions: list, ia: Session):

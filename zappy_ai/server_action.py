@@ -12,7 +12,7 @@
 ##
 
 from connect import send_server
-from datatypes import ActionType
+from action_type import ActionType
 from os import fork
 
 def broadcast(client, text):

@@ -63,10 +63,11 @@ def go_to(i,creature: Creature, ia:Session, last_actions: list):
         last_actions.append(fowards(ia.client))
 
 def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
-    feild = look(ia.client)
-    for item in feild:
-        if item.__contains__(target):
-            return item.index
+    last_actions.append(look(ia.client))
+    if creature.looked:
+        for item in creature.last_look:
+            if item.__contains__(target):
+                return item.index
     return -1
 
 def spiral(i, ia: Session, last_action: list):
@@ -106,32 +107,29 @@ def go_to_base(creature: Creature, ia:Session, last_action: list):
 
 
 def drop_all(creature: Creature, last_actions: list, ia: Session):
-    last_actions.append(inventory(ia.client))
-    inv = parse_inventory(last_actions[0])
-
-    invfood = inv.get("food")
+    invfood = creature.inventory.get("food")
     while (invfood >= 10) :
         last_actions.append(set_object(ia.client, "food"))
         invfood -= 1
     creature.food = 10
-    for key in inv :
+    for key in creature.inventory :
         if key != "food" :
-            for _ in inv[key]:
+            for _ in creature.inventory[key]:
                 last_actions.append(set_object(ia.client, key))
 
 def closest_resource(creature: Creature, last_actions: list, ia: Session):
-    feild = look(ia.client)
-    for item in feild:
-        if item == 'enemy':
-            last_actions.append(broadcast(ia.client, "enemy_spotted" + creature.pos_x + " " + creature.pos_y))
-        if item != "" and item != "player":
-            return item.index
+    last_actions.append(look(ia.client))
+    if creature.looked:
+        for item in creature.last_look:
+            if item == 'enemy':
+                last_actions.append(broadcast(ia.client, "enemy_spotted" + creature.pos_x + " " + creature.pos_y))
+            if item != "" and item != "player":
+                return item.index
     return -1
 
+
 def check_food(creature: Creature, last_actions: list, ia: Session):
-    last_actions.append(inventory(ia.client))
-    inv = parse_inventory(last_actions[0])
-    if (inv.get('food') < distance_to_base(creature) * 8) :
+    if (creature.inventory.get('food') < distance_to_base(creature) * 8) :
         creature.type = Creature.Types.BUTLER
 
 def gatherer_loop(creature: Creature, last_actions: list, ia: Session) :
@@ -148,8 +146,7 @@ def gatherer_loop(creature: Creature, last_actions: list, ia: Session) :
         last_actions.append(pick_up(ia.client))
 
     if creature.var % 20 == 0 :
-        last_actions.append(inventory(ia.client))
-        if objective_met(creature.level, parse_inventory(last_actions[0])):
+        if objective_met(creature.level, creature.inventory):
             go_to_base(creature, ia, last_actions)
             drop_all(creature, last_actions, ia)
 

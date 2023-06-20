@@ -8,10 +8,9 @@
 ## datatypes.py
 ##
 
-from connect import connect
-import server_action
-from server_get import *
-from communication import *
+import server_action as sa
+import server_get as sg
+import communication as com
 import uuid
 
 
@@ -40,33 +39,25 @@ class Creature:
         self.id = 0
         self.orientation = 0
         self.level = 0
-
+        self.inventory = {'food': 0, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
+        self.last_look = []
+        self.looked = False
 
 # Holds the size of the map (x,y)
 class Map:
     size_x = 10
     size_y = 10
 
-# Enum to define the last action made
-class ActionType: #enum
-    max = 5
-    NONE = 0
-    OK_ACTION = 1 # simple action just asking for an ok
-    LOOK = 2
-    INVENTORY  = 3
-    CALL_ALL = 4
-    FORK = 5
-
 # The Session class holds data about the current AI: it's socket client,
 # type (role), relative position, direction, number of messages sents, id.
 # It also holds aliases for client to server functions to use directly with the
 # AI socket client.
 class Session:
-    def __init__(self, client, type=Types.BASIC, pos=[0,0], direction=0):
+    def __init__(self, client, type=Creature.Types.QUEEN, pos=[0,0], direction=0):
         assert len(pos) == 2, "Session pos parameter should be of type [int,int]"
         assert isinstance(pos[0], int), "Session pos parameter should be of type [int,int]"
         assert isinstance(pos[1], int), "Session pos parameter should be of type [int,int]"
-        assert type <= Types.max, "Type d'ia inconnu"
+        assert type <= Creature.Types.max, "Type d'ia inconnu"
         assert direction <= 3 and direction >= 0, "Direciton invalide"
 
         self.client = client
@@ -79,34 +70,34 @@ class Session:
     # server_action :
 
     def broadcast(self, text):
-        output = broadcast(self.client, text)
+        output = sa.broadcast(self.client, text)
         self.msg_nb += 1
         return output
     def fowards(self):
-        return server_action.fowards(self.client)
+        return sa.fowards(self.client)
     def left(self):
-        return server_action.left(self.client)
+        return sa.left(self.client)
     def right(self):
-        return server_action.right(self.client)
+        return sa.right(self.client)
     def pick_up(self):
-        return server_action.pick_up(self.client)
+        return sa.pick_up(self.client)
     def pick_up(self):
-        return server_action.fork(self.client)
+        return sa.fork(self.client)
 
     # server_get :
 
     def look(self):
-        return look(self.client)
+        return sg.look(self.client)
     def inventory(self):
-        return inventory(self.client)
+        return sg.inventory(self.client)
 
     # communication :
 
     def call_all(self):
-        output = call_all(self.client, self.id, self.msg_nb)
+        output = com.call_all(self.client, self.id, self.msg_nb)
         self.msg_nb += 1
         return output
     def say_type(self):
-        output = say_type(self.client, self.id, self.nb)
+        output = com.say_type(self.client, self.id, self.nb)
         self.msg_nb += 1
         return output
