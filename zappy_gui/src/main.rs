@@ -7,12 +7,10 @@ mod zappy;
 mod interpreter;
 mod arguments;
 
-use std::thread;
 use std::time::Duration;
 
 use crate::zappy::Zappy;
 
-use crate::network::loop_server;
 use rend_ox::app::{app, App};
 use crate::arguments::parse_arguments;
 

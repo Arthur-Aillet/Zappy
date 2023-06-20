@@ -1,10 +1,8 @@
-use crate::map::Tile;
 use crate::tantorian::{Orientation, Tantorian};
 use crate::zappy::Zappy;
 use regex::Regex;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
-use std::thread::JoinHandle;
 use std::time::Duration;
 
 pub type ServerFunction = fn(&mut Zappy, String, Duration);
@@ -55,7 +53,7 @@ impl Zappy {
         }
     }
 
-    fn death_of_player(&mut self, command: String, at: Duration) {
+    fn death_of_player(&mut self, command: String, _at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
@@ -76,7 +74,7 @@ impl Zappy {
         }
     }
 
-    fn connect_new_player(&mut self, command: String, at: Duration) {
+    fn connect_new_player(&mut self, command: String, _at: Duration) {
         let re = Regex::new(r"^pnw (-?\d+) (\d+) (\d+) ([1-4]) ([0-8]) (\w+)$")
             .expect("Invalid regex");
 
@@ -110,7 +108,7 @@ impl Zappy {
         }
     }
 
-    fn add_team_name(&mut self, command: String, at: Duration) {
+    fn add_team_name(&mut self, command: String, _at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
@@ -124,7 +122,7 @@ impl Zappy {
         }
     }
 
-    fn set_time_unit(&mut self, command: String, at: Duration) {
+    fn set_time_unit(&mut self, command: String, _at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
@@ -140,7 +138,7 @@ impl Zappy {
         }
     }
 
-    fn tile_content(&mut self, command: String, at: Duration) {
+    fn tile_content(&mut self, command: String, _at: Duration) {
         let mut invalid = false;
         let args: Vec<usize> = command
             .split(" ")
@@ -172,7 +170,7 @@ impl Zappy {
         }
     }
 
-    fn set_map_size(&mut self, command: String, at: Duration) {
+    fn set_map_size(&mut self, command: String, _at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() == 3 {

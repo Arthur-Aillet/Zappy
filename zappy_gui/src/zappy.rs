@@ -1,13 +1,10 @@
 use rend_ox::app::App;
 use rend_ox::{Vec3, Mat4};
 use rend_ox::mesh::MeshDescriptor;
-use rend_ox::wgpu::Color;
 use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
 use std::thread::JoinHandle;
-use rend_ox::nannou::event::Key::Z;
 use rend_ox::nannou_egui::egui::CtxRef;
-use std::cmp::{max, min};
 
 use crate::map::Map;
 pub use crate::server::ServerConn;
@@ -30,7 +27,7 @@ pub struct Zappy {
     pub(crate) winner_team: Option<String>,
 }
 
-fn hsv_to_rgb(source: Vec3) -> Vec3
+fn _hsv_to_rgb(source: Vec3) -> Vec3
 {
     let mut r = ((source.x) * 1. * std::f32::consts::PI).cos();
     let mut g = ((source.x - (1. / 3.)) * 1. * std::f32::consts::PI).cos();
@@ -94,7 +91,7 @@ impl Zappy {
                 }
                 app.user.map.mesh = Some(md);
             }
-            if let Ok(mut md) = graphics.load_mesh("./obj/rock.obj") {
+            if let Ok(md) = graphics.load_mesh("./obj/rock.obj") {
                 app.user.map.rock_mesh = Some(md);
             }
             if let Ok(md) = graphics.load_mesh("./obj/batgnome.obj") {

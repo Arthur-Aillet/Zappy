@@ -2,7 +2,6 @@ use rend_ox::mesh::MeshDescriptor;
 use rend_ox::{Mat4, Vec3};
 use rend_ox::app::App;
 use rend_ox::glam::Quat;
-use rend_ox::nannou::lyon::geom::size;
 use rend_ox::nannou::rand::random_range;
 use crate::zappy::Zappy;
 
@@ -114,7 +113,7 @@ impl Map {
         };
         let diff = n as i32 - resource.len() as i32;
         if diff > 0 {
-            for i in 0..diff {
+            for _ in 0..diff {
                 tile.spawn_resource(q);
             }
         } else {

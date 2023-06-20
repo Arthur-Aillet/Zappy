@@ -1,6 +1,5 @@
 use std::io::{self, Read, Write};
 use std::net::{Shutdown, TcpStream};
-use std::process::exit;
 use std::sync::{Arc, Mutex};
 
 pub struct ServerConn {

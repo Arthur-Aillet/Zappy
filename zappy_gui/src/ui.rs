@@ -1,14 +1,10 @@
 use std::fmt::Display;
-use std::os::linux::raw::stat;
-use std::string::ToString;
 use std::time::Duration;
-use rend_ox::nannou::event::Update;
 use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
 use rend_ox::nannou_egui::egui::CollapsingHeader;
 
 use crate::tantorian::Tantorian;
 use crate::ui::State::{Connect, Disconnect, Nothing};
-use crate::zappy::Zappy;
 
 pub(crate) struct ZappyUi {
     pub selected_tile: Option<[usize; 2]>,
@@ -20,7 +16,6 @@ pub(crate) enum State {
     Nothing,
     Connect,
     Disconnect,
-    Reset,
 }
 
 impl ZappyUi {
