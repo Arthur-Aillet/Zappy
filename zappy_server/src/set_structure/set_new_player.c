@@ -78,7 +78,6 @@ static bool add_new_player(team_t *team, size_t max_x, size_t max_y,
     int status;
     int x = rand() % max_x;
     int y = rand() % max_y;
-
     if (team->nb_slot == team->actif_player)
         return false;
     status = egg_position(&x, &y, team);
