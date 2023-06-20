@@ -7,11 +7,13 @@ mod zappy;
 mod interpreter;
 mod arguments;
 
+use std::f32::consts::PI;
 use std::time::Duration;
 
 use crate::zappy::Zappy;
 
 use rend_ox::app::{app, App};
+use rend_ox::Vec3;
 use crate::arguments::parse_arguments;
 
 fn zappy_key_pressed(app: &rend_ox::nannou::App, model: &mut App<Zappy>, key: rend_ox::nannou::event::Key) {
@@ -38,6 +40,8 @@ fn zappy_app(nannou_app: &rend_ox::nannou::App) -> App<Zappy> {
 
     app.user.hostname = hostname;
     app.user.port = port;
+    app.camera.position = Vec3::new(0.04, 0.04, 0.08);
+    app.camera.pitch = -PI/2.;
     Zappy::load(&mut app);
     app.user.try_to_connect(Duration::from_millis(0));
     app
