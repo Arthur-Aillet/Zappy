@@ -16,7 +16,7 @@ static void funct_prepare_response(gui_t *gui, ia_t *tmp_ia, uint8_t **args)
     sprintf(str_level, "%ld", tmp_ia->player->level);
     gui->buffer.bufferWrite.usedSize += (strlen(str_level) + 7);
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
+                sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }

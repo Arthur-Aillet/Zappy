@@ -128,7 +128,7 @@ void response_take(ia_t *ia, int idx, common_t *com);
 
 client_gui_t create_struct_client_gui(uint8_t **command);
 server_ia_t create_struct_client_ia(uint8_t **command);
-ia_t *to_find_ia_for_command(common_t *com, client_t client);
+ia_t *to_find_ia_for_command(common_t *com, client_t *client);
 
 void to_check_command_exist_ia(server_ia_t *server_ia, ia_t *ia,
                                 common_t *com);

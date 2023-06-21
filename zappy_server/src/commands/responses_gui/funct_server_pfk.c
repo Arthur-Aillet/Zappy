@@ -9,7 +9,7 @@
 
 static void to_lay_egg(team_t *team, ia_t *ia)
 {
-    team->egg = realloc(team->egg, sizeof(u_int8_t) * (team->nb_eggs + 1));
+    team->egg = realloc(team->egg, sizeof(uint8_t) * (team->nb_eggs + 1));
     if (team->egg == NULL) {
     }
     team->egg[team->nb_eggs] = set_egg(ia->player->x, ia->player->y);
@@ -20,7 +20,7 @@ static void funct_prepare_response(gui_t *gui, uint8_t **args)
 {
     gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) + 6;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                    sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
+                    sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }

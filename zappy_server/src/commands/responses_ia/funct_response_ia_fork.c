@@ -24,7 +24,7 @@ static void funct_prepare_response(team_t *team, ia_t *ia)
     team->nb_slot += 1;
     ia->buffer.bufferWrite.usedSize = 4;
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
@@ -32,13 +32,13 @@ static void funct_prepare_response(team_t *team, ia_t *ia)
     strcat((char*)ia->buffer.bufferWrite.octets, "ok\n\0");
 }
 
-static u_int8_t *create_args_for_response_gui(int arg)
+static uint8_t *create_args_for_response_gui(int arg)
 {
-    u_int8_t *new_args;
+    uint8_t *new_args;
     char buffer_args[256];
 
     sprintf(buffer_args, "%d", arg);
-    new_args = malloc(sizeof(u_int8_t) * strlen(buffer_args));
+    new_args = malloc(sizeof(uint8_t) * strlen(buffer_args));
     if (new_args == NULL) {
         return NULL;
     }
@@ -51,7 +51,7 @@ void funct_response_ia_fork(uint8_t **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
     team_t *team = to_find_team_by_int(ia->player->id, com);
-    u_int8_t **arg = malloc(sizeof(u_int8_t *) * 4);
+    uint8_t **arg = malloc(sizeof(uint8_t *) * 4);
 
     (void)args;
     (void)com;

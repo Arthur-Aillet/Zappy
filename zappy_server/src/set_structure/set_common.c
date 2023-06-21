@@ -69,6 +69,8 @@ common_t set_common(int ac, char *av[])
     com.freq = parser->freq;
     com.nb_teams = parser->nb_teams;
     com.timer = time(NULL);
+    com.nb_ia = 0;
+    
     set_structures(&com, parser);
     free_parser(parser);
     return com;

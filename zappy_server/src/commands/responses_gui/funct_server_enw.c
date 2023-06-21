@@ -13,7 +13,7 @@ static void funct_prepare_response(gui_t *gui, uint8_t **args,
     gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) +
     strlen((char*)args[1]) + strlen(buffer_x) + strlen(buffer_y) + 9;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-    sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
+    sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }

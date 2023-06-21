@@ -17,7 +17,7 @@ static void inventory_phiras(ia_t *ia)
     sprintf(buffer_inventory, "%ld", ia->player->inventory[6]);
     ia->buffer.bufferWrite.usedSize += 11 + strlen(buffer_inventory);
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
@@ -33,7 +33,7 @@ static void inventory_thystame(ia_t *ia)
     sprintf(buffer_inventory, "%ld", ia->player->inventory[7]);
     ia->buffer.bufferWrite.usedSize += 7 + strlen(buffer_inventory);
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
@@ -73,7 +73,7 @@ void funct_response_ia_inventory(uint8_t **args, void *info, common_t *com)
     sprintf(buffer_inventory, "%ld", ia->player->inventory[0]);
     ia->buffer.bufferWrite.usedSize = 8 + strlen(buffer_inventory);
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+                        sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }

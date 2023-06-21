@@ -13,7 +13,7 @@ static void funct_prepare_response(gui_t *gui, common_t *common,
 {
     gui->buffer.bufferWrite.usedSize = strlen(tmp_team->name) + 6;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-    sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
+    sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }

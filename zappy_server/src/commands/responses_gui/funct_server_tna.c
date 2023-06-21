@@ -15,7 +15,7 @@ static void funct_prepare_response(gui_t *gui, common_t *common)
         gui->buffer.bufferWrite.usedSize += 5 +
                                 strlen(common->teams[nbr_teams].name);
         gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets
-        , sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
+        , sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize));
         if (gui->buffer.bufferWrite.octets == NULL) {
             return;
         }
@@ -35,7 +35,7 @@ void funct_server_tna(uint8_t **args, void *info, common_t *common)
 
     gui->buffer.bufferWrite.usedSize = 1;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
+                sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }

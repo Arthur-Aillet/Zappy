@@ -17,7 +17,7 @@ void inventory_food(ia_t *ia)
     sprintf(buffer_inventory, "%ld", ia->player->inventory[1]);
     ia->buffer.bufferWrite.usedSize += 11 + strlen(buffer_inventory);
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
@@ -33,7 +33,7 @@ void inventory_linemate(ia_t *ia)
     sprintf(buffer_inventory, "%ld", ia->player->inventory[2]);
     ia->buffer.bufferWrite.usedSize += 12 + strlen(buffer_inventory);
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
@@ -49,7 +49,7 @@ void inventory_deraumere(ia_t *ia)
     sprintf(buffer_inventory, "%ld", ia->player->inventory[3]);
     ia->buffer.bufferWrite.usedSize += 8 + strlen(buffer_inventory);
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
@@ -65,7 +65,7 @@ void inventory_sibur(ia_t *ia)
     sprintf(buffer_inventory, "%ld", ia->player->inventory[4]);
     ia->buffer.bufferWrite.usedSize += 11 + strlen(buffer_inventory);
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
@@ -81,7 +81,7 @@ void inventory_mendiane(ia_t *ia)
     sprintf(buffer_inventory, "%ld", ia->player->inventory[5]);
     ia->buffer.bufferWrite.usedSize += 9 + strlen(buffer_inventory);
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }

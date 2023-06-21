@@ -12,29 +12,38 @@
 
 static ia_t *to_find_ia_int(int id, common_t *common)
 {
-    for (size_t i = 0; i < common->nb_ia; i++) {
-        if (id == common->ia[i].player->id) {
+    for (size_t i = 0; i < MAX_CLIENTS; i++) {
+        if (common->ia[i].player != NULL && id == common->ia[i].player->id) {
             return &common->ia[i];
         }
     }
     return NULL;
 }
 
-static void player_is_dead(player_t *player, common_t *com)
+static int player_is_dead(player_t *player, common_t *com)
 {
-    u_int8_t **args = malloc(sizeof(u_int8_t *) * 2);
     char buffer_args[256];
+    uint8_t **args = malloc(sizeof(uint8_t *) * 2);
+    ia_t *ia = to_find_ia_int(player->id, com);
 
     if (args == NULL)
-        error("Memory allocation failed", 0);
+        return error("Memory allocation failed", 0);
+    if (ia == NULL)
+        return error("Bad player id", 0);
+
+    *ia = close_ia();
+    if (args == NULL)
+        return error("Memory allocation failed", 0);
     sprintf(buffer_args, "%d", player->id);
-    args[0] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
+    args[0] = malloc(sizeof(uint8_t) * strlen(buffer_args) + 1);
     if (args[0] == NULL)
-        error("Memory allocation failed", 0);
+        return error("Memory allocation failed", 0);
     args[0][0] = '\0';
+    args[1] = NULL;
     strcat((char*)args[0], buffer_args);
     funct_server_pdi(args, com->gui, com);
-    funct_response_ia_death(args, to_find_ia_int(player->id, com), com);
+    funct_response_ia_death(args, ia, com);
+    return 1;
 }
 
 //FIXME il faut que le player est accès à la structure client via un pointeur
@@ -51,6 +60,7 @@ static int update_player_life(player_t *player, common_t *com)
             player->inventory[FOOD]--;
         if (player->life == 0) {
             player_is_dead(player, com);
+            close_player(player);
             return 0;
         }
         player->start = time(NULL);

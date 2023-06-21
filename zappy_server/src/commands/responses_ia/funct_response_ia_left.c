@@ -16,7 +16,7 @@ void funct_response_ia_left(uint8_t **args, void *info, common_t *com)
     ia->player->orientation = West;
     ia->buffer.bufferWrite.usedSize = 4;
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }

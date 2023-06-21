@@ -9,14 +9,14 @@
 
 static void fill_args(msg_queue_t *new_msg, uint8_t **args)
 {
-    new_msg->msg[0] = malloc(sizeof(u_int8_t) *
+    new_msg->msg[0] = malloc(sizeof(uint8_t) *
                     (strlen((char*)args[0]) + 1));
     if (new_msg->msg[0] == NULL) {
         return;
     }
     new_msg->msg[0][0] = '\0';
     new_msg->msg[0] = (uint8_t*)strcat((char*)new_msg->msg[0], (char*)args[0]);
-    new_msg->msg[1] = malloc(sizeof(u_int8_t) *
+    new_msg->msg[1] = malloc(sizeof(uint8_t) *
                     (strlen((char*)args[1]) + 1));
     if (new_msg->msg[0] == NULL) {
         return;

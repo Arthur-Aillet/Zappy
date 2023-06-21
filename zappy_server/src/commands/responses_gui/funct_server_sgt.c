@@ -18,7 +18,7 @@ void funct_server_sgt(uint8_t **args, void *info, common_t *common)
     sprintf(str_freq, "%ld", common->freq);
     gui->buffer.bufferWrite.usedSize = strlen(str_freq) + 6;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
+                sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }

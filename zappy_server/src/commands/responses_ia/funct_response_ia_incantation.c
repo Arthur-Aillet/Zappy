@@ -20,7 +20,7 @@ void funct_response_ia_incantation(uint8_t **args, void *info, common_t *com)
         ia->player->level += 1;
         sprintf(buffer_incantation, "%ld", ia->player->level);
         ia->buffer.bufferWrite.usedSize = 35 + strlen(buffer_incantation);
-        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets, sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets, sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
         if (ia->buffer.bufferWrite.octets == NULL) {
             return;
         }
@@ -32,7 +32,7 @@ void funct_response_ia_incantation(uint8_t **args, void *info, common_t *com)
         strcat((char*)ia->buffer.bufferWrite.octets, "\n\0");
     } else {
         ia->buffer.bufferWrite.usedSize = 4;
-        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets, sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets, sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
         if (ia->buffer.bufferWrite.octets == NULL) {
             return;
         }
