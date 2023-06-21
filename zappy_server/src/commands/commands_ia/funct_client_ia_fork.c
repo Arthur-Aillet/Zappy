@@ -22,6 +22,7 @@ static void call_function_gui(ia_t *ia, common_t *com)
     arg[0][0] = '\0';
     strcat((char*)arg[0], buffer_player);
     funct_server_pfk(arg, com->gui, com);
+    free_arg(1, arg);
 }
 
 void funct_client_ia_fork(ia_t *ia, uint8_t **args, common_t *com)

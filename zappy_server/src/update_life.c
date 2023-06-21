@@ -10,16 +10,6 @@
 #include "zappy.h"
 #include "error_handling.h"
 
-static ia_t *to_find_ia_int(int id, common_t *common)
-{
-    for (size_t i = 0; i < MAX_CLIENTS; i++) {
-        if (common->ia[i].player != NULL && id == common->ia[i].player->id) {
-            return &common->ia[i];
-        }
-    }
-    return NULL;
-}
-
 client_t *find_client_by_id(int id, common_t *com)
 {
     for (size_t i = 0; i < MAX_CLIENTS; i++) {

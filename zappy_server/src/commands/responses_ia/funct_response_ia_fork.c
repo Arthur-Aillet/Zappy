@@ -64,6 +64,7 @@ void funct_response_ia_fork(uint8_t **args, void *info, common_t *com)
     arg[2] = create_args_for_response_gui(ia->player->x);
     arg[3] = create_args_for_response_gui(ia->player->y);
     funct_server_enw(arg, com->gui, com);
+    free_arg(4, arg);
     write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
         ia->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_response_ia_fork\n");
