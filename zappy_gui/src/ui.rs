@@ -1,13 +1,14 @@
 use std::fmt::Display;
+use std::os::linux::raw::stat;
 use std::time::Duration;
 use rend_ox::nannou::draw::renderer::VertexMode::Color;
 use rend_ox::nannou_egui::egui::{self, Color32, CtxRef, Ui};
-use rend_ox::nannou_egui::egui::CollapsingHeader;
 use rend_ox::nannou_egui::egui::color_picker::Alpha;
 use rend_ox::Vec3;
 
 use crate::tantorian::Tantorian;
 use crate::ui::State::{Connect, Disconnect, Nothing};
+use crate::zappy::{display_ui, Zappy};
 
 pub(crate) struct ZappyUi {
     pub selected_tile: Option<[usize; 2]>,
@@ -93,21 +94,16 @@ impl ZappyUi {
 
     pub(crate) fn communications(&mut self, ctx: &CtxRef, is_active: bool) {
         egui::Window::new("Communications")
+            .vscroll(true)
             .enabled(!is_active)
             .show(ctx, |ui| {
-                egui::ScrollArea::vertical()
-                    .auto_shrink([false, true])
-                    .max_height(100.)
-                    .stick_to_bottom()
-                    .show(ui, |ui| {
-                        egui::Grid::new("Broadcast Messages")
-                            .num_columns(2)
-                            .striped(true)
-                            .show(ui, |grid| {
-                                for (time, team_name, number, message) in self.broadcast_messages.iter() {
-                                    ZappyUi::display_stat(grid, &*format!("<{team_name}:{number} {:.1}s>", time.as_secs_f32()), &message);
-                                }
-                            });
+                egui::Grid::new("Broadcast Messages")
+                    .num_columns(2)
+                    .striped(true)
+                    .show(ui, |grid| {
+                        for (time, team_name, number, message) in self.broadcast_messages.iter() {
+                            ZappyUi::display_stat(grid, &*format!("<{team_name}:{number} {:.1}s>", time.as_secs_f32()), &message);
+                        }
                     });
             });
     }
@@ -164,9 +160,37 @@ impl ZappyUi {
         ZappyUi::display_stat(grid,"Thystame", map.tiles[selected[0]][selected[1]].q6.len());
     }
 
-    pub(crate) fn tiles(&mut self, ctx: &CtxRef, map: &crate::map::Map, is_active: bool) {
+    pub(crate) fn tile_settings(&mut self, ui: &mut Ui, ctx: &CtxRef, auto_refresh: &mut bool, refresh_rate: &mut f32) -> bool {
+        let mut state: bool = false;
+
+        egui::CollapsingHeader::new("Settings")
+            .default_open(false)
+            .show(ui, |col| {
+                egui::Grid::new("Settings")
+                    .num_columns(2)
+                    .striped(true)
+                    .show(col, |grid| {
+                        grid.add(egui::Label::new(format!("Refresh:")).underline());
+                        state = grid.add(egui::Button::new("Refresh")).clicked();
+                        grid.end_row();
+                        grid.add(egui::Label::new(format!("Auto refresh:")).underline());
+                        grid.add(egui::Checkbox::new(auto_refresh, ""));
+                        grid.end_row();
+                        if *auto_refresh {
+                            grid.add(egui::Label::new(format!("Refresh rate:")).underline());
+                            grid.add(egui::Slider::new(refresh_rate, 0.1..=1000.0).logarithmic(true));
+                            grid.end_row();
+                        }
+                    });
+            });
+        state
+    }
+
+    pub(crate) fn tiles(&mut self, ctx: &CtxRef, auto_refresh: &mut bool, refresh_rate: &mut f32, map: &crate::map::Map, is_active: bool) -> bool {
+        let mut state = false;
         egui::Window::new("Map").vscroll(true).enabled(!is_active).show(
             ctx, |ui| {
+                state = self.tile_settings(ui, ctx, auto_refresh, refresh_rate);
                 ui.add(egui::Label::new("Tiles:").heading());
                 egui::Grid::new("Tiles")
                     .num_columns(map.size[0] as usize)
@@ -191,11 +215,12 @@ impl ZappyUi {
                 }
             },
         );
+        state
     }
 
     pub(crate) fn team(ui :&mut Ui, players: &mut Vec<Tantorian>, team_name: &String) {
         for mut player in players.iter_mut().filter(|x| {x.team_name == *team_name}) {
-            CollapsingHeader::new(player.number)
+            egui::CollapsingHeader::new(player.number)
                 .default_open(false)
                 .show(ui, |col| {
                     egui::Grid::new("Player data")
@@ -238,7 +263,7 @@ impl ZappyUi {
             .resizable(true)
             .show(ctx, |ui| {
                 for team in teams {
-                    CollapsingHeader::new(team)
+                    egui::CollapsingHeader::new(team)
                         .default_open(false)
                         .show(ui, |col| {
                             ZappyUi::team(col, players, team);

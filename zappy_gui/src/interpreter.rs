@@ -183,11 +183,11 @@ impl Zappy {
             return;
         }
         if args.len() != 9 {
-            println!("btc: wrong number of arguments");
+            println!("bct: wrong number of arguments");
             return;
         }
         if args[0] > self.map.size[0] || args[1] > self.map.size[1] {
-            println!("btc: tile outside of the map");
+            println!("bct: tile outside of the map");
             return;
         }
         for i in 0..7 {
