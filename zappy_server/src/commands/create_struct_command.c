@@ -17,7 +17,8 @@ static int compt_nbr_args_on_command(uint8_t **command)
 
 static void create_args_client_gui(uint8_t **command, int nbr_args, client_gui_t *gui)
 {
-    for (int i = 1; i < nbr_args; i++) {
+    int i;
+    for (i = 1; i < nbr_args; i++) {
         gui->args = realloc(gui->args, sizeof(uint8_t *) * i);
         if (gui->args == NULL) {
             gui->args = NULL;
@@ -25,6 +26,7 @@ static void create_args_client_gui(uint8_t **command, int nbr_args, client_gui_t
         }
         gui->args[i - 1] = (uint8_t *)strcat((char *)gui->args[i - 1], (char *)command[i]);
     }
+    gui->args[i] = NULL;
 }
 
 client_gui_t create_struct_client_gui(uint8_t **command)
@@ -55,7 +57,7 @@ static void create_args_client_ia(uint8_t **command, int nbr_args,
         return;
     }
     for (; i < nbr_args; i++) {
-        ia->args[i -1] = malloc(sizeof(uint8_t) * (strlen((char*)command[i]) + 1));
+        ia->args[i - 1] = malloc(sizeof(uint8_t) * (strlen((char*)command[i]) + 1));
         ia->args[i - 1][0] = '\0';
         ia->args[i - 1] = (uint8_t *)strcat((char *)ia->args[i - 1],
                         (char *)command[i]);

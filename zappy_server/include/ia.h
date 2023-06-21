@@ -70,8 +70,8 @@ static const server_ia_t COMMAND_GESTION_IA[] = {
     {(uint8_t*)"Connect_nbr", NULL, funct_client_ia_connect_nbr},
     {(uint8_t*)"Fork", NULL, funct_client_ia_fork},
     {(uint8_t*)"Eject", NULL, funct_client_ia_eject},
-    {(uint8_t*)"Take object", NULL, funct_client_ia_take_obj},
-    {(uint8_t*)"Set object", NULL, funct_client_ia_set_obj},
+    {(uint8_t*)"Take", NULL, funct_client_ia_take_obj},
+    {(uint8_t*)"Set", NULL, funct_client_ia_set_obj},
     {(uint8_t*)"Incantation", NULL, funct_client_ia_incantation},
     {(uint8_t*)"Connect_nbr", NULL, funct_client_ia_connect_bar},
 };

@@ -25,6 +25,8 @@ static int is_valid_opt_ia(size_t i, ia_t *ia,
     if (strcmp((char*)server_ia->comd,
         (char*)COMMAND_GESTION_IA[i].comd) == 0) {
         COMMAND_GESTION_IA[i].handler(ia, server_ia->args, com);
+        player_t *player = (player_t*)ia->player;
+        printf("%sPlayer\n\tposition:%s%d %d%s\n\torientation: %s%ld%s\n", CYAN, R, player->x, player->y, CYAN, R, player->orientation, N);
         return 1;
     }
     return 0;
@@ -48,6 +50,8 @@ void to_check_command_exist_gui(client_gui_t *client_gui,
 void to_check_command_exist_ia(server_ia_t *server_ia, ia_t *ia,
                                 common_t *com)
 {
+    for (int i = 0; server_ia->args[i] != NULL; i++)
+        printf("%d: %s\n", i, (char *)server_ia->args[i]);
     int value = 0;
     if (ia == NULL) {
         error("ia player ID's is not the same as the client's player", 0);
