@@ -40,7 +40,7 @@ macro_rules! parse_capture {
 
 impl Zappy {
     fn broadcast(&mut self, command: String, at: Duration) {
-       let args: Vec<&str> = command.split(" ").collect();
+        let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 3 {
             println!("pbc: wrong number of arguments");
@@ -50,11 +50,12 @@ impl Zappy {
             match maybe_number {
                 Ok(number) => {
                     for player in &mut self.players {
-                        if player.number == number {
+                        if player.number == number && player.alive {
                             self.ui.broadcast_messages.push((at, player.team_name.clone(), number, String::from(args[2])));
                             return;
                         }
                     }
+                    println!("pbc: player not found");
                 }
                 Err(_) => {println!("pbc: invalid player number");}
             }
