@@ -7,8 +7,6 @@
 
 #include "zappy.h"
 
-//voir avec ludo pour l'incantation
-
 static void funct_prepare_response_gui(ia_t *ia, common_t *com, int r)
 {
     u_int8_t **args = malloc(sizeof(u_int8_t *) * 3);
