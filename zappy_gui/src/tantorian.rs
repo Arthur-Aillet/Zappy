@@ -21,6 +21,15 @@ impl Orientation {
             _ => panic!("Orientation: Unknown value: {}", value),
         }
     }
+
+    pub fn to_char(&self) -> char {
+        match value {
+            Orientation::N => 'N',
+            Orientation::E => 'E',
+            Orientation::S => 'S',
+            Orientation::W => 'W',
+        }
+    }
 }
 
 
@@ -34,6 +43,13 @@ pub struct Tantorian {
     pub orientation: Orientation,
     pub mesh_descriptor: u32,
     pub alive: bool,
+    pub food: u32,
+    pub linemate: u32,
+    pub deraumere: u32,
+    pub sibur: u32,
+    pub mendiane: u32,
+    pub phiras: u32,
+    pub thystame: u32,
 }
 
 impl Tantorian {
@@ -48,6 +64,13 @@ impl Tantorian {
             mesh_descriptor: 0,
             current_tile: UVec2::new(0, 0),
             alive: true,
+            food: 0,
+            linemate: 0,
+            deraumere: 0,
+            sibur: 0,
+            mendiane: 0,
+            phiras: 0,
+            thystame: 0,
         }
     }
 
@@ -78,6 +101,13 @@ impl Tantorian {
                 player.mesh_descriptor = 0;
                 player.current_tile = UVec2::new(x as u32, y as u32);
                 player.alive = true;
+                player.food = 0;
+                player.linemate = 0;
+                player.deraumere = 0;
+                player.sibur = 0;
+                player.mendiane = 0;
+                player.phiras = 0;
+                player.thystame = 0;
                 return None;
             }
         }
@@ -94,9 +124,8 @@ impl Tantorian {
             g += 10;
             b += 10;
         }
-        let color = Vec3::new((r as f32/255.) , (g as f32/255.), (b as f32/255.));
+        let color = Vec3::new(r as f32/255. , g as f32/255., b as f32/255.);
 
-        println!("color {}", color);
         Some(Tantorian {
             team_name,
             number,
@@ -107,6 +136,13 @@ impl Tantorian {
             mesh_descriptor: 0,
             current_tile: UVec2::new(x as u32, y as u32),
             alive: true,
+            food: 0,
+            linemate: 0,
+            deraumere: 0,
+            sibur: 0,
+            mendiane: 0,
+            phiras: 0,
+            thystame: 0,
         })
     }
 

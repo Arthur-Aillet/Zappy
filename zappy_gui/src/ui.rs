@@ -195,15 +195,27 @@ impl ZappyUi {
             CollapsingHeader::new(player.number)
                 .default_open(false)
                 .show(ui, |col| {
-                    ZappyUi::display_stat(col, "Number", player.number);
+                    egui::Grid::new("Player data")
+                        .num_columns(2)
+                        .striped(true)
+                        .show(col, |ui_grid| {
+                            ZappyUi::display_stat(ui_grid, "Number", player.number);
 
-                    let state: &str;
-                    if player.alive {
-                        state = "alive";
-                    } else  {
-                        state = "dead";
-                    }
-                    ZappyUi::display_stat(col, "Status", state);
+                            let state: &str;
+                            if player.alive {
+                                state = "alive";
+                            } else  {
+                                state = "dead";
+                            }
+                            ZappyUi::display_stat(ui_grid, "Status", state);
+                            ZappyUi::display_stat(ui_grid, "Position", format!("{} {}", player.current_tile.x, player.current_tile.y));
+                            ZappyUi::display_stat(ui_grid, "Level", format!("{}", player.level));
+                            ZappyUi::display_stat(ui_grid, "Orientation", player.orientation.to_char());
+
+                            ui_grid.add(egui::Label::new(format!("Color:")).underline());
+                            ui_grid.add(egui::Button::new("   ").fill(egui::Color32::from_rgb((player.color.x * 255.0) as u8, (player.color.y * 255.0) as u8, (player.color.z * 255.0) as u8)));
+                            ui_grid.end_row();
+                        });
                 });
         }
     }
