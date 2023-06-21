@@ -47,7 +47,7 @@ typedef struct common_s {
 } common_t;
 
 typedef struct msg_queue_s {
-    size_t time;
+    double time;
     time_t start;
     uint8_t **msg;
     void (*handler)(uint8_t **args, void *info, common_t *com);
@@ -134,5 +134,7 @@ void to_check_command_exist_ia(server_ia_t *server_ia, ia_t *ia,
                                 common_t *com);
 void to_check_command_exist_gui(client_gui_t *client_gui,
                                 gui_t *gui, common_t *com);
+
+void check_msg_queue_ia(common_t *com);
 
 #endif /* !ZAPPY_H_ */

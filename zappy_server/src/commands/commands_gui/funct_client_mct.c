@@ -17,6 +17,8 @@ void funct_client_mct(gui_t *gui, uint8_t **args, common_t *com)
         return;
     }
     new_msg->time = 0;
+    new_msg->start = 0;
+    new_msg->msg = NULL;
     new_msg->handler = &funct_server_all_bct;
     new_msg->next_msg = gui->msg_queue;
     gui->msg_queue = new_msg;

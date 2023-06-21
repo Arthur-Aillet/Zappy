@@ -27,6 +27,8 @@ void funct_client_pin(gui_t *gui, uint8_t **args, common_t *com)
         return;
     }
     new_msg->time = 0;
+    new_msg->start = 0;
+    new_msg->msg = NULL;
     malloc_nbr_args(new_msg, 2);
     fill_args(new_msg, args);
     new_msg->handler = &funct_server_pin;
