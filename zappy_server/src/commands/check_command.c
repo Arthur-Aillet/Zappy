@@ -49,6 +49,8 @@ void to_check_command_exist_gui(client_gui_t *client_gui,
 void to_check_command_exist_ia(server_ia_t *server_ia, ia_t *ia,
                                 common_t *com)
 {
+    for (int i = 0; server_ia->args[i] != NULL; i++)
+        printf("%d: %s\n", i, (char *)server_ia->args[i]);
     int value = 0;
     if (ia == NULL) {
         error("ia player ID's is not the same as the client's player", 0);

@@ -46,9 +46,9 @@ void response_take(ia_t *ia, int idx, common_t *com)
 
 static void next_if_funct_tree(ia_t *ia, common_t *com, uint8_t **args)
 {
-    if (strcmp((char*)args[0], "PHIRAS")) {
+    if (strcmp((char*)args[0], "phiras") == 0) {
         response_take(ia, 5, com);
-    } else if (strcmp((char*)args[0], "THYSTAME")) {
+    } else if (strcmp((char*)args[0], "thystame") == 0) {
         response_take(ia, 6, com);
     } else {
         strcat((char*)ia->buffer.bufferWrite.octets, "ko\n\0");
@@ -57,9 +57,9 @@ static void next_if_funct_tree(ia_t *ia, common_t *com, uint8_t **args)
 
 static void next_if_funct_bis(ia_t *ia, common_t *com, uint8_t **args)
 {
-    if (strcmp((char*)args[0], "SIBUR")) {
+    if (strcmp((char*)args[0], "sibur") == 0) {
         response_take(ia, 3, com);
-    } else if (strcmp((char*)args[0], "MENDIANE")) {
+    } else if (strcmp((char*)args[0], "mendiane") == 0) {
         response_take(ia, 4, com);
     } else {
         next_if_funct_tree(ia, com, args);
@@ -68,9 +68,9 @@ static void next_if_funct_bis(ia_t *ia, common_t *com, uint8_t **args)
 
 void next_if_funct_take(ia_t *ia, common_t *com, uint8_t **args)
 {
-    if (strcmp((char*)args[0], "LINEMATE")) {
+    if (strcmp((char*)args[0], "linemate") == 0) {
         response_take(ia, 1, com);
-    } else if (strcmp((char*)args[0], "DERAUMERE")) {
+    } else if (strcmp((char*)args[0], "deraumere") == 0) {
         response_take(ia, 2, com);
     } else {
         next_if_funct_bis(ia, com, args);
