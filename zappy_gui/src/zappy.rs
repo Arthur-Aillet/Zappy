@@ -82,6 +82,7 @@ impl Zappy {
             winner_team: None,
         }
     }
+
     pub fn load(app: &mut App<Zappy>) {
         app.user.map.resize(8, 8);
         if let Ok(mut graphics) = app.graphics.try_borrow_mut() {
@@ -110,9 +111,10 @@ impl Zappy {
 
     pub fn render(app: &mut App<Zappy>) {
         if let Some(mesh) = &app.user.tantorian_mesh {
+            let player = app.user.players.iter().filter(|p| p.alive);
             let mat = Mat4::from_rotation_x(std::f32::consts::PI * 0.5);
-            let instances : Vec<Mat4> = app.user.players.iter().map(|p| Mat4::from_translation(p.pos + Vec3::new(0., 0., 2.)) * mat).collect();
-            let colors : Vec<Vec3> = app.user.players.iter().map(|p| p.color).collect();
+            let instances : Vec<Mat4> = player.clone().map(|p| Mat4::from_translation(p.pos + Vec3::new(0., 0., 2.)) * mat).collect();
+            let colors : Vec<Vec3> = player.map(|p| p.color).collect();
             app.draw_instances(mesh, instances.clone(), colors.clone());
         }
         Map::render(app);
