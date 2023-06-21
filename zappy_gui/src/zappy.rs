@@ -158,11 +158,13 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
 
 fn ask_for_update(zappy: &mut Zappy, at: Duration) {
     if let Some(server) = &mut zappy.server {
-        if zappy.last_map_update.as_secs_f32() + 20. / zappy.time_unit * zappy.refresh_factor < at.as_secs_f32() {
-            zappy.last_map_update = at;
-            if server.send_to_server("mct", -1, -1) == false {
-                zappy.close_connection(at);
-                zappy.reset_server_data();
+        if zappy.auto_update == true {
+            if zappy.last_map_update.as_secs_f32() + 20. / zappy.time_unit * zappy.refresh_factor < at.as_secs_f32() {
+                zappy.last_map_update = at;
+                if server.send_to_server("mct", -1, -1) == false {
+                    zappy.close_connection(at);
+                    zappy.reset_server_data();
+                }
             }
         }
     }
