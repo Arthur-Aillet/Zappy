@@ -214,6 +214,7 @@ static void call_function_gui(ia_t *ia, common_t *com, msg_queue_t *new_msg)
         strcat((char*)arg[3], buffer_player);
         to_complete_ia_in_incantation(1, arg, &com->gui->map.tiles[ia->player->x][ia->player->y]);
         funct_server_pic(arg, com->gui, com);
+        free_arg(4, arg);
     } else if (ia->player->level == 2 || ia->player->level == 3) {
         arg = malloc(sizeof(u_int8_t *) * 5);
         if (arg == NULL) {
@@ -265,6 +266,7 @@ static void call_function_gui(ia_t *ia, common_t *com, msg_queue_t *new_msg)
         strcat((char*)arg[4], buffer_player);
         to_complete_ia_in_incantation(2, arg, &com->gui->map.tiles[ia->player->x][ia->player->y]);
         funct_server_pic(arg, com->gui, com);
+        free_arg(5, arg);
     } else if (ia->player->level == 4 || ia->player->level == 5) {
         arg = malloc(sizeof(u_int8_t *) * 7);
         if (arg == NULL) {
@@ -344,6 +346,7 @@ static void call_function_gui(ia_t *ia, common_t *com, msg_queue_t *new_msg)
         strcat((char*)arg[6], buffer_player);
         to_complete_ia_in_incantation(4, arg, &com->gui->map.tiles[ia->player->x][ia->player->y]);
         funct_server_pic(arg, com->gui, com);
+        free_arg(7, arg);
     } else {
         arg = malloc(sizeof(u_int8_t *) * 9);
         if (arg == NULL) {
@@ -449,6 +452,7 @@ static void call_function_gui(ia_t *ia, common_t *com, msg_queue_t *new_msg)
         strcat((char*)arg[8], buffer_player);
         to_complete_ia_in_incantation(6, arg, &com->gui->map.tiles[ia->player->x][ia->player->y]);
         funct_server_pic(arg, com->gui, com);
+        free_arg(9, arg);
     }
 }
 

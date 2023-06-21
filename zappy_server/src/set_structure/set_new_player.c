@@ -67,6 +67,7 @@ static void send_to_gui(int status, common_t *com, team_t *team, int i)
         send_to_gui_buffer(team->players[i].level, NULL, &args[4]);
         send_to_gui_buffer(0, team->name, &args[5]);
         funct_server_pnw(args, com->gui, com);
+        free_arg(6, args);
     }
 }
 

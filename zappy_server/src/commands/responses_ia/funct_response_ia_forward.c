@@ -16,12 +16,12 @@ static void to_move_ia(ia_t *ia, common_t *com)
     }
     if (ia->player->orientation == Sud) {
         ia->player->y += 1;
-        if (ia->player->y > com->gui->map.height)
+        if (ia->player->y > (int)com->gui->map.height)
             ia->player->y = 0;
     }
     if (ia->player->orientation == Est) {
         ia->player->x += 1;
-        if (ia->player->x > com->gui->map.width)
+        if (ia->player->x > (int)com->gui->map.width)
             ia->player->x = 0;
     }
     if (ia->player->orientation == West) {
