@@ -24,7 +24,6 @@ SRC		=	src/listening_socket.c										\
 			src/set_structure/set_player.c 								\
 			src/set_structure/set_new_player.c							\
 			src/commands/client_undefined.c								\
-			src/commands/choose_command.c								\
 
 COMMAND	=	src/commands/check_command.c								\
 			src/commands/common_functions.c								\
@@ -65,12 +64,16 @@ COMMAND	=	src/commands/check_command.c								\
 			src/commands/responses_gui/funct_server_suc.c				\
 			src/commands/responses_gui/funct_server_tna.c				\
 			src/commands/commands_ia/funct_client_ia_broadcast.c		\
+			src/commands/commands_ia/funct_client_ia_check_ressources.c	\
 			src/commands/commands_ia/funct_client_ia_connect_bar.c		\
 			src/commands/commands_ia/funct_client_ia_connect_nbr.c		\
 			src/commands/commands_ia/funct_client_ia_eject.c			\
 			src/commands/commands_ia/funct_client_ia_fork.c				\
 			src/commands/commands_ia/funct_client_ia_forward.c			\
 			src/commands/commands_ia/funct_client_ia_incantation.c		\
+			src/commands/commands_ia/funct_client_ia_incantation_bis.c	\
+			src/commands/commands_ia/funct_create_check_incantation.c	\
+			src/commands/commands_ia/funct_client_incantation_bis.c		\
 			src/commands/commands_ia/funct_client_ia_inventory.c		\
 			src/commands/commands_ia/funct_client_ia_left.c				\
 			src/commands/commands_ia/funct_client_ia_look.c				\
