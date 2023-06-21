@@ -14,3 +14,11 @@ void free_arg(int nbr, uint8_t **arg)
     }
     free(arg);
 }
+
+void free_msg_queue(msg_queue_t msg)
+{
+    for (int i = 0; msg.msg[i]; i++) {
+        free(msg.msg[i]);
+    }
+    free(msg.msg);
+}

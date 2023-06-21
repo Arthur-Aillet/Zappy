@@ -51,6 +51,7 @@ COMMAND	=	src/commands/check_command.c								\
 			src/commands/responses_gui/funct_server_pfk.c				\
 			src/commands/responses_gui/funct_server_pgt.c				\
 			src/commands/responses_gui/funct_server_pic.c				\
+			src/commands/responses_gui/funct_server_pic_next.c			\
 			src/commands/responses_gui/funct_server_pie.c				\
 			src/commands/responses_gui/funct_server_pin.c				\
 			src/commands/responses_gui/funct_server_plv.c				\
@@ -83,6 +84,7 @@ COMMAND	=	src/commands/check_command.c								\
 			src/commands/commands_ia/funct_client_ia_take_obj.c			\
 			src/commands/responses_ia/funct_response_ia_broadcast.c		\
 			src/commands/responses_ia/funct_remove_player.c				\
+			src/commands/responses_ia/funct_remove_player_bis.c			\
 			src/commands/responses_ia/funct_find_post.c					\
 			src/commands/responses_ia/funct_remove_egg.c				\
 			src/commands/responses_ia/funct_response_ia_connect_bar.c	\
@@ -92,6 +94,7 @@ COMMAND	=	src/commands/check_command.c								\
 			src/commands/responses_ia/funct_response_ia_fork.c			\
 			src/commands/responses_ia/funct_response_ia_forward.c		\
 			src/commands/responses_ia/funct_response_ia_incantation.c	\
+			src/commands/responses_ia/funct_response_ia_incantation_bis.c\
 			src/commands/responses_ia/funct_response_ia_inventory.c		\
 			src/commands/responses_ia/funct_response_ia_inventory_bis.c	\
 			src/commands/responses_ia/funct_response_ia_left.c			\

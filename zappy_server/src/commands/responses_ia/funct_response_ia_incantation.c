@@ -7,57 +7,17 @@
 
 #include "zappy.h"
 
-static void funct_prepare_response_gui(ia_t *ia, common_t *com, int r)
+static void funct_level_other_level_next(ia_t *ia, common_t *com)
 {
-    u_int8_t **args = malloc(sizeof(u_int8_t *) * 3);
-    char buffer_args[256];
-
-    if (args == NULL) {
-        return;
-    }
-    sprintf(buffer_args, "%d", ia->player->x);
-    args[0] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
-    if (args[0] == NULL) {
-        return;
-    }
-    args[0][0] = '\0';
-    strcat((char*)args[0], buffer_args);
-    sprintf(buffer_args, "%d", ia->player->y);
-    args[1] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
-    if (args[1] == NULL) {
-        return;
-    }
-    args[1][0] = '\0';
-    strcat((char*)args[1], buffer_args);
-    sprintf(buffer_args, "%d", r);
-    args[1] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
-    if (args[1] == NULL) {
-        return;
-    }
-    args[1][0] = '\0';
-    strcat((char*)args[1], buffer_args);
-    funct_server_pie(args, com->gui, com);
-}
-
-static void funct_level_1(ia_t *ia, common_t *com)
-{
-    char buffer_incantation[256];
-
-    ia->player->level += 1;
-    sprintf(buffer_incantation, "%ld", ia->player->level);
-    ia->buffer.bufferWrite.usedSize = 35 + strlen(buffer_incantation);
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets, sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
-        return;
-    }
     char level[3];
+
     sprintf(level, "%ld", ia->player->level);
     ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat((char*)ia->buffer.bufferWrite.octets, "Elevation underway current level ");
+    strcat((char*)ia->buffer.bufferWrite.octets,
+    "Elevation underway current level ");
     strcat((char*)ia->buffer.bufferWrite.octets, level);
     strcat((char*)ia->buffer.bufferWrite.octets, "\n\0");
-    funct_prepare_response_gui(ia, com, 1);
-    funct_server_seg(NULL, ia, com);
+    funct_prepare_response_gui_incantation(ia, com, 1);
 }
 
 static void funct_level_other_level(ia_t *ia, common_t *com, int nbr_ia_level)
@@ -66,23 +26,44 @@ static void funct_level_other_level(ia_t *ia, common_t *com, int nbr_ia_level)
     ia_t *tmp_ia;
 
     for (int i = 0; i < nbr_ia_level; i++) {
-        tmp_ia = to_find_ia_int(com->gui->map.tiles[ia->player->x][ia->player->y].nb_player_incantations[i], com);
+        tmp_ia = to_find_ia_int(com->gui->map.tiles[ia->player->x]
+        [ia->player->y].nb_player_incantations[i], com);
         tmp_ia->player->level += 1;
         funct_server_seg(NULL, tmp_ia, com);
     }
     sprintf(buffer_incantation, "%ld", ia->player->level);
     ia->buffer.bufferWrite.usedSize = 35 + strlen(buffer_incantation);
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets, sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
+    sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
-    char level[3];
-    sprintf(level, "%ld", ia->player->level);
+    funct_level_other_level_next(ia, com);
+}
+
+static void funct_response_ia_incantation_bis(ia_t *ia, common_t *com)
+{
+    if (ia->player->level == 2 || ia->player->level == 3) {
+            funct_level_other_level(ia, com, 2);
+    }
+    if (ia->player->level == 4 || ia->player->level == 5) {
+        funct_level_other_level(ia, com, 4);
+    }
+    if (ia->player->level == 6 || ia->player->level == 7) {
+        funct_level_other_level(ia, com, 6);
+    }
+}
+
+static void funct_response_echec_incantation(ia_t *ia)
+{
+    ia->buffer.bufferWrite.usedSize = 4;
+    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
+    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
+    if (ia->buffer.bufferWrite.octets == NULL) {
+        return;
+    }
     ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat((char*)ia->buffer.bufferWrite.octets, "Elevation underway current level ");
-    strcat((char*)ia->buffer.bufferWrite.octets, level);
-    strcat((char*)ia->buffer.bufferWrite.octets, "\n\0");
-    funct_prepare_response_gui(ia, com, 1);
+    strcat((char*)ia->buffer.bufferWrite.octets, "ko\n\0");
 }
 
 void funct_response_ia_incantation(uint8_t **args, void *info, common_t *com)
@@ -92,22 +73,13 @@ void funct_response_ia_incantation(uint8_t **args, void *info, common_t *com)
     if (strcmp((char *)args[0], "ok")) {
         if (ia->player->level == 1) {
             funct_level_1(ia, com);
-        } else if (ia->player->level == 2 || ia->player->level == 3) {
-            funct_level_other_level(ia, com, 2);
-        } else if (ia->player->level == 4 || ia->player->level == 5) {
-            funct_level_other_level(ia, com, 4);
         } else {
-            funct_level_other_level(ia, com, 6);
+            funct_response_ia_incantation_bis(ia, com);
         }
     } else {
-        ia->buffer.bufferWrite.usedSize = 4;
-        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets, sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
-        if (ia->buffer.bufferWrite.octets == NULL) {
-            return;
-        }
-        ia->buffer.bufferWrite.octets[0] = '\0';
-        strcat((char*)ia->buffer.bufferWrite.octets, "ko\n\0");
+        funct_response_echec_incantation(ia);
     }
-    write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets, ia->buffer.bufferWrite.usedSize);
+    write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
+    ia->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_response_ia_incantation\n");
 }

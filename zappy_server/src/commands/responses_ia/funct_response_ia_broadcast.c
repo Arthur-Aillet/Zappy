@@ -42,7 +42,7 @@ static int calculate_broadcast_angle(ia_t *ia, player_t *player, map_t map)
     float x = ia->player->x - player->x;
     float y = ia->player->y - player->y;
 
-    x = (x < 0) ? x + map.width: x;
+    x = (x < 0) ? x + map.width : x;
     x = (x > map.width / 2) ? x - map.width : x;
     y = (y < 0) ? y + map.height : y;
     y = (y > map.height / 2) ? y - map.height : y;

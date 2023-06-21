@@ -153,4 +153,17 @@ void to_complete_ia_in_incantation_bis(int nbr_ia,
                                 u_int8_t **arg, tile_t *tile);
 int to_find_ia_incantation(common_t *com, ia_t *ia);
 
+void funct_server_pic_send_message(uint8_t **args, gui_t *gui);
+
+u_int8_t *prepare_arg_response_gui(int x);
+int set_nbr_ia(ia_t *ia);
+void remove_choose_player(player_t *ennemy, common_t *com,
+                                uint8_t **args, player_t *ia);
+void free_msg_queue(msg_queue_t msg);
+void funct_server_pic_level_other(uint8_t **args, gui_t *gui);
+void funct_server_pic_level_four_five(uint8_t **args, gui_t *gui);
+
+void funct_level_1(ia_t *ia, common_t *com);
+void funct_prepare_response_gui_incantation(ia_t *ia, common_t *com, int r);
+
 #endif /* !ZAPPY_H_ */
