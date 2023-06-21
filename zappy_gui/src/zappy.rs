@@ -138,10 +138,7 @@ pub(crate) fn zappy_update(
         .players(ctx, &zappy.user.players, &zappy.user.team_names, zappy.camera_is_active);
     zappy.user.ui.tiles(ctx, &zappy.user.map, zappy.camera_is_active);
     if let Some(server) = &zappy.user.server {
-        zappy
-            .user
-            .ui
-            .communications(ctx, zappy.camera_is_active, &server.commands.lock().expect("Lock poisoned"));
+        zappy.user.ui.communications(ctx, zappy.camera_is_active);
     }
     let state = zappy.user.ui.network_status(ctx, zappy.camera_is_active, &mut zappy.user.port, &mut zappy.user.hostname, zappy.user.server.is_some());
     if state == ui::State::Connect {

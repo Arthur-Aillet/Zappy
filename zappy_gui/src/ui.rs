@@ -9,6 +9,7 @@ use crate::ui::State::{Connect, Disconnect, Nothing};
 pub(crate) struct ZappyUi {
     pub selected_tile: Option<[usize; 2]>,
     pub network_messages: Vec<(Duration, String)>,
+    pub broadcast_messages: Vec<(Duration, String, i64, String)>,
 }
 
 #[derive(PartialEq)]
@@ -23,6 +24,7 @@ impl ZappyUi {
         ZappyUi {
             selected_tile: None,
             network_messages: vec![],
+            broadcast_messages: vec![],
         }
     }
 
@@ -86,18 +88,23 @@ impl ZappyUi {
         state
     }
 
-    pub(crate) fn communications(&mut self, ctx: &CtxRef, is_active: bool, messages: &Vec<String>) {
+    pub(crate) fn communications(&mut self, ctx: &CtxRef, is_active: bool) {
         egui::Window::new("Communications")
             .enabled(!is_active)
             .show(ctx, |ui| {
                 egui::ScrollArea::vertical()
-                    .auto_shrink([false; 2])
+                    .auto_shrink([false, true])
                     .max_height(100.)
                     .stick_to_bottom()
                     .show(ui, |ui| {
-                        for message in messages.iter() {
-                            ui.label(message);
-                        }
+                        egui::Grid::new("Broadcast Messages")
+                            .num_columns(2)
+                            .striped(true)
+                            .show(ui, |grid| {
+                                for (time, team_name, number, message) in self.broadcast_messages.iter() {
+                                    ZappyUi::display_stat(grid, &*format!("<{team_name}:{number} {:.1}s>", time.as_secs_f32()), &message);
+                                }
+                            });
                     });
             });
     }

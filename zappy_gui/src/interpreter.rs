@@ -17,6 +17,7 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     functions.insert("pnw".to_string(), Zappy::connect_new_player);
     functions.insert("pdi".to_string(), Zappy::death_of_player);
     functions.insert("seg".to_string(), Zappy::end_of_game);
+    functions.insert("pbc".to_string(), Zappy::broadcast);
     functions
 }
 
@@ -38,11 +39,33 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn broadcast(&mut self, command: String, at: Duration) {
+       let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() != 3 {
+            println!("pbc: wrong number of arguments");
+        } else {
+            let maybe_number : Result<i64, _> = args[1].to_string().parse();
+
+            match maybe_number {
+                Ok(number) => {
+                    for player in &mut self.players {
+                        if player.number == number {
+                            self.ui.broadcast_messages.push((at, player.team_name.clone(), number, String::from(args[2])));
+                            return;
+                        }
+                    }
+                }
+                Err(_) => {println!("pbc: invalid player number");}
+            }
+        }
+    }
+
     fn end_of_game(&mut self, command: String, at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
-            println!("seg: Too many arguments");
+            println!("seg: wrong number of arguments");
         } else {
             if !self.team_names.contains(&args[1].to_string()) {
                 println!("seg: invalid team name");
@@ -57,7 +80,7 @@ impl Zappy {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
-            println!("pdi: Too many arguments");
+            println!("pdi: wrong number of arguments");
         } else {
             let maybe_number : Result<i64, _> = args[1].to_string().parse();
 
@@ -112,7 +135,7 @@ impl Zappy {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
-            println!("tna: Too many arguments");
+            println!("tna: wrong number of arguments");
         } else {
             if !self.team_names.contains(&args[1].to_string()) {
                 self.team_names.push(args[1].to_string())
@@ -126,7 +149,7 @@ impl Zappy {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
-            println!("sgt: Too many arguments");
+            println!("sgt: wrong number of arguments");
         } else {
             let result: Result<f32, _> = args[1].parse();
             match result {
