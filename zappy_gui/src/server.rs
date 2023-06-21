@@ -76,7 +76,8 @@ impl ServerConn {
     //       the command to be sent, and two optional integers.
     //       These are required for certain commands.
     //       If you don't need them, set the value to negative
-    pub fn send_to_server(&mut self, s: &str, x: i32, y: i32) {
+    //       Returns false in case of error, true if none.
+    pub fn send_to_server(&mut self, s: &str, x: i32, y: i32) -> bool {
         let concatenated_string: String;
 
         if x < 0 && y < 0 {
@@ -88,7 +89,10 @@ impl ServerConn {
         } else {
             concatenated_string = format!("{} {}", s, y);
         }
-        write!(self.stream, "{}\n", concatenated_string).expect("Could't send message to server");
+        match write!(self.stream, "{}\n", concatenated_string) {
+            Ok(_) => {true}
+            Err(_) => {false}
+        }
     }
 
     //NOTE - Close the socket flux

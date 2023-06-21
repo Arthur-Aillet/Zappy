@@ -1,7 +1,10 @@
 use std::fmt::Display;
 use std::time::Duration;
-use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
+use rend_ox::nannou::draw::renderer::VertexMode::Color;
+use rend_ox::nannou_egui::egui::{self, Color32, CtxRef, Ui};
 use rend_ox::nannou_egui::egui::CollapsingHeader;
+use rend_ox::nannou_egui::egui::color_picker::Alpha;
+use rend_ox::Vec3;
 
 use crate::tantorian::Tantorian;
 use crate::ui::State::{Connect, Disconnect, Nothing};
@@ -190,8 +193,8 @@ impl ZappyUi {
         );
     }
 
-    pub(crate) fn team(ui :&mut Ui, players: &Vec<Tantorian>, team_name: &String) {
-        for player in players.iter().filter(|x| {x.team_name == *team_name}) {
+    pub(crate) fn team(ui :&mut Ui, players: &mut Vec<Tantorian>, team_name: &String) {
+        for mut player in players.iter_mut().filter(|x| {x.team_name == *team_name}) {
             CollapsingHeader::new(player.number)
                 .default_open(false)
                 .show(ui, |col| {
@@ -213,7 +216,8 @@ impl ZappyUi {
                             ZappyUi::display_stat(ui_grid, "Orientation", player.orientation.to_char());
 
                             ui_grid.add(egui::Label::new(format!("Color:")).underline());
-                            ui_grid.add(egui::Button::new("   ").fill(egui::Color32::from_rgb((player.color.x * 255.0) as u8, (player.color.y * 255.0) as u8, (player.color.z * 255.0) as u8)));
+
+                            ui_grid.color_edit_button_rgb(player.color.as_mut());
                             ui_grid.end_row();
 
                             ZappyUi::display_stat(ui_grid,"Food", player.food);
@@ -228,7 +232,7 @@ impl ZappyUi {
         }
     }
 
-    pub(crate) fn players(&mut self, ctx: &CtxRef, players: &Vec<Tantorian>, teams: &Vec<String>, is_active: bool) {
+    pub(crate) fn players(&mut self, ctx: &CtxRef, players: &mut Vec<Tantorian>, teams: &Vec<String>, is_active: bool) {
         egui::Window::new("Players")
             .enabled(!is_active)
             .resizable(true)

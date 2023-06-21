@@ -4,6 +4,7 @@ use rend_ox::mesh::MeshDescriptor;
 use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
 use std::thread::JoinHandle;
+use std::time::Duration;
 use rend_ox::nannou_egui::egui::CtxRef;
 
 use crate::map::Map;
@@ -25,6 +26,7 @@ pub struct Zappy {
     pub(crate) port: String,
     pub(crate) hostname: String,
     pub(crate) winner_team: Option<String>,
+    pub(crate) last_map_update: Duration,
 }
 
 fn _hsv_to_rgb(source: Vec3) -> Vec3
@@ -80,6 +82,7 @@ impl Zappy {
             port: "".to_string(),
             hostname: "".to_string(),
             winner_team: None,
+            last_map_update: Duration::from_secs_f32(20. / 100.),
         }
     }
 
@@ -119,6 +122,40 @@ impl Zappy {
         }
         Map::render(app);
     }
+
+}
+pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
+    zappy.user.ui
+        .settings(ctx, &mut zappy.camera, zappy.camera_is_active);
+    zappy.user.ui
+        .players(ctx, &mut zappy.user.players, &zappy.user.team_names, zappy.camera_is_active);
+    zappy.user.ui.tiles(ctx, &zappy.user.map, zappy.camera_is_active);
+    if let Some(server) = &zappy.user.server {
+        zappy.user.ui.communications(ctx, zappy.camera_is_active);
+    }
+    let state = zappy.user.ui.network_status(ctx, zappy.camera_is_active, &mut zappy.user.port, &mut zappy.user.hostname, zappy.user.server.is_some());
+    if state == ui::State::Connect {
+        zappy.user.try_to_connect(at);
+    }
+    if state == ui::State::Disconnect {
+        zappy.user.close_connection(at);
+        zappy.user.reset_server_data();
+    }
+    if let Some(team) = &zappy.user.winner_team {
+        zappy.user.ui.win(ctx, team, zappy.camera_is_active);
+    }
+}
+
+fn ask_for_update(app: &mut App<Zappy>, at: Duration) {
+    if let Some(server) = &mut app.user.server {
+        if app.user.last_map_update.as_secs_f32() + 20. / app.user.time_unit < at.as_secs_f32() {
+            app.user.last_map_update = at;
+            if server.send_to_server("mct", -1, -1) == false {
+                app.user.close_connection(at);
+                app.user.reset_server_data();
+            }
+        }
+    }
 }
 
 pub(crate) fn zappy_update(
@@ -130,27 +167,6 @@ pub(crate) fn zappy_update(
     rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
     Zappy::render(zappy);
     zappy.user.interpret_commands(update.since_start);
-    zappy
-        .user
-        .ui
-        .settings(ctx, &mut zappy.camera, zappy.camera_is_active);
-    zappy
-        .user
-        .ui
-        .players(ctx, &zappy.user.players, &zappy.user.team_names, zappy.camera_is_active);
-    zappy.user.ui.tiles(ctx, &zappy.user.map, zappy.camera_is_active);
-    if let Some(server) = &zappy.user.server {
-        zappy.user.ui.communications(ctx, zappy.camera_is_active);
-    }
-    let state = zappy.user.ui.network_status(ctx, zappy.camera_is_active, &mut zappy.user.port, &mut zappy.user.hostname, zappy.user.server.is_some());
-    if state == ui::State::Connect {
-        zappy.user.try_to_connect(update.since_start);
-    }
-    if state == ui::State::Disconnect {
-        zappy.user.close_connection(update.since_start);
-        zappy.user.reset_server_data();
-    }
-    if let Some(team) = &zappy.user.winner_team {
-        zappy.user.ui.win(ctx, team, zappy.camera_is_active);
-    }
+    ask_for_update(zappy, update.since_start);
+    display_ui(zappy, update.since_start, ctx);
 }
