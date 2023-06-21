@@ -24,6 +24,8 @@ static int is_valid_opt_ia(size_t i, ia_t *ia,
 {
     if (strcmp((char*)server_ia->comd, (char*)COMMAND_GESTION_IA[i].comd) == 0) {
         COMMAND_GESTION_IA[i].handler(ia, server_ia->args, com);
+        player_t *player = (player_t*)ia->player;
+        printf("%sPlayer\n\tposition:%s%d %d%s\n\torientation: %s%ld%s\n", CYAN, R, player->x, player->y, CYAN, R, player->orientation, N);
         return 1;
     }
     return 0;
