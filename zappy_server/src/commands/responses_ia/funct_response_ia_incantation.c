@@ -57,6 +57,7 @@ static void funct_level_1(ia_t *ia, common_t *com)
     strcat((char*)ia->buffer.bufferWrite.octets, level);
     strcat((char*)ia->buffer.bufferWrite.octets, "\n\0");
     funct_prepare_response_gui(ia, com, 1);
+    funct_server_seg(NULL, ia, com);
 }
 
 static void funct_level_other_level(ia_t *ia, common_t *com, int nbr_ia_level)
@@ -67,6 +68,7 @@ static void funct_level_other_level(ia_t *ia, common_t *com, int nbr_ia_level)
     for (int i = 0; i < nbr_ia_level; i++) {
         tmp_ia = to_find_ia_int(com->gui->map.tiles[ia->player->x][ia->player->y].nb_player_incantations[i], com);
         tmp_ia->player->level += 1;
+        funct_server_seg(NULL, tmp_ia, com);
     }
     sprintf(buffer_incantation, "%ld", ia->player->level);
     ia->buffer.bufferWrite.usedSize = 35 + strlen(buffer_incantation);

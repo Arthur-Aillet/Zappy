@@ -24,16 +24,35 @@ static void funct_prepare_response(gui_t *gui, common_t *common,
     strcat((char*)gui->buffer.bufferWrite.octets, "\n\0");
 }
 
+static int to_check_in(team_t *tmp_team)
+{
+    int cmp = 0;
+
+    for (size_t i = 0; i < tmp_team->actif_player; i++) {
+        if (tmp_team->players[i].level == 8) {
+            cmp++;
+        }
+    }
+    if (cmp >= 6) {
+        return 0;
+    }
+    return 1;
+}
+
 void funct_server_seg(uint8_t **args, void *info, common_t *common)
 {
-    gui_t *gui = (gui_t *)info;
-    team_t *tmp_team = to_find_team_by_uint8_t(args[0], common);
+    ia_t *ia = (ia_t *)info;
+    team_t *tmp_team = to_find_team_by_int(ia->player->id, common);
 
     if (tmp_team == NULL) {
         return;
     }
-    funct_prepare_response(gui, common, tmp_team, args);
-    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-    gui->buffer.bufferWrite.usedSize);
+    if (to_check_in(tmp_team) == 1) {
+        return;
+    }
+    funct_prepare_response(common->gui, common, tmp_team, args);
+    write(common->gui->buffer.sock.sockfd,
+    common->gui->buffer.bufferWrite.octets,
+    common->gui->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_server_seg\n");
 }
