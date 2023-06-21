@@ -11,7 +11,7 @@
 static void funct_prepare_response(gui_t *gui, uint8_t **args)
 {
     free(gui->buffer.bufferWrite.octets);
-    gui->buffer.bufferWrite.octets = malloc(sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
+    gui->buffer.bufferWrite.octets = malloc(sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }

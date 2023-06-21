@@ -35,7 +35,7 @@ static void remove_choose_player_est(player_t *ennemy, common_t *com)
 }
 
 static void remove_choose_player(player_t *ennemy, common_t *com,
-                                u_int8_t **args, player_t *ia)
+                                uint8_t **args, player_t *ia)
 {
     if (ia->orientation == North) {
         if ((size_t)ennemy->x == com->gui->map.height) {
@@ -53,14 +53,14 @@ static void remove_choose_player(player_t *ennemy, common_t *com,
 
 void remove_player(player_t *ennemy, player_t *ia, common_t *com)
 {
-    u_int8_t **args = malloc(sizeof(u_int8_t *) * 1);
+    uint8_t **args = malloc(sizeof(uint8_t *) * 1);
     char buffer_ennemy[256];
 
     if (args == NULL) {
         return;
     }
     sprintf(buffer_ennemy, "%d", ennemy->id);
-    args[0] = malloc(sizeof(u_int8_t) * strlen(buffer_ennemy));
+    args[0] = malloc(sizeof(uint8_t) * strlen(buffer_ennemy));
     if (args[0] == NULL) {
         return;
     }

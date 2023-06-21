@@ -16,7 +16,7 @@ static void funct_ressources_on_tile(gui_t *gui, uint8_t **args)
         [atoi((char*)args[1])].ressources[i]);
         gui->buffer.bufferWrite.usedSize += strlen(buffer_x) + 1;
         gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets
-        , sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
+        , sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize));
         if (gui->buffer.bufferWrite.octets == NULL) {
             return;
         }
@@ -38,7 +38,7 @@ static void funct_prepare_response(gui_t *gui, uint8_t **args)
     gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize] = '\n';
     gui->buffer.bufferWrite.usedSize += 1;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                    sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
+                    sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }
@@ -53,7 +53,7 @@ void funct_server_bct(uint8_t **args, void *info, common_t *common)
     gui->buffer.bufferWrite.usedSize = 6 + strlen((char*)args[0]) +
                                         strlen((char*)args[1]);
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                        sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize));
+                        sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }

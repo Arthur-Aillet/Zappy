@@ -15,12 +15,12 @@
 static int create_new_client(int acc, client_t *client, server_t *server)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        if (SOCKET(i) == 0) {
+        if (SOCKET(i) <= 0) {
             SOCKET(i) = acc;
             client[i].type = UNDEFINED;
             FD_SET(acc, &server->read_fd);
             server->maxsd = (acc > server->maxsd) ? acc : server->maxsd;
-            write(client->socket, "WELCOME\n", 8);
+            write(SOCKET(i), "WELCOME\n", 8);
             printf("%sCreate client: %s%d%s\n", G, R, SOCKET(i), N);
             return 1;
         }
@@ -53,7 +53,7 @@ static int check_command(uint8_t **command, common_t *com, int i)
         printf("%sCheck in IA Command%s\n", B, N);
         ia = create_struct_client_ia(command);
         to_check_command_exist_ia(&ia,
-                to_find_ia_for_command(com, com->client[i]), com);
+                to_find_ia_for_command(com, &com->client[i]), com);
     } else if (com->client[i].type == GUI) {
         printf("%sCheck in GUI Command%s\n", B, N);
         gui = create_struct_client_gui(command);

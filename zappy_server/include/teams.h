@@ -14,10 +14,11 @@
     #include <stdio.h>
 
 enum orientation {
-    North = 0,
-    Est = 1,
-    Sud = 2,
-    West = 3,
+    Unknown = 0,
+    North = 1,
+    Est = 2,
+    Sud = 3,
+    West = 4,
 };
 
 enum incantation {
@@ -61,6 +62,7 @@ player_t set_player(size_t x, size_t y, size_t freq);
 team_t set_team(char *team_name, size_t slot, size_t freq);
 
 void free_all_teams(team_t* teams, size_t nbr_teams);
+void free_all_players(team_t * team);
 
 void reset_player(player_t *player, size_t freq);
 

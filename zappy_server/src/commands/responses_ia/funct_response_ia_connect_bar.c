@@ -17,7 +17,7 @@ void funct_response_ia_connect_bar(uint8_t **args, void *info, common_t *com)
     sprintf(buffer_nb_slot, "%ld", team->nb_slot);
     ia->buffer.bufferWrite.usedSize = strlen(buffer_nb_slot) + 2;
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                    sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+                    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }

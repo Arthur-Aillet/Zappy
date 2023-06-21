@@ -30,7 +30,7 @@ enum resources {
 };
 
 typedef struct buffer_s {
-    u_int8_t *octets;
+    uint8_t *octets;
     size_t usedSize;
 } buffer_t;
 

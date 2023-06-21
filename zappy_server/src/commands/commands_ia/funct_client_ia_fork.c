@@ -9,14 +9,14 @@
 
 static void call_function_gui(ia_t *ia, common_t *com)
 {
-    u_int8_t **arg = malloc(sizeof(u_int8_t *) * 1);
+    uint8_t **arg = malloc(sizeof(uint8_t *) * 1);
     char buffer_player[256];
 
     if (arg == NULL) {
         return;
     }
     sprintf(buffer_player, "%d", ia->player->id);
-    arg[0] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
+    arg[0] = malloc(sizeof(uint8_t) * strlen(buffer_player));
     if (arg[0] == NULL) {
     }
     arg[0][0] = '\0';

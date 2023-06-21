@@ -15,7 +15,7 @@ void funct_server_pbc(uint8_t **args, void *info, common_t *common)
     gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) +
                                         strlen((char*)args[1]) + 7;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
+                sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }

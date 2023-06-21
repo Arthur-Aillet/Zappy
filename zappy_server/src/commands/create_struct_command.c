@@ -48,38 +48,46 @@ client_gui_t create_struct_client_gui(uint8_t **command)
 static void create_args_client_ia(uint8_t **command, int nbr_args,
                                 server_ia_t *ia)
 {
-    for (int i = 1; i < nbr_args; i++) {
-        ia->args = realloc(ia->args, sizeof(uint8_t *) * i);
-        if (ia->args == NULL) {
-            ia->args = NULL;
-            return;
-        }
+    int i = 1;
+    ia->args = calloc(sizeof(uint8_t *), nbr_args + 1);
+    if (ia->args == NULL) {
+        ia->args = NULL;
+        return;
+    }
+    for (; i < nbr_args; i++) {
+        ia->args[i -1] = malloc(sizeof(uint8_t) * (strlen((char*)command[i]) + 1));
+        ia->args[i - 1][0] = '\0';
         ia->args[i - 1] = (uint8_t *)strcat((char *)ia->args[i - 1],
                         (char *)command[i]);
     }
+    ia->args[i] = NULL;
 }
 
 server_ia_t create_struct_client_ia(uint8_t **command)
 {
     server_ia_t ia;
+    ia.comd = NULL;
+    ia.args = NULL;
     int nbr_args = compt_nbr_args_on_command(command);
 
     if (command[0] == NULL) {
         return ia;
     } else {
-        ia.comd = malloc(sizeof(uint8_t) * strlen((char *)command[0]));
+        ia.comd = malloc(sizeof(uint8_t) * (strlen((char *)command[0]) + 1));
         if (ia.comd == NULL) {
             return ia;
         }
+        printf("comd: %s", command[0]);
+        ia.comd[0] = (uint8_t)'\0';
         ia.comd = (uint8_t *)strcat((char *)ia.comd, (char *)command[0]);
         create_args_client_ia(command, nbr_args, &ia);
     }
     return ia;
 }
 
-ia_t *to_find_ia_for_command(common_t *com, client_t client)
+ia_t *to_find_ia_for_command(common_t *com, client_t *client)
 {
-    player_t *player = (player_t *)client.str_cli;
+    player_t *player = (player_t *)client->str_cli;
 
     for (size_t tmp = 0; tmp < com->nb_ia; tmp++) {
         if (com->ia[tmp].player->id == player->id) {

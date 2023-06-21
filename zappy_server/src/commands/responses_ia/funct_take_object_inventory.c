@@ -8,19 +8,19 @@
 #include "zappy.h"
 
 static void funct_response_gui(ia_t *ia, int idx,
-                        common_t *com, u_int8_t **args)
+                        common_t *com, uint8_t **args)
 {
     char buffer_args[256];
 
     sprintf(buffer_args, "%d", ia->player->id);
-    args[0] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
+    args[0] = malloc(sizeof(uint8_t) * strlen(buffer_args));
     if (args[0] == NULL) {
         return;
     }
     args[0][0] = '\0';
     strcat((char*)args[0], buffer_args);
     sprintf(buffer_args, "%d", idx);
-    args[1] = malloc(sizeof(u_int8_t) * strlen(buffer_args));
+    args[1] = malloc(sizeof(uint8_t) * strlen(buffer_args));
     if (args[1] == NULL) {
         return;
     }
@@ -31,7 +31,7 @@ static void funct_response_gui(ia_t *ia, int idx,
 
 void response_take(ia_t *ia, int idx, common_t *com)
 {
-    u_int8_t **args = malloc(sizeof(u_int8_t *) * 2);
+    uint8_t **args = malloc(sizeof(uint8_t *) * 2);
 
     if (args == NULL) {
         return;
