@@ -10,16 +10,6 @@
 #include "zappy.h"
 #include "error_handling.h"
 
-static ia_t *to_find_ia_int(int id, common_t *common)
-{
-    for (size_t i = 0; i < common->nb_ia; i++) {
-        if (id == common->ia[i].player->id) {
-            return &common->ia[i];
-        }
-    }
-    return NULL;
-}
-
 static void player_is_dead(player_t *player, common_t *com)
 {
     u_int8_t **args = malloc(sizeof(u_int8_t *) * 2);

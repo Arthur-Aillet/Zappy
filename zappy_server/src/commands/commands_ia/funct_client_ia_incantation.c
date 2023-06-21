@@ -26,73 +26,235 @@ static int to_find_ia_incantation(common_t *com, ia_t *ia)
     return -1;
 }
 
-static void call_function_gui(ia_t *ia, common_t *com)
+static void to_create_message_response_ia(msg_queue_t *new_msg)
+{
+    new_msg->msg = malloc(sizeof(uint8_t *) * 1);
+    if (new_msg->msg == NULL) {
+        return;
+    }
+    new_msg->msg[0] = malloc(sizeof(uint8_t) * 2);
+    if (new_msg->msg[0] == NULL) {
+        return;
+    }
+    new_msg->msg[0][0] = '\0';
+    new_msg->msg[0] = (uint8_t *)strcat((char *)new_msg->msg[0], "ko");
+}
+
+static int to_check_ressources(ia_t *ia, common_t *com)
+{
+    if (ia->player->level == 1) {
+        if (com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] > 0) {
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] -= 1;
+            return 0;
+        }
+    }
+    if (ia->player->level == 2) {
+        if (com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] > 0 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[2] > 0 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[3] > 0) {
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] -= 1;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[2] -= 1;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[3] -= 1;
+            return 0;
+        }
+    }
+    if (ia->player->level == 3) {
+        if (com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] > 1 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[3] > 0 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[5] > 1) {
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] -= 2;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[3] -= 1;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[5] -= 2;
+            return 0;
+        }
+    }
+    if (ia->player->level == 4) {
+        if (com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] > 0 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[2] > 0 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[3] > 1 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[5] > 0) {
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] -= 1;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[2] -= 1;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[3] -= 2;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[5] -= 1;
+            return 0;
+        }
+    }
+    if (ia->player->level == 5) {
+        if (com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] > 0 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[2] > 1 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[3] > 0 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[4] > 2) {
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] -= 1;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[2] -= 2;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[3] -= 1;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[4] -= 3;
+            return 0;
+        }
+    }
+    if (ia->player->level == 6) {
+        if (com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] > 0 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[2] > 1 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[3] > 2 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[5] > 0) {
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] -= 1;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[2] -= 2;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[3] -= 3;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[5] -= 1;
+            return 0;
+        }
+    }
+    if (ia->player->level == 7) {
+        if (com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] > 1 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[2] > 1 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[3] > 1 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[4] > 1 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[5] > 1 &&
+        com->gui->map.tiles[ia->player->x][ia->player->y].ressources[6] > 0) {
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[1] -= 2;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[2] -= 2;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[3] -= 2;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[4] -= 2;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[5] -= 2;
+            com->gui->map.tiles[ia->player->x][ia->player->y].ressources[6] -= 1;
+            return 0;
+        }
+    }
+    return -1;
+}
+
+static void to_complete_ia_in_incantation(int nbr_ia, u_int8_t **arg, tile_t *tile)
+{
+    if (nbr_ia == 1) {
+        tile->nb_player_incantations = realloc(tile->nb_player_incantations, sizeof(size_t) * 1);
+        if (tile->nb_player_incantations == NULL) {
+            return;
+        }
+        tile->nb_player_incantations[0] = atoi((char *)arg[3]);
+    }
+    if (nbr_ia == 2) {
+        tile->nb_player_incantations = realloc(tile->nb_player_incantations, sizeof(size_t) * 2);
+        if (tile->nb_player_incantations == NULL) {
+            return;
+        }
+        tile->nb_player_incantations[0] = atoi((char *)arg[3]);
+        tile->nb_player_incantations[0] = atoi((char *)arg[4]);
+    }
+    if (nbr_ia == 4) {
+        tile->nb_player_incantations = realloc(tile->nb_player_incantations, sizeof(size_t) * 4);
+        if (tile->nb_player_incantations == NULL) {
+            return;
+        }
+        tile->nb_player_incantations[0] = atoi((char *)arg[3]);
+        tile->nb_player_incantations[0] = atoi((char *)arg[4]);
+        tile->nb_player_incantations[0] = atoi((char *)arg[5]);
+        tile->nb_player_incantations[0] = atoi((char *)arg[6]);
+    }
+    if (nbr_ia == 6) {
+        tile->nb_player_incantations = realloc(tile->nb_player_incantations, sizeof(size_t) * 6);
+        if (tile->nb_player_incantations == NULL) {
+            return;
+        }
+        tile->nb_player_incantations[0] = atoi((char *)arg[3]);
+        tile->nb_player_incantations[0] = atoi((char *)arg[4]);
+        tile->nb_player_incantations[0] = atoi((char *)arg[5]);
+        tile->nb_player_incantations[0] = atoi((char *)arg[6]);
+        tile->nb_player_incantations[0] = atoi((char *)arg[7]);
+        tile->nb_player_incantations[0] = atoi((char *)arg[8]);
+    }
+}
+
+static void call_function_gui(ia_t *ia, common_t *com, msg_queue_t *new_msg)
 {
     u_int8_t **arg;
     int result_ia = 0;
     char buffer_player[256];
 
     if (ia->player->level == 1) {
+        if (to_check_ressources(ia, com) == -1) {
+            to_create_message_response_ia(new_msg);
+            return;
+        }
         arg = malloc(sizeof(u_int8_t *) * 4);
         if (arg == NULL) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", ia->player->x);
         arg[0] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[0] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[0][0] = '\0';
         strcat((char*)arg[0], buffer_player);
         sprintf(buffer_player, "%d", ia->player->y);
         arg[1] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[1] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[1][0] = '\0';
         strcat((char*)arg[1], buffer_player);
         sprintf(buffer_player, "%ld", ia->player->level);
         arg[2] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[2] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[2][0] = '\0';
         strcat((char*)arg[2], buffer_player);
         sprintf(buffer_player, "%d", ia->player->id);
         arg[3] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[3] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[3][0] = '\0';
         strcat((char*)arg[3], buffer_player);
+        to_complete_ia_in_incantation(1, arg, &com->gui->map.tiles[ia->player->x][ia->player->y]);
         funct_server_pic(arg, com->gui, com);
     } else if (ia->player->level == 2 || ia->player->level == 3) {
         arg = malloc(sizeof(u_int8_t *) * 5);
         if (arg == NULL) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", ia->player->x);
         arg[0] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[0] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[0][0] = '\0';
         strcat((char*)arg[0], buffer_player);
         sprintf(buffer_player, "%d", ia->player->y);
         arg[1] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[1] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[1][0] = '\0';
         strcat((char*)arg[1], buffer_player);
         sprintf(buffer_player, "%ld", ia->player->level);
         arg[2] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[2] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[2][0] = '\0';
         strcat((char*)arg[2], buffer_player);
         sprintf(buffer_player, "%d", ia->player->id);
         arg[3] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[3] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[3][0] = '\0';
         strcat((char*)arg[3], buffer_player);
         result_ia = to_find_ia_incantation(com, ia);
         if (result_ia == -1) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", result_ia);
@@ -101,146 +263,191 @@ static void call_function_gui(ia_t *ia, common_t *com)
         }
         arg[4][0] = '\0';
         strcat((char*)arg[4], buffer_player);
+        to_complete_ia_in_incantation(2, arg, &com->gui->map.tiles[ia->player->x][ia->player->y]);
         funct_server_pic(arg, com->gui, com);
     } else if (ia->player->level == 4 || ia->player->level == 5) {
         arg = malloc(sizeof(u_int8_t *) * 7);
         if (arg == NULL) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", ia->player->x);
         arg[0] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[0] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[0][0] = '\0';
         strcat((char*)arg[0], buffer_player);
         sprintf(buffer_player, "%d", ia->player->y);
         arg[1] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[1] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[1][0] = '\0';
         strcat((char*)arg[1], buffer_player);
         sprintf(buffer_player, "%ld", ia->player->level);
         arg[2] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[2] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[2][0] = '\0';
         strcat((char*)arg[2], buffer_player);
         sprintf(buffer_player, "%d", ia->player->id);
         arg[3] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[3] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[3][0] = '\0';
         strcat((char*)arg[3], buffer_player);
         result_ia = to_find_ia_incantation(com, ia);
         if (result_ia == -1) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", result_ia);
         arg[4] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[4] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[4][0] = '\0';
         strcat((char*)arg[4], buffer_player);
         result_ia = to_find_ia_incantation(com, ia);
         if (result_ia == -1) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", result_ia);
         arg[5] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[5] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[5][0] = '\0';
         strcat((char*)arg[5], buffer_player);
         result_ia = to_find_ia_incantation(com, ia);
         if (result_ia == -1) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", result_ia);
         arg[6] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[6] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[6][0] = '\0';
         strcat((char*)arg[6], buffer_player);
+        to_complete_ia_in_incantation(4, arg, &com->gui->map.tiles[ia->player->x][ia->player->y]);
         funct_server_pic(arg, com->gui, com);
     } else {
         arg = malloc(sizeof(u_int8_t *) * 9);
         if (arg == NULL) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", ia->player->x);
         arg[0] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[0] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[0][0] = '\0';
         strcat((char*)arg[0], buffer_player);
         sprintf(buffer_player, "%d", ia->player->y);
         arg[1] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[1] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[1][0] = '\0';
         strcat((char*)arg[1], buffer_player);
         sprintf(buffer_player, "%ld", ia->player->level);
         arg[2] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[2] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[2][0] = '\0';
         strcat((char*)arg[2], buffer_player);
         sprintf(buffer_player, "%d", ia->player->id);
         arg[3] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[3] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[3][0] = '\0';
         strcat((char*)arg[3], buffer_player);
         result_ia = to_find_ia_incantation(com, ia);
         if (result_ia == -1) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", result_ia);
         arg[4] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[4] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[4][0] = '\0';
         strcat((char*)arg[4], buffer_player);
         result_ia = to_find_ia_incantation(com, ia);
         if (result_ia == -1) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", result_ia);
         arg[5] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[5] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[5][0] = '\0';
         strcat((char*)arg[5], buffer_player);
         result_ia = to_find_ia_incantation(com, ia);
         if (result_ia == -1) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", result_ia);
         arg[6] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[6] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[6][0] = '\0';
         strcat((char*)arg[6], buffer_player);
         result_ia = to_find_ia_incantation(com, ia);
         if (result_ia == -1) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", result_ia);
         arg[7] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[7] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[7][0] = '\0';
         strcat((char*)arg[7], buffer_player);
         result_ia = to_find_ia_incantation(com, ia);
         if (result_ia == -1) {
+            to_create_message_response_ia(new_msg);
             return;
         }
         sprintf(buffer_player, "%d", result_ia);
         arg[8] = malloc(sizeof(u_int8_t) * strlen(buffer_player));
         if (arg[8] == NULL) {
+            to_create_message_response_ia(new_msg);
+            return;
         }
         arg[8][0] = '\0';
         strcat((char*)arg[8], buffer_player);
+        to_complete_ia_in_incantation(6, arg, &com->gui->map.tiles[ia->player->x][ia->player->y]);
         funct_server_pic(arg, com->gui, com);
     }
 }
@@ -254,8 +461,10 @@ void funct_client_ia_incantation(ia_t *ia, uint8_t **args, common_t *com)
     if (new_msg == NULL) {
         return;
     }
-    if (com->gui->map.tiles[ia->player->x][ia->player->y].nb_player_incantations) { //voir condition pour rentrer dedans
-        call_function_gui(ia, com);
+    if (ia->player->incantation == NO) {
+        call_function_gui(ia, com, new_msg);
+    } else {
+        to_create_message_response_ia(new_msg);
     }
     new_msg->time = 300;
     new_msg->handler = &funct_response_ia_incantation;

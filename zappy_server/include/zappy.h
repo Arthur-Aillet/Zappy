@@ -89,6 +89,7 @@ common_t set_common(int ac, char *av[]);
 egg_t set_egg(int x, int y);
 void free_common(common_t *com);
 ia_t *to_find_ia(uint8_t *n, common_t *common);
+ia_t *to_find_ia_int(int n, common_t *common);
 
 //---------------------------------------------------------------//
 
