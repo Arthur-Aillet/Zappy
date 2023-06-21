@@ -19,12 +19,12 @@ void funct_response_ia_set_obj(uint8_t **args, void *info, common_t *com)
     ia->buffer.bufferWrite.octets[0] = '\0';
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
-    } else if (strcmp((char*)args[0], "FOOD")) {
+    } else if (strcmp((char*)args[0], "food")) {
         response_set(ia, 0, com);
     } else {
         next_if_funct_set(ia, com, args);
     }
     write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
         ia->buffer.bufferWrite.usedSize);
-    printf("rentrer dans la fonctions funct_response_ia_set_obj\n");
+    basic_log("rentrer dans la fonctions funct_response_ia_set_obj", CYAN, 0);
 }
