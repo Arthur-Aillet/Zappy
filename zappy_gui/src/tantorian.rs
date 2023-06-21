@@ -1,5 +1,8 @@
+use std::collections::hash_map::DefaultHasher;
 use rend_ox::glam::UVec2;
 use rend_ox::Vec3;
+use std::hash;
+use std::hash::{Hash, Hasher};
 
 pub enum Orientation {
     N = 1,
@@ -78,11 +81,27 @@ impl Tantorian {
                 return None;
             }
         }
+        let mut color_string: String = team_name.to_owned();
+        color_string.push_str(&*number.to_string());
+        let mut hasher = DefaultHasher::new();
+        color_string.hash(&mut hasher);
+        let hash = hasher.finish();
+        let mut r = (hash & 0xFF0000) >> 16;
+        let mut g = (hash & 0x00FF00) >> 8;
+        let mut b = hash & 0x0000FF;
+        if r + g + b < 30 {
+            r += 10;
+            g += 10;
+            b += 10;
+        }
+        let color = Vec3::new((r as f32/255.) , (g as f32/255.), (b as f32/255.));
+
+        println!("color {}", color);
         Some(Tantorian {
             team_name,
             number,
             pos: Vec3::new(x as f32, y as f32, 0.),
-            color: Vec3::new(1., 1., 1.),
+            color,
             level,
             orientation,
             mesh_descriptor: 0,

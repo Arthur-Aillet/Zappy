@@ -47,6 +47,11 @@ fn zappy_app(nannou_app: &rend_ox::nannou::App) -> App<Zappy> {
     app
 }
 
+use std::hash;
+use std::hash::{Hash, Hasher};
+use std::collections::hash_map::DefaultHasher;
+
+
 fn main() {
     rend_ox::app::launch_rendox_app(zappy_app);
 }
