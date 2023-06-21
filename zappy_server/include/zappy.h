@@ -102,7 +102,6 @@ uint8_t **get_message(server_t *server, client_t *client);
 int undefined_client_command(uint8_t **command, common_t *com, int idx);
 int check_slot_and_create_player(common_t *com, int team_idx,int client_idx);
 
-int choose_graphic_command(uint8_t **cmd, common_t *com, int i);
 int choose_ia_command(uint8_t **cmd, common_t *com, int i);
 
 void update_life(client_t *client, server_t *server,
@@ -138,5 +137,20 @@ void to_check_command_exist_gui(client_gui_t *client_gui,
                                 gui_t *gui, common_t *com);
 
 void check_msg_queue_ia(common_t *com);
+
+int to_check_ressources_bis(ia_t *ia, common_t *com, int x, int y);
+int to_check_ressources(ia_t *ia, common_t *com, int x, int y);
+u_int8_t *create_new_arg(int nbr, msg_queue_t *new_msg);
+void status_level_one(ia_t *ia, common_t *com, msg_queue_t *new_msg);
+void status_level_two_tree(ia_t *ia,
+                                common_t *com, msg_queue_t *new_msg);
+void to_complete_ia_in_incantation(int nbr_ia,
+                                u_int8_t **arg, tile_t *tile);
+void status_level_other(ia_t *ia, common_t *com, msg_queue_t *new_msg);
+void status_level_four_five(ia_t *ia, common_t *com, msg_queue_t *new_msg);
+void to_create_message_response_ia(msg_queue_t *new_msg);
+void to_complete_ia_in_incantation_bis(int nbr_ia,
+                                u_int8_t **arg, tile_t *tile);
+int to_find_ia_incantation(common_t *com, ia_t *ia);
 
 #endif /* !ZAPPY_H_ */
