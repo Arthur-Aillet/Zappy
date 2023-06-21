@@ -16,9 +16,11 @@ void funct_client_ia_forward(ia_t *ia, uint8_t **args, common_t *com)
     if (new_msg == NULL) {
         return;
     }
-    new_msg->time = 7;
+    new_msg->time = 7 / com->freq;
+    new_msg->start = 0;
+    new_msg->msg = NULL;
     new_msg->handler = &funct_response_ia_forward;
     new_msg->next_msg = ia->msg_queue;
     ia->msg_queue = new_msg;
-    printf("rentrer dans la funct_client_ia_forward");
+    basic_log("rentrer dans la funct_client_ia_forward", CYAN, 0);
 }

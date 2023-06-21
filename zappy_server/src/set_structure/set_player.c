@@ -18,7 +18,7 @@ player_t set_player(size_t x, size_t y, size_t freq)
     new.x = x;
     new.y = y;
     new.id = rand();
-    new.orientation = 1 + rand() % 5;
+    new.orientation = 1 + rand() % 4;
     new.level = 1;
     new.life = 10;
     new.satiety = 10;

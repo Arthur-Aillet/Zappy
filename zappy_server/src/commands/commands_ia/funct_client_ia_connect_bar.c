@@ -14,8 +14,10 @@ void funct_client_ia_connect_bar(ia_t *ia, uint8_t **args, common_t *com)
     (void)com;
     (void)args;
     new_msg->time = 0;
+    new_msg->start = 0;
+    new_msg->msg = NULL;
     new_msg->handler = &funct_response_ia_connect_bar;
     new_msg->next_msg = ia->msg_queue;
     ia->msg_queue = new_msg;
-    printf("rentrer dans la funct_client_ia_connect_bar");
+    basic_log("rentrer dans la funct_client_ia_connect_bar", CYAN, 0);
 }

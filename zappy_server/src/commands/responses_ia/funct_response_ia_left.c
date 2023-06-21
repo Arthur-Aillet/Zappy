@@ -13,7 +13,8 @@ void funct_response_ia_left(uint8_t **args, void *info, common_t *com)
 
     (void)args;
     (void)com;
-    ia->player->orientation = West;
+    ia->player->orientation = (ia->player->orientation == North) ?
+                                West : ia->player->orientation - 1;
     ia->buffer.bufferWrite.usedSize = 4;
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
     sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
@@ -24,5 +25,5 @@ void funct_response_ia_left(uint8_t **args, void *info, common_t *com)
     strcat((char*)ia->buffer.bufferWrite.octets, "ok\n\0");
     write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
     ia->buffer.bufferWrite.usedSize);
-    printf("rentrer dans la fonctions funct_response_ia_left\n");
+    basic_log("rentrer dans la fonctions funct_response_ia_left", CYAN, 0);
 }

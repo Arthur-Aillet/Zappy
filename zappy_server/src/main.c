@@ -69,8 +69,10 @@ int main_loop(common_t *com)
             return -1;
         }
         listening_sockets(com);
+        check_msg_queue_ia(com);
         update_map(&com->gui->map);
-        update_life(com->client, &com->server, com->freq, com);
+        //FIXME - decommenter la fonction update_life
+        // update_life(com->client, &com->server, com->freq, com);
     }
     return 0;
 }

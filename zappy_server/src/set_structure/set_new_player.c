@@ -85,7 +85,7 @@ static int add_new_player(team_t *team, size_t max_x, size_t max_y,
     for (; i < MAX_PLAYER; i++) {
         if (team->players[i].x == -1 && team->players[i].y == -1) {
             team->players[i] = set_player(x, y, com->freq);
-            printf("Player position: %d %d\n", team->players[i].x, team->players[i].y);
+            printf("%sPlayer position: %d %d%s\n", CYAN, team->players[i].x, team->players[i].y, N);
             team->actif_player++;
             ret = i;
             break;
@@ -108,7 +108,14 @@ int check_slot_and_create_player(common_t *com, int t_idx,int client_idx)
     com->client[client_idx].str_cli = player;
     com->client[client_idx].type = IA;
     com->nb_ia++;
-    com->ia->player = player;
+    for (int i = 0; i < MAX_PLAYER; i++) {
+        if (com->ia[i].player == NULL) {
+            com->ia[i].player = player;
+            com->ia[i].buffer.sock.sockfd = com->client[client_idx].socket;
+            com->ia[i].buffer.sock.addr = com->client[client_idx].addr;
+            break;
+        }
+    }
     printf("%sThe client %s%d%s has been registered in the team %s%s%s "\
     "with the id %s%d%s\n", G, B, com->client[client_idx].socket, G, B,
     TEAM(t_idx).name, G, B, player->id, N);

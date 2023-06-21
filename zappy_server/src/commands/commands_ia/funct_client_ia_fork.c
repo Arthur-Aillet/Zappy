@@ -34,9 +34,11 @@ void funct_client_ia_fork(ia_t *ia, uint8_t **args, common_t *com)
         return;
     }
     call_function_gui(ia, com);
-    new_msg->time = 42;
+    new_msg->time = 42 / com->freq;
+    new_msg->start = 0;
+    new_msg->msg = NULL;
     new_msg->handler = &funct_response_ia_fork;
     new_msg->next_msg = ia->msg_queue;
     ia->msg_queue = new_msg;
-    printf("rentrer dans la funct_client_ia_fork");
+    basic_log("rentrer dans la funct_client_ia_fork", CYAN, 0);
 }

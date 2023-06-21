@@ -56,8 +56,7 @@ static int update_player_life(player_t *player, common_t *com)
     time_t now = time(NULL);
 
     if (player->x == -1 && player->y == -1) {
-        error("Player not initialized", 1);
-        return 1;
+        return error("Player not initialized", 1);
     }
     if (difftime(now, player->start) >= player->time) {
         if (player->inventory[FOOD] == 0)
