@@ -15,7 +15,7 @@
 static int create_new_client(int acc, client_t *client, server_t *server)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        if (SOCKET(i) == 0) {
+        if (SOCKET(i) <= 0) {
             SOCKET(i) = acc;
             client[i].type = UNDEFINED;
             FD_SET(acc, &server->read_fd);

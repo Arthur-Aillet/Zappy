@@ -61,8 +61,6 @@ typedef struct team_s {
 player_t set_player(size_t x, size_t y, size_t freq);
 team_t set_team(char *team_name, size_t slot, size_t freq);
 
-void close_player(player_t *player);
-
 void free_all_teams(team_t* teams, size_t nbr_teams);
 void free_all_players(team_t * team);
 

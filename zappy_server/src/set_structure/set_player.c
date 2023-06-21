@@ -34,15 +34,11 @@ player_t set_player(size_t x, size_t y, size_t freq)
     return new;
 }
 
-void close_player(player_t *player)
+void reset_player(player_t *player, size_t freq)
 {
-    player->id = -1;
-    player->incantation = NO;
-    for (size_t i = 0; i < 7; i++)
-        player->inventory[i] = 0;
-    player->level = 1;
-    player->life = 0;
-    player->orientation = Unknown;
+    if (player->inventory != NULL)
+        free(player->inventory);
+    *player = set_player(-1, -1, freq);
 }
 
 void free_all_players(team_t * team)

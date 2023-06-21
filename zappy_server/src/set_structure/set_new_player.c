@@ -83,9 +83,8 @@ static int add_new_player(team_t *team, size_t max_x, size_t max_y,
     status = egg_position(&x, &y, team);
     for (; i < MAX_PLAYER; i++) {
         if (team->players[i].x == -1 && team->players[i].y == -1) {
-            team->players[i].x = x;
-            team->players[i].y = y;
-            team->players[i].orientation = rand() % 4;
+            team->players[i] = set_player(x, y, com->freq);
+            printf("Player position: %d %d\n", team->players[i].x, team->players[i].y);
             team->actif_player++;
             ret = i;
             break;
@@ -104,13 +103,13 @@ int check_slot_and_create_player(common_t *com, int t_idx,int client_idx)
         R, B,TEAM(t_idx).name, R, N);
         return 0;
     }
-    printf("%sThe client %s%d%s has been registered in the team %s%s%s\n",
-        G, B, com->client[client_idx].socket, G, B, TEAM(t_idx).name, N);
-
-    com->client[client_idx].str_cli = (player_t*) &(TEAM(t_idx).players[res]);
+    player_t *player = (player_t*) &(TEAM(t_idx).players[res]);
+    com->client[client_idx].str_cli = player;
     com->client[client_idx].type = IA;
     com->nb_ia++;
-    com->ia->player =(player_t*) &(TEAM(t_idx).players[res]);
-
+    com->ia->player = player;
+    printf("%sThe client %s%d%s has been registered in the team %s%s%s "\
+    "with the id %s%d%s\n", G, B, com->client[client_idx].socket, G, B,
+    TEAM(t_idx).name, G, B, player->id, N);
     return 1;
 }

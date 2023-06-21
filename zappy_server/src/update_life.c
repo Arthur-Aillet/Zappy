@@ -20,6 +20,20 @@ static ia_t *to_find_ia_int(int id, common_t *common)
     return NULL;
 }
 
+client_t *find_client_by_id(int id, common_t *com)
+{
+    for (size_t i = 0; i < MAX_CLIENTS; i++) {
+        if (com->client[i].str_cli == NULL || com->client[i].type != IA)
+            continue;
+        player_t *player = (player_t*)&com->client[i].str_cli;
+        printf("client id: %d\n", player->id);
+        printf("player id: %d\n\n", id);
+        if (player->id == id)
+            return &com->client[i];
+    }
+    return NULL;
+}
+
 static int player_is_dead(player_t *player, common_t *com)
 {
     char buffer_args[256];
@@ -51,16 +65,18 @@ static int update_player_life(player_t *player, common_t *com)
 {
     time_t now = time(NULL);
 
-    if (player->x == -1 && player->y == -1)
+    if (player->x == -1 && player->y == -1) {
+        error("Player not initialized", 1);
         return 1;
+    }
     if (difftime(now, player->start) >= player->time) {
         if (player->inventory[FOOD] == 0)
             player->life--;
         else
             player->inventory[FOOD]--;
         if (player->life == 0) {
+            printf("%splayer %s%d%s is dead%s\n", G, B, player->id, G, N);
             player_is_dead(player, com);
-            close_player(player);
             return 0;
         }
         player->start = time(NULL);
@@ -68,25 +84,18 @@ static int update_player_life(player_t *player, common_t *com)
     return 1;
 }
 
-void reset_player(player_t *player, size_t freq)
-{
-    if (player->inventory != NULL)
-        free(player->inventory);
-    *player = set_player(-1, -1, freq);
-}
-
-//FIXME close_client(client->socket, server);
 void update_life(client_t *client, server_t *server, size_t freq, common_t *com)
 {
-    (void)server;
     int res = 1;
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        if (client->type == IA) {
-            res = update_player_life((player_t *)client->str_cli, com);
+        if (client[i].type == IA) {
+            res = update_player_life((player_t *)client[i].str_cli, com);
         }
-        if (client->type == IA && res == 0) {
+        if (client[i].type == IA && res == 0) {
             res = 1;
+            client[i].type = UNDEFINED;
             reset_player((player_t *)client->str_cli, freq);
+            client[i].socket = close_client(client[i].socket, server);
         }
     }
 }
