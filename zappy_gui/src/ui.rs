@@ -215,6 +215,14 @@ impl ZappyUi {
                             ui_grid.add(egui::Label::new(format!("Color:")).underline());
                             ui_grid.add(egui::Button::new("   ").fill(egui::Color32::from_rgb((player.color.x * 255.0) as u8, (player.color.y * 255.0) as u8, (player.color.z * 255.0) as u8)));
                             ui_grid.end_row();
+
+                            ZappyUi::display_stat(ui_grid,"Food", player.food);
+                            ZappyUi::display_stat(ui_grid,"Linemate", player.linemate);
+                            ZappyUi::display_stat(ui_grid,"Deraumere", player.deraumere);
+                            ZappyUi::display_stat(ui_grid,"Sibur", player.sibur);
+                            ZappyUi::display_stat(ui_grid,"Mendiane", player.mendiane);
+                            ZappyUi::display_stat(ui_grid,"Phiras", player.phiras);
+                            ZappyUi::display_stat(ui_grid,"Thystame", player.thystame);
                         });
                 });
         }

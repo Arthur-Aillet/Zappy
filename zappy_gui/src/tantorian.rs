@@ -23,7 +23,7 @@ impl Orientation {
     }
 
     pub fn to_char(&self) -> char {
-        match value {
+        match self {
             Orientation::N => 'N',
             Orientation::E => 'E',
             Orientation::S => 'S',
