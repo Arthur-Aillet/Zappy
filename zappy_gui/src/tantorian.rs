@@ -1,7 +1,6 @@
 use std::collections::hash_map::DefaultHasher;
 use rend_ox::glam::UVec2;
 use rend_ox::Vec3;
-use std::hash;
 use std::hash::{Hash, Hasher};
 
 pub enum Orientation {
@@ -67,7 +66,7 @@ pub struct Tantorian {
 }
 
 impl Tantorian {
-    pub fn new() -> Tantorian {
+    /*pub fn new() -> Tantorian {
         Tantorian {
             team_name: "".to_string(),
             number: 0,
@@ -86,7 +85,7 @@ impl Tantorian {
             phiras: 0,
             thystame: 0,
         }
-    }
+    }*/
 
     pub fn new_from_command(number: i64, x: usize, y: usize, orientation: Orientation, level : u32, team_name: String, teams: &Vec<String>, map_size: &[usize; 2], players: &mut Vec<Tantorian>) -> Option<Tantorian> {
         if !teams.contains(&team_name) {

@@ -1,14 +1,9 @@
 use std::fmt::Display;
-use std::os::linux::raw::stat;
 use std::time::Duration;
-use rend_ox::nannou::draw::renderer::VertexMode::Color;
-use rend_ox::nannou_egui::egui::{self, Color32, CtxRef, Ui};
-use rend_ox::nannou_egui::egui::color_picker::Alpha;
-use rend_ox::Vec3;
+use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
 
 use crate::tantorian::Tantorian;
 use crate::ui::State::{Connect, Disconnect, Nothing};
-use crate::zappy::{display_ui, Zappy};
 
 pub(crate) struct ZappyUi {
     pub selected_tile: Option<[usize; 2]>,
@@ -160,7 +155,7 @@ impl ZappyUi {
         ZappyUi::display_stat(grid,"Thystame", map.tiles[selected[0]][selected[1]].q6.len());
     }
 
-    pub(crate) fn tile_settings(&mut self, ui: &mut Ui, ctx: &CtxRef, auto_refresh: &mut bool, refresh_rate: &mut f32) -> bool {
+    pub(crate) fn tile_settings(&mut self, ui: &mut Ui, auto_refresh: &mut bool, refresh_rate: &mut f32) -> bool {
         let mut state: bool = false;
 
         egui::CollapsingHeader::new("Settings")
@@ -190,7 +185,7 @@ impl ZappyUi {
         let mut state = false;
         egui::Window::new("Map").vscroll(true).enabled(!is_active).show(
             ctx, |ui| {
-                state = self.tile_settings(ui, ctx, auto_refresh, refresh_rate);
+                state = self.tile_settings(ui, auto_refresh, refresh_rate);
                 ui.add(egui::Label::new("Tiles:").heading());
                 egui::Grid::new("Tiles")
                     .num_columns(map.size[0] as usize)
@@ -219,7 +214,7 @@ impl ZappyUi {
     }
 
     pub(crate) fn team(ui :&mut Ui, players: &mut Vec<Tantorian>, team_name: &String) {
-        for mut player in players.iter_mut().filter(|x| {x.team_name == *team_name}) {
+        for player in players.iter_mut().filter(|x| {x.team_name == *team_name}) {
             egui::CollapsingHeader::new(player.number)
                 .default_open(false)
                 .show(ui, |col| {

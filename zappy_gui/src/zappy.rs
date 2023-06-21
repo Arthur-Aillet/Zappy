@@ -53,7 +53,7 @@ fn _hsv_to_rgb(source: Vec3) -> Vec3
     Vec3::new(r, g, b)
 }
 
-fn hsv2rgb(source: Vec3) -> Vec3/* h,s,v) */ {
+fn _hsv2rgb(source: Vec3) -> Vec3/* h,s,v) */ {
     let mut r = ((((source.x + (3. / 3.)) % 1.) * 2. - 1.).abs() * 3. - 1.).clamp(0., 1.);
     let mut g = ((((source.x + (5. / 3.)) % 1.) * 2. - 1.).abs() * 3. - 1.).clamp(0., 1.);
     let mut b = ((((source.x + (4. / 3.)) % 1.) * 2. - 1.).abs() * 3. - 1.).clamp(0., 1.);

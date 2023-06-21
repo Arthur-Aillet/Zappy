@@ -93,11 +93,13 @@ impl Map {
             }
         }
     }
+    /*
     pub fn spawn_resource(&mut self, x: usize, y: usize, q: usize) -> bool {
         self.tiles.get_mut(x).and_then(|ts| ts.get_mut(y)).and_then(|t|
             if t.spawn_resource(q) { Some(t) } else { None }
         ).is_some()
     }
+    */
 
     pub fn update_resources(&mut self, x: usize, y: usize, q: usize, n:usize) {
         let tile = &mut self.tiles[x][y];
