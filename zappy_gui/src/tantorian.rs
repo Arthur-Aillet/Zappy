@@ -32,6 +32,20 @@ impl Orientation {
     }
 }
 
+fn generate_color_from_string(string: &String) -> Vec3 {
+    let mut hasher = DefaultHasher::new();
+    string.hash(&mut hasher);
+    let hash = hasher.finish();
+    let mut r = (hash & 0xFF0000) >> 16;
+    let mut g = (hash & 0x00FF00) >> 8;
+    let mut b = hash & 0x0000FF;
+    if r + g + b < 30 {
+        r += 10;
+        g += 10;
+        b += 10;
+    }
+    return Vec3::new(r as f32/255. , g as f32/255., b as f32/255.)
+}
 
 pub struct Tantorian {
     pub team_name: String,
@@ -111,26 +125,15 @@ impl Tantorian {
                 return None;
             }
         }
-        let mut color_string: String = team_name.to_owned();
-        color_string.push_str(&*number.to_string());
-        let mut hasher = DefaultHasher::new();
-        color_string.hash(&mut hasher);
-        let hash = hasher.finish();
-        let mut r = (hash & 0xFF0000) >> 16;
-        let mut g = (hash & 0x00FF00) >> 8;
-        let mut b = hash & 0x0000FF;
-        if r + g + b < 30 {
-            r += 10;
-            g += 10;
-            b += 10;
-        }
-        let color = Vec3::new(r as f32/255. , g as f32/255., b as f32/255.);
+
+        let team_color = generate_color_from_string(&team_name);
+        let number_color = generate_color_from_string(&format!("{number}"));
 
         Some(Tantorian {
             team_name,
             number,
             pos: Vec3::new(x as f32, y as f32, 0.),
-            color,
+            color: team_color.lerp(number_color, 0.85),
             level,
             orientation,
             mesh_descriptor: 0,
