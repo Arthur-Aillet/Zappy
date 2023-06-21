@@ -11,6 +11,7 @@ from server_get import *
 from server_action import *
 from sys import stderr
 from datatypes import Creature, Session
+from communication import *
 from common import *
 
 def go_to(i,creature: Creature, ia:Session, last_actions: list):

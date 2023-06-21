@@ -11,6 +11,7 @@ from server_get import *
 from server_action import *
 from sys import stderr
 from commun import *
+from communication import *
 from datatypes import Creature, Session
 
 def objectives(i: int):
@@ -124,9 +125,8 @@ def closest_resource(creature: Creature, last_actions: list, ia: Session):
             if item == 'enemy':
                 last_actions.append(broadcast(ia.client, "enemy_spotted" + creature.pos_x + " " + creature.pos_y))
             if item != "" and item != "player":
-                return item.index
+                return item.index, item
     return -1
-
 
 def check_food(creature: Creature, last_actions: list, ia: Session):
     if (creature.inventory.get('food') < distance_to_base(creature) * 8) :
@@ -140,10 +140,10 @@ def gatherer_loop(creature: Creature, last_actions: list, ia: Session) :
         last_actions.append(left(ia.client))
         last_actions.append(fowards(ia.client))
         last_actions.append(right(ia.client))
-    resource_spotted = closest_resource(creature, last_actions, ia, "")
+    resource_spotted, tile: str = closest_resource(creature, last_actions, ia, "")
     if (resource_spotted != -1) :
         go_to(resource_spotted)
-        last_actions.append(pick_up(ia.client))
+        last_actions.append(pick_up(ia.client, tile.split(" ")[0]))
 
     if creature.var % 20 == 0 :
         if objective_met(creature.level, creature.inventory):

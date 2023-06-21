@@ -11,6 +11,7 @@ from server_get import *
 from server_action import *
 from sys import stderr
 from datatypes import Creature, Session
+from communication import *
 from common import *
 
 def go_to(i,creature: Creature, ia:Session, last_actions: list):
@@ -90,6 +91,6 @@ def butler_loop(creature: Creature, last_actions: list, ia: Session) :
     food_spotted = look_for(creature, last_actions, ia, "food")
     if (food_spotted != -1) :
         go_to(food_spotted)
-        last_actions.append(pick_up(ia.client))
+        last_actions.append(pick_up(ia.client, "food"))
     return False
     #ad queen order to return

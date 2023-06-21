@@ -10,7 +10,55 @@ from connect import connect
 from server_get import *
 from server_action import *
 from sys import stderr
+from communication import *
 from datatypes import Creature, Session
+
+def ascending_objectives(i: int):
+    if (i == 0):
+        return {'number': 1, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0, "level": 1}
+    if (i == 1):
+        return {'number': 1, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0, "level": 1}
+    if (i == 2):
+        return {'number': 2, 'linemate': 2, 'deraumere': 2, 'sibur': 2, 'mendiane': 0, 'phiras': 0, 'thystame': 0, "level": 2}
+    if (i == 3):
+        return {'number': 2, 'linemate': 4, 'deraumere': 0, 'sibur': 3, 'mendiane': 0, 'phiras': 4, 'thystame': 0, "level": 3}
+    if (i == 4):
+        return {'number': 1, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0, "level": 1}
+    if (i == 5):
+        return {'number': 1, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0, "level": 1}
+    if (i == 6):
+        return {'number': 2, 'linemate': 2, 'deraumere': 2, 'sibur': 2, 'mendiane': 0, 'phiras': 0, 'thystame': 0, "level": 2}
+    if (i == 7):
+        return {'number': 2, 'linemate': 4, 'deraumere': 0, 'sibur': 3, 'mendiane': 0, 'phiras': 4, 'thystame': 0, "level": 3}
+    if (i == 8):
+        return {'number': 4, 'linemate': 4, 'deraumere': 4, 'sibur': 8, 'mendiane': 0, 'phiras': 4, 'thystame': 0, "level": 4}
+    if (i == 9):
+        return {'number': 4, 'linemate': 4, 'deraumere': 8, 'sibur': 4, 'mendiane': 12, 'phiras': 0, 'thystame': 0, "level": 5}
+    if (i == 10):
+        return {'number': 1, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0, "level": 1}
+    if (i == 11):
+        return {'number': 1, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0, "level": 1}
+    if (i == 12):
+        return {'number': 2, 'linemate': 2, 'deraumere': 2, 'sibur': 2, 'mendiane': 0, 'phiras': 0, 'thystame': 0, "level": 2}
+    if (i == 13):
+        return {'number': 2, 'linemate': 4, 'deraumere': 0, 'sibur': 3, 'mendiane': 0, 'phiras': 4, 'thystame': 0, "level": 3}
+    if (i == 14):
+        return {'number': 1, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0, "level": 1}
+    if (i == 15):
+        return {'number': 1, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0, "level": 1}
+    if (i == 16):
+        return {'number': 2, 'linemate': 2, 'deraumere': 2, 'sibur': 2, 'mendiane': 0, 'phiras': 0, 'thystame': 0, "level": 2}
+    if (i == 17):
+        return {'number': 2, 'linemate': 4, 'deraumere': 0, 'sibur': 3, 'mendiane': 0, 'phiras': 4, 'thystame': 0, "level": 3}
+    if (i == 18):
+        return {'number': 4, 'linemate': 4, 'deraumere': 4, 'sibur': 8, 'mendiane': 0, 'phiras': 4, 'thystame': 0, "level": 4}
+    if (i == 19):
+        return {'number': 4, 'linemate': 4, 'deraumere': 8, 'sibur': 4, 'mendiane': 12, 'phiras': 0, 'thystame': 0, "level": 5}
+    if (i == 20):
+        return {'number': 6, 'linemate': 6, 'deraumere': 12, 'sibur': 18, 'mendiane': 0, 'phiras': 6, 'thystame': 0, "level": 7}
+    if (i == 21):
+        return {'number': 6, 'linemate': 12, 'deraumere': 12, 'sibur': 12, 'mendiane': 12, 'phiras': 12, 'thystame': 6, "level": 5}
+    return {'number': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
 
 def objectives(i: int):
     if (i == 0):
@@ -28,7 +76,6 @@ def objectives(i: int):
     if (i == 6):
         return {'food': 0, 'linemate': 2, 'deraumere': 2, 'sibur': 2, 'mendiane': 2, 'phiras': 2, 'thystame': 1}
     return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
-
 
 def parrot(ia: Session, creature: Creature, last_action: list):
     last_action.append(broadcast(creature.strvar))
@@ -66,6 +113,27 @@ def go_to_base(creature: Creature, ia:Session, last_action: list):
         fowards(ia.client)
     creature.var = 0
 
+def stockpile_contains(objective: dict[str, int], tile: str):
+    if objective.get("linemate") < tile.count("linemate"):
+        return False
+    if objective.get("deraumere") < tile.count("deraumere"):
+        return False
+    if objective.get("sibur") < tile.count("sibur"):
+        return False
+    if objective.get("mendiane") < tile.count("mendiane"):
+        return False
+    if objective.get("phiras") < tile.count("phiras"):
+        return False
+    if objective.get("thystame") < tile.count("thystame"):
+        return False
+    return True
+
+def pick_up_list(objective: dict[str, int], last_action: list, ai: Session):
+    for key in objective :
+        if key != "number" :
+            for _ in objective[key]:
+                last_action.append(pick_up(ai.client, key))
+
 def distance_to_base(creature: Creature):
     return abs(creature.pos_x - creature.spawn_pos_x) + abs(creature.pos_y - creature.spawn_pos_y)
 
@@ -78,28 +146,30 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session):
 
     if creature.food < 10:
         if (look_for(creature, last_Action, ia, "food") == 0):
-            last_Action.append(pick_up())
+            last_Action.append(pick_up(ia.client, "food"))
         else:
             parrot(ia, creature, last_Action)
     if distance_to_base > 0:
         go_to_base(creature, ia, last_Action)
     if (creature.var == 0) :
         return True
-    if i == 5:
-        if (rocks on the floor are sufficient for next step (objective))
-            if called == false
+    if creature.looked:
+        if (stockpile_contains(ascending_objectives(creature.level), creature.last_look[0])):
+            if creature.called == False:
                 call the closest level apropriate people to base_pos. priority on butler then gatherers then warriors then babys then queen
-                objective += 1
-            else
-                if people on same tile == number required + 1
-                    ritual order
-    if creature.var == 10
-        job status;
-        get responses;
-        if (percentages are not good)
-            take random people from too numerous groups and change their profession
-    if (someone need info)
-        say infos
-    else ():
+                creature.called = True
+    if creature.called == True and creature.confirmed == ascending_objectives(creature.level).get("number"):
+        pick_up_list()
+        last_Action.append(ritual_in(ia.client, creature.id, creature.message_index))
+        creature.message_index += 1
+    if creature.var == 10:
+        last_Action.append(role_call(ia.client, creature.id, creature.message_index))
+        creature.message_index += 1
+        # get responses;
+        # if (percentages are not good)
+        #     take random people from too numerous groups and change their profession
+    # if (someone need info)
+    #     say infos
+    else:
         parrot();
     return False

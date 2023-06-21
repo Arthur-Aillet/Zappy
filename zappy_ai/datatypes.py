@@ -35,13 +35,17 @@ class Creature:
         self.strvar = "Qu'est-ce que c'est? Hey, mais c'est les minables!"
         self.var = 0
         self.time_to_ritual = -1
-        self.food = 10
+        self.food = 0
         self.id = 0
         self.orientation = 0
         self.level = 0
-        self.inventory = {'food': 0, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
+        self.inventory = {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
         self.last_look = []
         self.looked = False
+        self.called = False
+        self.confirmed = 0
+        self.other_creatures = [{"lvl": 1, "role": Creature.Types.QUEEN, "messages": 0}]
+        self.message_index = 0
 
 # Holds the size of the map (x,y)
 class Map:

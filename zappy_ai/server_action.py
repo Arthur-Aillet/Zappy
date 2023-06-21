@@ -26,7 +26,6 @@ def broadcast(client, text):
     """
     send_server(client, "Broadcast " + text)
 
-
 def fowards(client):
     """!
     Send the forward command to the server.
@@ -54,13 +53,22 @@ def right(client):
     send_server(client, "Right")
     return ActionType.OK_ACTION
 
-def pick_up(client):
+def pick_up(client, object: str):
     """!
     Send the pick up command to the server.
 
-    @param client Ai socket client
+    @param client Ai socket client and object
     """
-    send_server(client, "Take object")
+    send_server(client, "Take " + object)
+    return ActionType.OK_ACTION
+
+def set_object(client, object: str):
+    """!
+    Send the set object command to the server.
+
+    @param client Ai socket client and object
+    """
+    send_server(client, "Set " + object)
     return ActionType.OK_ACTION
 
 # si fork_ai return true la mainloop doit fork et l'enfant mainloop doit return True

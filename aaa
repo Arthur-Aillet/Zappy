@@ -1,17 +1,16 @@
 
 msg: [nb msg] [ordre] [insulte optionelle]
 
-ordre:  -[id] deviens [type de creature] | ""
+ordre:  -[id] deviens [type de creature] | "et plus vite que ca"
         -[id] retour a la base | "viens ici toi"
+        -[id] arrive a destination | "en position"
         -[id] prend [liste de materiaux] | "ramasse ca"
-        -[id] rituel dans [t] | ""
-        -[id] status inventaire | "vide tes poches"
         -enemy spoted in [x, y] | "allez lui voler ses cailloux" | "plus de rotules pour toi" | "throngle him"
         -base bouge de [x, y] | "on demenage"
-        -status jobs | "qui fait quoi"
+        -status jobs | "@everyone"
         -need info | "quoi qui se passe" | "huh? euh... me when the uu. the me huh?" | "oh i have dementia? i dont remember asking!"
-        -inventaire [id] [inventaire] | "j'ai que ca je jure"
         -info [infos necessaires] | "quoicoubeh"
+        -rituel dans [t] | "autobots roll out"
         -[id]: my job is [job] | "engagez vous qu'ils disaient"
 
 jobs:
