@@ -180,7 +180,7 @@ impl ZappyUi {
                         grid.end_row();
                         if *auto_refresh {
                             grid.add(egui::Label::new(format!("Refresh rate:")).underline());
-                            grid.add(egui::Slider::new(refresh_rate, 0.1..=1000.0).logarithmic(true));
+                            grid.add(egui::Slider::new(refresh_rate, 1.0..=1000.0).logarithmic(true));
                             grid.end_row();
                         }
                     });

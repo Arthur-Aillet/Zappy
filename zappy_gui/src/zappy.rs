@@ -6,6 +6,8 @@ use std::collections::HashMap;
 use std::f32::consts::PI;
 use std::thread::JoinHandle;
 use std::time::Duration;
+use rend_ox::glam::Vec2;
+use rend_ox::nannou::event::Update;
 use rend_ox::nannou_egui::egui::CtxRef;
 
 use crate::map::Map;
@@ -119,7 +121,7 @@ impl Zappy {
         }
     }
 
-    pub fn render(app: &mut App<Zappy>) {
+    pub fn render(app: &mut App<Zappy>, update: &Update) {
         let player_mesh : &MeshDescriptor;
         if let Some(mesh) = &app.user.tantorian_mesh {
             player_mesh = mesh
@@ -128,11 +130,26 @@ impl Zappy {
         }
         {
             for player in &mut app.user.players {
-                player.pos = Vec3 {
-                    x: player.current_tile.x as f32 + 0.5,
-                    y: player.current_tile.y as f32 + 0.5,
-                    z: 0.666,
-                };
+                println!("{:?} {:?}", player.last_tile, player.current_tile);
+                if let Some(movement_start) = &player.start_movement {
+                    let mut new_pos: Vec2 = player.last_tile as Vec2;
+
+                    let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
+
+                    println!("prog {}", progress);
+                    if progress >= 1. {
+                        progress = 1.;
+                        player.start_movement = None;
+                    }
+
+                    new_pos = new_pos.lerp(player.current_tile as Vec2, progress);
+
+                    player.pos = Vec3 {
+                        x: new_pos.x as f32 + 0.5,
+                        y: new_pos.y as f32 + 0.5,
+                        z: 0.666,
+                    };
+                }
             }
         }
         for player in &app.user.players {
@@ -141,8 +158,8 @@ impl Zappy {
         }
         Map::render(app);
     }
-
 }
+
 pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
     zappy.user.ui
         .settings(ctx, &mut zappy.camera, zappy.camera_is_active);
@@ -248,7 +265,7 @@ pub(crate) fn zappy_update(
 ) {
     rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
     following(nannou_app, zappy);
-    Zappy::render(zappy);
+    Zappy::render(zappy, &update);
     zappy.user.interpret_commands(update.since_start);
     ask_for_update(&mut zappy.user, update.since_start);
     display_ui(zappy, update.since_start, ctx);

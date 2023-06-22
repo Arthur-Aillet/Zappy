@@ -1,8 +1,9 @@
 use std::collections::hash_map::DefaultHasher;
 use std::f32::consts::PI;
-use rend_ox::glam::UVec2;
+use rend_ox::glam::Vec2;
 use rend_ox::Vec3;
 use std::hash::{Hash, Hasher};
+use std::time::Duration;
 
 pub enum Orientation {
     N = 1,
@@ -61,7 +62,9 @@ pub struct Tantorian {
     pub number: i64,
     pub pos: Vec3,
     pub color: Vec3,
-    pub current_tile: UVec2,
+    pub current_tile: Vec2,
+    pub last_tile: Vec2,
+    pub start_movement: Option<Duration>,
     pub level: u32,
     pub orientation: Orientation,
     pub mesh_descriptor: u32,
@@ -110,6 +113,11 @@ impl Tantorian {
             println!("New player too high level!");
             return None;
         }
+        let pos = Vec3 {
+            x: x as f32 + 0.5,
+            y: y as f32 + 0.5,
+            z: 0.666,
+        };
         for player in players {
             if player.team_name == team_name && player.number == number && player.alive == true {
                 println!("New player number already attributed!");
@@ -117,12 +125,14 @@ impl Tantorian {
             } else if player.team_name == team_name && player.number == number {
                 player.team_name = team_name;
                 player.number = number;
-                player.pos = Vec3::new(x as f32, y as f32, 0.);
+                player.pos = pos;
                 player.color = player.color;
                 player.level = level;
                 player.orientation = orientation;
                 player.mesh_descriptor = 0;
-                player.current_tile = UVec2::new(x as u32, y as u32);
+                player.current_tile = Vec2::new(x as f32, y as f32);
+                player.last_tile = Vec2::new(x as f32, y as f32);
+                player.start_movement = None;
                 player.alive = true;
                 player.food = 0;
                 player.linemate = 0;
@@ -141,12 +151,14 @@ impl Tantorian {
         Some(Tantorian {
             team_name,
             number,
-            pos: Vec3::new(x as f32, y as f32, 0.),
+            pos,
             color: team_color.lerp(number_color, 0.85),
             level,
             orientation,
             mesh_descriptor: 0,
-            current_tile: UVec2::new(x as u32, y as u32),
+            current_tile: Vec2::new(x as f32, y as f32),
+            last_tile: Vec2::new(x as f32, y as f32),
+            start_movement: None,
             alive: true,
             food: 0,
             linemate: 0,

@@ -13,11 +13,17 @@ use std::time::Duration;
 use crate::zappy::Zappy;
 
 use rend_ox::app::{app, App};
+use rend_ox::glam::Vec3Swizzles;
 use rend_ox::Vec3;
 use crate::arguments::parse_arguments;
 use crate::tantorian::Tantorian;
 
 fn zappy_key_pressed(app: &rend_ox::nannou::App, model: &mut App<Zappy>, key: rend_ox::nannou::event::Key) {
+    if let rend_ox::nannou::event::Key::R = key { // Testing purpose
+        model.user.players[0].last_tile = model.user.players[0].pos.xy() - 0.5;
+        model.user.players[0].current_tile += 1.;
+        model.user.players[0].start_movement = Some(app.duration.since_start);
+    }
     if let rend_ox::nannou::event::Key::Space = key {
         let window = app.main_window();
         if !model.camera_is_active {
