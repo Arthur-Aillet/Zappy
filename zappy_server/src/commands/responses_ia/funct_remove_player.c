@@ -36,7 +36,7 @@ static void funct_status_incantation(int i, common_t *com,
     int cmp = 0;
 
     for (int tmp = 0; tmp < i; tmp++) {
-        ia_tmp = to_find_ia_int(com->gui->map.tiles[ia->x][ia->y].
+        ia_tmp = to_find_ia_int(com->gui->map.tiles[ia->y][ia->x].
         nb_player_incantations[tmp], com);
         if (ia_tmp->player->incantation == MASTER) {
             cmp = funct_status_master(ia_tmp);
@@ -51,7 +51,7 @@ static void funct_status_incantation(int i, common_t *com,
 static void to_check_status_incantation(common_t *com, player_t *ia)
 {
     int i = set_nbr_ia(to_find_ia_int(com->gui->map.tiles
-    [ia->x][ia->y].nb_player_incantations[0], com));
+    [ia->y][ia->x].nb_player_incantations[0], com));
     u_int8_t **args = malloc(sizeof(u_int8_t *) * 1);
 
     if (args == NULL) {

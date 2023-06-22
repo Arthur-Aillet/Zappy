@@ -32,7 +32,6 @@ void funct_server_pgt(uint8_t **args, void *info, common_t *common)
     if (tmp_ia == NULL) {
         return;
     }
-    tmp_ia->player->inventory[atoi((char*)args[1])] += 1;
     funct_prepare_res(gui, args);
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
         gui->buffer.bufferWrite.usedSize);

@@ -9,10 +9,10 @@
 
 static void funct_for_on_tiles(gui_t *gui)
 {
-    for (size_t nbr_tiles_width = 0; nbr_tiles_width
-                            < gui->map.width; nbr_tiles_width++) {
-        for (size_t nbr_tiles_height = 0; nbr_tiles_height
-                    < gui->map.height; nbr_tiles_height++) {
+    for (size_t nbr_tiles_height = 0; nbr_tiles_height
+                            < gui->map.height; nbr_tiles_height++) {
+        for (size_t nbr_tiles_width = 0; nbr_tiles_width
+                    < gui->map.width; nbr_tiles_width++) {
             funct_prepare_response(gui, nbr_tiles_width, nbr_tiles_height);
         }
     }

@@ -19,7 +19,8 @@ static team_t *to_find_team_by_uint8_t_bis(size_t i, uint8_t *n,
                                             common_t *common)
 {
     for (size_t y = 0; y < common->teams[i].actif_player; y++) {
-        if (atoi((char*)n) == common->teams[i].players[y].id) {
+        if (common->teams[i].players[y].x >= 0 &&
+        atoi((char*)n) == common->teams[i].players[y].id) {
             return &common->teams[i];
         }
     }
@@ -43,7 +44,8 @@ static team_t *to_find_team_by_int_bis(size_t i, int n,
                                             common_t *common)
 {
     for (size_t y = 0; y < common->teams[i].actif_player; y++) {
-        if (n == common->teams[i].players[y].id) {
+        if (common->teams[i].players[y].x >= 0 &&
+            n == common->teams[i].players[y].id) {
             return &common->teams[i];
         }
     }
