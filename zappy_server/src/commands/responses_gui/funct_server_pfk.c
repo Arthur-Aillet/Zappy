@@ -7,16 +7,6 @@
 
 #include "zappy.h"
 
-static void to_lay_egg(team_t *team, ia_t *ia)
-{
-    team->egg = realloc(team->egg, sizeof(uint8_t) * (team->nb_eggs + 1));
-    if (team->egg == NULL) {
-        return;
-    }
-    team->egg[team->nb_eggs] = set_egg(ia->player->x, ia->player->y);
-    team->nb_eggs += 1;
-}
-
 static void funct_prepare_response(gui_t *gui, uint8_t **args)
 {
     gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) + 6;
@@ -44,7 +34,6 @@ void funct_server_pfk(uint8_t **args, void *info, common_t *common)
     if (tmp_team == NULL) {
         return;
     }
-    // to_lay_egg(tmp_team, tmp_ia);
     funct_prepare_response(gui, args);
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
             gui->buffer.bufferWrite.usedSize);
