@@ -166,4 +166,15 @@ void funct_server_pic_level_four_five(uint8_t **args, gui_t *gui);
 void funct_level_1(ia_t *ia, common_t *com);
 void funct_prepare_response_gui_incantation(ia_t *ia, common_t *com, int r);
 
+void to_take_ressources_response_ia(ia_t *ia, common_t *com,
+                                                int x, int y);
+void to_take_ressources_response_ia_deraumere(ia_t *ia,
+                                        common_t *com, int x, int y);
+void to_take_ressources_response_ia_food(ia_t *ia,
+                                    common_t *com, int x, int y);
+void funct_response_look_north(ia_t *ia, common_t *com);
+void funct_response_look_sud(ia_t *ia, common_t *com);
+void funct_response_look_est(ia_t *ia, common_t *com);
+void funct_response_look_west(ia_t *ia, common_t *com);
+
 #endif /* !ZAPPY_H_ */
