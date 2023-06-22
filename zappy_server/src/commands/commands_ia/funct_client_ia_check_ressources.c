@@ -10,18 +10,18 @@
 static int to_check_ressources_six(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 7) {
-        if (com->gui->map.tiles[x][y].ressources[1] > 1 &&
-        com->gui->map.tiles[x][y].ressources[2] > 1 &&
-        com->gui->map.tiles[x][y].ressources[3] > 1 &&
-        com->gui->map.tiles[x][y].ressources[4] > 1 &&
-        com->gui->map.tiles[x][y].ressources[5] > 1 &&
-        com->gui->map.tiles[x][y].ressources[6] > 0) {
-            com->gui->map.tiles[x][y].ressources[1] -= 2;
-            com->gui->map.tiles[x][y].ressources[2] -= 2;
-            com->gui->map.tiles[x][y].ressources[3] -= 2;
-            com->gui->map.tiles[x][y].ressources[4] -= 2;
-            com->gui->map.tiles[x][y].ressources[5] -= 2;
-            com->gui->map.tiles[x][y].ressources[6] -= 1;
+        if (com->gui->map.tiles[y][x].ressources[1] > 1 &&
+        com->gui->map.tiles[y][x].ressources[2] > 1 &&
+        com->gui->map.tiles[y][x].ressources[3] > 1 &&
+        com->gui->map.tiles[y][x].ressources[4] > 1 &&
+        com->gui->map.tiles[y][x].ressources[5] > 1 &&
+        com->gui->map.tiles[y][x].ressources[6] > 0) {
+            com->gui->map.tiles[y][x].ressources[1] -= 2;
+            com->gui->map.tiles[y][x].ressources[2] -= 2;
+            com->gui->map.tiles[y][x].ressources[3] -= 2;
+            com->gui->map.tiles[y][x].ressources[4] -= 2;
+            com->gui->map.tiles[y][x].ressources[5] -= 2;
+            com->gui->map.tiles[y][x].ressources[6] -= 1;
             com->gui->map.density -= 11;
             return 0;
         }
@@ -32,14 +32,14 @@ static int to_check_ressources_six(ia_t *ia, common_t *com, int x, int y)
 static int to_check_ressources_five(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 6) {
-        if (com->gui->map.tiles[x][y].ressources[1] > 0 &&
-        com->gui->map.tiles[x][ia->player->y].ressources[2] > 1 &&
-        com->gui->map.tiles[x][ia->player->y].ressources[3] > 2 &&
-        com->gui->map.tiles[x][ia->player->y].ressources[5] > 0) {
-            com->gui->map.tiles[x][y].ressources[1] -= 1;
-            com->gui->map.tiles[x][y].ressources[2] -= 2;
-            com->gui->map.tiles[x][y].ressources[3] -= 3;
-            com->gui->map.tiles[x][y].ressources[5] -= 1;
+        if (com->gui->map.tiles[y][x].ressources[1] > 0 &&
+        com->gui->map.tiles[y][x].ressources[2] > 1 &&
+        com->gui->map.tiles[y][x].ressources[3] > 2 &&
+        com->gui->map.tiles[y][x].ressources[5] > 0) {
+            com->gui->map.tiles[y][x].ressources[1] -= 1;
+            com->gui->map.tiles[y][x].ressources[2] -= 2;
+            com->gui->map.tiles[y][x].ressources[3] -= 3;
+            com->gui->map.tiles[y][x].ressources[5] -= 1;
             com->gui->map.density -= 7;
             return 0;
         }
@@ -50,14 +50,14 @@ static int to_check_ressources_five(ia_t *ia, common_t *com, int x, int y)
 static int to_check_ressources_four(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 5) {
-        if (com->gui->map.tiles[x][y].ressources[1] > 0 &&
-        com->gui->map.tiles[x][y].ressources[2] > 1 &&
-        com->gui->map.tiles[x][y].ressources[3] > 0 &&
-        com->gui->map.tiles[x][y].ressources[4] > 2) {
-            com->gui->map.tiles[x][y].ressources[1] -= 1;
-            com->gui->map.tiles[x][y].ressources[2] -= 2;
-            com->gui->map.tiles[x][y].ressources[3] -= 1;
-            com->gui->map.tiles[x][y].ressources[4] -= 3;
+        if (com->gui->map.tiles[y][x].ressources[1] > 0 &&
+        com->gui->map.tiles[y][x].ressources[2] > 1 &&
+        com->gui->map.tiles[y][x].ressources[3] > 0 &&
+        com->gui->map.tiles[y][x].ressources[4] > 2) {
+            com->gui->map.tiles[y][x].ressources[1] -= 1;
+            com->gui->map.tiles[y][x].ressources[2] -= 2;
+            com->gui->map.tiles[y][x].ressources[3] -= 1;
+            com->gui->map.tiles[y][x].ressources[4] -= 3;
             com->gui->map.density -= 7;
             return 0;
         }
@@ -68,14 +68,14 @@ static int to_check_ressources_four(ia_t *ia, common_t *com, int x, int y)
 static int to_check_ressources_tree(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 4) {
-        if (com->gui->map.tiles[x][y].ressources[1] > 0 &&
-        com->gui->map.tiles[x][y].ressources[2] > 0 &&
-        com->gui->map.tiles[x][y].ressources[3] > 1 &&
-        com->gui->map.tiles[x][y].ressources[5] > 0) {
-            com->gui->map.tiles[x][y].ressources[1] -= 1;
-            com->gui->map.tiles[x][y].ressources[2] -= 1;
-            com->gui->map.tiles[x][y].ressources[3] -= 2;
-            com->gui->map.tiles[x][y].ressources[5] -= 1;
+        if (com->gui->map.tiles[y][x].ressources[1] > 0 &&
+        com->gui->map.tiles[y][x].ressources[2] > 0 &&
+        com->gui->map.tiles[y][x].ressources[3] > 1 &&
+        com->gui->map.tiles[y][x].ressources[5] > 0) {
+            com->gui->map.tiles[y][x].ressources[1] -= 1;
+            com->gui->map.tiles[y][x].ressources[2] -= 1;
+            com->gui->map.tiles[y][x].ressources[3] -= 2;
+            com->gui->map.tiles[y][x].ressources[5] -= 1;
             com->gui->map.density -= 5;
             return 0;
         }
@@ -86,12 +86,12 @@ static int to_check_ressources_tree(ia_t *ia, common_t *com, int x, int y)
 int to_check_ressources_bis(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 3) {
-        if (com->gui->map.tiles[x][y].ressources[1] > 1 &&
-        com->gui->map.tiles[x][y].ressources[3] > 0 &&
-        com->gui->map.tiles[x][y].ressources[5] > 1) {
-            com->gui->map.tiles[x][y].ressources[1] -= 2;
-            com->gui->map.tiles[x][y].ressources[3] -= 1;
-            com->gui->map.tiles[x][y].ressources[5] -= 2;
+        if (com->gui->map.tiles[y][x].ressources[1] > 1 &&
+        com->gui->map.tiles[y][x].ressources[3] > 0 &&
+        com->gui->map.tiles[y][x].ressources[5] > 1) {
+            com->gui->map.tiles[y][x].ressources[1] -= 2;
+            com->gui->map.tiles[y][x].ressources[3] -= 1;
+            com->gui->map.tiles[y][x].ressources[5] -= 2;
             com->gui->map.density -= 5;
             return 0;
         }

@@ -26,7 +26,7 @@ static void funct_response_gui(ia_t *ia, int idx,
     }
     args[1][0] = '\0';
     strcat((char*)args[1], buffer_args);
-    funct_server_pdr(args, com->gui, com);
+    funct_server_pgt(args, com->gui, com);
 }
 
 void response_take(ia_t *ia, int idx, common_t *com)
@@ -36,10 +36,13 @@ void response_take(ia_t *ia, int idx, common_t *com)
     if (args == NULL) {
         return;
     }
-    if (ia->player->inventory[idx] > 0) {
+    if (com->gui->map.tiles[ia->player->y][ia->player->x].ressources[idx]
+                                                                        > 0) {
         ia->player->inventory[idx] += 1;
+        com->gui->map.tiles[ia->player->y][ia->player->x].ressources[idx] -= 1;
         funct_response_gui(ia, idx, com, args);
         com->gui->map.density -= 1;
+        update_tile_gui(com, ia);
         strcat((char*)ia->buffer.bufferWrite.octets, "ok\n\0");
     }
     strcat((char*)ia->buffer.bufferWrite.octets, "ko\n\0");

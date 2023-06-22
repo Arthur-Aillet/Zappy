@@ -26,8 +26,8 @@ static void funct_level_other_level(ia_t *ia, common_t *com, int nbr_ia_level)
     ia_t *tmp_ia;
 
     for (int i = 0; i < nbr_ia_level; i++) {
-        tmp_ia = to_find_ia_int(com->gui->map.tiles[ia->player->x]
-        [ia->player->y].nb_player_incantations[i], com);
+        tmp_ia = to_find_ia_int(com->gui->map.tiles[ia->player->y]
+        [ia->player->x].nb_player_incantations[i], com);
         tmp_ia->player->level += 1;
         funct_server_seg(NULL, tmp_ia, com);
     }

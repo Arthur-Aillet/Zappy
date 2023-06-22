@@ -21,7 +21,7 @@ static void status_level_four_five_bis(ia_t *ia,
         arg[4 + i] = create_new_arg(result_ia, new_msg);
     }
     to_complete_ia_in_incantation(4, arg,
-    &com->gui->map.tiles[ia->player->x][ia->player->y]);
+    &com->gui->map.tiles[ia->player->y][ia->player->x]);
     funct_server_pic(arg, com->gui, com);
     free_arg(7, arg);
 }
@@ -55,7 +55,7 @@ static void status_level_other_bis(ia_t *ia,
         arg[4 + i] = create_new_arg(result_ia, new_msg);
     }
     to_complete_ia_in_incantation(6, arg,
-    &com->gui->map.tiles[ia->player->x][ia->player->y]);
+    &com->gui->map.tiles[ia->player->y][ia->player->x]);
     funct_server_pic(arg, com->gui, com);
     free_arg(9, arg);
 }

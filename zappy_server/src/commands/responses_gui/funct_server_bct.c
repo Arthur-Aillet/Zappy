@@ -11,7 +11,7 @@ static void funct_ressources_on_tiles(gui_t *gui, size_t x,
                                         size_t y, char *buf_x)
 {
     for (int i = 0; i < 7; i++) {
-        sprintf(buf_x, "%ld", gui->map.tiles[x][y].ressources[i]);
+        sprintf(buf_x, "%ld", gui->map.tiles[y][x].ressources[i]);
         gui->buffer.bufferWrite.usedSize += strlen(buf_x) + 3;
         gui->buffer.bufferWrite.octets =
         realloc(gui->buffer.bufferWrite.octets,

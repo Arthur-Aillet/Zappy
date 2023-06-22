@@ -58,7 +58,7 @@ void status_level_one(ia_t *ia, common_t *com, msg_queue_t *new_msg)
     arg[2] = create_new_arg(ia->player->level, new_msg);
     arg[3] = create_new_arg(ia->player->id, new_msg);
     to_complete_ia_in_incantation(1, arg,
-    &com->gui->map.tiles[ia->player->x][ia->player->y]);
+    &com->gui->map.tiles[ia->player->y][ia->player->x]);
     funct_server_pic(arg, com->gui, com);
     free_arg(4, arg);
 }
@@ -75,7 +75,7 @@ static void status_level_two_tree_next(ia_t *ia,
     }
     arg[4] = create_new_arg(result_ia, new_msg);
     to_complete_ia_in_incantation(2, arg,
-    &com->gui->map.tiles[ia->player->x][ia->player->y]);
+    &com->gui->map.tiles[ia->player->y][ia->player->x]);
     funct_server_pic(arg, com->gui, com);
     free_arg(5, arg);
 }
