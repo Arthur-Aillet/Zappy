@@ -22,6 +22,7 @@ static int to_check_ressources_six(ia_t *ia, common_t *com, int x, int y)
             com->gui->map.tiles[x][y].ressources[4] -= 2;
             com->gui->map.tiles[x][y].ressources[5] -= 2;
             com->gui->map.tiles[x][y].ressources[6] -= 1;
+            com->gui->map.density -= 11;
             return 0;
         }
     }
@@ -39,6 +40,7 @@ static int to_check_ressources_five(ia_t *ia, common_t *com, int x, int y)
             com->gui->map.tiles[x][y].ressources[2] -= 2;
             com->gui->map.tiles[x][y].ressources[3] -= 3;
             com->gui->map.tiles[x][y].ressources[5] -= 1;
+            com->gui->map.density -= 7;
             return 0;
         }
     }
@@ -56,6 +58,7 @@ static int to_check_ressources_four(ia_t *ia, common_t *com, int x, int y)
             com->gui->map.tiles[x][y].ressources[2] -= 2;
             com->gui->map.tiles[x][y].ressources[3] -= 1;
             com->gui->map.tiles[x][y].ressources[4] -= 3;
+            com->gui->map.density -= 7;
             return 0;
         }
     }
@@ -73,6 +76,7 @@ static int to_check_ressources_tree(ia_t *ia, common_t *com, int x, int y)
             com->gui->map.tiles[x][y].ressources[2] -= 1;
             com->gui->map.tiles[x][y].ressources[3] -= 2;
             com->gui->map.tiles[x][y].ressources[5] -= 1;
+            com->gui->map.density -= 5;
             return 0;
         }
     }
@@ -88,6 +92,7 @@ int to_check_ressources_bis(ia_t *ia, common_t *com, int x, int y)
             com->gui->map.tiles[x][y].ressources[1] -= 2;
             com->gui->map.tiles[x][y].ressources[3] -= 1;
             com->gui->map.tiles[x][y].ressources[5] -= 2;
+            com->gui->map.density -= 5;
             return 0;
         }
     }
