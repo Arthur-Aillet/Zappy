@@ -12,7 +12,8 @@ void funct_server_pie(uint8_t **args, void *info, common_t *common)
     gui_t *gui = (gui_t *)info;
 
     (void)common;
-    gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) + strlen((char*)args[1]) + strlen((char*)args[2]) + 8;
+    gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) +
+                    strlen((char*)args[1]) + strlen((char*)args[2]) + 8;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
                 sizeof(u_int8_t) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
