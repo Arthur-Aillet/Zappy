@@ -48,13 +48,15 @@ static int player_is_dead(player_t *player, common_t *com)
     return 1;
 }
 
-//FIXME il faut que le player est accès à la structure client via un pointeur
 static int update_player_life(player_t *player, common_t *com)
 {
     time_t now = time(NULL);
 
-    if (player->x == -1 && player->y == -1) {
-        return error("Player not initialized", 1);
+    if (player->x == -1 && player->y == -1)
+        return error("Player not initialized", 0);
+    if (player->life > 0 && player->life < 10 && player->inventory[FOOD] > 0) {
+        player->life++;
+        player->inventory[FOOD]--;
     }
     if (difftime(now, player->start) >= player->time) {
         if (player->inventory[FOOD] == 0)
@@ -63,23 +65,22 @@ static int update_player_life(player_t *player, common_t *com)
             player->inventory[FOOD]--;
         if (player->life == 0) {
             printf("%splayer %s%d%s is dead%s\n", G, B, player->id, G, N);
-            player_is_dead(player, com);
-            return 0;
+            return player_is_dead(player, com);
         }
         player->start = time(NULL);
     }
-    return 1;
+    return 0;
 }
 
 void update_life(client_t *client, server_t *server, size_t freq, common_t *com)
 {
-    int res = 1;
+    int res = 0;
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (client[i].type == IA) {
             res = update_player_life((player_t *)client[i].str_cli, com);
         }
-        if (client[i].type == IA && res == 0) {
-            res = 1;
+        if (client[i].type == IA && res == 1) {
+            res = 0;
             client[i].type = UNDEFINED;
             reset_player((player_t *)client->str_cli, freq);
             client[i].socket = close_client(client[i].socket, server);

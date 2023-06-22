@@ -25,6 +25,4 @@ typedef struct map_s {
     tile_t **tiles;
 } map_t;
 
-void update_map(map_t *map);
-
 #endif /* !MAP_H_ */

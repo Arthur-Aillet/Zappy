@@ -70,5 +70,5 @@ void funct_response_ia_fork(uint8_t **args, void *info, common_t *com)
     free_arg(4, arg);
     write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
         ia->buffer.bufferWrite.usedSize);
-    printf("rentrer dans la fonctions funct_response_ia_fork\n");
+    printf("Lay an egg\n");
 }

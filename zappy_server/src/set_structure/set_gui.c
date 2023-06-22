@@ -52,6 +52,8 @@ gui_t *set_gui(int height, int width, int freq)
     gui->buffer.bufferWrite.octets = NULL;
     gui->buffer.bufferWrite.usedSize = 0;
     gui->buffer.sock.sockfd = 0;
+    gui->msg_queue = NULL;
+    gui->error = NULL;
     return gui;
 }
 
