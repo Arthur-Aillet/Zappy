@@ -42,6 +42,7 @@ static void inventory_thystame(ia_t *ia)
 static void inventory_egg(ia_t *ia)
 {
     char buffer_inventory[256];
+
     sprintf(buffer_inventory, "%ld", ia->player->inventory[EGG]);
     ia->buffer.bufferWrite.usedSize += 7 + strlen(buffer_inventory);
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
@@ -52,7 +53,8 @@ static void inventory_egg(ia_t *ia)
     strcat((char*)ia->buffer.bufferWrite.octets, "egg ");
     strcat((char*)ia->buffer.bufferWrite.octets, buffer_inventory);
     strcat((char*)ia->buffer.bufferWrite.octets, "]\n\0");
-    ia->buffer.bufferWrite.usedSize = strlen((char*)ia->buffer.bufferWrite.octets);
+    ia->buffer.bufferWrite.usedSize =
+    strlen((char*)ia->buffer.bufferWrite.octets);
 }
 
 static void funct_result_response_ia_inventory(ia_t *ia)

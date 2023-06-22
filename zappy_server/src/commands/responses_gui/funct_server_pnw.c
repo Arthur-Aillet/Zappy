@@ -41,7 +41,7 @@ void funct_server_pnw(uint8_t **args, void *info, common_t *common)
     funct_prepare_res(gui, args);
     gui->buffer.bufferWrite.usedSize =
     strlen((char*)gui->buffer.bufferWrite.octets);
-    // write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-    //     gui->buffer.bufferWrite.usedSize);
+    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
+        gui->buffer.bufferWrite.usedSize);
     basic_log("Send pnw command tout the GUI", C, 0);
 }
