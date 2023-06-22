@@ -5,6 +5,7 @@ use rend_ox::Vec3;
 use std::hash::{Hash, Hasher};
 use std::time::Duration;
 
+#[derive(Clone, Copy)]
 pub enum Orientation {
     N = 1,
     E = 2,
@@ -64,6 +65,8 @@ pub struct Tantorian {
     pub color: Vec3,
     pub current_tile: Vec2,
     pub last_tile: Vec2,
+    pub last_orientation: Orientation,
+    pub rotation: Vec3,
     pub start_movement: Option<Duration>,
     pub level: u32,
     pub orientation: Orientation,
@@ -118,6 +121,7 @@ impl Tantorian {
             y: y as f32 + 0.5,
             z: 0.666,
         };
+        let rot = Vec3::new(PI/2., orientation.as_radian(), 0.);
         for player in players {
             if player.team_name == team_name && player.number == number && player.alive == true {
                 println!("New player number already attributed!");
@@ -126,9 +130,11 @@ impl Tantorian {
                 player.team_name = team_name;
                 player.number = number;
                 player.pos = pos;
+                player.rotation = rot;
                 player.color = player.color;
                 player.level = level;
                 player.orientation = orientation;
+                player.last_orientation = orientation;
                 player.mesh_descriptor = 0;
                 player.current_tile = Vec2::new(x as f32, y as f32);
                 player.last_tile = Vec2::new(x as f32, y as f32);
@@ -155,6 +161,8 @@ impl Tantorian {
             color: team_color.lerp(number_color, 0.85),
             level,
             orientation,
+            last_orientation: orientation,
+            rotation: rot,
             mesh_descriptor: 0,
             current_tile: Vec2::new(x as f32, y as f32),
             last_tile: Vec2::new(x as f32, y as f32),

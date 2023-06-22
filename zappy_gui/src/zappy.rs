@@ -73,6 +73,10 @@ fn _hsv2rgb(source: Vec3) -> Vec3/* h,s,v) */ {
     Vec3::new(r, g, b)
 }
 
+fn lerp(fst: f32, snd: f32, perc: f32) -> f32{
+    fst + (snd - fst) * perc
+}
+
 impl Zappy {
     pub fn new() -> Zappy {
         Zappy {
@@ -132,6 +136,7 @@ impl Zappy {
             for player in &mut app.user.players {
                 if let Some(movement_start) = &player.start_movement {
                     let mut new_pos: Vec2 = player.last_tile as Vec2;
+                    let mut new_rot: f32 = player.last_orientation.as_radian();
                     let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
                     let modifier = 1. / (7. / app.user.time_unit);
 
@@ -141,17 +146,22 @@ impl Zappy {
                     }
 
                     new_pos = new_pos.lerp(player.current_tile as Vec2, progress * modifier);
+                    new_rot = lerp(new_rot, player.orientation.as_radian(), progress * modifier);
                     player.pos = Vec3 {
                         x: new_pos.x as f32 + 0.5,
                         y: new_pos.y as f32 + 0.5,
                         z: 0.666,
                     };
+                    player.rotation = Vec3 {
+                        x: PI/2.,
+                        y: new_rot,
+                        z: 0.,
+                    };
                 }
             }
         }
         for player in &app.user.players {
-            let rot = Vec3::new(PI/2., player.orientation.as_radian(), 0.);
-            app.draw_at(player_mesh, player.color.clone(), player.pos.clone(), rot, Vec3::new(0.333, 0.333, 0.333));
+            app.draw_at(player_mesh, player.color.clone(), player.pos.clone(), player.rotation.clone(), Vec3::new(0.333, 0.333, 0.333));
         }
         Map::render(app);
     }

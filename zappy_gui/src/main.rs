@@ -21,6 +21,8 @@ use crate::tantorian::Tantorian;
 fn zappy_key_pressed(app: &rend_ox::nannou::App, model: &mut App<Zappy>, key: rend_ox::nannou::event::Key) {
     if let rend_ox::nannou::event::Key::R = key { // Testing purpose
         model.user.players[0].last_tile = model.user.players[0].pos.xy() - 0.5;
+        model.user.players[0].last_orientation = model.user.players[0].orientation;
+        model.user.players[0].orientation = crate::tantorian::Orientation::W;
         model.user.players[0].current_tile += 1.;
         model.user.players[0].start_movement = Some(app.duration.since_start);
     }
