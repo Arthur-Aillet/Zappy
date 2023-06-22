@@ -8,7 +8,7 @@
 #include "zappy.h"
 #include <string.h>
 
-static void funct_prepare_response(gui_t *gui, uint8_t **args)
+static void funct_prepare_res(gui_t *gui, uint8_t **args)
 {
     free(gui->buffer.bufferWrite.octets);
     gui->buffer.bufferWrite.octets = malloc(sizeof(uint8_t) *
@@ -38,7 +38,7 @@ void funct_server_pnw(uint8_t **args, void *info, common_t *common)
     gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) +
     strlen((char*)args[1]) + strlen((char*)args[2]) + strlen((char*)args[3]) +
     strlen((char*)args[4]) + strlen((char*)args[5]) + 9;
-    funct_prepare_response(gui, args);
+    funct_prepare_res(gui, args);
     gui->buffer.bufferWrite.usedSize =
     strlen((char*)gui->buffer.bufferWrite.octets);
     // write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,

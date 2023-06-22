@@ -16,7 +16,7 @@ static void to_add_new_egg(ia_t *ia, team_t *team)
     team->egg[team->nb_eggs] = set_egg(ia->player->x, ia->player->y);
 }
 
-static void funct_prepare_response(team_t *team, ia_t *ia)
+static void funct_prepare_res(team_t *team, ia_t *ia)
 {
     team->egg = realloc(team->egg, sizeof(egg_t) * (team->nb_eggs + 1));
     if (team->egg == NULL) {
@@ -61,7 +61,7 @@ void funct_response_ia_fork(uint8_t **args, void *info, common_t *com)
     if (arg == NULL || team == NULL) {
         return;
     }
-    funct_prepare_response(team, ia);
+    funct_prepare_res(team, ia);
     arg[0] = create_args_for_response_gui(team->egg[team->nb_eggs - 1].egg_id);
     arg[1] = create_args_for_response_gui(ia->player->id);
     arg[2] = create_args_for_response_gui(ia->player->x);

@@ -38,9 +38,13 @@ static void update_tiles_ressources(map_t *map)
     size_t *resources = new_ressource(map->height, map->width);
 
     for (int i = 0; i < 7; i++) {
+        if (map->density[i] >= resources[i])
+            continue;
+        resources[i] -= map->density[i];
         while (resources[i] > 0) {
             random_resource_position(map, i);
             resources[i]--;
+            map->density[i]++;
         }
     }
     free(resources);

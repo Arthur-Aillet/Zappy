@@ -55,4 +55,6 @@ void free_gui(gui_t *gui);
 
 void check_msg_queue_gui(common_t *com);
 
+void funct_prepare_response(gui_t *gui, size_t x, size_t y);
+
 #endif /* !GUI_H_ */

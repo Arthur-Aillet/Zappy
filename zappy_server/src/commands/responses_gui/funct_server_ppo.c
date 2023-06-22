@@ -20,7 +20,7 @@ static void funct_args_response(char *buffer_x, char *buffer_y,
     strcat((char*)gui->buffer.bufferWrite.octets, "\n\0");
 }
 
-static void funct_prepare_response(gui_t *gui, uint8_t **args, ia_t *tmp_ia)
+static void funct_prepare_res(gui_t *gui, uint8_t **args, ia_t *tmp_ia)
 {
     char buffer_x[256];
     char buffer_y[256];
@@ -50,7 +50,7 @@ void funct_server_ppo(uint8_t **args, void *info, common_t *common)
     if (tmp_ia == NULL) {
         return;
     }
-    funct_prepare_response(gui, args, tmp_ia);
+    funct_prepare_res(gui, args, tmp_ia);
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
         gui->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_server_ppo\n");

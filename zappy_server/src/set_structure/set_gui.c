@@ -29,6 +29,7 @@ static map_t set_map(int height, int width, int freq)
     map.start = time(NULL);
     map.time = 20 / freq;
     map.tiles = malloc(sizeof(tile_t *) * height);
+    map.density = set_ressources();
     if (map.tiles == NULL)
         exit(error("Failed to allocate tiles map", 84));
     for (int i = 0; i < height; i++) {
@@ -66,6 +67,7 @@ static void free_map(map_t *map)
         free(map->tiles[i]);
     }
     free(map->tiles);
+    free(map->density);
 }
 
 void free_gui(gui_t *gui)

@@ -23,6 +23,7 @@ typedef struct map_s {
     size_t width;
     size_t height;
     tile_t **tiles;
+    size_t *density;
 } map_t;
 
 #endif /* !MAP_H_ */

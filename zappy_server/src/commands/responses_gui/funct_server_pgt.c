@@ -8,7 +8,7 @@
 #include "zappy.h"
 #include <string.h>
 
-static void funct_prepare_response(gui_t *gui, uint8_t **args)
+static void funct_prepare_res(gui_t *gui, uint8_t **args)
 {
     gui->buffer.bufferWrite.usedSize += (strlen((char*)args[1]) + 7);
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
@@ -33,7 +33,7 @@ void funct_server_pgt(uint8_t **args, void *info, common_t *common)
         return;
     }
     tmp_ia->player->inventory[atoi((char*)args[1])] += 1;
-    funct_prepare_response(gui, args);
+    funct_prepare_res(gui, args);
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
         gui->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_server_pgt\n");

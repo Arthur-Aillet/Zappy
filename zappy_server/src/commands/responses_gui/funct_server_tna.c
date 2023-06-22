@@ -8,7 +8,7 @@
 #include "zappy.h"
 #include <string.h>
 
-static void funct_prepare_response(gui_t *gui, common_t *common)
+static void funct_prepare_res(gui_t *gui, common_t *common)
 {
     gui->buffer.bufferWrite.octets[0] = '\0';
     for (size_t nbr_teams = 0; nbr_teams < common->nb_teams; nbr_teams++) {
@@ -39,7 +39,7 @@ void funct_server_tna(uint8_t **args, void *info, common_t *common)
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }
-    funct_prepare_response(gui, common);
+    funct_prepare_res(gui, common);
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
         gui->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_server_tna\n");

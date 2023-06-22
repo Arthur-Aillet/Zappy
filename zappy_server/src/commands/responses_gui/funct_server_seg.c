@@ -8,7 +8,7 @@
 #include "zappy.h"
 #include <string.h>
 
-static void funct_prepare_response(gui_t *gui, common_t *common,
+static void funct_prepare_res(gui_t *gui, common_t *common,
                                 team_t *tmp_team, uint8_t **args)
 {
     gui->buffer.bufferWrite.usedSize = strlen(tmp_team->name) + 6;
@@ -50,7 +50,7 @@ void funct_server_seg(uint8_t **args, void *info, common_t *common)
     if (to_check_in(tmp_team) == 1) {
         return;
     }
-    funct_prepare_response(common->gui, common, tmp_team, args);
+    funct_prepare_res(common->gui, common, tmp_team, args);
     write(common->gui->buffer.sock.sockfd,
     common->gui->buffer.bufferWrite.octets,
     common->gui->buffer.bufferWrite.usedSize);

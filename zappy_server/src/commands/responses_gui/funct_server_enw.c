@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-static void funct_prepare_response(gui_t *gui, uint8_t **args,
+static void funct_prepare_res(gui_t *gui, uint8_t **args,
                                 char *buffer_x, char *buffer_y)
 {
     gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) +
@@ -42,7 +42,7 @@ void funct_server_enw(uint8_t **args, void *info, common_t *common)
     tmp_ia->player->inventory[EGG] -= 1;
     sprintf(buffer_x, "%d", tmp_ia->player->x);
     sprintf(buffer_y, "%d", tmp_ia->player->y);
-    funct_prepare_response(gui, args, buffer_x, buffer_y);
+    funct_prepare_res(gui, args, buffer_x, buffer_y);
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
         gui->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_server_enw\n");
