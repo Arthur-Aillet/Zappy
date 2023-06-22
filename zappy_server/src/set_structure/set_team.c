@@ -11,6 +11,28 @@
 #include <time.h>
 #include "error_handling.h"
 
+void delete_egg(egg_t *egg, int nb_valid_egg)
+{
+    egg_t *e = malloc(sizeof(egg_t) * nb_valid_egg);
+    int new_i = 0;
+
+    for (int i = 0; i < nb_valid_egg; i++) {
+        if (egg[i].x == -1 && egg[i].y == -1)
+            continue;
+        e[new_i] = egg[i];
+        new_i++;
+    }
+    egg = realloc(egg, sizeof(egg_t) * nb_valid_egg);
+    new_i = 0;
+    for (int i = 0; i < nb_valid_egg; i++) {
+        if (egg[i].x == -1 && egg[i].y == -1)
+            continue;
+        egg[new_i] = e[i];
+        new_i++;
+    }
+    free(e);
+}
+
 egg_t set_egg(int x, int y)
 {
     egg_t new;

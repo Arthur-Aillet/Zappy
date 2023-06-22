@@ -53,4 +53,6 @@ static const client_gui_t COMMAND_GESTION_CLIENT_GUI[] = {
 gui_t *set_gui(int height, int wigth, int freq);
 void free_gui(gui_t *gui);
 
+void check_msg_queue_gui(common_t *com);
+
 #endif /* !GUI_H_ */

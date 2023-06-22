@@ -24,6 +24,7 @@ player_t set_player(size_t x, size_t y, size_t freq)
     new.satiety = 10;
     new.start = time(NULL);
     new.time = 126 / freq;
+    new.incantation = NO;
     new.inventory = malloc(sizeof(size_t) * 8);
     if (new.inventory == NULL) {
         error("Couldn't allocate inventory", 0);

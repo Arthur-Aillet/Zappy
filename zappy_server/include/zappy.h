@@ -178,4 +178,6 @@ void funct_response_look_sud(ia_t *ia, common_t *com);
 void funct_response_look_est(ia_t *ia, common_t *com);
 void funct_response_look_west(ia_t *ia, common_t *com);
 
+void update_map(common_t *com);
+
 #endif /* !ZAPPY_H_ */

@@ -11,8 +11,6 @@
 #include "error_handling.h"
 #include "zappy.h"
 
-//NOTE - If an egg is find the player take its position and delete the egg
-// ! An egg is deleted when these positions are in x= -1 and y= -1
 static int egg_position(int *x, int *y, team_t *team)
 {
     if (team->nb_eggs > 0) {

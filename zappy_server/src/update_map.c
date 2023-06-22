@@ -5,7 +5,7 @@
 ** update_map.c
 */
 
-#include "map.h"
+#include "zappy.h"
 #include "error_handling.h"
 #include <stdlib.h>
 
@@ -47,14 +47,14 @@ static void update_tiles_ressources(map_t *map)
 }
 
 //FIXME - envoyer la commande bct pour toute les tiles au GUI
-void update_map(map_t *map)
+void update_map(common_t *com)
 {
     time_t now = time(NULL);
 
-    if (difftime(now, map->start) >= map->time) {
-        map->start = time(NULL);
-        update_tiles_ressources(map);
-        if (map->time >= 0.2)
+    if (difftime(now, com->gui->map.start) >= com->gui->map.time) {
+        com->gui->map.start = time(NULL);
+        update_tiles_ressources(&com->gui->map);
+        if (com->gui->map.time >= 0.1)
             basic_log("update map resources", G, 0);
     }
 }

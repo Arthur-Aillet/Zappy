@@ -69,7 +69,7 @@ static void to_check_status_incantation(common_t *com, player_t *ia)
 
 void remove_player(player_t *ennemy, player_t *ia, common_t *com)
 {
-    uint8_t **args = malloc(sizeof(uint8_t *) * 1);
+    uint8_t **args = malloc(sizeof(uint8_t *));
     char buffer_ennemy[256];
 
     if (args == NULL) {
@@ -79,7 +79,7 @@ void remove_player(player_t *ennemy, player_t *ia, common_t *com)
         to_check_status_incantation(com, ia);
     }
     sprintf(buffer_ennemy, "%d", ennemy->id);
-    args[0] = malloc(sizeof(uint8_t) * strlen(buffer_ennemy));
+    args[0] = malloc(sizeof(uint8_t) * (strlen(buffer_ennemy) + 1));
     if (args[0] == NULL) {
         return;
     }
