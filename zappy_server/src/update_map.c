@@ -46,7 +46,6 @@ static void update_tiles_ressources(map_t *map)
     free(resources);
 }
 
-
 //FIXME - envoyer la commande bct pour toute les tiles au GUI
 void update_map(map_t *map)
 {

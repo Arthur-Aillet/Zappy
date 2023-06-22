@@ -37,7 +37,6 @@ ia_t *set_ia(void)
     return ia;
 }
 
-
 void free_ia(ia_t *ia)
 {
     free(ia);

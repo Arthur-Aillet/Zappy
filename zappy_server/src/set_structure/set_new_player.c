@@ -50,16 +50,14 @@ static void send_to_gui(int status, common_t *com, team_t *team, int i)
     uint8_t **args;
     if (i == -1)
         return;
+    args = (status != 0) ? malloc(sizeof(uint8_t *) * 1) :
+                            malloc(sizeof(uint8_t *) * 6);
+    if (args == NULL)
+        error("Memory allocation failed", 0);
     if (status != 0) {
-        args = malloc(sizeof(uint8_t *) * 1);
-        if (args == NULL)
-            error("Memory allocation failed", 0);
         send_to_gui_buffer(status, NULL, &args[0]);
         funct_server_ebo(args, com->gui, com);
     } else {
-        args = malloc(sizeof(uint8_t *) * 6);
-        if (args == NULL)
-            error("Memory allocation failed", 0);
         send_to_gui_buffer(team->players[i].id, NULL, &args[0]);
         send_to_gui_buffer(team->players[i].x, NULL, &args[1]);
         send_to_gui_buffer(team->players[i].y, NULL, &args[2]);
@@ -85,7 +83,8 @@ static int add_new_player(team_t *team, size_t max_x, size_t max_y,
     for (; i < MAX_PLAYER; i++) {
         if (team->players[i].x == -1 && team->players[i].y == -1) {
             team->players[i] = set_player(x, y, com->freq);
-            printf("%sPlayer position: %d %d%s\n", CYAN, team->players[i].x, team->players[i].y, N);
+            printf("%sPlayer position: %d %d%s\n", C,
+                        team->players[i].x, team->players[i].y, N);
             team->actif_player++;
             ret = i;
             break;
@@ -99,11 +98,6 @@ int check_slot_and_create_player(common_t *com, int t_idx,int client_idx)
 {
     int res = add_new_player(&TEAM(t_idx), com->gui->map.height,
                             com->gui->map.width, com);
-    if (res == -1) {
-        fprintf(stderr, "%sThe team: %s%s%s is full%s\n",
-        R, B,TEAM(t_idx).name, R, N);
-        return 0;
-    }
     player_t *player = (player_t*) &(TEAM(t_idx).players[res]);
     com->client[client_idx].str_cli = player;
     com->client[client_idx].type = IA;

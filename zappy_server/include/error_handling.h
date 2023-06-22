@@ -7,12 +7,12 @@
 
 #ifndef ERROR_HANDLING_H_
     #define ERROR_HANDLING_H_
-    #define CYAN    "\e[1;36m"
+    #define C    "\e[1;36m"
     #define G   "\e[1;32m"
     #define R     "\e[1;31m"
-    #define PURPLE  "\e[1;35m"
+    #define P  "\e[1;35m"
     #define B    "\e[1;34m"
-    #define YELLOW  "\e[1;33m"
+    #define Y  "\e[1;33m"
     #define N  "\e[0;m"
 
     #include <stdio.h>

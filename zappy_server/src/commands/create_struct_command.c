@@ -87,17 +87,3 @@ server_ia_t create_struct_client_ia(uint8_t **command)
     create_args_client_ia(command, nbr_args, &ia);
     return ia;
 }
-
-ia_t *to_find_ia_for_command(common_t *com, client_t *client)
-{
-    player_t *player = (player_t *)client->str_cli;
-
-    for (size_t tmp = 0; tmp < MAX_CLIENTS; tmp++) {
-        if (com->ia[tmp].player == NULL)
-            continue;
-        if (com->ia[tmp].player->id == player->id) {
-            return &com->ia[tmp];
-        }
-    }
-    return NULL;
-}
