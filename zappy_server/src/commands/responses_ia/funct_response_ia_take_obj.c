@@ -27,5 +27,5 @@ void funct_response_ia_take_obj(uint8_t **args, void *info, common_t *com)
     }
     write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
         ia->buffer.bufferWrite.usedSize);
-    basic_log("rentrer dans la fonctions funct_response_ia_take_obj", CYAN, 0);
+    basic_log("rentrer dans la fonctions funct_response_ia_take_obj", C, 0);
 }

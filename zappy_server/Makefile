@@ -29,6 +29,7 @@ COMMAND	=	src/commands/check_command.c								\
 			src/commands/common_functions.c								\
 			src/commands/common_functions_bis.c							\
 			src/commands/create_struct_command.c						\
+			src/commands/find_ia_for_command.c	 						\
 			src/commands/commands_gui/funct_client_bct.c				\
 			src/commands/commands_gui/funct_client_mct.c				\
 			src/commands/commands_gui/funct_client_msz.c				\

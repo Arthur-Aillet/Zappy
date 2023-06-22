@@ -15,7 +15,8 @@ static void update_msg_queue(ia_t *ia, common_t *com)
         ia->msg_queue->start = now;
         return;
     }
-    if (ia->msg_queue->start != 0 && difftime(now, ia->msg_queue->start) >= ia->msg_queue->time) {
+    if (ia->msg_queue->start != 0 &&
+        difftime(now, ia->msg_queue->start) >= ia->msg_queue->time) {
         ia->msg_queue->handler(ia->msg_queue->msg, ia, com);
         msg = ia->msg_queue;
         ia->msg_queue = ia->msg_queue->next_msg;

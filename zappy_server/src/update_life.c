@@ -36,8 +36,6 @@ static int player_is_dead(player_t *player, common_t *com)
         return error("Bad player id", 0);
 
     *ia = close_ia();
-    if (args == NULL)
-        return error("Memory allocation failed", 0);
     sprintf(buffer_args, "%d", player->id);
     args[0] = malloc(sizeof(uint8_t) * strlen(buffer_args) + 1);
     if (args[0] == NULL)

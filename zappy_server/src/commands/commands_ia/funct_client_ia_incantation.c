@@ -54,5 +54,5 @@ void funct_client_ia_incantation(ia_t *ia, uint8_t **args, common_t *com)
     new_msg->handler = &funct_response_ia_incantation;
     new_msg->next_msg = ia->msg_queue;
     ia->msg_queue = new_msg;
-    basic_log("rentrer dans la funct_client_ia_incantation", CYAN, 0);
+    basic_log("rentrer dans la funct_client_ia_incantation", C, 0);
 }

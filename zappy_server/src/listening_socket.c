@@ -53,7 +53,7 @@ static int check_command(uint8_t **command, common_t *com, int cli_idx)
         printf("%sCheck in IA Command%s\n", B, N);
         ia = create_struct_client_ia(command);
         to_check_command_exist_ia(&ia,
-                to_find_ia_for_command(com, &com->client[cli_idx]), com);
+                find_ia_for_command(com, &com->client[cli_idx]), com);
     } else if (com->client[cli_idx].type == GUI) {
         printf("%sCheck in GUI Command%s\n", B, N);
         gui = create_struct_client_gui(command);

@@ -36,7 +36,7 @@ static void normalizing_vector(float *x, float *y)
     *y = *y / tang;
 }
 
-static int calculate_broadcast_angle(ia_t *ia, player_t *player, map_t map)
+static int calc_angle(ia_t *ia, player_t *player, map_t map)
 {
     static int const idxes[3][3] = {{2, 1, 8},{3, 0, 7},{4, 5, 6}};
     float x = ia->player->x - player->x;
@@ -62,21 +62,17 @@ static void send_message_to_players(common_t *com, uint8_t **args, ia_t *ia)
 {
     player_t *player;
     size_t buffer_size = 12;
-    char *buffer;
-
     for (int i = 0; args[i] != NULL; i++)
         buffer_size += (strlen((char*)args[i]) + 1);
-    buffer = malloc(sizeof(char) * buffer_size);
+    char *buffer = malloc(sizeof(char) * buffer_size);
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (com->client[i].type != IA)
             continue;
         player = (player_t*)com->client[i].str_cli;
         if (player->id == ia->player->id)
             continue;
-        int k = calculate_broadcast_angle(ia, player, com->gui->map);
-        sprintf(buffer, "message %d,", k);
+        sprintf(buffer, "message %d,", calc_angle(ia, player, com->gui->map));
         for (int j = 0; args[j] != NULL; j++) {
-            printf(" %s", (char*)args[j]);
             strcat(buffer, " ");
             strcat(buffer, (char*)args[j]);
         }
@@ -100,5 +96,4 @@ void funct_response_ia_broadcast(uint8_t **args, void *info, common_t *com)
     strcat((char*)ia->buffer.bufferWrite.octets, "ok\n\0");
     write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
         ia->buffer.bufferWrite.usedSize);
-    basic_log("rentrer dans la fonctions funct_response_ia_broadcast", CYAN, 0);
 }
