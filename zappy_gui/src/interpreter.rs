@@ -13,13 +13,15 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
 
     functions.insert("msz".to_string(), Zappy::set_map_size);
     functions.insert("bct".to_string(), Zappy::tile_content);
-    functions.insert("sgt".to_string(), Zappy::set_time_unit);
     functions.insert("tna".to_string(), Zappy::add_team_name);
     functions.insert("pnw".to_string(), Zappy::connect_new_player);
+    functions.insert("ppo".to_string(), Zappy::player_position);
+    functions.insert("plv".to_string(), Zappy::player_level);
+    functions.insert("pin".to_string(), Zappy::player_inventory);
+    functions.insert("sgt".to_string(), Zappy::set_time_unit);
     functions.insert("pdi".to_string(), Zappy::death_of_player);
     functions.insert("seg".to_string(), Zappy::end_of_game);
     functions.insert("pbc".to_string(), Zappy::broadcast);
-    functions.insert("ppo".to_string(), Zappy::player_position);
     functions
 }
 
@@ -41,6 +43,74 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn player_inventory(&mut self, command: String, at: Duration) {
+        let re = Regex::new(r"^pin (-?\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, number, capture, "pin: invalid player number");
+            parse_capture!(usize, 2, x, capture, "pin: invalid player x coordinate");
+            parse_capture!(usize, 3, y, capture, "pin: invalid player y coordinate");
+
+            parse_capture!(usize, 4, q0, capture, "pin: invalid player q0 resource");
+            parse_capture!(usize, 5, q1, capture, "pin: invalid player q1 resource");
+            parse_capture!(usize, 6, q2, capture, "pin: invalid player q2 resource");
+            parse_capture!(usize, 7, q3, capture, "pin: invalid player q3 resource");
+            parse_capture!(usize, 8, q4, capture, "pin: invalid player q4 resource");
+            parse_capture!(usize, 9, q5, capture, "pin: invalid player q5 resource");
+            parse_capture!(usize, 10, q6, capture, "pin: invalid player q6 resource");
+
+            if x > self.map.size[0] {
+                println!("pin: x coordinate out of bounds");
+                return;
+            }
+            if y > self.map.size[1] {
+                println!("pin: y coordinate out of bounds");
+                return;
+            }
+            let mut found = false;
+            for player in &mut self.players {
+                if player.number == number {
+                    found = true;
+                    player.last_tile = player.pos.xy() - 0.5;
+                    player.current_tile = Vec2::new(x as f32, y as f32);
+                    player.start_movement = Some(at);
+                    player.food = q0 as u32;
+                    player.linemate = q1 as u32;
+                    player.deraumere = q2 as u32;
+                    player.sibur = q3 as u32;
+                    player.mendiane = q4 as u32;
+                    player.phiras = q5 as u32;
+                    player.thystame = q6 as u32;
+                }
+            }
+            if found == false {
+                println!("pin: player not found");
+            }
+        }
+    }
+
+    fn player_level(&mut self, command: String, at: Duration) {
+        let re = Regex::new(r"^plv (-?\d+) ([1-8])$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, number, capture, "plv: invalid player number");
+            parse_capture!(usize, 2, level, capture, "plv: invalid player level coordinate");
+
+            let mut found = false;
+            for player in &mut self.players {
+                if player.number == number {
+                    found = true;
+                    player.level = level as u32;
+                }
+            }
+            if found == false {
+                println!("plv: player not found");
+            }
+        }
+    }
+
     fn player_position(&mut self, command: String, at: Duration) {
         let re = Regex::new(r"^ppo (-?\d+) (\d+) (\d+) ([1-4])$")
             .expect("Invalid regex");
