@@ -35,7 +35,7 @@ static void prepare_response_ia(uint8_t *response, char *buffer_nb_slot,
     response = (uint8_t *)strcat((char *)response, buffer_nb_slot);
     response = (uint8_t *)strcat((char *)response, "\n");
     response = (uint8_t *)strcat((char *)response, buffer_x);
-    response = (uint8_t *)strcat((char *)response, "\n");
+    response = (uint8_t *)strcat((char *)response, " ");
     response = (uint8_t *)strcat((char *)response, buffer_y);
     response = (uint8_t *)strcat((char *)response, "\n\0");
 }
@@ -68,9 +68,7 @@ int undefined_client_command(uint8_t **command, common_t *com, int idx)
         funct_server_msz(NULL, com->gui, com);
         funct_server_sgt(NULL, com->gui, com);
         funct_server_all_bct(NULL, com->gui, com);
-        write(com->client[idx].socket, "graphic command\n", 16);
     } else if (check_teams_name((char*)command[0], com, idx) == 1){
-        write(com->client[idx].socket, "player command\n", 15);
         response_start_ia(com->client[idx], com);
     } else {
         return error("Invalid command for defined the client", 0);

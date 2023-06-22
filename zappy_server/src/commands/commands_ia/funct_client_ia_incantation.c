@@ -19,6 +19,28 @@ static void call_function_gui_bis(ia_t *ia, common_t *com,
     }
 }
 
+void update_tile_gui(common_t *com, ia_t *ia)
+{
+    uint8_t **args = malloc(sizeof(uint8_t *) * 2);
+    char buffer_args[256];
+
+    if (args == NULL)
+        return;
+    sprintf(buffer_args, "%d", ia->player->x);
+    args[0] = malloc(sizeof(uint8_t) * strlen(buffer_args));
+    if (args[0] == NULL)
+        return;
+    args[0][0] = '\0';
+    args[0] = (uint8_t *)strcat((char *)args[0], buffer_args);
+    sprintf(buffer_args, "%d", ia->player->y);
+    args[1] = malloc(sizeof(uint8_t) * strlen(buffer_args));
+    if (args[1] == NULL)
+        return;
+    args[1][0] = '\0';
+    args[1] = (uint8_t *)strcat((char *)args[1], buffer_args);
+    funct_server_bct(args, com->gui, com);
+}
+
 static void call_function_gui(ia_t *ia, common_t *com,
                                 msg_queue_t *new_msg)
 {
@@ -32,6 +54,7 @@ static void call_function_gui(ia_t *ia, common_t *com,
     } else {
         call_function_gui_bis(ia, com, new_msg);
     }
+    update_tile_gui(com, ia);
 }
 
 void funct_client_ia_incantation(ia_t *ia, uint8_t **args, common_t *com)

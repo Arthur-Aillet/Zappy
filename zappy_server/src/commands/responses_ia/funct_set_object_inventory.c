@@ -41,6 +41,7 @@ void response_set(ia_t *ia, int idx, common_t *com)
         funct_response_gui(ia, idx, com, args);
         com->gui->map.density += 1;
         strcat((char*)ia->buffer.bufferWrite.octets, "ok\n\0");
+        update_tile_gui(com, ia);
     }
     strcat((char*)ia->buffer.bufferWrite.octets, "ko\n\0");
 }
