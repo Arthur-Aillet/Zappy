@@ -19,12 +19,13 @@ static void create_args_client_gui(uint8_t **command, int nbr_args,
                                 client_gui_t *gui)
 {
     int i;
+    gui->args = calloc(sizeof(uint8_t *), nbr_args + 1);
+    if (gui->args == NULL)
+        return;
     for (i = 1; i < nbr_args; i++) {
-        gui->args = realloc(gui->args, sizeof(uint8_t *) * i);
-        if (gui->args == NULL) {
-            gui->args = NULL;
-            return;
-        }
+        gui->args[i - 1] = malloc(sizeof(uint8_t) *
+                        (strlen((char*)command[i]) + 1));
+        gui->args[i - 1][0] = '\0';
         gui->args[i - 1] = (uint8_t *)strcat((char *)gui->args[i - 1],
                             (char *)command[i]);
     }
@@ -39,10 +40,11 @@ client_gui_t create_struct_client_gui(uint8_t **command)
     if (command[0] == NULL) {
         return gui;
     } else {
-        gui.comd = malloc(sizeof(uint8_t) * strlen((char *)command[0]));
+        gui.comd = malloc(sizeof(uint8_t) * (strlen((char *)command[0]) + 1));
         if (gui.comd == NULL) {
             return gui;
         }
+        gui.comd[0] = '\0';
         gui.comd = (uint8_t *)strcat((char *)gui.comd, (char *)command[0]);
         create_args_client_gui(command, nbr_args, &gui);
     }
@@ -55,7 +57,6 @@ static void create_args_client_ia(uint8_t **command, int nbr_args,
     int i = 1;
     ia->args = calloc(sizeof(uint8_t *), nbr_args + 1);
     if (ia->args == NULL) {
-        ia->args = NULL;
         return;
     }
     for (; i < nbr_args; i++) {

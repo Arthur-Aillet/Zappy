@@ -23,7 +23,7 @@ typedef struct gui_s {
 } gui_t;
 
 typedef struct client_gui_s {
-    const uint8_t *comd;
+    uint8_t *comd;
     uint8_t **args;
     void (*handler)(gui_t *gui, uint8_t **args, common_t *com);
 } client_gui_t;
@@ -39,15 +39,15 @@ void funct_client_sgt(gui_t *gui, uint8_t **args, common_t *com);
 void funct_client_sst(gui_t *gui, uint8_t **args, common_t *com);
 
 static const client_gui_t COMMAND_GESTION_CLIENT_GUI[] = {
-    {(const uint8_t*)"msz", NULL, funct_client_msz},
-    {(const uint8_t*)"bct", NULL, funct_client_bct},
-    {(const uint8_t*)"mct", NULL, funct_client_mct},
-    {(const uint8_t*)"tna", NULL, funct_client_tna},
-    {(const uint8_t*)"ppo", NULL, funct_client_ppo},
-    {(const uint8_t*)"plv", NULL, funct_client_plv},
-    {(const uint8_t*)"pin", NULL, funct_client_pin},
-    {(const uint8_t*)"sgt", NULL, funct_client_sgt},
-    {(const uint8_t*)"sst", NULL, funct_client_sst},
+    {(uint8_t*)"msz", NULL, funct_client_msz},
+    {(uint8_t*)"bct", NULL, funct_client_bct},
+    {(uint8_t*)"mct", NULL, funct_client_mct},
+    {(uint8_t*)"tna", NULL, funct_client_tna},
+    {(uint8_t*)"ppo", NULL, funct_client_ppo},
+    {(uint8_t*)"plv", NULL, funct_client_plv},
+    {(uint8_t*)"pin", NULL, funct_client_pin},
+    {(uint8_t*)"sgt", NULL, funct_client_sgt},
+    {(uint8_t*)"sst", NULL, funct_client_sst},
 };
 
 gui_t *set_gui(int height, int wigth, int freq);
