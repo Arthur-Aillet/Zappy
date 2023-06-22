@@ -7,19 +7,22 @@
 
 #include "zappy.h"
 
-static egg_t *to_add_new_egg(ia_t *ia, team_t *team)
+static void to_add_new_egg(ia_t *ia, team_t *team)
 {
-    team->egg[team->nb_eggs + 1] = set_egg(ia->player->x, ia->player->y);
-    return team->egg;
+    team->egg = realloc(team->egg, sizeof(egg_t) * (team->nb_eggs + 1));
+    if (team->egg == NULL) {
+        return;
+    }
+    team->egg[team->nb_eggs] = set_egg(ia->player->x, ia->player->y);
 }
 
 static void funct_prepare_response(team_t *team, ia_t *ia)
 {
     team->egg = realloc(team->egg, sizeof(egg_t) * (team->nb_eggs + 1));
     if (team->egg == NULL) {
-        ;
+        return;
     }
-    team->egg = to_add_new_egg(ia, team);
+    to_add_new_egg(ia, team);
     team->nb_eggs += 1;
     team->nb_slot += 1;
     ia->buffer.bufferWrite.usedSize = 4;
@@ -38,7 +41,7 @@ static uint8_t *create_args_for_response_gui(int arg)
     char buffer_args[256];
 
     sprintf(buffer_args, "%d", arg);
-    new_args = malloc(sizeof(uint8_t) * strlen(buffer_args));
+    new_args = malloc(sizeof(uint8_t) * (strlen(buffer_args) + 1));
     if (new_args == NULL) {
         return NULL;
     }
@@ -59,7 +62,7 @@ void funct_response_ia_fork(uint8_t **args, void *info, common_t *com)
         return;
     }
     funct_prepare_response(team, ia);
-    arg[0] = create_args_for_response_gui(team->egg[team->nb_eggs].egg_id);
+    arg[0] = create_args_for_response_gui(team->egg[team->nb_eggs - 1].egg_id);
     arg[1] = create_args_for_response_gui(ia->player->id);
     arg[2] = create_args_for_response_gui(ia->player->x);
     arg[3] = create_args_for_response_gui(ia->player->y);
