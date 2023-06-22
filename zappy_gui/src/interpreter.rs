@@ -4,6 +4,7 @@ use regex::Regex;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
+use rend_ox::glam::{Vec2, Vec3Swizzles};
 
 pub type ServerFunction = fn(&mut Zappy, String, Duration);
 
@@ -18,6 +19,7 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     functions.insert("pdi".to_string(), Zappy::death_of_player);
     functions.insert("seg".to_string(), Zappy::end_of_game);
     functions.insert("pbc".to_string(), Zappy::broadcast);
+    functions.insert("ppo".to_string(), Zappy::player_position);
     functions
 }
 
@@ -39,6 +41,45 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn player_position(&mut self, command: String, at: Duration) {
+        let re = Regex::new(r"^ppo (-?\d+) (\d+) (\d+) ([1-4])$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, number, capture, "ppo: invalid player number");
+            parse_capture!(usize, 2, x, capture, "ppo: invalid player x coordinate");
+            parse_capture!(usize, 3, y, capture, "ppo: invalid player y coordinate");
+            parse_capture!(usize, 4, orientation, capture, "ppo: invalid player orientation");
+
+            if orientation < 1 || orientation > 4 {
+                println!("ppo: invalid player orientation");
+                return;
+            }
+            if x > self.map.size[0] {
+                println!("ppo: x coordinate out of bounds");
+                return;
+            }
+            if y > self.map.size[1] {
+                println!("ppo: y coordinate out of bounds");
+                return;
+            }
+            let mut found = false;
+            for player in &mut self.players {
+                if player.number == number {
+                    found = true;
+                    player.last_tile = player.pos.xy() - 0.5;
+                    player.last_orientation = player.orientation;
+                    player.orientation = Orientation::from_usize(orientation);
+                    player.current_tile = Vec2::new(x as f32, y as f32);
+                    player.start_movement = Some(at);
+                }
+            }
+            if found == false {
+                println!("ppo: player not found");
+            }
+        }
+    }
+
     fn broadcast(&mut self, command: String, at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
@@ -112,6 +153,14 @@ impl Zappy {
 
             if orientation < 1 || orientation > 4 {
                 println!("pnw: invalid player orientation");
+                return;
+            }
+            if x > self.map.size[0] {
+                println!("pnw: x coordinate out of bounds");
+                return;
+            }
+            if y > self.map.size[1] {
+                println!("pnw: y coordinate out of bounds");
                 return;
             }
             if let Some(new_player) = Tantorian::new_from_command(
