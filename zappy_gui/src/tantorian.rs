@@ -1,4 +1,5 @@
 use std::collections::hash_map::DefaultHasher;
+use std::f32::consts::PI;
 use rend_ox::glam::UVec2;
 use rend_ox::Vec3;
 use std::hash::{Hash, Hasher};
@@ -27,6 +28,15 @@ impl Orientation {
             Orientation::E => 'E',
             Orientation::S => 'S',
             Orientation::W => 'W',
+        }
+    }
+
+    pub fn as_radian(&self) -> f32 {
+        match self {
+            Orientation::N => 180. * PI/180.,
+            Orientation::E => 270. * PI/180.,
+            Orientation::S => 0.,
+            Orientation::W => 90. * PI/180.,
         }
     }
 }

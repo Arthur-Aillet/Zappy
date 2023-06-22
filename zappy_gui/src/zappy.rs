@@ -1,12 +1,11 @@
 use rend_ox::app::App;
-use rend_ox::{Vec3, Mat4};
+use rend_ox::Vec3;
 use rend_ox::mesh::MeshDescriptor;
 use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
+use std::f32::consts::PI;
 use std::thread::JoinHandle;
 use std::time::Duration;
-use getopts::HasArg::No;
-use rend_ox::nannou::state::keys::Down;
 use rend_ox::nannou_egui::egui::CtxRef;
 
 use crate::map::Map;
@@ -121,12 +120,24 @@ impl Zappy {
     }
 
     pub fn render(app: &mut App<Zappy>) {
+        let player_mesh : &MeshDescriptor;
         if let Some(mesh) = &app.user.tantorian_mesh {
-            let player = app.user.players.iter().filter(|p| p.alive);
-            let mat = Mat4::from_rotation_x(std::f32::consts::PI * 0.5);
-            let instances : Vec<Mat4> = player.clone().map(|p| Mat4::from_translation(p.pos + Vec3::new(0., 0., 2.)) * mat).collect();
-            let colors : Vec<Vec3> = player.map(|p| p.color).collect();
-            app.draw_instances(mesh, instances.clone(), colors.clone());
+            player_mesh = mesh
+        } else {
+            return;
+        }
+        {
+            for player in &mut app.user.players {
+                player.pos = Vec3 {
+                    x: player.current_tile.x as f32 + 0.5,
+                    y: player.current_tile.y as f32 + 0.5,
+                    z: 0.666,
+                };
+            }
+        }
+        for player in &app.user.players {
+            let rot = Vec3::new(PI/2., player.orientation.as_radian(), 0.);
+            app.draw_at(player_mesh, player.color.clone(), player.pos.clone(), rot, Vec3::new(0.333, 0.333, 0.333));
         }
         Map::render(app);
     }
@@ -191,7 +202,7 @@ fn look_at_player(model: &mut App<Zappy>, number: &i64, team_name: &String) {
             model.camera.position = Vec3 {
                 x: player.pos.x / 100.,
                 y: player.pos.y / 100.,
-                z: 0.08,
+                z: 0.04,
             };
         }
     }

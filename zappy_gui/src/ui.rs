@@ -3,7 +3,6 @@ use std::time::Duration;
 use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
 
 use crate::tantorian::Tantorian;
-use crate::ui::PlayerAction::{Follow, GoTo};
 use crate::ui::State::{Connect, Disconnect, Nothing};
 
 pub(crate) struct ZappyUi {

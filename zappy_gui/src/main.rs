@@ -15,6 +15,7 @@ use crate::zappy::Zappy;
 use rend_ox::app::{app, App};
 use rend_ox::Vec3;
 use crate::arguments::parse_arguments;
+use crate::tantorian::Tantorian;
 
 fn zappy_key_pressed(app: &rend_ox::nannou::App, model: &mut App<Zappy>, key: rend_ox::nannou::event::Key) {
     if let rend_ox::nannou::event::Key::Space = key {
@@ -42,8 +43,14 @@ fn zappy_app(nannou_app: &rend_ox::nannou::App) -> App<Zappy> {
     app.user.port = port;
     Zappy::load(&mut app);
     app.user.try_to_connect(Duration::from_millis(0));
-    app.camera.position = Vec3::new(app.user.map.size[0] as f32 / 200., app.user.map.size[1] as f32 / 200., 0.08);
+    app.camera.position = Vec3::new(app.user.map.size[0] as f32 / 200., app.user.map.size[1] as f32 / 200., 0.04);
     app.camera.pitch = -PI/2.;
+    app.user.team_names.push("Team5".to_string());
+    let new = Tantorian::new_from_command(
+        1, 0, 0,
+        crate::tantorian::Orientation::S, 1, "Team5".to_string(),
+        &app.user.team_names, &app.user.map.size, &mut app.user.players).unwrap();
+    app.user.players.push(new);
     app
 }
 
