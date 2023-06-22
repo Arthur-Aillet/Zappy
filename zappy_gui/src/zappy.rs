@@ -5,6 +5,8 @@ use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
 use std::thread::JoinHandle;
 use std::time::Duration;
+use getopts::HasArg::No;
+use rend_ox::nannou::state::keys::Down;
 use rend_ox::nannou_egui::egui::CtxRef;
 
 use crate::map::Map;
@@ -29,6 +31,7 @@ pub struct Zappy {
     pub(crate) refresh_factor: f32,
     pub(crate) winner_team: Option<String>,
     pub(crate) last_map_update: Duration,
+    pub(crate) following: Option<(i64, String)>,
 }
 
 fn _hsv_to_rgb(source: Vec3) -> Vec3
@@ -87,6 +90,7 @@ impl Zappy {
             refresh_factor: 1.0,
             winner_team: None,
             last_map_update: Duration::from_secs_f32(20. / 100.),
+            following: None,
         }
     }
 
@@ -131,8 +135,19 @@ impl Zappy {
 pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
     zappy.user.ui
         .settings(ctx, &mut zappy.camera, zappy.camera_is_active);
-    zappy.user.ui
+    let (action, player_number, team_name) = zappy.user.ui
         .players(ctx, &mut zappy.user.players, &zappy.user.team_names, zappy.camera_is_active);
+    if action == crate::ui::PlayerAction::Follow {
+        for player in &zappy.user.players {
+            if player.team_name == team_name && player.number == player_number {
+                zappy.user.following = Some((player_number, team_name));
+                break;
+            }
+        }
+    } else if action == crate::ui::PlayerAction::GoTo {
+        zappy.user.following = None;
+        look_at_player(zappy, &player_number, &team_name);
+    }
     let refresh_map = zappy.user.ui.tiles(ctx, &mut zappy.user.auto_update, &mut zappy.user.refresh_factor, &zappy.user.map, zappy.camera_is_active);
     if let Some(server) = &mut zappy.user.server {
         if refresh_map {
@@ -170,6 +185,50 @@ fn ask_for_update(zappy: &mut Zappy, at: Duration) {
     }
 }
 
+fn look_at_player(model: &mut App<Zappy>, number: &i64, team_name: &String) {
+    for player in &model.user.players {
+        if &player.team_name == team_name && &player.number == number {
+            model.camera.position = Vec3 {
+                x: player.pos.x / 100.,
+                y: player.pos.y / 100.,
+                z: 0.08,
+            };
+        }
+    }
+}
+
+fn following(app: &rend_ox::nannou::App, model: &mut App<Zappy>) {
+    if model.user.following.is_none() {
+        return;
+    }
+    if model.camera_is_active {
+        if app.keys.down.contains(&rend_ox::nannou::event::Key::Z) {
+            model.user.following = None;
+        }
+        if app.keys.down.contains(&rend_ox::nannou::event::Key::S) {
+            model.user.following = None;
+        }
+        if app.keys.down.contains(&rend_ox::nannou::event::Key::Q) {
+            model.user.following = None;
+        }
+        if app.keys.down.contains(&rend_ox::nannou::event::Key::D) {
+            model.user.following = None;
+        }
+        if app.keys.down.contains(&rend_ox::nannou::event::Key::A) {
+            model.user.following = None;
+        }
+        if app.keys.down.contains(&rend_ox::nannou::event::Key::E) {
+            model.user.following = None;
+        }
+    }
+    if let Some((number, team_name)) = &model.user.following {
+        let player_number = number.clone();
+        let player_team_name = team_name.clone();
+
+        look_at_player(model, &player_number, &player_team_name);
+    }
+}
+
 pub(crate) fn zappy_update(
     nannou_app: &rend_ox::nannou::App,
     zappy: &mut App<Zappy>,
@@ -177,6 +236,8 @@ pub(crate) fn zappy_update(
     ctx: &CtxRef
 ) {
     rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
+    following(nannou_app, zappy);
+    println!("{:?}", zappy.user.following);
     Zappy::render(zappy);
     zappy.user.interpret_commands(update.since_start);
     ask_for_update(&mut zappy.user, update.since_start);

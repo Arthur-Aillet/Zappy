@@ -3,6 +3,7 @@ use std::time::Duration;
 use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
 
 use crate::tantorian::Tantorian;
+use crate::ui::PlayerAction::{Follow, GoTo};
 use crate::ui::State::{Connect, Disconnect, Nothing};
 
 pub(crate) struct ZappyUi {
@@ -16,6 +17,13 @@ pub(crate) enum State {
     Nothing,
     Connect,
     Disconnect,
+}
+
+#[derive(PartialEq)]
+pub(crate) enum PlayerAction {
+    Nothing,
+    Follow,
+    GoTo,
 }
 
 impl ZappyUi {
@@ -213,7 +221,9 @@ impl ZappyUi {
         state
     }
 
-    pub(crate) fn team(ui :&mut Ui, players: &mut Vec<Tantorian>, team_name: &String) {
+    pub(crate) fn team(ui :&mut Ui, players: &mut Vec<Tantorian>, team_name: &String) -> (PlayerAction, i64, String) {
+        let mut state = (PlayerAction::Nothing, 0, String::from(""));
+
         for player in players.iter_mut().filter(|x| {x.team_name == *team_name}) {
             egui::CollapsingHeader::new(player.number)
                 .default_open(false)
@@ -222,6 +232,13 @@ impl ZappyUi {
                         .num_columns(2)
                         .striped(true)
                         .show(col, |ui_grid| {
+                            if ui_grid.add(egui::Button::new("Go to")).clicked() {
+                                state = (PlayerAction::GoTo, player.number, team_name.clone());
+                            }
+                            if ui_grid.add(egui::Button::new("Follow")).clicked() {
+                                state = (PlayerAction::Follow, player.number, team_name.clone());
+                            }
+                            ui_grid.end_row();
                             ZappyUi::display_stat(ui_grid, "Number", player.number);
 
                             let state: &str;
@@ -250,9 +267,11 @@ impl ZappyUi {
                         });
                 });
         }
+        state
     }
 
-    pub(crate) fn players(&mut self, ctx: &CtxRef, players: &mut Vec<Tantorian>, teams: &Vec<String>, is_active: bool) {
+    pub(crate) fn players(&mut self, ctx: &CtxRef, players: &mut Vec<Tantorian>, teams: &Vec<String>, is_active: bool) -> (PlayerAction, i64, String) {
+        let mut state = (PlayerAction::Nothing, 0, String::from(""));
         egui::Window::new("Players")
             .enabled(!is_active)
             .resizable(true)
@@ -261,10 +280,10 @@ impl ZappyUi {
                     egui::CollapsingHeader::new(team)
                         .default_open(false)
                         .show(ui, |col| {
-                            ZappyUi::team(col, players, team);
+                            state = ZappyUi::team(col, players, team);
                         });
                 }
             });
-
+        state
     }
 }
