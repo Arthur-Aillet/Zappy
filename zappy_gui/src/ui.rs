@@ -7,6 +7,7 @@ use crate::ui::State::{Connect, Disconnect, Nothing};
 
 pub(crate) struct ZappyUi {
     pub selected_tile: Option<[usize; 2]>,
+    pub selected_time_unit: i32,
     pub network_messages: Vec<(Duration, String)>,
     pub broadcast_messages: Vec<(Duration, String, i64, String)>,
 }
@@ -29,6 +30,7 @@ impl ZappyUi {
     pub(crate) fn new() -> ZappyUi {
         ZappyUi {
             selected_tile: None,
+            selected_time_unit: 100,
             network_messages: vec![],
             broadcast_messages: vec![],
         }
@@ -43,7 +45,8 @@ impl ZappyUi {
         );
     }
 
-    pub(crate) fn settings(&mut self, ctx: &CtxRef, camera: &mut rend_ox::camera::Camera, is_active: bool) {
+    pub(crate) fn settings(&mut self, ctx: &CtxRef, camera: &mut rend_ox::camera::Camera, is_active: bool) -> Option<i32> {
+        let mut time_unit = None;
         egui::Window::new("Settings").enabled(!is_active).show(
             &ctx,
             |ui| {
@@ -51,8 +54,14 @@ impl ZappyUi {
                 ui.add(egui::Slider::new(&mut camera.speed, 0.1..=10.0).text("Speed:"));
                 ui.add(egui::Slider::new(&mut camera.fov, 60.0..=150.0).text("FOV:"));
                 ui.add(egui::Slider::new(&mut camera.sensitivity, 0.1..=10.0).text("Sensitivity:"));
+                ui.label("Game:");
+                ui.add(egui::Slider::new(&mut self.selected_time_unit, 1..=10000).text("Time unit:").logarithmic(true));
+                if ui.add(egui::Button::new("Request change")).clicked() {
+                    time_unit = Some(self.selected_time_unit);
+                }
             },
         );
+        time_unit
     }
 
     pub(crate) fn network_status(&mut self, ctx: &CtxRef, is_active: bool, port: &mut String, hostname: &mut String, status: bool) -> State {

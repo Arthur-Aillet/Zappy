@@ -130,20 +130,17 @@ impl Zappy {
         }
         {
             for player in &mut app.user.players {
-                println!("{:?} {:?}", player.last_tile, player.current_tile);
                 if let Some(movement_start) = &player.start_movement {
                     let mut new_pos: Vec2 = player.last_tile as Vec2;
-
                     let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
+                    let modifier = 1. / (7. / app.user.time_unit);
 
-                    println!("prog {}", progress);
-                    if progress >= 1. {
-                        progress = 1.;
+                    if progress >= 1. / modifier {
+                        progress = 1. / modifier;
                         player.start_movement = None;
                     }
 
-                    new_pos = new_pos.lerp(player.current_tile as Vec2, progress);
-
+                    new_pos = new_pos.lerp(player.current_tile as Vec2, progress * modifier);
                     player.pos = Vec3 {
                         x: new_pos.x as f32 + 0.5,
                         y: new_pos.y as f32 + 0.5,
@@ -161,8 +158,14 @@ impl Zappy {
 }
 
 pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
-    zappy.user.ui
-        .settings(ctx, &mut zappy.camera, zappy.camera_is_active);
+    if let Some(new_time_unit) = zappy.user.ui .settings(ctx, &mut zappy.camera, zappy.camera_is_active) {
+        if let Some(server) = &mut zappy.user.server {
+            if server.send_to_server("sst", new_time_unit, -1) == false {
+                zappy.user.close_connection(at);
+                zappy.user.reset_server_data();
+            }
+        }
+    }
     let (action, player_number, team_name) = zappy.user.ui
         .players(ctx, &mut zappy.user.players, &zappy.user.team_names, zappy.camera_is_active);
     if action == crate::ui::PlayerAction::Follow {
