@@ -24,12 +24,12 @@ player_t set_player(size_t x, size_t y, size_t freq)
     new.satiety = 10;
     new.start = time(NULL);
     new.time = 126 / freq;
-    new.inventory = malloc(sizeof(size_t) * 7);
+    new.inventory = malloc(sizeof(size_t) * 8);
     if (new.inventory == NULL) {
         error("Couldn't allocate inventory", 0);
         return new;
     }
-    for (size_t i = 0; i < 7; i++)
+    for (size_t i = 0; i < 8; i++)
         new.inventory[i] = 0;
     return new;
 }

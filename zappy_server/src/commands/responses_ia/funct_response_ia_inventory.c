@@ -11,45 +11,53 @@ static void inventory_phiras(ia_t *ia)
 {
     char buffer_inventory[256];
 
-    strcat((char*)ia->buffer.bufferWrite.octets, "phiras ");
-    strcat((char*)ia->buffer.bufferWrite.octets, buffer_inventory);
-    strcat((char*)ia->buffer.bufferWrite.octets, ", ");
-    sprintf(buffer_inventory, "%ld", ia->player->inventory[6]);
-    ia->buffer.bufferWrite.usedSize += 11 + strlen(buffer_inventory);
+    sprintf(buffer_inventory, "%ld", ia->player->inventory[PHIRAS]);
+    ia->buffer.bufferWrite.usedSize += 10 + strlen(buffer_inventory);
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
     sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
+    strcat((char*)ia->buffer.bufferWrite.octets, "phiras ");
+    strcat((char*)ia->buffer.bufferWrite.octets, buffer_inventory);
+    strcat((char*)ia->buffer.bufferWrite.octets, ", ");
 }
 
 static void inventory_thystame(ia_t *ia)
 {
     char buffer_inventory[256];
 
+    sprintf(buffer_inventory, "%ld", ia->player->inventory[THYSTAME]);
+    ia->buffer.bufferWrite.usedSize += 12 + strlen(buffer_inventory);
+    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
+    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
+    if (ia->buffer.bufferWrite.octets == NULL) {
+        return;
+    }
     strcat((char*)ia->buffer.bufferWrite.octets, "thystame ");
     strcat((char*)ia->buffer.bufferWrite.octets, buffer_inventory);
     strcat((char*)ia->buffer.bufferWrite.octets, ", ");
-    sprintf(buffer_inventory, "%ld", ia->player->inventory[7]);
+}
+
+static void inventory_egg(ia_t *ia)
+{
+    char buffer_inventory[256];
+    sprintf(buffer_inventory, "%ld", ia->player->inventory[EGG]);
     ia->buffer.bufferWrite.usedSize += 7 + strlen(buffer_inventory);
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
     sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
-}
-
-static void inventory_egg(ia_t *ia)
-{
-    char buffer_inventory[256];
-
     strcat((char*)ia->buffer.bufferWrite.octets, "egg ");
     strcat((char*)ia->buffer.bufferWrite.octets, buffer_inventory);
     strcat((char*)ia->buffer.bufferWrite.octets, "]\n\0");
+    ia->buffer.bufferWrite.usedSize = strlen((char*)ia->buffer.bufferWrite.octets);
 }
 
 static void funct_result_response_ia_inventory(ia_t *ia)
 {
+    ia->buffer.bufferWrite.octets = malloc(sizeof(char));
     ia->buffer.bufferWrite.octets[0] = '\0';
     inventory_food(ia);
     inventory_linemate(ia);
@@ -66,17 +74,8 @@ static void funct_result_response_ia_inventory(ia_t *ia)
 void funct_response_ia_inventory(uint8_t **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
-    char buffer_inventory[256];
-
     (void)args;
     (void)com;
-    sprintf(buffer_inventory, "%ld", ia->player->inventory[0]);
-    ia->buffer.bufferWrite.usedSize = 8 + strlen(buffer_inventory);
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
-        return;
-    }
     funct_result_response_ia_inventory(ia);
-    printf("rentrer dans la fonctions funct_response_ia_inventory\n");
+    basic_log("Check his inventory", C, 0);
 }
