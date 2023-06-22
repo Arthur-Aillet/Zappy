@@ -7,52 +7,50 @@
 
 #include "zappy.h"
 
-static void to_take_ressources_response_ia_player(int *post_ressources,
-                                    int *post_tmp, ia_t *ia, common_t *com)
+static void to_take_ressources_response_ia_player(player_t *player, ia_t *ia,
+                                                 int *pos)
 {
-    if (com->teams[post_tmp[0]].players[post_tmp[1]].x == post_ressources[0] &&
-        com->teams[post_tmp[0]].players[post_tmp[1]].y == post_ressources[1]) {
+    if (player->x == pos[0] && player->y == pos[1]) {
         ia->buffer.bufferWrite.usedSize += 7;
+        printf("player: usedSize: %ld\n", ia->buffer.bufferWrite.usedSize);
         ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
                         sizeof(u_int8_t) * ia->buffer.bufferWrite.usedSize);
         if (ia->buffer.bufferWrite.octets == NULL) {
             return;
         }
-        ia->buffer.bufferWrite.octets = (u_int8_t *)
-            strcat((char *)ia->buffer.bufferWrite.octets, "player ");
+        strcat((char *)ia->buffer.bufferWrite.octets, "player ");
     }
 }
 
-static void to_take_ressources_response_ia_egg(int *post_ressources,
-                                    int *post_tmp, ia_t *ia, common_t *com)
+static void to_take_ressources_response_ia_egg(int *pos, int *post_tmp,
+                                                ia_t *ia, common_t *com)
 {
-    if (com->teams[post_tmp[0]].egg[post_tmp[1]].x == post_ressources[0] &&
-        com->teams[post_tmp[0]].egg[post_tmp[1]].y == post_ressources[1]) {
+    if (com->teams[post_tmp[0]].egg[post_tmp[1]].x == pos[0] &&
+        com->teams[post_tmp[0]].egg[post_tmp[1]].y == pos[1]) {
         ia->buffer.bufferWrite.usedSize += 4;
+        printf("egg: usedSize: %ld\n", ia->buffer.bufferWrite.usedSize);
         ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
                         sizeof(u_int8_t) * ia->buffer.bufferWrite.usedSize);
         if (ia->buffer.bufferWrite.octets == NULL) {
             return;
         }
-        ia->buffer.bufferWrite.octets = (u_int8_t *)
-                strcat((char *)ia->buffer.bufferWrite.octets, "egg ");
+        strcat((char *)ia->buffer.bufferWrite.octets, "egg ");
     }
 }
 
 static void to_take_ressources_response_ia_bis(ia_t *ia,
                                         common_t *com, int x, int y)
 {
-    int post_ressources[2];
+    int pos[2];
     int post_tmp[2];
 
+    pos[0] = x;
+    pos[1] = y;
     for (size_t i = 0; i < com->nb_teams; i++) {
         for (size_t j = 0; j < com->teams[i].nb_eggs; j++) {
-            post_ressources[0] = x;
-            post_ressources[1] = x;
             post_tmp[0] = i;
             post_tmp[1] = j;
-            to_take_ressources_response_ia_egg(post_ressources,
-                                            post_tmp, ia, com);
+            to_take_ressources_response_ia_egg(pos, post_tmp, ia, com);
         }
     }
     to_take_ressources_response_ia_food(ia, com, x, y);
@@ -61,18 +59,15 @@ static void to_take_ressources_response_ia_bis(ia_t *ia,
 void to_take_ressources_response_ia(ia_t *ia, common_t *com,
                                                 int x, int y)
 {
-    int post_ressources[2];
-    int post_tmp[2];
+    int pos[2];
 
-    for (size_t i = 0; i < com->nb_teams; i++) {
-        for (size_t j = 0; j < com->teams[i].actif_player; j++) {
-            post_ressources[0] = x;
-            post_ressources[1] = x;
-            post_tmp[0] = i;
-            post_tmp[1] = j;
-            to_take_ressources_response_ia_player(post_ressources,
-                                                    post_tmp, ia, com);
-        }
+    pos[0] = x;
+    pos[1] = y;
+    printf("case 0: usedSize: %ld\n", ia->buffer.bufferWrite.usedSize);
+    for (size_t j = 0; j < MAX_PLAYER; j++) {
+        if (com->ia[j].player == NULL)
+            continue;
+        to_take_ressources_response_ia_player(com->ia[j].player, ia, pos);
     }
     to_take_ressources_response_ia_bis(ia, com, x, y);
 }
