@@ -181,10 +181,4 @@ impl Tantorian {
             thystame: 0,
         })
     }
-
-    // pub fn update(&mut self, server: &mut ServerConn) {}
-
-    // pub fn draw(&self, &mut app: &mut App) {
-    //     app.draw(self.mesh_descriptor, rend_ox::glam::Mat4::from_translation(self.pos.into()));
-    // }
 }

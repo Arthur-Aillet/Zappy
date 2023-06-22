@@ -125,41 +125,43 @@ impl Zappy {
         }
     }
 
-    pub fn render(app: &mut App<Zappy>, update: &Update) {
+    pub fn update_players(app: &mut App<Zappy>, update: &Update) {
+        for player in &mut app.user.players {
+            if let Some(movement_start) = &player.start_movement {
+                let mut new_pos: Vec2 = player.last_tile as Vec2;
+                let mut new_rot: f32 = player.last_orientation.as_radian();
+                let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
+                let modifier = 1. / (7. / app.user.time_unit);
+
+                if progress >= 1. / modifier {
+                    progress = 1. / modifier;
+                    player.start_movement = None;
+                }
+
+                new_pos = new_pos.lerp(player.current_tile as Vec2, progress * modifier);
+                new_rot = lerp(new_rot, player.orientation.as_radian(), progress * modifier);
+                player.pos = Vec3 {
+                    x: new_pos.x as f32 + 0.5,
+                    y: new_pos.y as f32 + 0.5,
+                    z: 0.666,
+                };
+                player.rotation = Vec3 {
+                    x: PI/2.,
+                    y: new_rot,
+                    z: 0.,
+                };
+            }
+        }
+    }
+
+    pub fn render(app: &mut App<Zappy>) {
         let player_mesh : &MeshDescriptor;
         if let Some(mesh) = &app.user.tantorian_mesh {
             player_mesh = mesh
         } else {
             return;
         }
-        {
-            for player in &mut app.user.players {
-                if let Some(movement_start) = &player.start_movement {
-                    let mut new_pos: Vec2 = player.last_tile as Vec2;
-                    let mut new_rot: f32 = player.last_orientation.as_radian();
-                    let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
-                    let modifier = 1. / (7. / app.user.time_unit);
 
-                    if progress >= 1. / modifier {
-                        progress = 1. / modifier;
-                        player.start_movement = None;
-                    }
-
-                    new_pos = new_pos.lerp(player.current_tile as Vec2, progress * modifier);
-                    new_rot = lerp(new_rot, player.orientation.as_radian(), progress * modifier);
-                    player.pos = Vec3 {
-                        x: new_pos.x as f32 + 0.5,
-                        y: new_pos.y as f32 + 0.5,
-                        z: 0.666,
-                    };
-                    player.rotation = Vec3 {
-                        x: PI/2.,
-                        y: new_rot,
-                        z: 0.,
-                    };
-                }
-            }
-        }
         for player in &app.user.players {
             app.draw_at(player_mesh, player.color.clone(), player.pos.clone(), player.rotation.clone(), Vec3::new(0.333, 0.333, 0.333));
         }
@@ -278,7 +280,8 @@ pub(crate) fn zappy_update(
 ) {
     rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
     following(nannou_app, zappy);
-    Zappy::render(zappy, &update);
+    Zappy::render(zappy);
+    Zappy::update_players(zappy, &update);
     zappy.user.interpret_commands(update.since_start);
     ask_for_update(&mut zappy.user, update.since_start);
     display_ui(zappy, update.since_start, ctx);
