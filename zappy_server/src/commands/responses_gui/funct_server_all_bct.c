@@ -12,7 +12,7 @@ static void funct_ressources_on_tiles(gui_t *gui, size_t x,
 {
     for (int i = 0; i < 7; i++) {
         sprintf(buffer_x, "%ld", gui->map.tiles[x][y].ressources[i]);
-        gui->buffer.bufferWrite.usedSize += strlen(buffer_x) + 1;
+        gui->buffer.bufferWrite.usedSize += strlen(buffer_x) + 3;
         gui->buffer.bufferWrite.octets =
         realloc(gui->buffer.bufferWrite.octets,
         sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize));
@@ -22,6 +22,7 @@ static void funct_ressources_on_tiles(gui_t *gui, size_t x,
         strcat((char*)gui->buffer.bufferWrite.octets, buffer_x);
         strcat((char*)gui->buffer.bufferWrite.octets, " ");
     }
+    strcat((char*)gui->buffer.bufferWrite.octets, "\n");
 }
 
 static void funct_post_tiles(char *buffer_x, char *buffer_y, gui_t *gui)
@@ -55,8 +56,8 @@ static void funct_for_on_tiles(gui_t *gui)
             funct_post_tiles(buffer_x, buffer_y, gui);
             funct_ressources_on_tiles(gui, nbr_tiles_width,
             nbr_tiles_height, buffer_x);
-            gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize]
-                                                                    = '\n';
+            // gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize - 1]
+            //                                                         = '\n';
         }
     }
 }
@@ -75,8 +76,8 @@ void funct_server_all_bct(uint8_t **args, void *info, common_t *common)
     }
     gui->buffer.bufferWrite.octets[0] = '\0';
     funct_for_on_tiles(gui);
-    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize] = '\0';
+    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize - 1] = '\0';
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-            gui->buffer.bufferWrite.usedSize);
+            strlen((char*)gui->buffer.bufferWrite.octets));
     printf("rentrer dans la fonctions funct_server_all_bct\n");
 }
