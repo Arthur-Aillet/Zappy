@@ -9,12 +9,12 @@
 
 void funct_response_ia_connect_nbr(uint8_t **args, void *info, common_t *com)
 {
+    (void)args;
     ia_t *ia = (ia_t *)info;
     team_t *team = to_find_team_by_int(ia->player->id, com);
     char buffer_nb_slot[256];
 
-    (void)args;
-    sprintf(buffer_nb_slot, "%ld", team->nb_slot);
+    sprintf(buffer_nb_slot, "%ld", (team->nb_slot - team->actif_player));
     ia->buffer.bufferWrite.usedSize = strlen(buffer_nb_slot) + 2;
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
                     sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));

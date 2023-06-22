@@ -61,8 +61,12 @@ static int calculate_broadcast_angle(ia_t *ia, player_t *player, map_t map)
 static void send_message_to_players(common_t *com, uint8_t **args, ia_t *ia)
 {
     player_t *player;
-    size_t buffer_size = (strlen((char*)args[0]) + 13);
-    char *buffer = malloc(sizeof(char) * buffer_size);
+    size_t buffer_size = 12;
+    char *buffer;
+
+    for (int i = 0; args[i] != NULL; i++)
+        buffer_size += (strlen((char*)args[i]) + 1);
+    buffer = malloc(sizeof(char) * buffer_size);
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (com->client[i].type != IA)
             continue;
@@ -70,8 +74,14 @@ static void send_message_to_players(common_t *com, uint8_t **args, ia_t *ia)
         if (player->id == ia->player->id)
             continue;
         int k = calculate_broadcast_angle(ia, player, com->gui->map);
-        sprintf(buffer, "message %d, %s\n", k, args[0]);
-        write(com->client[i].socket, buffer, buffer_size);
+        sprintf(buffer, "message %d,", k);
+        for (int j = 0; args[j] != NULL; j++) {
+            printf(" %s", (char*)args[j]);
+            strcat(buffer, " ");
+            strcat(buffer, (char*)args[j]);
+        }
+        strcat(buffer, "\n");
+        write(com->client[i].socket, buffer, strlen(buffer));
     }
     free(buffer);
 }
