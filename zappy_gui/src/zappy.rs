@@ -19,7 +19,7 @@ use crate::ui::ZappyUi;
 pub struct Zappy {
     pub(crate) map: Map,
     pub(crate) players: Vec<Tantorian>,
-    pub(crate) team_names: Vec<String>,
+    pub(crate) teams: Vec<(String, Vec3)>,
     pub(crate) server: Option<ServerConn>,
     pub(crate) ui: ZappyUi,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
@@ -82,7 +82,7 @@ impl Zappy {
         Zappy {
             map: Map::new(0, 0),
             players: vec![],
-            team_names: vec![],
+            teams: vec![],
             server: None,
             ui: ZappyUi::new(),
             tantorian_mesh: None,
@@ -177,7 +177,7 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
         }
     }
     let (action, player_number, team_name) = zappy.user.ui
-        .players(ctx, &mut zappy.user.players, &zappy.user.team_names, zappy.camera_is_active);
+        .players(ctx, &mut zappy.user.players, &mut zappy.user.teams, zappy.camera_is_active);
     if action == crate::ui::PlayerAction::Follow {
         for player in &zappy.user.players {
             if player.team_name == team_name && player.number == player_number {

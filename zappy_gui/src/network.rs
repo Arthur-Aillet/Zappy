@@ -6,7 +6,7 @@ use crate::zappy::Zappy;
 
 impl Zappy {
     pub(crate) fn reset_server_data(&mut self) {
-        self.team_names = vec![];
+        self.teams = vec![];
         self.players = vec![];
         self.time_unit = 100.0;
         self.map.resize(8, 8);

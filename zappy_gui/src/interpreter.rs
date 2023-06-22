@@ -1,4 +1,4 @@
-use crate::tantorian::{Orientation, Tantorian};
+use crate::tantorian::{generate_color_from_string, Orientation, Tantorian};
 use crate::zappy::Zappy;
 use regex::Regex;
 use std::collections::HashMap;
@@ -185,7 +185,7 @@ impl Zappy {
         if args.len() != 2 {
             println!("seg: wrong number of arguments");
         } else {
-            if !self.team_names.contains(&args[1].to_string()) {
+            if !self.teams.iter().any(|(name, _color)| *name == args[1].to_string()) {
                 println!("seg: invalid team name");
             } else {
                 self.close_connection(at);
@@ -246,7 +246,7 @@ impl Zappy {
                 Orientation::from_usize(orientation),
                 level,
                 team_name,
-                &self.team_names,
+                &self.teams,
                 &self.map.size,
                 &mut self.players,
             ) {
@@ -263,8 +263,11 @@ impl Zappy {
         if args.len() != 2 {
             println!("tna: wrong number of arguments");
         } else {
-            if !self.team_names.contains(&args[1].to_string()) {
-                self.team_names.push(args[1].to_string())
+            let team_name = args[1].to_string();
+            if !self.teams.iter().any(|(name, _color)| name == &team_name) {
+                let color = generate_color_from_string(&team_name);
+
+                self.teams.push((team_name, color))
             } else {
                 println!("tna: Team name already given");
             }

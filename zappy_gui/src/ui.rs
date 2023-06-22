@@ -1,8 +1,9 @@
 use std::fmt::Display;
 use std::time::Duration;
 use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
+use rend_ox::Vec3;
 
-use crate::tantorian::Tantorian;
+use crate::tantorian::{generate_color_from_string, Tantorian};
 use crate::ui::State::{Connect, Disconnect, Nothing};
 
 pub(crate) struct ZappyUi {
@@ -229,10 +230,10 @@ impl ZappyUi {
         state
     }
 
-    pub(crate) fn team(ui :&mut Ui, players: &mut Vec<Tantorian>, team_name: &String) -> (PlayerAction, i64, String) {
+    pub(crate) fn team(ui :&mut Ui, players: &mut Vec<Tantorian>, team: &(String, Vec3)) -> (PlayerAction, i64, String) {
         let mut state = (PlayerAction::Nothing, 0, String::from(""));
 
-        for player in players.iter_mut().filter(|x| {x.team_name == *team_name}) {
+        for player in players.iter_mut().filter(|x| {x.team_name == team.0}) {
             egui::CollapsingHeader::new(player.number)
                 .default_open(false)
                 .show(ui, |col| {
@@ -241,10 +242,10 @@ impl ZappyUi {
                         .striped(true)
                         .show(col, |ui_grid| {
                             if ui_grid.add(egui::Button::new("Go to")).clicked() {
-                                state = (PlayerAction::GoTo, player.number, team_name.clone());
+                                state = (PlayerAction::GoTo, player.number, team.0.clone());
                             }
                             if ui_grid.add(egui::Button::new("Follow")).clicked() {
-                                state = (PlayerAction::Follow, player.number, team_name.clone());
+                                state = (PlayerAction::Follow, player.number, team.0.clone());
                             }
                             ui_grid.end_row();
                             ZappyUi::display_stat(ui_grid, "Number", player.number);
@@ -278,21 +279,33 @@ impl ZappyUi {
         state
     }
 
-    pub(crate) fn players(&mut self, ctx: &CtxRef, players: &mut Vec<Tantorian>, teams: &Vec<String>, is_active: bool) -> (PlayerAction, i64, String) {
+    pub(crate) fn players(&mut self, ctx: &CtxRef, players: &mut Vec<Tantorian>, teams: &mut Vec<(String, Vec3)>, is_active: bool) -> (PlayerAction, i64, String) {
         let mut state = (PlayerAction::Nothing, 0, String::from(""));
+        let mut what_team_color_regenerate: Option<usize> = None;
         egui::Window::new("Players")
             .enabled(!is_active)
             .resizable(true)
             .vscroll(true)
             .show(ctx, |ui| {
-                for team in teams {
-                    egui::CollapsingHeader::new(team)
+                for (team_index, team) in teams.iter_mut().enumerate() {
+                    egui::CollapsingHeader::new(&team.0)
                         .default_open(false)
                         .show(ui, |col| {
-                            state = ZappyUi::team(col, players, team);
+                            col.add(egui::Label::new(format!("Color:")).underline());
+                            if col.color_edit_button_rgb(team.1.as_mut()).changed() {
+                                what_team_color_regenerate = Some(team_index);
+                            }
+                            state = ZappyUi::team(col, players, &team);
                         });
                 }
             });
+        if let Some(team_index) = what_team_color_regenerate {
+            for player in players {
+                if player.team_name == teams[team_index].0 {
+                    player.color = teams[team_index].1.lerp(generate_color_from_string(&format!("{}", player.number)), 0.2);
+                }
+            }
+        }
         state
     }
 }

@@ -43,7 +43,7 @@ impl Orientation {
     }
 }
 
-fn generate_color_from_string(string: &String) -> Vec3 {
+pub fn generate_color_from_string(string: &String) -> Vec3 {
     let mut hasher = DefaultHasher::new();
     string.hash(&mut hasher);
     let hash = hasher.finish();
@@ -103,8 +103,8 @@ impl Tantorian {
         }
     }*/
 
-    pub fn new_from_command(number: i64, x: usize, y: usize, orientation: Orientation, level : u32, team_name: String, teams: &Vec<String>, map_size: &[usize; 2], players: &mut Vec<Tantorian>) -> Option<Tantorian> {
-        if !teams.contains(&team_name) {
+    pub fn new_from_command(number: i64, x: usize, y: usize, orientation: Orientation, level : u32, team_name: String, teams: &Vec<(String, Vec3)>, map_size: &[usize; 2], players: &mut Vec<Tantorian>) -> Option<Tantorian> {
+        if !teams.iter().any(|(name, _color)| *name == team_name) {
             println!("New player team name does not exist!");
             return None;
         }
@@ -151,14 +151,18 @@ impl Tantorian {
             }
         }
 
-        let team_color = generate_color_from_string(&team_name);
         let number_color = generate_color_from_string(&format!("{number}"));
-
+        let mut team_color = Vec3::default();
+        for (current_name, current_color) in teams {
+            if current_name == &team_name {
+                team_color = current_color.clone();
+            }
+        }
         Some(Tantorian {
             team_name,
             number,
             pos,
-            color: team_color.lerp(number_color, 0.85),
+            color: team_color.lerp(number_color, 0.2),
             level,
             orientation,
             last_orientation: orientation,
