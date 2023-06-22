@@ -237,7 +237,6 @@ pub(crate) fn zappy_update(
 ) {
     rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
     following(nannou_app, zappy);
-    println!("{:?}", zappy.user.following);
     Zappy::render(zappy);
     zappy.user.interpret_commands(update.since_start);
     ask_for_update(&mut zappy.user, update.since_start);
