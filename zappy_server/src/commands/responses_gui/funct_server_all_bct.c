@@ -7,12 +7,11 @@
 
 #include "zappy.h"
 
-static void funct_ressources_on_tiles(gui_t *gui, uint8_t **args,
-                                    char *buffer_x)
+static void funct_ressources_on_tiles(gui_t *gui, size_t x,
+                                        size_t y, char *buffer_x)
 {
     for (int i = 0; i < 7; i++) {
-        sprintf(buffer_x, "%ld", gui->map.tiles[atoi((char*)args[0])]
-                                        [atoi((char*)args[1])].ressources[i]);
+        sprintf(buffer_x, "%ld", gui->map.tiles[x][y].ressources[i]);
         gui->buffer.bufferWrite.usedSize += strlen(buffer_x) + 1;
         gui->buffer.bufferWrite.octets =
         realloc(gui->buffer.bufferWrite.octets,
@@ -42,7 +41,7 @@ static void funct_post_tiles(char *buffer_x, char *buffer_y, gui_t *gui)
     strcat((char*)gui->buffer.bufferWrite.octets, " ");
 }
 
-static void funct_for_on_tiles(gui_t *gui, uint8_t **args)
+static void funct_for_on_tiles(gui_t *gui)
 {
     char buffer_y[256];
     char buffer_x[256];
@@ -54,7 +53,8 @@ static void funct_for_on_tiles(gui_t *gui, uint8_t **args)
             sprintf(buffer_x, "%ld", nbr_tiles_width);
             sprintf(buffer_y, "%ld", nbr_tiles_height);
             funct_post_tiles(buffer_x, buffer_y, gui);
-            funct_ressources_on_tiles(gui, args, buffer_x);
+            funct_ressources_on_tiles(gui, nbr_tiles_width,
+            nbr_tiles_height, buffer_x);
             gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize]
                                                                     = '\n';
         }
@@ -63,9 +63,10 @@ static void funct_for_on_tiles(gui_t *gui, uint8_t **args)
 
 void funct_server_all_bct(uint8_t **args, void *info, common_t *common)
 {
-    (void)common;
     gui_t *gui = (gui_t *)info;
 
+    (void)common;
+    (void)args;
     gui->buffer.bufferWrite.usedSize = 1;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
                     sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize));
@@ -73,7 +74,7 @@ void funct_server_all_bct(uint8_t **args, void *info, common_t *common)
         return;
     }
     gui->buffer.bufferWrite.octets[0] = '\0';
-    funct_for_on_tiles(gui, args);
+    funct_for_on_tiles(gui);
     gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize] = '\0';
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
             gui->buffer.bufferWrite.usedSize);
