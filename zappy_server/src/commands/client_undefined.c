@@ -28,17 +28,50 @@ static int check_graphic(uint8_t **command, common_t *com, int idx)
     return 1;
 }
 
+static void prepare_response_ia(uint8_t *response, char *buffer_nb_slot,
+                                char *buffer_x, char *buffer_y)
+{
+    response[0] = '\0';
+    response = (uint8_t *)strcat((char *)response, buffer_nb_slot);
+    response = (uint8_t *)strcat((char *)response, "\n");
+    response = (uint8_t *)strcat((char *)response, buffer_x);
+    response = (uint8_t *)strcat((char *)response, "\n");
+    response = (uint8_t *)strcat((char *)response, buffer_y);
+    response = (uint8_t *)strcat((char *)response, "\n\0");
+}
+
+static void response_start_ia(client_t client, common_t *com)
+{
+    char buffer_x[256];
+    char buffer_y[256];
+    char buffer_nb_slot[256];
+    int size = 0;
+    uint8_t *response;
+    player_t *player = (player_t *)client.str_cli;
+
+    sprintf(buffer_nb_slot, "%ld",
+    to_find_team_by_int(player->id, com)->nb_slot);
+    sprintf(buffer_x, "%ld", com->gui->map.width);
+    sprintf(buffer_y, "%ld", com->gui->map.height);
+    size = strlen(buffer_nb_slot) + strlen(buffer_x) + strlen(buffer_y) + 4;
+    response = malloc(sizeof(uint8_t) * size);
+    if (response == NULL) {
+        return;
+    }
+    prepare_response_ia(response, buffer_nb_slot, buffer_x, buffer_y);
+    write(client.socket, response, size);
+}
+
 int undefined_client_command(uint8_t **command, common_t *com, int idx)
 {
     if (check_graphic(command, com, idx) == 1) {
-        //TODO - send command msz
-        //TODO - send command sgt
-        //TODO - send command bct for all tiles
+        funct_server_msz(NULL, com->gui, com);
+        funct_server_sgt(NULL, com->gui, com);
+        funct_server_all_bct(NULL, com->gui, com);
         write(com->client[idx].socket, "graphic command\n", 16);
     } else if (check_teams_name((char*)command[0], com, idx) == 1){
         write(com->client[idx].socket, "player command\n", 15);
-        //TODO - send client num `TEAM(i).nb_slot`
-        //TODO - send world's dimension
+        response_start_ia(com->client[idx], com);
     } else {
         return error("Invalid command for defined the client", 0);
     }
