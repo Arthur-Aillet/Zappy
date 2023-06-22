@@ -283,6 +283,7 @@ impl ZappyUi {
         egui::Window::new("Players")
             .enabled(!is_active)
             .resizable(true)
+            .vscroll(true)
             .show(ctx, |ui| {
                 for team in teams {
                     egui::CollapsingHeader::new(team)

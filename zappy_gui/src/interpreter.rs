@@ -87,10 +87,12 @@ impl Zappy {
             if found == false {
                 println!("pin: player not found");
             }
+        } else {
+            println!("pin: invalid command given");
         }
     }
 
-    fn player_level(&mut self, command: String, at: Duration) {
+    fn player_level(&mut self, command: String, _at: Duration) {
         let re = Regex::new(r"^plv (-?\d+) ([1-8])$")
             .expect("Invalid regex");
 
@@ -108,6 +110,8 @@ impl Zappy {
             if found == false {
                 println!("plv: player not found");
             }
+        } else {
+            println!("plv: invalid command given");
         }
     }
 
@@ -147,6 +151,8 @@ impl Zappy {
             if found == false {
                 println!("ppo: player not found");
             }
+        } else {
+            println!("ppo: invalid command given");
         }
     }
 
