@@ -28,14 +28,11 @@ static void funct_ressources_on_tiles(gui_t *gui, size_t x,
 static void funct_post_tiles(char *buf_x, char *buf_y, gui_t *gui)
 {
     gui->buffer.bufferWrite.usedSize += 7 + strlen(buf_x) + strlen(buf_y);
-    printf("here\n");
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
                     sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize));
-    printf("here\n");
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }
-    printf("here\n");
     strcat((char*)gui->buffer.bufferWrite.octets, "bct");
     strcat((char*)gui->buffer.bufferWrite.octets, " ");
     strcat((char*)gui->buffer.bufferWrite.octets, buf_x);
@@ -65,14 +62,15 @@ void funct_server_bct(uint8_t **args, void *info, common_t *common)
     }
     gui->buffer.bufferWrite.usedSize = 6 + strlen((char*)args[0]) +
                                         strlen((char*)args[1]);
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                        sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize));
+    free(gui->buffer.bufferWrite.octets);
+    gui->buffer.bufferWrite.octets = malloc(sizeof(uint8_t) *
+                                    (gui->buffer.bufferWrite.usedSize));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }
+    gui->buffer.bufferWrite.octets[0] = '\0';
     funct_prepare_response(gui, atoi((char*)args[0]), atoi((char*)args[1]));
-    printf("test: %s\n", gui->buffer.bufferWrite.octets);
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-        gui->buffer.bufferWrite.usedSize);
+        strlen((char*)gui->buffer.bufferWrite.octets));
     printf("rentrer dans la fonctions funct_server_bct\n");
 }
