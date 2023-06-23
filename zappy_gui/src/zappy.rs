@@ -178,10 +178,7 @@ impl Zappy {
 pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
     if let Some(new_time_unit) = zappy.user.ui.settings(ctx, &mut zappy.camera, zappy.camera_is_active) {
         if let Some(server) = &mut zappy.user.server {
-            if server.send_to_server("sst", new_time_unit, -1) == false {
-                zappy.user.close_connection(at);
-                zappy.user.reset_server_data();
-            }
+            server.send_to_server("sst", new_time_unit, -1);
         }
     }
     let (action, player_number, team_name) = zappy.user.ui
