@@ -13,6 +13,38 @@
 
 from server_action import broadcast
 from datatypes import Creature
+import re
+
+class messageinfo:
+    valid : bool
+    text : str
+    id : int
+    number : int
+    direction: int
+
+def get_validation(message:str, creature: Creature):
+    split = message.split("-")
+    id = split[0]
+    number = split[1]
+    expected = -1
+    for creature in creature.other_creatures:
+        if creature.id == id:
+            expected = creature.message_index
+    if expected == -1:
+        creature.other_creatures.append({"lvl": 0, "role": Creature.Types.BABY, "id": id, "messages": number})
+    else:
+        if expected - 2 <= number <= expected + 2:
+            return id, number, True
+        else:
+            return id, number, False
+
+def getmsginfo(message: str, creature: Creature):
+    splitted = re.split(",||", message)
+    result = messageinfo()
+    result.direction = splitted[0].split(" ")[1]
+    result.id, result.number, result.valid = get_validation(splitted[1], creature)
+    result.text = splitted[2]
+    return result
 
 def role_call(client, id, nb):
     """!
@@ -26,7 +58,7 @@ def role_call(client, id, nb):
     @return Return the value returned by the broadcast(client, text) function (that return the
     succes or fail of the send_server function with True or False).
     """
-    return broadcast(client, str(id) + "-" + str(nb) + " role call" + " - " + "-@everyone")
+    return broadcast(client, str(id) + "-" + str(nb) + "|" "role call" + " - " + "@everyone")
 
 def change_profession(client, id, nb, target, type):
     """!
@@ -42,7 +74,7 @@ def change_profession(client, id, nb, target, type):
     @return Return the value returned by the broadcast(client, text) function (that return the
     succes or fail of the send_server function with True or False).
     """
-    return(broadcast(client, str(id) + "-" + str(nb) + target + " deviens" + type + " - " + "et plus vite que ca"))
+    return(broadcast(client, str(id) + "-" + str(nb) + "|" + target + " deviens" + type + " - " + "et plus vite que ca"))
 
 def status_report(client, id, nb, type, level):
     """!
@@ -58,7 +90,7 @@ def status_report(client, id, nb, type, level):
     @return Return the value returned by the broadcast(client, text) function (that return the
     succes or fail of the send_server function with True or False).
     """
-    return broadcast(client, str(id) + "-" + str(nb) + " my job is " + type + " " + level + " - " + "engagez vous qu'ils disaient")
+    return broadcast(client, str(id) + "-" + str(nb) + "|" + "my job is " + type + " " + level + " - " + "engagez vous qu'ils disaient")
 
 def dict_to_str(dict: dict[str, int]):
     result = ""
@@ -80,7 +112,7 @@ def take_this(client, id, nb, to_take: str):
     @return Return the value returned by the broadcast(client, text) function (that return the
     succes or fail of the send_server function with True or False).
     """
-    return broadcast(client, str(id) + "-" + str(nb) + " it's dangerous to go alone " + dict_to_str(str) + " - " + "take this")
+    return broadcast(client, str(id) + "-" + str(nb) + "|" + "it's dangerous to go alone " + dict_to_str(str) + " - " + "take this")
 
 def enemy_spotted(client, id, nb, x, y):
     """!
@@ -96,7 +128,7 @@ def enemy_spotted(client, id, nb, x, y):
     @return Return the value returned by the broadcast(client, text) function (that return the
     succes or fail of the send_server function with True or False).
     """
-    return broadcast(client, str(id) + "-" + str(nb) + " enemy spotted " + x + " " + y + " - " + "allez lui voler ses cailloux")
+    return broadcast(client, str(id) + "-" + str(nb) + "|" + "enemy spotted " + x + " " + y + " - " + "allez lui voler ses cailloux")
 
 def base_moved(client, id, nb, x, y):
     """!
@@ -112,7 +144,7 @@ def base_moved(client, id, nb, x, y):
     @return Return the value returned by the broadcast(client, text) function (that return the
     succes or fail of the send_server function with True or False).
     """
-    return broadcast(client, str(id) + "-" + str(nb) + " base moved to " + x + " " + y + " - " + "on demenage")
+    return broadcast(client, str(id) + "-" + str(nb) + "|" + "base moved to " + x + " " + y + " - " + "on demenage")
 
 def ask_for_info(client, id, nb):
     """!
@@ -125,7 +157,7 @@ def ask_for_info(client, id, nb):
     @return Return the value returned by the broadcast(client, text) function (that return the
     succes or fail of the send_server function with True or False).
     """
-    return broadcast(client, str(id) + "-" + str(nb) + " need info" + " - " + "oh i have dementia? i dont remember asking!")
+    return broadcast(client, str(id) + "-" + str(nb) + "|" + "need info" + " - " + "oh i have dementia? i dont remember asking!")
 
 def give_info(client, id, nb, receiver_id, creature: Creature, orientation, type):
     """!
@@ -141,7 +173,7 @@ def give_info(client, id, nb, receiver_id, creature: Creature, orientation, type
     succes or fail of the send_server function with True or False).
     """
     new_id = len(creature.other_creatures)
-    return broadcast(client, str(id) + "-" + str(nb) + " here's info " + receiver_id + " :" + creature.map.size_x + " " + creature.map.size_y + " " + orientation + " " + creature.spawn_pos_x + " " + creature.spawn_pos_y + " " + type + " " + new_id)
+    return broadcast(client, str(id) + "-" + str(nb) + "|" + "here's info " + receiver_id + " :" + creature.map.size_x + " " + creature.map.size_y + " " + orientation + " " + creature.spawn_pos_x + " " + creature.spawn_pos_y + " " + type + " " + new_id)
 
 def ritual_in(client, id, nb, t):
     """!
@@ -155,7 +187,7 @@ def ritual_in(client, id, nb, t):
     @return Return the value returned by the broadcast(client, text) function (that return the
     succes or fail of the send_server function with True or False).
     """
-    return broadcast(client, str(id) + "-" + str(nb) + " ritual in " + t + " - " + "autobots roll out")
+    return broadcast(client, str(id) + "-" + str(nb) + "|" + "ritual in " + t + " - " + "autobots roll out")
 
 def arrived(client, id, nb):
     """!
@@ -168,4 +200,4 @@ def arrived(client, id, nb):
     @return Return the value returned by the broadcast(client, text) function (that return the
     succes or fail of the send_server function with True or False).
     """
-    return broadcast(client, str(id) + "-" + str(nb) + "bien arrive")
+    return broadcast(client, str(id) + "-" + str(nb) + "|" + "bien arrive")

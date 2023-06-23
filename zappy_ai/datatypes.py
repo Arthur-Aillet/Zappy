@@ -44,7 +44,7 @@ class Creature:
         self.looked = False
         self.called = False
         self.confirmed = 0
-        self.other_creatures = [{"lvl": 1, "role": Creature.Types.QUEEN, "messages": 0}]
+        self.other_creatures = [{"lvl": 1, "role": Creature.Types.QUEEN, "id": 0, "messages": 0}]
         self.message_index = 0
 
 # Holds the size of the map (x,y)
