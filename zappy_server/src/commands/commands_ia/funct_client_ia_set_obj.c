@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-void funct_client_ia_set_obj(ia_t *ia, uint8_t **args, common_t *com)
+void funct_client_ia_set_obj(ia_t *ia, char **args, common_t *com)
 {
     msg_queue_t *new_msg = malloc(sizeof(msg_queue_t));
 
@@ -16,10 +16,10 @@ void funct_client_ia_set_obj(ia_t *ia, uint8_t **args, common_t *com)
     if (new_msg == NULL) {
         return;
     }
-    new_msg->msg = malloc(sizeof(uint8_t*) * 2);
-    new_msg->msg[0] = malloc(sizeof(uint8_t) * (strlen((char*)args[0]) + 1));
+    new_msg->msg = malloc(sizeof(char*) * 2);
+    new_msg->msg[0] = malloc(sizeof(char) * (strlen(args[0]) + 1));
     new_msg->msg[0][0] = '\0';
-    new_msg->msg[0] = (uint8_t*)strcat((char*)new_msg->msg[0], (char*)args[0]);
+    new_msg->msg[0] = strcat(new_msg->msg[0], args[0]);
     new_msg->msg[1] = NULL;
     new_msg->time = 7. / (double)com->freq;
     new_msg->start = 0;

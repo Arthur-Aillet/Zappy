@@ -9,25 +9,25 @@
 
 void malloc_nbr_args(msg_queue_t *new_msg, size_t nbr_args)
 {
-    new_msg->msg = malloc(sizeof(uint8_t *) * nbr_args);
+    new_msg->msg = malloc(sizeof(char *) * nbr_args);
     if (new_msg->msg == NULL) {
         return;
     }
 }
 
-static team_t *to_find_team_by_uint8_t_bis(size_t i, uint8_t *n,
+static team_t *to_find_team_by_uint8_t_bis(size_t i, char *n,
                                             common_t *common)
 {
     for (size_t y = 0; y < common->teams[i].actif_player; y++) {
         if (common->teams[i].players[y].x >= 0 &&
-        atoi((char*)n) == common->teams[i].players[y].id) {
+        atoi(n) == common->teams[i].players[y].id) {
             return &common->teams[i];
         }
     }
     return NULL;
 }
 
-team_t *to_find_team_by_uint8_t(uint8_t *n, common_t *common)
+team_t *to_find_team_by_uint8_t(char *n, common_t *common)
 {
     team_t *tmp = NULL;
 

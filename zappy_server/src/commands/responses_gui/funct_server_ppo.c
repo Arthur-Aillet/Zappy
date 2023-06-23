@@ -8,7 +8,7 @@
 #include "zappy.h"
 #include <string.h>
 
-static void funct_prepare_res(gui_t *gui, uint8_t **args, ia_t *tmp_ia)
+static void funct_prepare_res(gui_t *gui, char **args, ia_t *tmp_ia)
 {
     char buffer_x[256];
     char buffer_y[256];
@@ -20,16 +20,16 @@ static void funct_prepare_res(gui_t *gui, uint8_t **args, ia_t *tmp_ia)
     gui->buffer.bufferWrite.usedSize += (strlen(buffer_x) + strlen(buffer_y)
     + strlen(buffer_o) + 9);
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-    sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize + 1));
+    sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }
     gui->buffer.bufferWrite.octets[0] = '\0';
-    sprintf((char*)gui->buffer.bufferWrite.octets, "ppo %s %s %s %s\n",
-            (char*)args[0], buffer_x, buffer_y, buffer_o);
+    sprintf(gui->buffer.bufferWrite.octets, "ppo %s %s %s %s\n",
+            args[0], buffer_x, buffer_y, buffer_o);
 }
 
-void funct_server_ppo(uint8_t **args, void *info, common_t *common)
+void funct_server_ppo(char **args, void *info, common_t *common)
 {
     gui_t *gui = (gui_t *)info;
     ia_t *tmp_ia = to_find_ia(args[0], common);
@@ -38,8 +38,8 @@ void funct_server_ppo(uint8_t **args, void *info, common_t *common)
         return;
     }
     funct_prepare_res(gui, args, tmp_ia);
-    printf("%s\n", (char*)gui->buffer.bufferWrite.octets);
+    printf("%s\n", gui->buffer.bufferWrite.octets);
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-        strlen((char*)gui->buffer.bufferWrite.octets));
+        strlen(gui->buffer.bufferWrite.octets));
     printf("rentrer dans la fonctions funct_server_ppo\n");
 }

@@ -10,7 +10,7 @@
 static void funct_prepare_response_gui(player_t *ia,
                                     common_t *com, int r)
 {
-    u_int8_t **args = malloc(sizeof(u_int8_t *) * 3);
+    char **args = malloc(sizeof(char *) * 3);
 
     if (args == NULL) {
         return;
@@ -30,7 +30,7 @@ static int funct_status_master(ia_t *ia_tmp)
 }
 
 static void funct_status_incantation(int i, common_t *com,
-                                player_t *ia, u_int8_t **args)
+                                player_t *ia, char **args)
 {
     ia_t *ia_tmp;
     int cmp = 0;
@@ -52,24 +52,24 @@ static void to_check_status_incantation(common_t *com, player_t *ia)
 {
     int i = set_nbr_ia(to_find_ia_int(com->gui->map.tiles
     [ia->y][ia->x].nb_player_incantations[0], com));
-    u_int8_t **args = malloc(sizeof(u_int8_t *) * 1);
+    char **args = malloc(sizeof(char *) * 1);
 
     if (args == NULL) {
         return;
     }
-    args[0] = malloc(sizeof(u_int8_t) * 2);
+    args[0] = malloc(sizeof(char) * 2);
     if (args[0] == NULL) {
         return;
     }
     args[0][0] = '\0';
-    args[0] = (u_int8_t *)strcat((char *)args[0], "ko");
+    args[0] = strcat(args[0], "ko");
     funct_status_incantation(i, com, ia, args);
     funct_prepare_response_gui(ia, com, 0);
 }
 
 void remove_player(player_t *ennemy, player_t *ia, common_t *com)
 {
-    uint8_t **args = malloc(sizeof(uint8_t *));
+    char **args = malloc(sizeof(char *));
     char buffer_ennemy[256];
 
     if (args == NULL) {
@@ -79,11 +79,11 @@ void remove_player(player_t *ennemy, player_t *ia, common_t *com)
         to_check_status_incantation(com, ia);
     }
     sprintf(buffer_ennemy, "%d", ennemy->id);
-    args[0] = malloc(sizeof(uint8_t) * (strlen(buffer_ennemy) + 1));
+    args[0] = malloc(sizeof(char) * (strlen(buffer_ennemy) + 1));
     if (args[0] == NULL) {
         return;
     }
     args[0][0] = '\0';
-    strcat((char*)args[0], buffer_ennemy);
+    strcat(args[0], buffer_ennemy);
     remove_choose_player(ennemy, com, args, ia);
 }

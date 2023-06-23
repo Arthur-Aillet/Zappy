@@ -25,7 +25,7 @@ client_t *find_client_by_id(int id, common_t *com)
 static int player_is_dead(player_t *player, common_t *com)
 {
     char buffer_args[256];
-    uint8_t **args = malloc(sizeof(uint8_t *) * 2);
+    char **args = malloc(sizeof(char *) * 2);
     ia_t *ia = to_find_ia_int(player->id, com);
 
     if (args == NULL)
@@ -35,12 +35,12 @@ static int player_is_dead(player_t *player, common_t *com)
 
     *ia = close_ia();
     sprintf(buffer_args, "%d", player->id);
-    args[0] = malloc(sizeof(uint8_t) * strlen(buffer_args) + 1);
+    args[0] = malloc(sizeof(char) * strlen(buffer_args) + 1);
     if (args[0] == NULL)
         return error("Memory allocation failed", 0);
     args[0][0] = '\0';
     args[1] = NULL;
-    strcat((char*)args[0], buffer_args);
+    strcat(args[0], buffer_args);
     funct_server_pdi(args, com->gui, com);
     funct_response_ia_death(args, ia, com);
     return 1;
@@ -48,12 +48,12 @@ static int player_is_dead(player_t *player, common_t *com)
 
 static void send_pdi(player_t *player, common_t *com)
 {
-    uint8_t **args = malloc(sizeof(uint8_t*) * 2);
+    char **args = malloc(sizeof(char*) * 2);
     char buffer[256];
     sprintf(buffer, "%d", player->id);
-    args[0] = malloc(sizeof(uint8_t) * (strlen(buffer) + 2));
+    args[0] = malloc(sizeof(char) * (strlen(buffer) + 2));
     args[0][0] = '\0';
-    sprintf((char*)args[0], "%d", player->id);
+    sprintf(args[0], "%d", player->id);
     funct_server_pdi(args, (void*)com->gui, NULL);
     free(args[0]);
     free(args);

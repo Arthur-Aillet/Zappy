@@ -30,7 +30,7 @@ enum resources {
 };
 
 typedef struct buffer_s {
-    uint8_t *octets;
+    char *octets;
     size_t usedSize;
 } buffer_t;
 
@@ -47,7 +47,7 @@ typedef struct buffered_socket_s {
 
 typedef struct error_handling_s {
     int error_code;
-    uint8_t *msg_error;
+    char *msg_error;
 } error_handling_t;
 
 //------------ LIB -------------------------------------------------//

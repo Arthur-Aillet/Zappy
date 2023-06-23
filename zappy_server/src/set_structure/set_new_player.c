@@ -29,27 +29,27 @@ static int egg_position(int *x, int *y, team_t *team)
     return 0;
 }
 
-static void send_to_gui_buffer(int num, char *value, uint8_t **arg)
+static void send_to_gui_buffer(int num, char *value, char **arg)
 {
     char buffer_args[256];
     if (value == NULL)
         sprintf(buffer_args, "%d", num);
     else
         sprintf(buffer_args, "%s", value);
-    *arg = malloc(sizeof(uint8_t) * (strlen(buffer_args) + 1));
+    *arg = malloc(sizeof(char) * (strlen(buffer_args) + 1));
     if (*arg == NULL)
         error("Memory allocation failed", 0);
     *arg[0] = '\0';
-    *arg = (uint8_t*)strcat((char*)*arg, buffer_args);
+    strcat(*arg, buffer_args);
 }
 
 static void send_to_gui(int status, common_t *com, team_t *team, int i)
 {
-    uint8_t **args;
+    char **args;
     if (i == -1)
         return;
-    args = (status != 0) ? malloc(sizeof(uint8_t *) * 1) :
-                            malloc(sizeof(uint8_t *) * 6);
+    args = (status != 0) ? malloc(sizeof(char *) * 1) :
+                            malloc(sizeof(char *) * 6);
     if (args == NULL)
         error("Memory allocation failed", 0);
     if (status != 0) {

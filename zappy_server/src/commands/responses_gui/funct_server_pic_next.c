@@ -7,11 +7,11 @@
 
 #include "zappy.h"
 
-void funct_server_pic_send_message(uint8_t **args, gui_t *gui)
+void funct_server_pic_send_message(char **args, gui_t *gui)
 {
-    if (atoi((char *)args[2]) == 4 || atoi((char *)args[2]) == 5) {
+    if (atoi(args[2]) == 4 || atoi(args[2]) == 5) {
         funct_server_pic_level_four_five(args, gui);
-    } else if (atoi((char *)args[2]) == 6 || atoi((char *)args[2]) == 7) {
+    } else if (atoi(args[2]) == 6 || atoi(args[2]) == 7) {
         funct_server_pic_level_other(args, gui);
     }
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
