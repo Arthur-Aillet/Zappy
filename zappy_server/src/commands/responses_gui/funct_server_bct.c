@@ -38,7 +38,6 @@ static void funct_post_tiles(char *buf_x, char *buf_y, gui_t *gui)
     strcat(gui->buffer.bufferWrite.octets, buf_x);
     strcat(gui->buffer.bufferWrite.octets, " ");
     strcat(gui->buffer.bufferWrite.octets, buf_y);
-    strcat(gui->buffer.bufferWrite.octets, " ");
 }
 
 void funct_prepare_response(gui_t *gui, size_t x, size_t y)
