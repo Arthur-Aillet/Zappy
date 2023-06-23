@@ -12,7 +12,6 @@ static void to_take_ressources_response_ia_player(player_t *player, ia_t *ia,
 {
     if (player->x == pos[0] && player->y == pos[1]) {
         ia->buffer.bufferWrite.usedSize += 7;
-        printf("player: usedSize: %ld\n", ia->buffer.bufferWrite.usedSize);
         ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
                         sizeof(u_int8_t) * ia->buffer.bufferWrite.usedSize);
         if (ia->buffer.bufferWrite.octets == NULL) {
@@ -28,7 +27,6 @@ static void to_take_ressources_response_ia_egg(int *pos, int *post_tmp,
     if (com->teams[post_tmp[0]].egg[post_tmp[1]].x == pos[0] &&
         com->teams[post_tmp[0]].egg[post_tmp[1]].y == pos[1]) {
         ia->buffer.bufferWrite.usedSize += 4;
-        printf("egg: usedSize: %ld\n", ia->buffer.bufferWrite.usedSize);
         ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
                         sizeof(u_int8_t) * ia->buffer.bufferWrite.usedSize);
         if (ia->buffer.bufferWrite.octets == NULL) {
@@ -63,7 +61,6 @@ void to_take_ressources_response_ia(ia_t *ia, common_t *com,
 
     pos[0] = x;
     pos[1] = y;
-    printf("case 0: usedSize: %ld\n", ia->buffer.bufferWrite.usedSize);
     for (size_t j = 0; j < MAX_PLAYER; j++) {
         if (com->ia[j].player == NULL)
             continue;

@@ -28,9 +28,7 @@ static void funct_response_look_north_bis(ia_t *ia, common_t *com)
     post_tile[1] = ia->player->y - 1;
     for (size_t level = 0; level < ia->player->level; level++) {
         nbr_tiles = 3 + level * 2;
-        printf("%snbr_tiles: %d%s\n", P, nbr_tiles, N);
         nbr_tiles_left = (nbr_tiles - 1) / 2;
-        printf("%snbr_tiles_left: %d%s\n", P, nbr_tiles_left, N);
         post_tile[0] = ia->player->x - nbr_tiles_left;
         if (post_tile[0] < 0) {
             post_tile[0] = com->gui->map.width + post_tile[0];
@@ -52,18 +50,14 @@ void funct_response_look_north(ia_t *ia, common_t *com)
         return;
     ia->buffer.bufferWrite.octets[0] = '\0';
     strcat((char *)ia->buffer.bufferWrite.octets, "[");
-    printf("start: usedSize: %ld\n", ia->buffer.bufferWrite.usedSize);
     to_take_ressources_response_ia(ia, com, ia->player->x, ia->player->y);
     funct_response_look_north_bis(ia, com);
-    printf("usedSize: %ld\n", ia->buffer.bufferWrite.usedSize);
-    ia->buffer.bufferWrite.usedSize += 1;
+    ia->buffer.bufferWrite.octets[ia->buffer.bufferWrite.usedSize - 2] = '\0';
+    ia->buffer.bufferWrite.usedSize += 2;
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
                         sizeof(u_int8_t) * ia->buffer.bufferWrite.usedSize);
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
-    printf("usedSize: %ld\n", ia->buffer.bufferWrite.usedSize);
-    printf("size: %ld", strlen((char*)ia->buffer.bufferWrite.octets));
-    ia->buffer.bufferWrite.octets[ia->buffer.bufferWrite.usedSize - 5] = ']';
-    ia->buffer.bufferWrite.octets[ia->buffer.bufferWrite.usedSize - 4] = '\0';
+    strcat((char*)ia->buffer.bufferWrite.octets, "]\n");
 }

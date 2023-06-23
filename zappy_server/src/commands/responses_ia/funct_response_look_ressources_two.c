@@ -10,9 +10,8 @@
 static void to_take_ressources_response_ia_linemate(ia_t *ia,
                                         common_t *com, int x, int y)
 {
-    for (size_t j = 0; j < com->gui->map.tiles[x][y].ressources[LINEMATE]; j++) {
+    for (size_t j = 0; j < com->gui->map.tiles[y][x].ressources[LINEMATE]; j++) {
         ia->buffer.bufferWrite.usedSize += 9;
-        printf("linemate: usedSize: %ld\n", ia->buffer.bufferWrite.usedSize);
         ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
                         sizeof(u_int8_t) * ia->buffer.bufferWrite.usedSize);
         if (ia->buffer.bufferWrite.octets == NULL) {
@@ -26,9 +25,8 @@ static void to_take_ressources_response_ia_linemate(ia_t *ia,
 void to_take_ressources_response_ia_food(ia_t *ia,
                                     common_t *com, int x, int y)
 {
-    for (size_t j = 0; j < com->gui->map.tiles[x][y].ressources[FOOD]; j++) {
+    for (size_t j = 0; j < com->gui->map.tiles[y][x].ressources[FOOD]; j++) {
         ia->buffer.bufferWrite.usedSize += 5;
-        printf("food: usedSize: %ld\n", ia->buffer.bufferWrite.usedSize);
         ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
                         sizeof(u_int8_t) * ia->buffer.bufferWrite.usedSize);
         if (ia->buffer.bufferWrite.octets == NULL) {
