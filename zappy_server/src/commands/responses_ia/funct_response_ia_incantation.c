@@ -68,14 +68,14 @@ void funct_response_ia_incantation(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
 
-    if (strcmp(args[0], "ok") == 0) {
+    if (args != NULL && args[0] != NULL && strcmp(args[0], "ko") == 0) {
+        funct_response_echec_incantation(ia);
+    } else {
         if (ia->player->level == 1) {
             funct_level_1(ia, com);
         } else {
             funct_response_ia_incantation_bis(ia, com);
         }
-    } else {
-        funct_response_echec_incantation(ia);
     }
     write(ia->buffer.sock.sockfd, OCTETS, SIZE);
     printf("rentrer dans la fonctions funct_response_ia_incantation\n");

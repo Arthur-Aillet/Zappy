@@ -10,18 +10,18 @@
 static int to_check_ressources_six(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 7) {
-        if (com->gui->map.tiles[y][x].ressources[1] > 1 &&
-        com->gui->map.tiles[y][x].ressources[2] > 1 &&
-        com->gui->map.tiles[y][x].ressources[3] > 1 &&
-        com->gui->map.tiles[y][x].ressources[4] > 1 &&
-        com->gui->map.tiles[y][x].ressources[5] > 1 &&
-        com->gui->map.tiles[y][x].ressources[6] > 0) {
-            update_density(&com->gui->map.density[1], &com->gui->map.tiles[y][x].ressources[1], -2);
-            update_density(&com->gui->map.density[2], &com->gui->map.tiles[y][x].ressources[2], -2);
-            update_density(&com->gui->map.density[3], &com->gui->map.tiles[y][x].ressources[3], -2);
-            update_density(&com->gui->map.density[4], &com->gui->map.tiles[y][x].ressources[4], -2);
-            update_density(&com->gui->map.density[5], &com->gui->map.tiles[y][x].ressources[5], -2);
-            update_density(&com->gui->map.density[6], &com->gui->map.tiles[y][x].ressources[6], -1);
+        if (C_RESSOURCES(y, x)[1] > 1 &&
+        C_RESSOURCES(y, x)[2] > 1 &&
+        C_RESSOURCES(y, x)[3] > 1 &&
+        C_RESSOURCES(y, x)[4] > 1 &&
+        C_RESSOURCES(y, x)[5] > 1 &&
+        C_RESSOURCES(y, x)[6] > 0) {
+            update_density(&C_DENSITY[1], &C_RESSOURCES(y, x)[1], -2);
+            update_density(&C_DENSITY[2], &C_RESSOURCES(y, x)[2], -2);
+            update_density(&C_DENSITY[3], &C_RESSOURCES(y, x)[3], -2);
+            update_density(&C_DENSITY[4], &C_RESSOURCES(y, x)[4], -2);
+            update_density(&C_DENSITY[5], &C_RESSOURCES(y, x)[5], -2);
+            update_density(&C_DENSITY[6], &C_RESSOURCES(y, x)[6], -1);
             return 0;
         }
     }
@@ -31,14 +31,14 @@ static int to_check_ressources_six(ia_t *ia, common_t *com, int x, int y)
 static int to_check_ressources_five(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 6) {
-        if (com->gui->map.tiles[y][x].ressources[1] > 0 &&
-        com->gui->map.tiles[y][x].ressources[2] > 1 &&
-        com->gui->map.tiles[y][x].ressources[3] > 2 &&
-        com->gui->map.tiles[y][x].ressources[5] > 0) {
-            update_density(&com->gui->map.density[1], &com->gui->map.tiles[y][x].ressources[1], -1);
-            update_density(&com->gui->map.density[2], &com->gui->map.tiles[y][x].ressources[2], -2);
-            update_density(&com->gui->map.density[3], &com->gui->map.tiles[y][x].ressources[3], -3);
-            update_density(&com->gui->map.density[5], &com->gui->map.tiles[y][x].ressources[5], -1);
+        if (C_RESSOURCES(y, x)[1] > 0 &&
+        C_RESSOURCES(y, x)[2] > 1 &&
+        C_RESSOURCES(y, x)[3] > 2 &&
+        C_RESSOURCES(y, x)[5] > 0) {
+            update_density(&C_DENSITY[1], &C_RESSOURCES(y, x)[1], -1);
+            update_density(&C_DENSITY[2], &C_RESSOURCES(y, x)[2], -2);
+            update_density(&C_DENSITY[3], &C_RESSOURCES(y, x)[3], -3);
+            update_density(&C_DENSITY[5], &C_RESSOURCES(y, x)[5], -1);
             return 0;
         }
     }
@@ -48,14 +48,14 @@ static int to_check_ressources_five(ia_t *ia, common_t *com, int x, int y)
 static int to_check_ressources_four(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 5) {
-        if (com->gui->map.tiles[y][x].ressources[1] > 0 &&
-        com->gui->map.tiles[y][x].ressources[2] > 1 &&
-        com->gui->map.tiles[y][x].ressources[3] > 0 &&
-        com->gui->map.tiles[y][x].ressources[4] > 2) {
-            update_density(&com->gui->map.density[1], &com->gui->map.tiles[y][x].ressources[1], -1);
-            update_density(&com->gui->map.density[2], &com->gui->map.tiles[y][x].ressources[2], -2);
-            update_density(&com->gui->map.density[3], &com->gui->map.tiles[y][x].ressources[3], -1);
-            update_density(&com->gui->map.density[4], &com->gui->map.tiles[y][x].ressources[4], -3);
+        if (C_RESSOURCES(y, x)[1] > 0 &&
+        C_RESSOURCES(y, x)[2] > 1 &&
+        C_RESSOURCES(y, x)[3] > 0 &&
+        C_RESSOURCES(y, x)[4] > 2) {
+            update_density(&C_DENSITY[1], &C_RESSOURCES(y, x)[1], -1);
+            update_density(&C_DENSITY[2], &C_RESSOURCES(y, x)[2], -2);
+            update_density(&C_DENSITY[3], &C_RESSOURCES(y, x)[3], -1);
+            update_density(&C_DENSITY[4], &C_RESSOURCES(y, x)[4], -3);
             return 0;
         }
     }
@@ -65,14 +65,14 @@ static int to_check_ressources_four(ia_t *ia, common_t *com, int x, int y)
 static int to_check_ressources_tree(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 4) {
-        if (com->gui->map.tiles[y][x].ressources[1] > 0 &&
-        com->gui->map.tiles[y][x].ressources[2] > 0 &&
-        com->gui->map.tiles[y][x].ressources[3] > 1 &&
-        com->gui->map.tiles[y][x].ressources[5] > 0) {
-            update_density(&com->gui->map.density[1], &com->gui->map.tiles[y][x].ressources[1], -1);
-            update_density(&com->gui->map.density[2], &com->gui->map.tiles[y][x].ressources[2], -1);
-            update_density(&com->gui->map.density[3], &com->gui->map.tiles[y][x].ressources[3], -2);
-            update_density(&com->gui->map.density[5], &com->gui->map.tiles[y][x].ressources[5], -1);
+        if (C_RESSOURCES(y, x)[1] > 0 &&
+        C_RESSOURCES(y, x)[2] > 0 &&
+        C_RESSOURCES(y, x)[3] > 1 &&
+        C_RESSOURCES(y, x)[5] > 0) {
+            update_density(&C_DENSITY[1], &C_RESSOURCES(y, x)[1], -1);
+            update_density(&C_DENSITY[2], &C_RESSOURCES(y, x)[2], -1);
+            update_density(&C_DENSITY[3], &C_RESSOURCES(y, x)[3], -2);
+            update_density(&C_DENSITY[5], &C_RESSOURCES(y, x)[5], -1);
             return 0;
         }
     }
@@ -82,12 +82,12 @@ static int to_check_ressources_tree(ia_t *ia, common_t *com, int x, int y)
 int to_check_ressources_bis(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 3) {
-        if (com->gui->map.tiles[y][x].ressources[1] > 1 &&
-        com->gui->map.tiles[y][x].ressources[3] > 0 &&
-        com->gui->map.tiles[y][x].ressources[5] > 1) {
-            update_density(&com->gui->map.density[1], &com->gui->map.tiles[y][x].ressources[1], -2);
-            update_density(&com->gui->map.density[3], &com->gui->map.tiles[y][x].ressources[3], -1);
-            update_density(&com->gui->map.density[5], &com->gui->map.tiles[y][x].ressources[5], -2);
+        if (C_RESSOURCES(y, x)[1] > 1 &&
+        C_RESSOURCES(y, x)[3] > 0 &&
+        C_RESSOURCES(y, x)[5] > 1) {
+            update_density(&C_DENSITY[1], &C_RESSOURCES(y, x)[1], -2);
+            update_density(&C_DENSITY[3], &C_RESSOURCES(y, x)[3], -1);
+            update_density(&C_DENSITY[5], &C_RESSOURCES(y, x)[5], -2);
             return 0;
         }
     }

@@ -72,6 +72,9 @@ static int check_incoming_data(common_t *com)
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (PC_SOCKET(i) > 0 && FD_ISSET(PC_SOCKET(i), &PS_READ)) {
             command = get_message(&com->server, &com->client[i]);
+            for (int j = 0; command[j] != NULL; j++) {
+                printf("|%s|", command[j]);
+            }
             int response = check_command(command, com, i);
             free_array((void**)command);
             return response;

@@ -10,7 +10,7 @@
 static void to_take_ressources_response_ia_linemate(ia_t *ia,
                                         common_t *com, int x, int y)
 {
-    for (size_t j = 0; j < com->gui->map.tiles[y][x].ressources[LINEMATE]; j++) {
+    for (size_t j = 0; j < C_RESSOURCES(y, x)[LINEMATE]; j++) {
         SIZE += 9;
         OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
         if (OCTETS == NULL) {
@@ -24,7 +24,7 @@ static void to_take_ressources_response_ia_linemate(ia_t *ia,
 void to_take_ressources_response_ia_food(ia_t *ia,
                                     common_t *com, int x, int y)
 {
-    for (size_t j = 0; j < com->gui->map.tiles[y][x].ressources[FOOD]; j++) {
+    for (size_t j = 0; j < C_RESSOURCES(y, x)[FOOD]; j++) {
         SIZE += 5;
         OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
         if (OCTETS == NULL) {

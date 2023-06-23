@@ -34,8 +34,8 @@ static void to_take_ressources_response_ia_egg(int *pos, int *post_tmp,
     }
 }
 
-static void to_take_ressources_response_ia_bis(ia_t *ia,
-                                        common_t *com, int x, int y)
+static void to_take_ressources_response_ia_bis(ia_t *ia, common_t *com,
+                                                int x, int y)
 {
     int pos[2];
     int post_tmp[2];

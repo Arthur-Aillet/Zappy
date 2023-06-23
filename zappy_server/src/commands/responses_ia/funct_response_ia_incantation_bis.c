@@ -13,19 +13,22 @@ static void funct_prepare_response_gui_next(ia_t *ia,
     char buffer_args[256];
 
     sprintf(buffer_args, "%d", ia->player->y);
-    args[1] = malloc(sizeof(char) * strlen(buffer_args));
+    args[1] = malloc(sizeof(char) * (strlen(buffer_args) + 1));
     if (args[1] == NULL) {
         return;
     }
     args[1][0] = '\0';
     strcat(args[1], buffer_args);
     sprintf(buffer_args, "%d", r);
-    args[1] = malloc(sizeof(char) * strlen(buffer_args));
+    args[1] = malloc(sizeof(char) * (strlen(buffer_args) + 1));
     if (args[1] == NULL) {
         return;
     }
     args[1][0] = '\0';
     strcat(args[1], buffer_args);
+    args[2] = malloc(sizeof(char) * 2);
+    args[2][0] = '0';
+    args[2][1] = '\0';
     funct_server_pie(args, com->gui, com);
 }
 
@@ -38,7 +41,7 @@ void funct_prepare_response_gui_incantation(ia_t *ia, common_t *com, int r)
         return;
     }
     sprintf(buffer_args, "%d", ia->player->x);
-    args[0] = malloc(sizeof(char) * strlen(buffer_args));
+    args[0] = malloc(sizeof(char) * (strlen(buffer_args) + 1));
     if (args[0] == NULL) {
         return;
     }
@@ -61,8 +64,7 @@ void funct_level_1(ia_t *ia, common_t *com)
     char level[3];
     sprintf(level, "%ld", ia->player->level);
     OCTETS[0] = '\0';
-    strcat(OCTETS,
-    "Elevation underway current level ");
+    strcat(OCTETS, "Elevation underway current level ");
     strcat(OCTETS, level);
     strcat(OCTETS, "\n\0");
     funct_prepare_response_gui_incantation(ia, com, 1);
