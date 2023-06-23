@@ -98,7 +98,7 @@ class Session:
     # communication :
 
     def call_all(self):
-        output = com.call_all(self.client, self.id, self.msg_nb)
+        output = com.role_call(self.client, self.id, self.msg_nb)
         self.msg_nb += 1
         return output
     def say_type(self):

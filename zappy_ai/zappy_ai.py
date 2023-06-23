@@ -7,12 +7,13 @@
 ##
 
 from connect import connect
+from communication import getmsginfo
 from server_get import *
 from server_action import *
 from sys import stderr
 from datatypes import Session, ActionType, Creature
 from gatherer_loop import gatherer_loop
-from queen_loop import queen_loop
+from queen_loop import queen_loop, take_new_role_in_account
 from warrior_loop import warrior_loop
 from butler_loop import butler_loop
 
@@ -47,6 +48,9 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
         # gestion des envois inopinés du serveur
         if message.startswith("Message "):
             creature.strvar = message
+            msg_info = getmsginfo(message, creature)
+            if msg_info.text.startswith("my job is "):
+                take_new_role_in_account(msg_info, creature)
             continue # traiter le maissage
 
         # gestion des envois prévus du serveur (si une récéption est prévue)

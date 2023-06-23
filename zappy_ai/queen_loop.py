@@ -137,6 +137,23 @@ def pick_up_list(objective: dict[str, int], last_action: list, ai: Session):
 def distance_to_base(creature: Creature):
     return abs(creature.pos_x - creature.spawn_pos_x) + abs(creature.pos_y - creature.spawn_pos_y)
 
+def call_all_roles(creature: Creature, ai: Session):
+    creature.other_creatures = [{"lvl": 1, "role": Creature.Types.QUEEN, "id": 0, "messages": 0}]
+    ai.call_all()
+
+def take_new_role_in_account(msg_info: str, creature: Creature):
+    temp_info = msg_info.text.split()
+    for i in creature.other_creatures:
+        if i["id"] == msg_info.id:
+            return
+    if msg_info.text.startswith("my job is "):
+        creature.other_creatures.append({
+            "lvl": temp_info[4],
+            "role": temp_info[3],
+            "id": msg_info.id,
+            "messages": msg_info.number
+        })
+
 def queen_loop(creature: Creature, last_Action: list, ia: Session):
     creature.var += 1
     creature.var %= 20;
