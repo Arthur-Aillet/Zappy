@@ -70,7 +70,7 @@ void funct_response_ia_incantation(uint8_t **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
 
-    if (strcmp((char *)args[0], "ok")) {
+    if (strcmp((char *)args[0], "ok") == 0) {
         if (ia->player->level == 1) {
             funct_level_1(ia, com);
         } else {
