@@ -24,15 +24,15 @@ void funct_server_all_bct(char **args, void *info, common_t *common)
 
     (void)common;
     (void)args;
-    gui->buffer.bufferWrite.usedSize = 1;
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                    sizeof(char) * (gui->buffer.bufferWrite.usedSize));
-    if (gui->buffer.bufferWrite.octets == NULL) {
+    GUI_SIZE = 1;
+    GUI_OCTETS = realloc(GUI_OCTETS,
+                    sizeof(char) * (GUI_SIZE));
+    if (GUI_OCTETS == NULL) {
         return;
     }
-    gui->buffer.bufferWrite.octets[0] = '\0';
+    GUI_OCTETS[0] = '\0';
     funct_for_on_tiles(gui);
-    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize - 1] = '\0';
-    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-            strlen(gui->buffer.bufferWrite.octets));
+    GUI_OCTETS[GUI_SIZE - 1] = '\0';
+    write(gui->buffer.sock.sockfd, GUI_OCTETS,
+            strlen(GUI_OCTETS));
 }

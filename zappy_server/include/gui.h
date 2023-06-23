@@ -7,6 +7,8 @@
 
 #ifndef GUI_H_
     #define GUI_H_
+    #define GUI_OCTETS          gui->buffer.bufferWrite.octets
+    #define GUI_SIZE            gui->buffer.bufferWrite.usedSize
 
     #include "map.h"
     #include "common.h"

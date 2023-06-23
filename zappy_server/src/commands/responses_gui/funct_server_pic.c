@@ -10,84 +10,84 @@
 void funct_server_pic_level_four_five(char **args, gui_t *gui)
 {
     for (int i = 0; i < 4; i++) {
-        gui->buffer.bufferWrite.usedSize += strlen(args[i + 3]) + 1;
-        gui->buffer.bufferWrite.octets =
-                    realloc(gui->buffer.bufferWrite.octets,
-                    sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
-        if (gui->buffer.bufferWrite.octets == NULL) {
+        GUI_SIZE += strlen(args[i + 3]) + 1;
+        GUI_OCTETS =
+                    realloc(GUI_OCTETS,
+                    sizeof(char) * (GUI_SIZE + 1));
+        if (GUI_OCTETS == NULL) {
             return;
         }
-        strcat(gui->buffer.bufferWrite.octets, args[i + 3]);
-        strcat(gui->buffer.bufferWrite.octets, " ");
+        strcat(GUI_OCTETS, args[i + 3]);
+        strcat(GUI_OCTETS, " ");
     }
-    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize] = '\n';
-    gui->buffer.bufferWrite.usedSize += 1;
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
-    if (gui->buffer.bufferWrite.octets == NULL) {
+    GUI_OCTETS[GUI_SIZE] = '\n';
+    GUI_SIZE += 1;
+    GUI_OCTETS = realloc(GUI_OCTETS,
+                sizeof(char) * (GUI_SIZE + 1));
+    if (GUI_OCTETS == NULL) {
         return;
     }
-    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize] = '\0';
+    GUI_OCTETS[GUI_SIZE] = '\0';
 }
 
 void funct_server_pic_level_other(char **args, gui_t *gui)
 {
     for (int i = 0; i < 6; i++) {
-        gui->buffer.bufferWrite.usedSize += strlen(args[i + 3]) + 1;
-        gui->buffer.bufferWrite.octets =
-                    realloc(gui->buffer.bufferWrite.octets,
-                    sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
-        if (gui->buffer.bufferWrite.octets == NULL) {
+        GUI_SIZE += strlen(args[i + 3]) + 1;
+        GUI_OCTETS =
+                    realloc(GUI_OCTETS,
+                    sizeof(char) * (GUI_SIZE + 1));
+        if (GUI_OCTETS == NULL) {
             return;
         }
-        strcat(gui->buffer.bufferWrite.octets, args[i + 3]);
-        strcat(gui->buffer.bufferWrite.octets, " ");
+        strcat(GUI_OCTETS, args[i + 3]);
+        strcat(GUI_OCTETS, " ");
     }
-    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize] = '\n';
-    gui->buffer.bufferWrite.usedSize += 1;
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
-    if (gui->buffer.bufferWrite.octets == NULL) {
+    GUI_OCTETS[GUI_SIZE] = '\n';
+    GUI_SIZE += 1;
+    GUI_OCTETS = realloc(GUI_OCTETS,
+                sizeof(char) * (GUI_SIZE + 1));
+    if (GUI_OCTETS == NULL) {
         return;
     }
-    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize] = '\0';
+    GUI_OCTETS[GUI_SIZE] = '\0';
 }
 
 static void funct_server_pic_level_two_three(char **args, gui_t *gui)
 {
     for (int i = 0; i < 2; i++) {
-        gui->buffer.bufferWrite.usedSize += strlen(args[i + 3]) + 1;
-        gui->buffer.bufferWrite.octets =
-                    realloc(gui->buffer.bufferWrite.octets,
-                    sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
-        if (gui->buffer.bufferWrite.octets == NULL) {
+        GUI_SIZE += strlen(args[i + 3]) + 1;
+        GUI_OCTETS =
+                    realloc(GUI_OCTETS,
+                    sizeof(char) * (GUI_SIZE + 1));
+        if (GUI_OCTETS == NULL) {
             return;
         }
-        strcat(gui->buffer.bufferWrite.octets, args[i + 3]);
-        strcat(gui->buffer.bufferWrite.octets, " ");
+        strcat(GUI_OCTETS, args[i + 3]);
+        strcat(GUI_OCTETS, " ");
     }
-    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize] = '\n';
-    gui->buffer.bufferWrite.usedSize += 1;
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
-    if (gui->buffer.bufferWrite.octets == NULL) {
+    GUI_OCTETS[GUI_SIZE] = '\n';
+    GUI_SIZE += 1;
+    GUI_OCTETS = realloc(GUI_OCTETS,
+                sizeof(char) * (GUI_SIZE + 1));
+    if (GUI_OCTETS == NULL) {
         return;
     }
-    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize] = '\0';
+    GUI_OCTETS[GUI_SIZE] = '\0';
 }
 
 static void funct_server_pic_next(char **args, gui_t *gui)
 {
     if (atoi(args[2]) == 1) {
-        gui->buffer.bufferWrite.usedSize += strlen(args[3]) + 2;
-        gui->buffer.bufferWrite.octets =
-                    realloc(gui->buffer.bufferWrite.octets,
-                    sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
-        if (gui->buffer.bufferWrite.octets == NULL) {
+        GUI_SIZE += strlen(args[3]) + 2;
+        GUI_OCTETS =
+                    realloc(GUI_OCTETS,
+                    sizeof(char) * (GUI_SIZE + 1));
+        if (GUI_OCTETS == NULL) {
             return;
         }
-        strcat(gui->buffer.bufferWrite.octets, args[3]);
-        strcat(gui->buffer.bufferWrite.octets, "\n\0");
+        strcat(GUI_OCTETS, args[3]);
+        strcat(GUI_OCTETS, "\n\0");
     } else if (atoi(args[2]) == 2 || atoi(args[2]) == 3) {
         funct_server_pic_level_two_three(args, gui);
     }
@@ -100,20 +100,20 @@ void funct_server_pic(char **args, void *info, common_t *common)
 
     (void)args;
     (void)common;
-    gui->buffer.bufferWrite.usedSize = strlen(args[0]) +
+    GUI_SIZE = strlen(args[0]) +
                 strlen(args[1]) + strlen(args[2]) + 7;
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
-    if (gui->buffer.bufferWrite.octets == NULL) {
+    GUI_OCTETS = realloc(GUI_OCTETS,
+                sizeof(char) * (GUI_SIZE + 1));
+    if (GUI_OCTETS == NULL) {
         return;
     }
-    gui->buffer.bufferWrite.octets[0] = '\0';
-    strcat(gui->buffer.bufferWrite.octets, "pic ");
-    strcat(gui->buffer.bufferWrite.octets, args[0]);
-    strcat(gui->buffer.bufferWrite.octets, " ");
-    strcat(gui->buffer.bufferWrite.octets, args[1]);
-    strcat(gui->buffer.bufferWrite.octets, " ");
-    strcat(gui->buffer.bufferWrite.octets, args[2]);
-    strcat(gui->buffer.bufferWrite.octets, " ");
+    GUI_OCTETS[0] = '\0';
+    strcat(GUI_OCTETS, "pic ");
+    strcat(GUI_OCTETS, args[0]);
+    strcat(GUI_OCTETS, " ");
+    strcat(GUI_OCTETS, args[1]);
+    strcat(GUI_OCTETS, " ");
+    strcat(GUI_OCTETS, args[2]);
+    strcat(GUI_OCTETS, " ");
     funct_server_pic_next(args, gui);
 }

@@ -50,8 +50,8 @@ gui_t *set_gui(int height, int width, int freq)
     gui->map = set_map(height, width, freq);
     gui->buffer.bufferRead.octets = NULL;
     gui->buffer.bufferRead.usedSize = 0;
-    gui->buffer.bufferWrite.octets = NULL;
-    gui->buffer.bufferWrite.usedSize = 0;
+    GUI_OCTETS = NULL;
+    GUI_SIZE = 0;
     gui->buffer.sock.sockfd = 0;
     gui->msg_queue = NULL;
     gui->error = NULL;
@@ -75,8 +75,8 @@ void free_gui(gui_t *gui)
 {
     free_map(&gui->map);
     basic_log("Map free", B, 0);
-    if (gui->buffer.bufferWrite.octets != NULL)
-        free(gui->buffer.bufferWrite.octets);
+    if (GUI_OCTETS != NULL)
+        free(GUI_OCTETS);
     if (gui->buffer.bufferRead.octets != NULL)
         free(gui->buffer.bufferRead.octets);
     free(gui);
