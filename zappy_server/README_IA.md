@@ -17,6 +17,14 @@
 - `clientsNb`: is the number of authorized clients per team
 - `freq`: is the reciprocal of time unit for execution of actions
 
+### Default parameters
+`port`: 4242
+`width`: 10
+`height`: 10
+`nameX`: "Team1" "Team2" "Team3" "Team4"
+`clientNB`: 2
+`freq`: 100
+
 ### Connection:
 
 When a client connects to the server:
@@ -38,7 +46,7 @@ When a client connects to the server:
 
 | Action  | Command    | time limite | response  |
 | :------ |:----------:|:-----------:| :-------: |
-|move up one title | "Forward" | 7/f | ok |
+| move up one title | "Forward" | 7/f | ok |
 | turn 90° right | "Right" | 7/f | ok |
 | tunr 90° left | "Left" | 7/f | ok |
 | look around | "Look" | 7/f | [tile1, tile2, ...] |
@@ -50,7 +58,7 @@ When a client connects to the server:
 | eject players from this tile | "Eject" | 7/f | ok/ko |
 | death of a player | - | - | dead |
 | take object | "Take object" | 7/f | ok/ko |
-| set object down | "Set object" | 7/f | ok/ko |
+| set object down | "Set **'name object'**" | 7/f | ok/ko |
 | start incantation | "Incantation" | 300/f | Elevation underway current level `k` / ko |
 
 ##### Fork command:

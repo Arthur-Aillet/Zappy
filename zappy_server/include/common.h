@@ -15,6 +15,8 @@
     #include <netinet/in.h>
     #include <sys/select.h>
     #include <sys/time.h>
+    #include <stdio.h>
+    #include <stdlib.h>
 
 enum resources {
     FOOD,
@@ -27,21 +29,8 @@ enum resources {
     EGG
 };
 
-typedef struct msg_queue_s {
-    time_t time;
-    uint8_t **msg;
-    void (*handler)(uint8_t **args, buffered_socket_t *client, void *info); //FIXME - check arguments
-    //NOTE - pointeur sur fonctione qu'on doit executer
-    msg_queue_s *next_msg;
-} msg_queue_t;
-
-typedef struct error_handling_s {
-    int error_code;
-    uint8_t *msg_error;
-} error_handling_t;
-
 typedef struct buffer_s {
-    u_int8_t *bytes;
+    uint8_t *octets;
     size_t usedSize;
 } buffer_t;
 
@@ -51,10 +40,20 @@ typedef struct sock_s {
 } sock_t;
 
 typedef struct buffered_socket_s {
-    buffer_t read_buffer;
-    buffer_t writte_buffer;
+    buffer_t bufferRead;
+    buffer_t bufferWrite;
     sock_t sock;
 } buffered_socket_t;
 
-#endif /* !COMMON_H_ */
+typedef struct error_handling_s {
+    int error_code;
+    uint8_t *msg_error;
+} error_handling_t;
 
+//------------ LIB -------------------------------------------------//
+
+char **my_str_to_word_array(char *str, char **seg, char c);
+void free_array(void **arr);
+
+//-----------------------------------------------------------------//
+#endif /* !COMMON_H_ */
