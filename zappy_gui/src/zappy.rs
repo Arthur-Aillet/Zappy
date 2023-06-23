@@ -126,7 +126,7 @@ impl Zappy {
             if let Ok(md) = graphics.load_mesh("./obj/batgnome.obj") {
                 app.user.tantorian_mesh = Some(md);
             } else {
-                println!("Zappy: couldn't load bat.obj");
+                println!("Zappy: couldn't load batgnome.obj");
             }
         }
     }

@@ -33,7 +33,7 @@ unsafe fn nannou_vertices_as_bytes(data: &[Vec3]) -> &[u8] {
 
 fn bench_buffer_copy(c: &mut Criterion) {
     let mut mesh: Mesh = Mesh::new();
-    let status = mesh.parse_obj("./.objs/bat.obj");
+    let status = mesh.parse_obj("./obj/batgnome.obj");
 
     let buffers = mesh.as_buffers();
 
