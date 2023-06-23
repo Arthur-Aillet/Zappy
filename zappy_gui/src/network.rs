@@ -9,7 +9,7 @@ impl Zappy {
         self.teams = vec![];
         self.players = vec![];
         self.time_unit = 100.0;
-        self.map.resize(8, 8);
+        self.map.resize(10, 10);
         self.winner_team = None;
         self.ui.selected_tile = None;
     }
@@ -47,7 +47,7 @@ impl Zappy {
 
 pub(crate) fn loop_server(mut server: ServerConn) {
     server.recv_from_server().expect("Error received for welcome");
-    server.send_to_server("GRAPHIC", -1, -1);
+    server.send_to_server(format!("GRAPHIC"));
     loop {
         match server.recv_from_server() {
             Ok(string) => {

@@ -246,7 +246,7 @@ impl Zappy {
     }
 
     fn connect_new_player(&mut self, command: String, _at: Duration) {
-        let re = Regex::new(r"^pnw (-?\d+) (\d+) (\d+) ([1-4]) ([0-8]) (\w+)$")
+        let re = Regex::new(r"^pnw #?(-?\d+) (\d+) (\d+) ([1-4]) ([0-8]) (\w+)$")
             .expect("Invalid regex");
 
         if let Some(capture) = re.captures(&*command) {
@@ -325,9 +325,10 @@ impl Zappy {
         let args: Vec<usize> = command
             .split(" ")
             .skip(1)
+            .filter(|&x| !x.is_empty())
             .map(|x| -> usize {
                 return match x.parse() {
-                    Ok(val) => val,
+                    Ok(val) => {val},
                     Err(_) => {
                         println!("bct: value needs to be a unsigned integers");
                         invalid = true;
@@ -382,7 +383,10 @@ impl Zappy {
     }
 
     fn interpret_command(&mut self, raw_command: String, at: Duration) {
-        let command_split = raw_command.split("\n").filter(|&x| !x.is_empty());
+        let command_split =
+            raw_command.split("\n")
+                .filter(|&x| !x.is_empty())
+                .filter(|&x| !(x.len() == 1 && x.as_bytes()[0] == 0));
 
         for command in command_split {
             let command_name = command.split(" ").next().expect("invalid cmd");
@@ -408,9 +412,8 @@ impl Zappy {
         };
         let mut commands = commands_access.lock().expect("Mutex poisoned");
         for _ in 0..commands.len() {
-            if let Some(command) = commands.pop() {
-                self.interpret_command(command, at);
-            }
+            let command = commands.remove(0);
+            self.interpret_command(command, at);
         }
     }
 }
