@@ -30,11 +30,11 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     //ebo
     //edi
     functions.insert("sgt".to_string(), Zappy::set_time_unit);
-    //sst
+    functions.insert("sst".to_string(), Zappy::set_time_unit);
     functions.insert("seg".to_string(), Zappy::end_of_game);
-    //smg
-    //suc
-    //sbp
+    functions.insert("smg".to_string(), Zappy::message_from_server);
+    functions.insert("suc".to_string(), Zappy::invalid_command_sent);
+    functions.insert("sbp".to_string(), Zappy::invalid_arg_sent);
     functions
 }
 
@@ -56,6 +56,23 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn invalid_arg_sent(&mut self, _command: String, at: Duration) {
+        self.ui.network_messages.push((at, String::from("Server received invalid argument")));
+        println!("Server received invalid argument");
+    }
+
+    fn invalid_command_sent(&mut self, _command: String, at: Duration) {
+        self.ui.network_messages.push((at, String::from("Server received invalid command")));
+        println!("Server received invalid command");
+    }
+
+    fn message_from_server(&mut self, command: String, at: Duration) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        self.ui.network_messages.push((at, String::from(args[1])));
+        println!("Server sent: {}", args[1]);
+    }
+
     fn player_inventory(&mut self, command: String, at: Duration) {
         let re = Regex::new(r"^pin (-?\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)$")
             .expect("Invalid regex");
@@ -229,7 +246,7 @@ impl Zappy {
     }
 
     fn connect_new_player(&mut self, command: String, _at: Duration) {
-        let re = Regex::new(r"^pnw (-?\d+) (\d+) (\d+) ([1-4]) ([0-8]) (\w+)$")
+        let re = Regex::new(r"^pnw #?(-?\d+) (\d+) (\d+) ([1-4]) ([0-8]) (\w+)$")
             .expect("Invalid regex");
 
         if let Some(capture) = re.captures(&*command) {
@@ -291,13 +308,13 @@ impl Zappy {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
-            println!("sgt: wrong number of arguments");
+            println!("sgt/sst: wrong number of arguments");
         } else {
             let result: Result<f32, _> = args[1].parse();
             match result {
                 Ok(val) => self.time_unit = val,
                 Err(_) => {
-                    println!("sgt: argument must be an int")
+                    println!("sgt/sst: argument must be an int")
                 }
             }
         }
@@ -308,9 +325,10 @@ impl Zappy {
         let args: Vec<usize> = command
             .split(" ")
             .skip(1)
+            .filter(|&x| !x.is_empty())
             .map(|x| -> usize {
                 return match x.parse() {
-                    Ok(val) => val,
+                    Ok(val) => {val},
                     Err(_) => {
                         println!("bct: value needs to be a unsigned integers");
                         invalid = true;
@@ -365,7 +383,10 @@ impl Zappy {
     }
 
     fn interpret_command(&mut self, raw_command: String, at: Duration) {
-        let command_split = raw_command.split("\n").filter(|&x| !x.is_empty());
+        let command_split =
+            raw_command.split("\n")
+                .filter(|&x| !x.is_empty())
+                .filter(|&x| !(x.len() == 1 && x.as_bytes()[0] == 0));
 
         for command in command_split {
             let command_name = command.split(" ").next().expect("invalid cmd");
@@ -391,9 +412,8 @@ impl Zappy {
         };
         let mut commands = commands_access.lock().expect("Mutex poisoned");
         for _ in 0..commands.len() {
-            if let Some(command) = commands.pop() {
-                self.interpret_command(command, at);
-            }
+            let command = commands.remove(0);
+            self.interpret_command(command, at);
         }
     }
 }

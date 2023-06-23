@@ -77,19 +77,8 @@ impl ServerConn {
     //       These are required for certain commands.
     //       If you don't need them, set the value to negative
     //       Returns false in case of error, true if none.
-    pub fn send_to_server(&mut self, s: &str, x: i32, y: i32) -> bool {
-        let concatenated_string: String;
-
-        if x < 0 && y < 0 {
-            concatenated_string = format!("{}", s);
-        } else if x >= 0 && y >= 0 {
-            concatenated_string = format!("{} {} {}", s, x, y);
-        } else if x >= 0 && y < 0 {
-            concatenated_string = format!("{} {}", s, x);
-        } else {
-            concatenated_string = format!("{} {}", s, y);
-        }
-        match write!(self.stream, "{}\n", concatenated_string) {
+    pub fn send_to_server(&mut self, s: String) -> bool {
+        match write!(self.stream, "{}\n", s) {
             Ok(_) => {true}
             Err(_) => {false}
         }

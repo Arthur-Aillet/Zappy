@@ -106,7 +106,7 @@ impl Zappy {
     }
 
     pub fn load(app: &mut App<Zappy>) {
-        app.user.map.resize(8, 8);
+        app.user.map.resize(10, 10);
         if let Ok(mut graphics) = app.graphics.try_borrow_mut() {
             if let Ok(mut md) = graphics.load_mesh("./obj/plane.obj") {
                 if let Ok(shader) = graphics.load_shader("./src/shaders/map.wgsl") {
@@ -178,7 +178,7 @@ impl Zappy {
 pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
     if let Some(new_time_unit) = zappy.user.ui.settings(ctx, &mut zappy.camera, zappy.camera_is_active) {
         if let Some(server) = &mut zappy.user.server {
-            server.send_to_server("sst", new_time_unit, -1);
+            server.send_to_server(format!("sst {}", new_time_unit));
         }
     }
     let (action, player_number, team_name) = zappy.user.ui
@@ -212,11 +212,11 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
     }
     if let Some(server) = &mut zappy.user.server {
         if refresh_map {
-            server.send_to_server("mct", -1, -1);
+            server.send_to_server(format!("mct"));
         }
         if refresh_player {
             for player in &zappy.user.players {
-                server.send_to_server("ppo", player.number as i32, -1);
+                server.send_to_server(format!("ppo #{}", player.number));
             }
         }
     }
@@ -227,14 +227,14 @@ fn ask_for_update(zappy: &mut Zappy, at: Duration) {
         if zappy.auto_update == true {
             if zappy.last_map_update.as_secs_f32() + 20. / zappy.time_unit * zappy.refresh_factor < at.as_secs_f32() {
                 zappy.last_map_update = at;
-                server.send_to_server("mct", -1, -1);
+                server.send_to_server(format!("mct"));
             }
         }
         if zappy.player_auto_update == true {
             if zappy.last_player_update.as_secs_f32() + 7. / zappy.time_unit * zappy.player_refresh_factor < at.as_secs_f32() {
                 zappy.last_player_update = at;
                 for player in &zappy.players {
-                    server.send_to_server("ppo", player.number as i32, -1);
+                    server.send_to_server(format!("ppo #{}", player.number));
                 }
             }
         }
