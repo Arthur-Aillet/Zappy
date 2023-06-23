@@ -86,14 +86,12 @@ void funct_response_ia_broadcast(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
 
-    ia->buffer.bufferWrite.usedSize = 4;
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL)
+    SIZE = 4;
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL)
         return;
     send_message_to_players(com, args, ia);
-    ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
-    write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
-        ia->buffer.bufferWrite.usedSize);
+    OCTETS[0] = '\0';
+    strcat(OCTETS, "ok\n\0");
+    write(ia->buffer.sock.sockfd, OCTETS, strlen(OCTETS));
 }
