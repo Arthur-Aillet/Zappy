@@ -43,29 +43,28 @@ void to_create_message_response_ia(msg_queue_t *new_msg)
     if (new_msg->msg == NULL) {
         return;
     }
-    new_msg->msg[0] = malloc(sizeof(char) * 2);
+    new_msg->msg[0] = malloc(sizeof(char) * 3);
     if (new_msg->msg[0] == NULL) {
         return;
     }
     new_msg->msg[0][0] = '\0';
-    new_msg->msg[0] = strcat(new_msg->msg[0], "ko");
+    new_msg->msg[0] = strcat(new_msg->msg[0], "ko\0");
 }
 
 int to_check_ressources(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 1) {
-        if (com->gui->map.tiles[y][x].ressources[1] > 0) {
-            update_density(&com->gui->map.density[1], &com->gui->map.tiles[y][x].ressources[1], -1);
+        if (C_RESSOURCES(y, x)[LINEMATE] > 0) {
+            update_density(&C_DENSITY[LINEMATE], &C_RESSOURCES(y, x)[LINEMATE], -1);
             return 0;
         }
     }
     if (ia->player->level == 2) {
-        if (com->gui->map.tiles[y][x].ressources[1] > 0 &&
-        com->gui->map.tiles[y][x].ressources[2] > 0 &&
-        com->gui->map.tiles[y][x].ressources[3] > 0) {
-            update_density(&com->gui->map.density[1], &com->gui->map.tiles[y][x].ressources[1], -1);
-            update_density(&com->gui->map.density[2], &com->gui->map.tiles[y][x].ressources[2], -1);
-            update_density(&com->gui->map.density[3], &com->gui->map.tiles[y][x].ressources[3], -1);
+        if (C_RESSOURCES(y, x)[1] > 0 && C_RESSOURCES(y, x)[2] > 0 &&
+            C_RESSOURCES(y, x)[3] > 0) {
+            update_density(&C_DENSITY[LINEMATE], &C_RESSOURCES(y, x)[LINEMATE], -1);
+            update_density(&C_DENSITY[DERAUMERE], &C_RESSOURCES(y, x)[DERAUMERE], -1);
+            update_density(&C_DENSITY[SIBUR], &C_RESSOURCES(y, x)[SIBUR], -1);
             return 0;
         }
     }

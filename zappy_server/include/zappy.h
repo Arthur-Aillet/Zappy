@@ -10,19 +10,22 @@
 
     #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
-    #define S_SOCKET        com.server.socket
-    #define S_READ          com.server.read_fd
-    #define S_MAX           com.server.maxsd
+    #define S_SOCKET            com.server.socket
+    #define S_READ              com.server.read_fd
+    #define S_MAX               com.server.maxsd
 
-    #define PS_SOCKET       com->server.socket
-    #define PS_READ         com->server.read_fd
-    #define PS_MAX          com->server.maxsd
+    #define PS_SOCKET           com->server.socket
+    #define PS_READ             com->server.read_fd
+    #define PS_MAX              com->server.maxsd
 
-    #define PC_SOCKET(i)    com->client[i].socket
+    #define PC_SOCKET(i)        com->client[i].socket
 
-    #define SOCKET(i)       client[i].socket
+    #define SOCKET(i)           client[i].socket
 
-    #define TEAM(i)         com->teams[i]
+    #define TEAM(i)             com->teams[i]
+
+    #define C_DENSITY           com->gui->map.density
+    #define C_RESSOURCES(y, x)  com->gui->map.tiles[y][x].ressources
 
     #include <stdio.h>
     #include <stdlib.h>

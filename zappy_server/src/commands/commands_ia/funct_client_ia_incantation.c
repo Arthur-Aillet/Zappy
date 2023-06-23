@@ -44,10 +44,8 @@ void update_tile_gui(common_t *com, ia_t *ia)
 static void call_function_gui(ia_t *ia, common_t *com,
                                 msg_queue_t *new_msg)
 {
-    if (to_check_ressources(ia, com,
-        ia->player->x, ia->player->y) == -1) {
-        to_create_message_response_ia(new_msg);
-        return;
+    if (to_check_ressources(ia, com, ia->player->x, ia->player->y) == -1) {
+        return to_create_message_response_ia(new_msg);
     }
     if (ia->player->level == 1) {
         status_level_one(ia, com, new_msg);
@@ -60,22 +58,20 @@ static void call_function_gui(ia_t *ia, common_t *com,
 void funct_client_ia_incantation(ia_t *ia, char **args, common_t *com)
 {
     msg_queue_t *new_msg = malloc(sizeof(msg_queue_t));
-
-    (void)com;
     (void)args;
     if (new_msg == NULL) {
         return;
     }
+    new_msg->msg = NULL;
     if (ia->player->incantation == NO) {
         call_function_gui(ia, com, new_msg);
     } else {
         to_create_message_response_ia(new_msg);
     }
-    new_msg->time = 300. / (double)com->freq;
-    new_msg->start = 0;
-    new_msg->msg = NULL;
-    new_msg->handler = &funct_response_ia_incantation;
     new_msg->next_msg = ia->msg_queue;
     ia->msg_queue = new_msg;
+    new_msg->time = 300. / (double)com->freq;
+    new_msg->start = 0;
+    new_msg->handler = &funct_response_ia_incantation;
     basic_log("rentrer dans la funct_client_ia_incantation", C, 0);
 }

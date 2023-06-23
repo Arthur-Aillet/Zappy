@@ -7,8 +7,7 @@
 
 #include "zappy.h"
 
-void to_complete_ia_in_incantation(int nbr_ia,
-                                char **arg, tile_t *tile)
+void to_complete_ia_in_incantation(int nbr_ia, char **arg, tile_t *tile)
 {
     if (nbr_ia == 1) {
         tile->nb_player_incantations =
@@ -34,14 +33,13 @@ char *create_new_arg(int nbr, msg_queue_t *new_msg)
     char *arg;
 
     sprintf(buffer_player, "%d", nbr);
-    arg = malloc(sizeof(char) * strlen(buffer_player));
+    arg = malloc(sizeof(char) * (strlen(buffer_player) + 1));
     if (arg == NULL) {
         to_create_message_response_ia(new_msg);
         return NULL;
     }
     arg[0] = '\0';
-    arg = strcat(arg, buffer_player);
-    return arg;
+    return strcat(arg, buffer_player);
 }
 
 void status_level_one(ia_t *ia, common_t *com, msg_queue_t *new_msg)
