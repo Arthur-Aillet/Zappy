@@ -22,7 +22,10 @@ void funct_client_ppo(gui_t *gui, uint8_t **args, common_t *com)
 {
     msg_queue_t *new_msg = malloc(sizeof(msg_queue_t));
 
-    (void)com;
+    if (args == NULL || args[0] == NULL) {
+        funct_server_sbp(NULL, com->gui, com);
+        return;
+    }
     new_msg->time = 0;
     new_msg->start = 0;
     new_msg->msg = NULL;
