@@ -223,7 +223,6 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
 }
 
 fn ask_for_update(zappy: &mut Zappy, at: Duration) {
-    let mut reset_server = false;
     if let Some(server) = &mut zappy.server {
         if zappy.auto_update == true {
             if zappy.last_map_update.as_secs_f32() + 20. / zappy.time_unit * zappy.refresh_factor < at.as_secs_f32() {
