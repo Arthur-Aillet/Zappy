@@ -34,7 +34,7 @@ void funct_client_ia_fork(ia_t *ia, uint8_t **args, common_t *com)
         return;
     }
     call_function_gui(ia, com);
-    new_msg->time = 42 / com->freq;
+    new_msg->time = 42. / (double)com->freq;
     new_msg->start = 0;
     new_msg->msg = NULL;
     new_msg->handler = &funct_response_ia_fork;

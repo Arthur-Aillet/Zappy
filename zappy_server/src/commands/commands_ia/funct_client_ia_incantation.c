@@ -27,13 +27,13 @@ void update_tile_gui(common_t *com, ia_t *ia)
     if (args == NULL)
         return;
     sprintf(buffer_args, "%d", ia->player->x);
-    args[0] = malloc(sizeof(uint8_t) * strlen(buffer_args));
+    args[0] = malloc(sizeof(uint8_t) * (strlen(buffer_args) + 1));
     if (args[0] == NULL)
         return;
     args[0][0] = '\0';
     args[0] = (uint8_t *)strcat((char *)args[0], buffer_args);
     sprintf(buffer_args, "%d", ia->player->y);
-    args[1] = malloc(sizeof(uint8_t) * strlen(buffer_args));
+    args[1] = malloc(sizeof(uint8_t) * (strlen(buffer_args) + 1));
     if (args[1] == NULL)
         return;
     args[1][0] = '\0';
@@ -71,7 +71,7 @@ void funct_client_ia_incantation(ia_t *ia, uint8_t **args, common_t *com)
     } else {
         to_create_message_response_ia(new_msg);
     }
-    new_msg->time = 300 / com->freq;
+    new_msg->time = 300. / (double)com->freq;
     new_msg->start = 0;
     new_msg->msg = NULL;
     new_msg->handler = &funct_response_ia_incantation;

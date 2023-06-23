@@ -52,7 +52,7 @@ static const client_gui_t COMMAND_GESTION_CLIENT_GUI[] = {
 
 gui_t *set_gui(int height, int wigth, int freq);
 void free_gui(gui_t *gui);
-
+void update_density(size_t *density, size_t *ressources, int value);
 void check_msg_queue_gui(common_t *com);
 
 void funct_prepare_response(gui_t *gui, size_t x, size_t y);

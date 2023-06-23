@@ -29,7 +29,7 @@ void funct_client_ia_broadcast(ia_t *ia, uint8_t **args, common_t *com)
     }
     size_t array_size;
     for (array_size = 0; args[array_size] != NULL; array_size++);
-    new_msg->time = 7 / com->freq;
+    new_msg->time = 7. / (double)com->freq;
     new_msg->start = 0;
     malloc_nbr_args(new_msg, array_size + 1);
     for (size_t i = 0; i < array_size; i++) {

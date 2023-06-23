@@ -12,10 +12,10 @@
 
 static size_t *set_ressources(void)
 {
-    size_t *resources = malloc(sizeof(size_t) * 8);
+    size_t *resources = malloc(sizeof(size_t) * 7);
     if (resources == NULL)
         exit(error("Failed to allocate resources for a tile", 84));
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 7; i++)
         resources[i] = 0;
     return resources;
 }
@@ -27,9 +27,9 @@ static map_t set_map(int height, int width, int freq)
     map.height = height;
     map.width = width;
     map.start = time(NULL);
-    map.time = 20 / freq;
+    map.time = (double)(20. / (double)freq);
     map.tiles = malloc(sizeof(tile_t *) * height);
-    map.density = set_ressources();
+    map.density = (size_t*)calloc(7, sizeof(size_t));
     if (map.tiles == NULL)
         exit(error("Failed to allocate tiles map", 84));
     for (int i = 0; i < height; i++) {

@@ -23,7 +23,7 @@ player_t set_player(size_t x, size_t y, size_t freq)
     new.life = 10;
     new.satiety = 10;
     new.start = time(NULL);
-    new.time = 126 / freq;
+    new.time = 126. / (double)freq;
     new.incantation = NO;
     new.inventory = malloc(sizeof(size_t) * 8);
     if (new.inventory == NULL) {

@@ -34,6 +34,6 @@ void funct_server_pgt(uint8_t **args, void *info, common_t *common)
     }
     funct_prepare_res(gui, args);
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-        gui->buffer.bufferWrite.usedSize);
+        strlen((char*)gui->buffer.bufferWrite.octets));
     printf("rentrer dans la fonctions funct_server_pgt\n");
 }

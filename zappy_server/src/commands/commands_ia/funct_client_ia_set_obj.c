@@ -21,7 +21,7 @@ void funct_client_ia_set_obj(ia_t *ia, uint8_t **args, common_t *com)
     new_msg->msg[0][0] = '\0';
     new_msg->msg[0] = (uint8_t*)strcat((char*)new_msg->msg[0], (char*)args[0]);
     new_msg->msg[1] = NULL;
-    new_msg->time = 7 / com->freq;
+    new_msg->time = 7. / (double)com->freq;
     new_msg->start = 0;
     new_msg->handler = &funct_response_ia_set_obj;
     new_msg->next_msg = ia->msg_queue;

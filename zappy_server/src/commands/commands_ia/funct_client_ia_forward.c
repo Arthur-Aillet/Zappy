@@ -16,7 +16,7 @@ void funct_client_ia_forward(ia_t *ia, uint8_t **args, common_t *com)
     if (new_msg == NULL) {
         return;
     }
-    new_msg->time = 7 / com->freq;
+    new_msg->time = 7. / (double)com->freq;
     new_msg->start = 0;
     new_msg->msg = NULL;
     new_msg->handler = &funct_response_ia_forward;

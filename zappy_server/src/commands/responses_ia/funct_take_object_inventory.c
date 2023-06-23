@@ -13,14 +13,14 @@ static void funct_response_gui(ia_t *ia, int idx,
     char buffer_args[256];
 
     sprintf(buffer_args, "%d", ia->player->id);
-    args[0] = malloc(sizeof(uint8_t) * strlen(buffer_args));
+    args[0] = malloc(sizeof(uint8_t) * (strlen(buffer_args) + 1));
     if (args[0] == NULL) {
         return;
     }
     args[0][0] = '\0';
     strcat((char*)args[0], buffer_args);
     sprintf(buffer_args, "%d", idx);
-    args[1] = malloc(sizeof(uint8_t) * strlen(buffer_args));
+    args[1] = malloc(sizeof(uint8_t) * (strlen(buffer_args) + 1));
     if (args[1] == NULL) {
         return;
     }
@@ -39,13 +39,12 @@ void response_take(ia_t *ia, int idx, common_t *com)
     if (com->gui->map.tiles[ia->player->y][ia->player->x].ressources[idx]
                                                                         > 0) {
         ia->player->inventory[idx] += 1;
-        com->gui->map.tiles[ia->player->y][ia->player->x].ressources[idx] -= 1;
+        update_density(&com->gui->map.density[idx], &com->gui->map.tiles[ia->player->y][ia->player->x].ressources[idx], -1);
         funct_response_gui(ia, idx, com, args);
-        com->gui->map.density -= 1;
         update_tile_gui(com, ia);
         strcat((char*)ia->buffer.bufferWrite.octets, "ok\n\0");
-    }
-    strcat((char*)ia->buffer.bufferWrite.octets, "ko\n\0");
+    } else
+        strcat((char*)ia->buffer.bufferWrite.octets, "ko\n\0");
 }
 
 static void next_if_funct_tree(ia_t *ia, common_t *com, uint8_t **args)

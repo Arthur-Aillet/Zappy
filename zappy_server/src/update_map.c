@@ -9,6 +9,12 @@
 #include "error_handling.h"
 #include <stdlib.h>
 
+void update_density(size_t *density, size_t *ressources, int value)
+{
+    *density = (*density + value > 0) ? *density + value : 0;
+    *ressources = (*ressources + value > 0) ? *ressources + value : 0;
+}
+
 static size_t *new_ressource(int height, int width)
 {
     size_t *resources = malloc(sizeof(size_t) * 7);
@@ -38,7 +44,7 @@ static void update_tiles_ressources(map_t *map)
     size_t *resources = new_ressource(map->height, map->width);
 
     for (int i = 0; i < 7; i++) {
-        if (map->density[i] >= resources[i])
+        if (resources[i] < map->density[i])
             continue;
         resources[i] -= map->density[i];
         while (resources[i] > 0) {
@@ -54,6 +60,7 @@ static void update_tiles_ressources(map_t *map)
 void update_map(common_t *com)
 {
     time_t now = time(NULL);
+
 
     if (difftime(now, com->gui->map.start) >= com->gui->map.time) {
         com->gui->map.start = time(NULL);

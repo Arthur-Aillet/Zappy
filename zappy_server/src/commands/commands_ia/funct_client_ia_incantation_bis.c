@@ -55,8 +55,7 @@ int to_check_ressources(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 1) {
         if (com->gui->map.tiles[y][x].ressources[1] > 0) {
-            com->gui->map.tiles[y][x].ressources[1] -= 1;
-            com->gui->map.density -= 1;
+            update_density(&com->gui->map.density[1], &com->gui->map.tiles[y][x].ressources[1], -1);
             return 0;
         }
     }
@@ -64,10 +63,9 @@ int to_check_ressources(ia_t *ia, common_t *com, int x, int y)
         if (com->gui->map.tiles[y][x].ressources[1] > 0 &&
         com->gui->map.tiles[y][x].ressources[2] > 0 &&
         com->gui->map.tiles[y][x].ressources[3] > 0) {
-            com->gui->map.tiles[y][x].ressources[1] -= 1;
-            com->gui->map.tiles[y][x].ressources[2] -= 1;
-            com->gui->map.tiles[y][x].ressources[3] -= 1;
-            com->gui->map.density -= 3;
+            update_density(&com->gui->map.density[1], &com->gui->map.tiles[y][x].ressources[1], -1);
+            update_density(&com->gui->map.density[2], &com->gui->map.tiles[y][x].ressources[2], -1);
+            update_density(&com->gui->map.density[3], &com->gui->map.tiles[y][x].ressources[3], -1);
             return 0;
         }
     }
