@@ -28,19 +28,19 @@ static void funct_find_egg(egg_t *new_eggs, size_t nb_eggs,
 egg_t *remove_egg(egg_t egg, egg_t *old_eggs, size_t nb_eggs, common_t *com)
 {
     egg_t *new_eggs = malloc(sizeof(egg_t) * (nb_eggs - 1));
-    uint8_t **args = malloc(sizeof(uint8_t *) * 1);
+    char **args = malloc(sizeof(char *) * 1);
     char buffer_egg[256];
 
     if (args == NULL || new_eggs == NULL) {
         return NULL;
     }
     sprintf(buffer_egg, "%d", egg.egg_id);
-    args[0] = malloc(sizeof(uint8_t) * strlen(buffer_egg));
+    args[0] = malloc(sizeof(char) * strlen(buffer_egg));
     if (args[0] == NULL) {
         return NULL;
     }
     args[0][0] = '\0';
-    strcat((char*)args[0], buffer_egg);
+    strcat(args[0], buffer_egg);
     funct_find_egg(new_eggs, nb_eggs, old_eggs, egg);
     funct_server_edi(args, com->gui, com);
     return new_eggs;

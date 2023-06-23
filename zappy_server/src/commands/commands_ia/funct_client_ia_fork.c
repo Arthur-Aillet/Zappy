@@ -9,23 +9,23 @@
 
 static void call_function_gui(ia_t *ia, common_t *com)
 {
-    uint8_t **arg = malloc(sizeof(uint8_t *) * 1);
+    char **arg = malloc(sizeof(char *) * 1);
     char buffer_player[256];
 
     if (arg == NULL) {
         return;
     }
     sprintf(buffer_player, "%d", ia->player->id);
-    arg[0] = malloc(sizeof(uint8_t) * (strlen(buffer_player) + 1));
+    arg[0] = malloc(sizeof(char) * (strlen(buffer_player) + 1));
     if (arg[0] == NULL) {
     }
     arg[0][0] = '\0';
-    strcat((char*)arg[0], buffer_player);
+    strcat(arg[0], buffer_player);
     funct_server_pfk(arg, com->gui, com);
     free_arg(1, arg);
 }
 
-void funct_client_ia_fork(ia_t *ia, uint8_t **args, common_t *com)
+void funct_client_ia_fork(ia_t *ia, char **args, common_t *com)
 {
     msg_queue_t *new_msg = malloc(sizeof(msg_queue_t));
 

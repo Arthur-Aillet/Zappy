@@ -39,16 +39,16 @@ int to_find_ia_incantation(common_t *com, ia_t *ia)
 
 void to_create_message_response_ia(msg_queue_t *new_msg)
 {
-    new_msg->msg = malloc(sizeof(uint8_t *) * 1);
+    new_msg->msg = malloc(sizeof(char *) * 1);
     if (new_msg->msg == NULL) {
         return;
     }
-    new_msg->msg[0] = malloc(sizeof(uint8_t) * 2);
+    new_msg->msg[0] = malloc(sizeof(char) * 2);
     if (new_msg->msg[0] == NULL) {
         return;
     }
     new_msg->msg[0][0] = '\0';
-    new_msg->msg[0] = (uint8_t *)strcat((char *)new_msg->msg[0], "ko");
+    new_msg->msg[0] = strcat(new_msg->msg[0], "ko");
 }
 
 int to_check_ressources(ia_t *ia, common_t *com, int x, int y)
@@ -73,7 +73,7 @@ int to_check_ressources(ia_t *ia, common_t *com, int x, int y)
 }
 
 void to_complete_ia_in_incantation_bis(int nbr_ia,
-                                u_int8_t **arg, tile_t *tile)
+                                char **arg, tile_t *tile)
 {
     if (nbr_ia == 2) {
         tile->nb_player_incantations =
@@ -81,15 +81,15 @@ void to_complete_ia_in_incantation_bis(int nbr_ia,
         if (tile->nb_player_incantations == NULL) {
             return;
         }
-        tile->nb_player_incantations[0] = atoi((char *)arg[3]);
-        tile->nb_player_incantations[0] = atoi((char *)arg[4]);
+        tile->nb_player_incantations[0] = atoi(arg[3]);
+        tile->nb_player_incantations[0] = atoi(arg[4]);
     }
     if (nbr_ia == 4) {
         tile->nb_player_incantations =
         realloc(tile->nb_player_incantations, sizeof(size_t) * 4);
-        tile->nb_player_incantations[0] = atoi((char *)arg[3]);
-        tile->nb_player_incantations[0] = atoi((char *)arg[4]);
-        tile->nb_player_incantations[0] = atoi((char *)arg[5]);
-        tile->nb_player_incantations[0] = atoi((char *)arg[6]);
+        tile->nb_player_incantations[0] = atoi(arg[3]);
+        tile->nb_player_incantations[0] = atoi(arg[4]);
+        tile->nb_player_incantations[0] = atoi(arg[5]);
+        tile->nb_player_incantations[0] = atoi(arg[6]);
     }
 }

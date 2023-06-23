@@ -8,7 +8,7 @@
 #include "zappy.h"
 
 static void status_level_four_five_bis(ia_t *ia,
-            common_t *com, msg_queue_t *new_msg, u_int8_t **arg)
+            common_t *com, msg_queue_t *new_msg, char **arg)
 {
     int result_ia = 0;
 
@@ -28,7 +28,7 @@ static void status_level_four_five_bis(ia_t *ia,
 
 void status_level_four_five(ia_t *ia, common_t *com, msg_queue_t *new_msg)
 {
-    u_int8_t **arg = malloc(sizeof(u_int8_t *) * 7);
+    char **arg = malloc(sizeof(char *) * 7);
 
     if (arg == NULL) {
         to_create_message_response_ia(new_msg);
@@ -42,7 +42,7 @@ void status_level_four_five(ia_t *ia, common_t *com, msg_queue_t *new_msg)
 }
 
 static void status_level_other_bis(ia_t *ia,
-            common_t *com, msg_queue_t *new_msg, u_int8_t **arg)
+            common_t *com, msg_queue_t *new_msg, char **arg)
 {
     int result_ia = 0;
 
@@ -62,7 +62,7 @@ static void status_level_other_bis(ia_t *ia,
 
 void status_level_other(ia_t *ia, common_t *com, msg_queue_t *new_msg)
 {
-    u_int8_t **arg = malloc(sizeof(u_int8_t *) * 7);
+    char **arg = malloc(sizeof(char *) * 7);
 
     if (arg == NULL) {
         to_create_message_response_ia(new_msg);

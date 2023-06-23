@@ -45,20 +45,20 @@ void funct_response_look_sud(ia_t *ia, common_t *com)
 {
     ia->buffer.bufferWrite.usedSize = 2;
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(u_int8_t) * ia->buffer.bufferWrite.usedSize);
+                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
     ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat((char *)ia->buffer.bufferWrite.octets, "[");
+    strcat(ia->buffer.bufferWrite.octets, "[");
     to_take_ressources_response_ia(ia, com, ia->player->x, ia->player->y);
     funct_response_look_sud_bis(ia, com);
     ia->buffer.bufferWrite.octets[ia->buffer.bufferWrite.usedSize - 2] = '\0';
     ia->buffer.bufferWrite.usedSize += 1;
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(u_int8_t) * ia->buffer.bufferWrite.usedSize);
+                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
-    strcat((char*)ia->buffer.bufferWrite.octets, "]\n");
+    strcat(ia->buffer.bufferWrite.octets, "]\n");
 }

@@ -22,58 +22,58 @@ typedef struct ia_s {
 } ia_t;
 
 typedef struct common_s common_t;
-void funct_response_ia_forward(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_right(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_left(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_look(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_inventory(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_broadcast(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_msg(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_connect_nbr(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_fork(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_eject(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_death(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_take_obj(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_set_obj(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_incantation(uint8_t **args, void *info, common_t *com);
-void funct_response_ia_connect_bar(uint8_t **args, void *info, common_t *com);
+void funct_response_ia_forward(char **args, void *info, common_t *com);
+void funct_response_ia_right(char **args, void *info, common_t *com);
+void funct_response_ia_left(char **args, void *info, common_t *com);
+void funct_response_ia_look(char **args, void *info, common_t *com);
+void funct_response_ia_inventory(char **args, void *info, common_t *com);
+void funct_response_ia_broadcast(char **args, void *info, common_t *com);
+void funct_response_ia_msg(char **args, void *info, common_t *com);
+void funct_response_ia_connect_nbr(char **args, void *info, common_t *com);
+void funct_response_ia_fork(char **args, void *info, common_t *com);
+void funct_response_ia_eject(char **args, void *info, common_t *com);
+void funct_response_ia_death(char **args, void *info, common_t *com);
+void funct_response_ia_take_obj(char **args, void *info, common_t *com);
+void funct_response_ia_set_obj(char **args, void *info, common_t *com);
+void funct_response_ia_incantation(char **args, void *info, common_t *com);
+void funct_response_ia_connect_bar(char **args, void *info, common_t *com);
 
 typedef struct server_ia_s {
-    uint8_t *comd;
-    uint8_t **args;
-    void (*handler)(ia_t *ia, uint8_t **args, common_t *com);
+    char *comd;
+    char **args;
+    void (*handler)(ia_t *ia, char **args, common_t *com);
 } server_ia_t;
 
-void funct_client_ia_forward(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_right(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_left(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_look(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_inventory(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_broadcast(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_msg(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_connect_nbr(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_fork(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_eject(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_take_obj(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_set_obj(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_incantation(ia_t *ia, uint8_t **args, common_t *com);
-void funct_client_ia_connect_bar(ia_t *ia, uint8_t **args, common_t *com);
+void funct_client_ia_forward(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_right(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_left(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_look(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_inventory(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_broadcast(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_msg(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_connect_nbr(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_fork(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_eject(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_take_obj(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_set_obj(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_incantation(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_connect_bar(ia_t *ia, char **args, common_t *com);
 
 static const server_ia_t COMMAND_GESTION_IA[] = {
-    {(uint8_t*)"Forward", NULL, funct_client_ia_forward},
-    {(uint8_t*)"Right", NULL, funct_client_ia_right},
-    {(uint8_t*)"Left", NULL, funct_client_ia_left},
-    {(uint8_t*)"Look", NULL, funct_client_ia_look},
-    {(uint8_t*)"Inventory", NULL, funct_client_ia_inventory},
-    {(uint8_t*)"Broadcast", NULL, funct_client_ia_broadcast},
-    {(uint8_t*)"message", NULL, funct_client_ia_msg},
-    {(uint8_t*)"Connect_nbr", NULL, funct_client_ia_connect_nbr},
-    {(uint8_t*)"Fork", NULL, funct_client_ia_fork},
-    {(uint8_t*)"Eject", NULL, funct_client_ia_eject},
-    {(uint8_t*)"Take", NULL, funct_client_ia_take_obj},
-    {(uint8_t*)"Set", NULL, funct_client_ia_set_obj},
-    {(uint8_t*)"Incantation", NULL, funct_client_ia_incantation},
-    {(uint8_t*)"Connect_nbr", NULL, funct_client_ia_connect_bar},
+    {"Forward", NULL, funct_client_ia_forward},
+    {"Right", NULL, funct_client_ia_right},
+    {"Left", NULL, funct_client_ia_left},
+    {"Look", NULL, funct_client_ia_look},
+    {"Inventory", NULL, funct_client_ia_inventory},
+    {"Broadcast", NULL, funct_client_ia_broadcast},
+    {"message", NULL, funct_client_ia_msg},
+    {"Connect_nbr", NULL, funct_client_ia_connect_nbr},
+    {"Fork", NULL, funct_client_ia_fork},
+    {"Eject", NULL, funct_client_ia_eject},
+    {"Take", NULL, funct_client_ia_take_obj},
+    {"Set", NULL, funct_client_ia_set_obj},
+    {"Incantation", NULL, funct_client_ia_incantation},
+    {"Connect_nbr", NULL, funct_client_ia_connect_bar},
 };
 
 ia_t *set_ia(void);

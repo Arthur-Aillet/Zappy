@@ -18,7 +18,7 @@ static void funct_for_on_tiles(gui_t *gui)
     }
 }
 
-void funct_server_all_bct(uint8_t **args, void *info, common_t *common)
+void funct_server_all_bct(char **args, void *info, common_t *common)
 {
     gui_t *gui = (gui_t *)info;
 
@@ -26,7 +26,7 @@ void funct_server_all_bct(uint8_t **args, void *info, common_t *common)
     (void)args;
     gui->buffer.bufferWrite.usedSize = 1;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                    sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize));
+                    sizeof(char) * (gui->buffer.bufferWrite.usedSize));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }
@@ -34,5 +34,5 @@ void funct_server_all_bct(uint8_t **args, void *info, common_t *common)
     funct_for_on_tiles(gui);
     gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize - 1] = '\0';
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-            strlen((char*)gui->buffer.bufferWrite.octets));
+            strlen(gui->buffer.bufferWrite.octets));
 }

@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-void funct_response_ia_take_obj(uint8_t **args, void *info, common_t *com)
+void funct_response_ia_take_obj(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
     if (args[0] == NULL) {
@@ -16,11 +16,11 @@ void funct_response_ia_take_obj(uint8_t **args, void *info, common_t *com)
     }
     ia->buffer.bufferWrite.usedSize = 4;
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
+                    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL)
         return;
     ia->buffer.bufferWrite.octets[0] = '\0';
-    if (strcmp((char*)args[0], "food") == 0) {
+    if (strcmp(args[0], "food") == 0) {
         response_take(ia, 0, com);
     } else {
         next_if_funct_take(ia, com, args);

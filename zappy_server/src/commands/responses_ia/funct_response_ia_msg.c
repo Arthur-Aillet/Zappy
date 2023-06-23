@@ -9,7 +9,7 @@
 
 //cette fonction ne sert a rien
 
-void funct_response_ia_msg(uint8_t **args, void *info, common_t *com)
+void funct_response_ia_msg(char **args, void *info, common_t *com)
 {
     (void)args;
     (void)info;
