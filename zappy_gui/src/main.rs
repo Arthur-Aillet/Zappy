@@ -15,7 +15,7 @@ use crate::zappy::Zappy;
 use rend_ox::app::{app, App};
 use rend_ox::Vec3;
 use crate::arguments::parse_arguments;
-use crate::tantorian::{generate_color_from_string, Tantorian};
+use crate::tantorian::{generate_color_from_string, PlayerState, Tantorian};
 
 fn zappy_key_pressed(app: &rend_ox::nannou::App, model: &mut App<Zappy>, key: rend_ox::nannou::event::Key) {
     if let rend_ox::nannou::event::Key::Space = key {
@@ -46,10 +46,11 @@ fn zappy_app(nannou_app: &rend_ox::nannou::App) -> App<Zappy> {
     app.camera.position = Vec3::new(app.user.map.size[0] as f32 / 200., app.user.map.size[1] as f32 / 200., 0.04);
     app.camera.pitch = -PI/2.;
     app.user.teams.push(("Team5".to_string(), generate_color_from_string(&"Team5".to_owned())));
-    let new = Tantorian::new_from_command(
+    let mut new = Tantorian::new_from_command(
         1, 0, 0,
         crate::tantorian::Orientation::S, 1, "Team5".to_string(),
         &app.user.teams, &app.user.map.size, &mut app.user.players).unwrap();
+    new.state = PlayerState::Egg;
     app.user.players.push(new);
     app
 }

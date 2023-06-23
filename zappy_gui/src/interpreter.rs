@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use rend_ox::glam::{Vec2, Vec3Swizzles};
+use crate::tantorian::PlayerState::{Alive, Dead};
 
 pub type ServerFunction = fn(&mut Zappy, String, Duration);
 
@@ -26,7 +27,7 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     //pdr
     //pgt
     functions.insert("pdi".to_string(), Zappy::death_of_player);
-    //enw
+    functions.insert("enw".to_string(), Zappy::new_egg);
     //ebo
     //edi
     functions.insert("sgt".to_string(), Zappy::set_time_unit);
@@ -56,6 +57,39 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn new_egg(&mut self, command: String, at: Duration) {
+        let re = Regex::new(r"^enw (-?\d+) (-?\d+) (\d+) (\d+)$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, egg_number, capture, "enw: invalid egg number");
+            parse_capture!(i64, 1, number, capture, "enw: invalid player number");
+            parse_capture!(usize, 2, x, capture, "enw: invalid player x coordinate");
+            parse_capture!(usize, 3, y, capture, "enw: invalid player y coordinate");
+
+            if x > self.map.size[0] {
+                println!("enw: x coordinate out of bounds");
+                return;
+            }
+            if y > self.map.size[1] {
+                println!("enw: y coordinate out of bounds");
+                return;
+            }
+            let mut found = false;
+            for player in &mut self.players {
+                if player.number == number {
+                    found = true;
+                }
+            }
+            if found == false {
+                println!("enw: player not found");
+                return;
+            }
+        } else {
+            println!("enw: invalid command given");
+        }
+    }
+
     fn invalid_arg_sent(&mut self, _command: String, at: Duration) {
         self.ui.network_messages.push((at, String::from("Server received invalid argument")));
         println!("Server received invalid argument");
@@ -197,7 +231,7 @@ impl Zappy {
             match maybe_number {
                 Ok(number) => {
                     for player in &mut self.players {
-                        if player.number == number && player.alive {
+                        if player.number == number && player.state == Alive {
                             self.ui.broadcast_messages.push((at, player.team_name.clone(), number, String::from(args[2])));
                             return;
                         }
@@ -236,7 +270,7 @@ impl Zappy {
                 Ok(number) => {
                     for player in &mut self.players {
                         if player.number == number {
-                            player.alive = false;
+                            player.state = Dead;
                         }
                     }
                 }

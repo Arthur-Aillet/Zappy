@@ -4,6 +4,7 @@ use rend_ox::glam::Vec2;
 use rend_ox::Vec3;
 use std::hash::{Hash, Hasher};
 use std::time::Duration;
+use crate::tantorian::PlayerState::{Alive, Dead};
 
 #[derive(Clone, Copy)]
 pub enum Orientation {
@@ -58,6 +59,23 @@ pub fn generate_color_from_string(string: &String) -> Vec3 {
     return Vec3::new(r as f32/255. , g as f32/255., b as f32/255.)
 }
 
+#[derive(Clone, Copy, PartialEq)]
+pub enum PlayerState {
+    Dead,
+    Alive,
+    Egg
+}
+
+impl PlayerState {
+    pub fn as_string(&self) -> &'static str {
+        match self {
+            Dead => {"dead"}
+            Alive => {"alive"}
+            PlayerState::Egg => {"egg"}
+        }
+    }
+}
+
 pub struct Tantorian {
     pub team_name: String,
     pub number: i64,
@@ -71,7 +89,7 @@ pub struct Tantorian {
     pub level: u32,
     pub orientation: Orientation,
     pub mesh_descriptor: u32,
-    pub alive: bool,
+    pub state: PlayerState,
     pub food: u32,
     pub linemate: u32,
     pub deraumere: u32,
@@ -82,27 +100,6 @@ pub struct Tantorian {
 }
 
 impl Tantorian {
-    /*pub fn new() -> Tantorian {
-        Tantorian {
-            team_name: "".to_string(),
-            number: 0,
-            pos: Vec3::new(0., 0., 0.),
-            color: Vec3::new(1., 1., 1.),
-            level: 0,
-            orientation: Orientation::N,
-            mesh_descriptor: 0,
-            current_tile: UVec2::new(0, 0),
-            alive: true,
-            food: 0,
-            linemate: 0,
-            deraumere: 0,
-            sibur: 0,
-            mendiane: 0,
-            phiras: 0,
-            thystame: 0,
-        }
-    }*/
-
     pub fn new_from_command(number: i64, x: usize, y: usize, orientation: Orientation, level : u32, team_name: String, teams: &Vec<(String, Vec3)>, map_size: &[usize; 2], players: &mut Vec<Tantorian>) -> Option<Tantorian> {
         if !teams.iter().any(|(name, _color)| *name == team_name) {
             println!("New player team name does not exist!");
@@ -123,7 +120,7 @@ impl Tantorian {
         };
         let rot = Vec3::new(PI/2., orientation.as_radian(), 0.);
         for player in players {
-            if player.team_name == team_name && player.number == number && player.alive == true {
+            if player.team_name == team_name && player.number == number && player.state == Alive {
                 println!("New player number already attributed!");
                 return None;
             } else if player.team_name == team_name && player.number == number {
@@ -139,7 +136,7 @@ impl Tantorian {
                 player.current_tile = Vec2::new(x as f32, y as f32);
                 player.last_tile = Vec2::new(x as f32, y as f32);
                 player.start_movement = None;
-                player.alive = true;
+                player.state = Alive;
                 player.food = 0;
                 player.linemate = 0;
                 player.deraumere = 0;
@@ -171,7 +168,7 @@ impl Tantorian {
             current_tile: Vec2::new(x as f32, y as f32),
             last_tile: Vec2::new(x as f32, y as f32),
             start_movement: None,
-            alive: true,
+            state: Alive,
             food: 0,
             linemate: 0,
             deraumere: 0,

@@ -12,6 +12,7 @@ use rend_ox::nannou_egui::egui::CtxRef;
 
 use crate::map::Map;
 pub use crate::server::ServerConn;
+use crate::tantorian::PlayerState::{Alive, Egg};
 use crate::tantorian::Tantorian;
 use crate::ui;
 use crate::ui::ZappyUi;
@@ -23,6 +24,7 @@ pub struct Zappy {
     pub(crate) server: Option<ServerConn>,
     pub(crate) ui: ZappyUi,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
+    pub(crate) egg_mesh: Option<MeshDescriptor>,
     pub(crate) functions: HashMap<String, ServerFunction>,
     pub(crate) time_unit: f32,
     pub(crate) thread_handle: Option<JoinHandle<()>>,
@@ -89,6 +91,7 @@ impl Zappy {
             server: None,
             ui: ZappyUi::new(),
             tantorian_mesh: None,
+            egg_mesh: None,
             functions: create_hash_function(),
             time_unit: 100.,
             thread_handle: None,
@@ -127,6 +130,11 @@ impl Zappy {
                 app.user.tantorian_mesh = Some(md);
             } else {
                 println!("Zappy: couldn't load batgnome.obj");
+            }
+            if let Ok(md) = graphics.load_mesh("./obj/egg.obj") {
+                app.user.egg_mesh = Some(md);
+            } else {
+                println!("Zappy: couldn't load egg.obj");
             }
         }
     }
@@ -167,9 +175,21 @@ impl Zappy {
         } else {
             return;
         }
+        let egg_mesh : &MeshDescriptor;
+        if let Some(mesh) = &app.user.egg_mesh {
+            egg_mesh = mesh
+        } else {
+            return;
+        }
 
         for player in &app.user.players {
-            app.draw_at(player_mesh, player.color.clone(), player.pos.clone(), player.rotation.clone(), Vec3::new(0.333, 0.333, 0.333));
+            if player.state == Alive {
+                app.draw_at(player_mesh, player.color.clone(), player.pos.clone(), player.rotation.clone(), Vec3::new(0.333, 0.333, 0.333));
+            } else if player.state == Egg {
+                let mut position = player.pos.clone();
+                position.z -= 0.333;
+                app.draw_at(egg_mesh, player.color.clone(), position, player.rotation.clone(), Vec3::new(0.333, 0.333, 0.333));
+            }
         }
         Map::render(app);
     }

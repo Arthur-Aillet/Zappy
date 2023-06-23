@@ -251,14 +251,7 @@ impl ZappyUi {
                             }
                             ui_grid.end_row();
                             ZappyUi::display_stat(ui_grid, "Number", player.number);
-
-                            let state: &str;
-                            if player.alive {
-                                state = "alive";
-                            } else  {
-                                state = "dead";
-                            }
-                            ZappyUi::display_stat(ui_grid, "Status", state);
+                            ZappyUi::display_stat(ui_grid, "Status", player.state.as_string());
                             ZappyUi::display_stat(ui_grid, "Position", format!("{} {}", player.current_tile.x, player.current_tile.y));
                             ZappyUi::display_stat(ui_grid, "Level", format!("{}", player.level));
                             ZappyUi::display_stat(ui_grid, "Orientation", player.orientation.to_char());
