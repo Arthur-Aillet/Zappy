@@ -21,7 +21,6 @@ player_t set_player(size_t x, size_t y, size_t freq)
     new.orientation = 1 + rand() % 4;
     new.level = 1;
     new.life = 10;
-    new.satiety = 10;
     new.start = time(NULL);
     new.time = 126. / (double)freq;
     new.incantation = NO;

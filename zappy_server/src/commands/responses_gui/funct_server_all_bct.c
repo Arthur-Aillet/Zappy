@@ -35,5 +35,4 @@ void funct_server_all_bct(uint8_t **args, void *info, common_t *common)
     gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize - 1] = '\0';
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
             strlen((char*)gui->buffer.bufferWrite.octets));
-    printf("rentrer dans la fonctions funct_server_all_bct\n");
 }
