@@ -6,6 +6,7 @@ use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
 use rend_ox::nannou_egui::egui::CtxRef;
 use std::cmp::{max, min};
+use rend_ox::material::MaterialDescriptor;
 
 use crate::map::Map;
 pub use crate::server::ServerConn;
@@ -76,22 +77,24 @@ impl Zappy {
     }
     pub fn load(app: &mut App<Zappy>) {
         app.user.map.resize(8, 8);
-        if let Ok(mut graphics) = app.graphics.try_borrow_mut() {
-            if let Ok(mut md) = graphics.load_mesh("./obj/plane.obj") {
-                if let Ok(shader) = graphics.load_shader("./src/shaders/map.wgsl") {
-                    graphics.bind_shader_to_mesh(&mut md, &shader);
-                }
-                app.user.map.mesh = Some(md);
+        if let Ok(mut md) = app.load_mesh("./obj/plane.obj") {
+            let mut mat = MaterialDescriptor::new();
+            mat.shader = Some("./src/shaders/map.wgsl".into());
+            mat.maps.push("./textures/happy-tree.png".into());
+            if let Ok(material) = app.load_material(mat) {
+            // if let Ok(shader) = app.load_shader("./src/shaders/map.wgsl") {
+                app.bind_material_to_mesh(&mut md, &material);
             }
-            if let Ok(mut md) = graphics.load_mesh("./obj/rock.obj") {
-                app.user.map.rock_mesh = Some(md);
-            }
-            if let Ok(md) = graphics.load_mesh("./obj/batgnome.obj") {
-                println!("Zappy: loaded bat.obj");
-                app.user.tantorian_mesh = Some(md);
-            } else {
-                println!("Zappy: couldn't load bat.obj");
-            }
+            app.user.map.mesh = Some(md);
+        }
+        if let Ok(mut md) = app.load_mesh("./obj/rock.obj") {
+            app.user.map.rock_mesh = Some(md);
+        }
+        if let Ok(md) = app.load_mesh("./obj/batgnome.obj") {
+            println!("Zappy: loaded bat.obj");
+            app.user.tantorian_mesh = Some(md);
+        } else {
+            println!("Zappy: couldn't load bat.obj");
         }
 
         // TODO : Allow skipping this in order to test things offline
