@@ -1,4 +1,4 @@
-use std::thread;
+use std::{io, thread};
 use std::thread::JoinHandle;
 use std::time::Duration;
 use crate::server::ServerConn;
@@ -49,11 +49,19 @@ pub(crate) fn loop_server(mut server: ServerConn) {
     server.recv_from_server().expect("Error received for welcome");
     server.send_to_server("GRAPHIC", -1, -1);
     loop {
-        let string = server.recv_from_server().expect("Error received from new message");
-        if !string.is_empty() {
-            {
-                let mut commands = (&mut server.commands).lock().expect("Mutex poisoned");
-                commands.push(string);
+        match server.recv_from_server() {
+            Ok(string) => {
+                if !string.is_empty() {
+                    {
+                        let mut commands = (&mut server.commands).lock().expect("Mutex poisoned");
+                        commands.push(string);
+                    }
+                }
+            }
+            Err(error) => {
+                if error.kind() == io::ErrorKind::ConnectionAborted {break;} else {
+                    panic!("Error receiving message form server")
+                }
             }
         }
         {

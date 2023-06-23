@@ -18,10 +18,23 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     functions.insert("ppo".to_string(), Zappy::player_position);
     functions.insert("plv".to_string(), Zappy::player_level);
     functions.insert("pin".to_string(), Zappy::player_inventory);
-    functions.insert("sgt".to_string(), Zappy::set_time_unit);
-    functions.insert("pdi".to_string(), Zappy::death_of_player);
-    functions.insert("seg".to_string(), Zappy::end_of_game);
+    //pex
     functions.insert("pbc".to_string(), Zappy::broadcast);
+    //pic
+    //pie
+    //pfk
+    //pdr
+    //pgt
+    functions.insert("pdi".to_string(), Zappy::death_of_player);
+    //enw
+    //ebo
+    //edi
+    functions.insert("sgt".to_string(), Zappy::set_time_unit);
+    //sst
+    functions.insert("seg".to_string(), Zappy::end_of_game);
+    //smg
+    //suc
+    //sbp
     functions
 }
 

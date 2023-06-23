@@ -30,8 +30,11 @@ pub struct Zappy {
     pub(crate) hostname: String,
     pub(crate) auto_update: bool,
     pub(crate) refresh_factor: f32,
-    pub(crate) winner_team: Option<String>,
     pub(crate) last_map_update: Duration,
+    pub(crate) player_auto_update: bool,
+    pub(crate) player_refresh_factor: f32,
+    pub(crate) last_player_update: Duration,
+    pub(crate) winner_team: Option<String>,
     pub(crate) following: Option<(i64, String)>,
 }
 
@@ -95,6 +98,9 @@ impl Zappy {
             refresh_factor: 1.0,
             winner_team: None,
             last_map_update: Duration::from_secs_f32(20. / 100.),
+            player_auto_update: false,
+            player_refresh_factor: 1.0,
+            last_player_update: Duration::from_secs_f32(7. / 100.),
             following: None,
         }
     }
@@ -170,7 +176,7 @@ impl Zappy {
 }
 
 pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
-    if let Some(new_time_unit) = zappy.user.ui .settings(ctx, &mut zappy.camera, zappy.camera_is_active) {
+    if let Some(new_time_unit) = zappy.user.ui.settings(ctx, &mut zappy.camera, zappy.camera_is_active) {
         if let Some(server) = &mut zappy.user.server {
             if server.send_to_server("sst", new_time_unit, -1) == false {
                 zappy.user.close_connection(at);
@@ -179,7 +185,8 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
         }
     }
     let (action, player_number, team_name) = zappy.user.ui
-        .players(ctx, &mut zappy.user.players, &mut zappy.user.teams, zappy.camera_is_active);
+        .players(ctx, &mut zappy.user.players, &mut zappy.user.teams, &mut zappy.user.player_auto_update, &mut zappy.user.player_refresh_factor, zappy.camera_is_active);
+    let refresh_player = action == crate::ui::PlayerAction::Refresh;
     if action == crate::ui::PlayerAction::Follow {
         for player in &zappy.user.players {
             if player.team_name == team_name && player.number == player_number {
@@ -192,13 +199,7 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
         look_at_player(zappy, &player_number, &team_name);
     }
     let refresh_map = zappy.user.ui.tiles(ctx, &mut zappy.user.auto_update, &mut zappy.user.refresh_factor, &zappy.user.map, zappy.camera_is_active);
-    if let Some(server) = &mut zappy.user.server {
-        if refresh_map {
-            if server.send_to_server("mct", -1, -1) == false {
-                zappy.user.close_connection(at);
-                zappy.user.reset_server_data();
-            }
-        }
+    if zappy.user.server.is_some() {
         zappy.user.ui.communications(ctx, zappy.camera_is_active);
     }
     let state = zappy.user.ui.network_status(ctx, zappy.camera_is_active, &mut zappy.user.port, &mut zappy.user.hostname, zappy.user.server.is_some());
@@ -212,16 +213,35 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
     if let Some(team) = &zappy.user.winner_team {
         zappy.user.ui.win(ctx, team, zappy.camera_is_active);
     }
+    let mut reset_server = false;
+    if let Some(server) = &mut zappy.user.server {
+        if refresh_map {
+            reset_server = !server.send_to_server("mct", -1, -1);
+        }
+        if refresh_player {
+            for player in &zappy.user.players {
+                reset_server = !server.send_to_server("ppo", player.number as i32, -1);
+            }
+        }
+    } else {
+        return;
+    }
 }
 
 fn ask_for_update(zappy: &mut Zappy, at: Duration) {
+    let mut reset_server = false;
     if let Some(server) = &mut zappy.server {
         if zappy.auto_update == true {
             if zappy.last_map_update.as_secs_f32() + 20. / zappy.time_unit * zappy.refresh_factor < at.as_secs_f32() {
                 zappy.last_map_update = at;
-                if server.send_to_server("mct", -1, -1) == false {
-                    zappy.close_connection(at);
-                    zappy.reset_server_data();
+                server.send_to_server("mct", -1, -1);
+            }
+        }
+        if zappy.player_auto_update == true {
+            if zappy.last_player_update.as_secs_f32() + 7. / zappy.time_unit * zappy.player_refresh_factor < at.as_secs_f32() {
+                zappy.last_player_update = at;
+                for player in &zappy.players {
+                    server.send_to_server("ppo", player.number as i32, -1);
                 }
             }
         }
@@ -278,6 +298,13 @@ pub(crate) fn zappy_update(
     update: rend_ox::nannou::event::Update,
     ctx: &CtxRef
 ) {
+    if let Some(handle) = &zappy.user.thread_handle {
+        if handle.is_finished() {
+            zappy.user.ui.network_messages.push((update.since_start, format!("Host {}:{} broke connection", zappy.user.hostname, zappy.user.port)));
+            zappy.user.close_connection(update.since_start);
+            zappy.user.reset_server_data();
+        }
+    }
     rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
     following(nannou_app, zappy);
     Zappy::render(zappy);

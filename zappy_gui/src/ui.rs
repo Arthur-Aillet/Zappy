@@ -23,6 +23,7 @@ pub(crate) enum State {
 #[derive(PartialEq)]
 pub(crate) enum PlayerAction {
     Nothing,
+    Refresh,
     Follow,
     GoTo,
 }
@@ -172,7 +173,7 @@ impl ZappyUi {
         ZappyUi::display_stat(grid,"Thystame", map.tiles[selected[0]][selected[1]].q6.len());
     }
 
-    pub(crate) fn tile_settings(&mut self, ui: &mut Ui, auto_refresh: &mut bool, refresh_rate: &mut f32) -> bool {
+    pub(crate) fn refresh_settings(&mut self, ui: &mut Ui, auto_refresh: &mut bool, refresh_rate: &mut f32) -> bool {
         let mut state: bool = false;
 
         egui::CollapsingHeader::new("Settings")
@@ -202,7 +203,7 @@ impl ZappyUi {
         let mut state = false;
         egui::Window::new("Map").vscroll(true).enabled(!is_active).show(
             ctx, |ui| {
-                state = self.tile_settings(ui, auto_refresh, refresh_rate);
+                state = self.refresh_settings(ui, auto_refresh, refresh_rate);
                 ui.add(egui::Label::new("Tiles:").heading());
                 egui::Grid::new("Tiles")
                     .num_columns(map.size[0] as usize)
@@ -229,6 +230,7 @@ impl ZappyUi {
         );
         state
     }
+
 
     pub(crate) fn team(ui :&mut Ui, players: &mut Vec<Tantorian>, team: &(String, Vec3)) -> (PlayerAction, i64, String) {
         let mut state = (PlayerAction::Nothing, 0, String::from(""));
@@ -279,7 +281,7 @@ impl ZappyUi {
         state
     }
 
-    pub(crate) fn players(&mut self, ctx: &CtxRef, players: &mut Vec<Tantorian>, teams: &mut Vec<(String, Vec3)>, is_active: bool) -> (PlayerAction, i64, String) {
+    pub(crate) fn players(&mut self, ctx: &CtxRef, players: &mut Vec<Tantorian>, teams: &mut Vec<(String, Vec3)>, auto_refresh: &mut bool, refresh_rate: &mut f32, is_active: bool) -> (PlayerAction, i64, String) {
         let mut state = (PlayerAction::Nothing, 0, String::from(""));
         let mut what_team_color_regenerate: Option<usize> = None;
         egui::Window::new("Players")
@@ -287,6 +289,9 @@ impl ZappyUi {
             .resizable(true)
             .vscroll(true)
             .show(ctx, |ui| {
+                if self.refresh_settings(ui, auto_refresh, refresh_rate) {
+                    state = (PlayerAction::Refresh, 0, String::from(""));
+                }
                 for (team_index, team) in teams.iter_mut().enumerate() {
                     egui::CollapsingHeader::new(&team.0)
                         .default_open(false)

@@ -62,7 +62,7 @@ impl ServerConn {
                         break;
                     }
                 }
-                Ok(_) => break,
+                Ok(_) => {return Err(io::Error::new(io::ErrorKind::ConnectionAborted, "Connection aborted"))},
                 Err(ref err) if err.kind() == io::ErrorKind::WouldBlock => {
                     break;
                 }
