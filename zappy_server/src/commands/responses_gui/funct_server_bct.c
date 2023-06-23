@@ -19,8 +19,8 @@ static void funct_ressources_on_tiles(gui_t *gui, size_t x,
         if (gui->buffer.bufferWrite.octets == NULL) {
             return;
         }
-        strcat(gui->buffer.bufferWrite.octets, buf_x);
         strcat(gui->buffer.bufferWrite.octets, " ");
+        strcat(gui->buffer.bufferWrite.octets, buf_x);
     }
     strcat(gui->buffer.bufferWrite.octets, "\n");
 }
