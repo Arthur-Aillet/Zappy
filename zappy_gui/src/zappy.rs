@@ -213,18 +213,15 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
     if let Some(team) = &zappy.user.winner_team {
         zappy.user.ui.win(ctx, team, zappy.camera_is_active);
     }
-    let mut reset_server = false;
     if let Some(server) = &mut zappy.user.server {
         if refresh_map {
-            reset_server = !server.send_to_server("mct", -1, -1);
+            server.send_to_server("mct", -1, -1);
         }
         if refresh_player {
             for player in &zappy.user.players {
-                reset_server = !server.send_to_server("ppo", player.number as i32, -1);
+                server.send_to_server("ppo", player.number as i32, -1);
             }
         }
-    } else {
-        return;
     }
 }
 
