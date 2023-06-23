@@ -43,21 +43,19 @@ static void funct_response_look_north_bis(ia_t *ia, common_t *com)
 
 void funct_response_look_north(ia_t *ia, common_t *com)
 {
-    ia->buffer.bufferWrite.usedSize = 2;
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
-    if (ia->buffer.bufferWrite.octets == NULL)
+    SIZE = 2;
+    OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
+    if (OCTETS == NULL)
         return;
-    ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat(ia->buffer.bufferWrite.octets, "[");
+    OCTETS[0] = '\0';
+    strcat(OCTETS, "[");
     to_take_ressources_response_ia(ia, com, ia->player->x, ia->player->y);
     funct_response_look_north_bis(ia, com);
-    ia->buffer.bufferWrite.octets[ia->buffer.bufferWrite.usedSize - 2] = '\0';
-    ia->buffer.bufferWrite.usedSize += 2;
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    OCTETS[SIZE - 2] = '\0';
+    SIZE += 2;
+    OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
+    if (OCTETS == NULL) {
         return;
     }
-    strcat(ia->buffer.bufferWrite.octets, "]\n");
+    strcat(OCTETS, "]\n");
 }

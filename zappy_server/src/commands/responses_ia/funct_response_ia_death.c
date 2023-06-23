@@ -13,15 +13,13 @@ void funct_response_ia_death(char **args, void *info, common_t *com)
 
     (void)args;
     (void)com;
-    ia->buffer.bufferWrite.usedSize = 6;
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    SIZE = 6;
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL) {
         return;
     }
-    ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat(ia->buffer.bufferWrite.octets, "dead\n\0");
-    write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
-        ia->buffer.bufferWrite.usedSize);
+    OCTETS[0] = '\0';
+    strcat(OCTETS, "dead\n\0");
+    write(ia->buffer.sock.sockfd, OCTETS, SIZE);
     printf("rentrer dans la fonctions funct_response_ia_death\n");
 }

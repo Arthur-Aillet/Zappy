@@ -10,18 +10,18 @@
 
 static void funct_prepare_res(gui_t *gui, char **args)
 {
-    gui->buffer.bufferWrite.usedSize += (strlen(args[1]) + 7);
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
-    if (gui->buffer.bufferWrite.octets == NULL) {
+    GUI_SIZE += (strlen(args[1]) + 7);
+    GUI_OCTETS = realloc(GUI_OCTETS,
+                sizeof(char) * (GUI_SIZE + 1));
+    if (GUI_OCTETS == NULL) {
         return;
     }
-    gui->buffer.bufferWrite.octets[0] = '\0';
-    strcat(gui->buffer.bufferWrite.octets, "pgt ");
-    strcat(gui->buffer.bufferWrite.octets, args[0]);
-    strcat(gui->buffer.bufferWrite.octets, " ");
-    strcat(gui->buffer.bufferWrite.octets, args[1]);
-    strcat(gui->buffer.bufferWrite.octets, "\n\0");
+    GUI_OCTETS[0] = '\0';
+    strcat(GUI_OCTETS, "pgt ");
+    strcat(GUI_OCTETS, args[0]);
+    strcat(GUI_OCTETS, " ");
+    strcat(GUI_OCTETS, args[1]);
+    strcat(GUI_OCTETS, "\n\0");
 }
 
 void funct_server_pgt(char **args, void *info, common_t *common)
@@ -33,7 +33,7 @@ void funct_server_pgt(char **args, void *info, common_t *common)
         return;
     }
     funct_prepare_res(gui, args);
-    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-        strlen(gui->buffer.bufferWrite.octets));
+    write(gui->buffer.sock.sockfd, GUI_OCTETS,
+        strlen(GUI_OCTETS));
     printf("rentrer dans la fonctions funct_server_pgt\n");
 }

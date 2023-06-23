@@ -12,11 +12,11 @@ static void funct_level_other_level_next(ia_t *ia, common_t *com)
     char level[3];
 
     sprintf(level, "%ld", ia->player->level);
-    ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat(ia->buffer.bufferWrite.octets,
+    OCTETS[0] = '\0';
+    strcat(OCTETS,
     "Elevation underway current level ");
-    strcat(ia->buffer.bufferWrite.octets, level);
-    strcat(ia->buffer.bufferWrite.octets, "\n\0");
+    strcat(OCTETS, level);
+    strcat(OCTETS, "\n\0");
     funct_prepare_response_gui_incantation(ia, com, 1);
 }
 
@@ -32,10 +32,9 @@ static void funct_level_other_level(ia_t *ia, common_t *com, int nbr_ia_level)
         funct_server_seg(NULL, tmp_ia, com);
     }
     sprintf(buffer_incantation, "%ld", ia->player->level);
-    ia->buffer.bufferWrite.usedSize = 35 + strlen(buffer_incantation);
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    SIZE = 35 + strlen(buffer_incantation);
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL) {
         return;
     }
     funct_level_other_level_next(ia, com);
@@ -56,14 +55,13 @@ static void funct_response_ia_incantation_bis(ia_t *ia, common_t *com)
 
 static void funct_response_echec_incantation(ia_t *ia)
 {
-    ia->buffer.bufferWrite.usedSize = 4;
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    SIZE = 4;
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL) {
         return;
     }
-    ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
+    OCTETS[0] = '\0';
+    strcat(OCTETS, "ko\n\0");
 }
 
 void funct_response_ia_incantation(char **args, void *info, common_t *com)
@@ -79,7 +77,6 @@ void funct_response_ia_incantation(char **args, void *info, common_t *com)
     } else {
         funct_response_echec_incantation(ia);
     }
-    write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
-    ia->buffer.bufferWrite.usedSize);
+    write(ia->buffer.sock.sockfd, OCTETS, SIZE);
     printf("rentrer dans la fonctions funct_response_ia_incantation\n");
 }

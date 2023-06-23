@@ -12,33 +12,32 @@ static void funct_ressources_on_tiles(gui_t *gui, size_t x,
 {
     for (int i = 0; i < 7; i++) {
         sprintf(buf_x, "%ld", gui->map.tiles[y][x].ressources[i]);
-        gui->buffer.bufferWrite.usedSize += strlen(buf_x) + 3;
-        gui->buffer.bufferWrite.octets =
-        realloc(gui->buffer.bufferWrite.octets,
-        sizeof(char) * (gui->buffer.bufferWrite.usedSize));
-        if (gui->buffer.bufferWrite.octets == NULL) {
+        GUI_SIZE += strlen(buf_x) + 3;
+        GUI_OCTETS =
+        realloc(GUI_OCTETS,
+        sizeof(char) * (GUI_SIZE));
+        if (GUI_OCTETS == NULL) {
             return;
         }
-        strcat(gui->buffer.bufferWrite.octets, buf_x);
-        strcat(gui->buffer.bufferWrite.octets, " ");
+        strcat(GUI_OCTETS, " ");
+        strcat(GUI_OCTETS, buf_x);
     }
-    strcat(gui->buffer.bufferWrite.octets, "\n");
+    strcat(GUI_OCTETS, "\n");
 }
 
 static void funct_post_tiles(char *buf_x, char *buf_y, gui_t *gui)
 {
-    gui->buffer.bufferWrite.usedSize += 7 + strlen(buf_x) + strlen(buf_y);
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                    sizeof(char) * (gui->buffer.bufferWrite.usedSize));
-    if (gui->buffer.bufferWrite.octets == NULL) {
+    GUI_SIZE += 7 + strlen(buf_x) + strlen(buf_y);
+    GUI_OCTETS = realloc(GUI_OCTETS,
+                    sizeof(char) * (GUI_SIZE));
+    if (GUI_OCTETS == NULL) {
         return;
     }
-    strcat(gui->buffer.bufferWrite.octets, "bct");
-    strcat(gui->buffer.bufferWrite.octets, " ");
-    strcat(gui->buffer.bufferWrite.octets, buf_x);
-    strcat(gui->buffer.bufferWrite.octets, " ");
-    strcat(gui->buffer.bufferWrite.octets, buf_y);
-    strcat(gui->buffer.bufferWrite.octets, " ");
+    strcat(GUI_OCTETS, "bct");
+    strcat(GUI_OCTETS, " ");
+    strcat(GUI_OCTETS, buf_x);
+    strcat(GUI_OCTETS, " ");
+    strcat(GUI_OCTETS, buf_y);
 }
 
 void funct_prepare_response(gui_t *gui, size_t x, size_t y)
@@ -60,17 +59,17 @@ void funct_server_bct(char **args, void *info, common_t *common)
         error("Invalid arguments", 0);
         return;
     }
-    gui->buffer.bufferWrite.usedSize = 6 + strlen(args[0]) +
+    GUI_SIZE = 6 + strlen(args[0]) +
                                         strlen(args[1]);
-    free(gui->buffer.bufferWrite.octets);
-    gui->buffer.bufferWrite.octets = malloc(sizeof(char) *
-                                    (gui->buffer.bufferWrite.usedSize));
-    if (gui->buffer.bufferWrite.octets == NULL) {
+    free(GUI_OCTETS);
+    GUI_OCTETS = malloc(sizeof(char) *
+                                    (GUI_SIZE));
+    if (GUI_OCTETS == NULL) {
         return;
     }
-    gui->buffer.bufferWrite.octets[0] = '\0';
+    GUI_OCTETS[0] = '\0';
     funct_prepare_response(gui, atoi(args[0]), atoi(args[1]));
-    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-        strlen(gui->buffer.bufferWrite.octets));
+    write(gui->buffer.sock.sockfd, GUI_OCTETS,
+        strlen(GUI_OCTETS));
     printf("rentrer dans la fonctions funct_server_bct\n");
 }

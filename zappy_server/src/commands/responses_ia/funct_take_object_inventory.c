@@ -42,9 +42,9 @@ void response_take(ia_t *ia, int idx, common_t *com)
         update_density(&com->gui->map.density[idx], &com->gui->map.tiles[ia->player->y][ia->player->x].ressources[idx], -1);
         funct_response_gui(ia, idx, com, args);
         update_tile_gui(com, ia);
-        strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
+        strcat(OCTETS, "ok\n\0");
     } else
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
+        strcat(OCTETS, "ko\n\0");
 }
 
 static void next_if_funct_tree(ia_t *ia, common_t *com, char **args)
@@ -54,7 +54,7 @@ static void next_if_funct_tree(ia_t *ia, common_t *com, char **args)
     } else if (strcmp(args[0], "thystame") == 0) {
         response_take(ia, 6, com);
     } else {
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
+        strcat(OCTETS, "ko\n\0");
     }
 }
 

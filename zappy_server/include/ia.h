@@ -8,6 +8,9 @@
 #ifndef IA_H_
     #define IA_H_
 
+    #define OCTETS      ia->buffer.bufferWrite.octets
+    #define SIZE        ia->buffer.bufferWrite.usedSize
+
     #include "common.h"
     #include "teams.h"
     #include "error_handling.h"

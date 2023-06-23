@@ -61,17 +61,22 @@ static int calc_angle(ia_t *ia, player_t *player, map_t map)
 static void send_message_to_players(common_t *com, char **args, ia_t *ia)
 {
     player_t *player;
-    size_t buffer_size = 12;
+    char buf[256];
+    sprintf(buf,"%d", ia->player->id);
+    size_t buffer_size = 12 + strlen(buf);
     for (int i = 0; args[i] != NULL; i++)
         buffer_size += (strlen(args[i]) + 1);
     char *buffer = malloc(sizeof(char) * buffer_size);
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        if (com->client[i].type != IA)
+        if (com->client[i].type == UNDEFINED)
             continue;
-        player = (player_t*)com->client[i].str_cli;
-        if (player->id == ia->player->id)
-            continue;
-        sprintf(buffer, "message %d,", calc_angle(ia, player, com->gui->map));
+        else if (com->client[i].type == IA) {
+            player = (player_t*)com->client[i].str_cli;
+            if (player->id == ia->player->id)
+                continue;
+            sprintf(buffer, "message %d,", calc_angle(ia, player, com->gui->map));
+        } else
+            sprintf(buffer, "pbc %d", ia->player->id);
         for (int j = 0; args[j] != NULL; j++) {
             strcat(buffer, " ");
             strcat(buffer, args[j]);
@@ -86,14 +91,12 @@ void funct_response_ia_broadcast(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
 
-    ia->buffer.bufferWrite.usedSize = 4;
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL)
+    SIZE = 4;
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL)
         return;
     send_message_to_players(com, args, ia);
-    ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
-    write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
-        ia->buffer.bufferWrite.usedSize);
+    OCTETS[0] = '\0';
+    strcat(OCTETS, "ok\n\0");
+    write(ia->buffer.sock.sockfd, OCTETS, strlen(OCTETS));
 }

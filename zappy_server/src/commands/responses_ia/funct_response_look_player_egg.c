@@ -11,13 +11,12 @@ static void to_take_ressources_response_ia_player(player_t *player, ia_t *ia,
                                                  int *pos)
 {
     if (player->x == pos[0] && player->y == pos[1]) {
-        ia->buffer.bufferWrite.usedSize += 7;
-        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
-        if (ia->buffer.bufferWrite.octets == NULL) {
+        SIZE += 7;
+        OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
+        if (OCTETS == NULL) {
             return;
         }
-        strcat(ia->buffer.bufferWrite.octets, "player ");
+        strcat(OCTETS, "player ");
     }
 }
 
@@ -26,13 +25,12 @@ static void to_take_ressources_response_ia_egg(int *pos, int *post_tmp,
 {
     if (com->teams[post_tmp[0]].egg[post_tmp[1]].x == pos[0] &&
         com->teams[post_tmp[0]].egg[post_tmp[1]].y == pos[1]) {
-        ia->buffer.bufferWrite.usedSize += 4;
-        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
-        if (ia->buffer.bufferWrite.octets == NULL) {
+        SIZE += 4;
+        OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
+        if (OCTETS == NULL) {
             return;
         }
-        strcat(ia->buffer.bufferWrite.octets, "egg ");
+        strcat(OCTETS, "egg ");
     }
 }
 
