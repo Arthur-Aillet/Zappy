@@ -30,9 +30,9 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     //ebo
     //edi
     functions.insert("sgt".to_string(), Zappy::set_time_unit);
-    //sst
+    functions.insert("sst".to_string(), Zappy::set_time_unit);
     functions.insert("seg".to_string(), Zappy::end_of_game);
-    //smg
+    functions.insert("smg".to_string(), Zappy::message_from_server);
     //suc
     //sbp
     functions
@@ -56,6 +56,13 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn message_from_server(&mut self, command: String, at: Duration) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        self.ui.broadcast_messages.push((at, String::from("Server"), 0, String::from(args[1])));
+        println!("Server sent: {}", args[1]);
+    }
+
     fn player_inventory(&mut self, command: String, at: Duration) {
         let re = Regex::new(r"^pin (-?\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)$")
             .expect("Invalid regex");
@@ -291,13 +298,13 @@ impl Zappy {
         let args: Vec<&str> = command.split(" ").collect();
 
         if args.len() != 2 {
-            println!("sgt: wrong number of arguments");
+            println!("sgt/sst: wrong number of arguments");
         } else {
             let result: Result<f32, _> = args[1].parse();
             match result {
                 Ok(val) => self.time_unit = val,
                 Err(_) => {
-                    println!("sgt: argument must be an int")
+                    println!("sgt/sst: argument must be an int")
                 }
             }
         }
