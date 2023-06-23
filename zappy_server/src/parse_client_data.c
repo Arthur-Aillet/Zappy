@@ -40,7 +40,8 @@ char **get_message(server_t *server, client_t *client)
         client->socket = close_client(client->socket, server);
         return NULL;
     }
-    data[strlen(data) - 1] = '\0';
+    if (data[strlen(data) - 1] == '\n')
+        data[strlen(data) - 1] = '\0';
     arr = my_str_to_word_array(data, arr, ' ');
     res = convert_arr_to_unit8(arr);
     free_array((void**)arr);
