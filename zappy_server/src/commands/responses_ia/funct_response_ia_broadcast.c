@@ -58,12 +58,12 @@ static int calc_angle(ia_t *ia, player_t *player, map_t map)
     return idxes[(int)x][(int)y];
 }
 
-static void send_message_to_players(common_t *com, uint8_t **args, ia_t *ia)
+static void send_message_to_players(common_t *com, char **args, ia_t *ia)
 {
     player_t *player;
     size_t buffer_size = 12;
     for (int i = 0; args[i] != NULL; i++)
-        buffer_size += (strlen((char*)args[i]) + 1);
+        buffer_size += (strlen(args[i]) + 1);
     char *buffer = malloc(sizeof(char) * buffer_size);
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (com->client[i].type != IA)
@@ -74,7 +74,7 @@ static void send_message_to_players(common_t *com, uint8_t **args, ia_t *ia)
         sprintf(buffer, "message %d,", calc_angle(ia, player, com->gui->map));
         for (int j = 0; args[j] != NULL; j++) {
             strcat(buffer, " ");
-            strcat(buffer, (char*)args[j]);
+            strcat(buffer, args[j]);
         }
         strcat(buffer, "\n");
         write(com->client[i].socket, buffer, strlen(buffer));
@@ -82,18 +82,18 @@ static void send_message_to_players(common_t *com, uint8_t **args, ia_t *ia)
     free(buffer);
 }
 
-void funct_response_ia_broadcast(uint8_t **args, void *info, common_t *com)
+void funct_response_ia_broadcast(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
 
     ia->buffer.bufferWrite.usedSize = 4;
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
+                    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL)
         return;
     send_message_to_players(com, args, ia);
     ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat((char*)ia->buffer.bufferWrite.octets, "ok\n\0");
+    strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
     write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
         ia->buffer.bufferWrite.usedSize);
 }

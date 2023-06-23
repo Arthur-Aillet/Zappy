@@ -21,23 +21,23 @@ static void call_function_gui_bis(ia_t *ia, common_t *com,
 
 void update_tile_gui(common_t *com, ia_t *ia)
 {
-    uint8_t **args = malloc(sizeof(uint8_t *) * 2);
+    char **args = malloc(sizeof(char *) * 2);
     char buffer_args[256];
 
     if (args == NULL)
         return;
     sprintf(buffer_args, "%d", ia->player->x);
-    args[0] = malloc(sizeof(uint8_t) * (strlen(buffer_args) + 1));
+    args[0] = malloc(sizeof(char) * (strlen(buffer_args) + 1));
     if (args[0] == NULL)
         return;
     args[0][0] = '\0';
-    args[0] = (uint8_t *)strcat((char *)args[0], buffer_args);
+    args[0] = strcat(args[0], buffer_args);
     sprintf(buffer_args, "%d", ia->player->y);
-    args[1] = malloc(sizeof(uint8_t) * (strlen(buffer_args) + 1));
+    args[1] = malloc(sizeof(char) * (strlen(buffer_args) + 1));
     if (args[1] == NULL)
         return;
     args[1][0] = '\0';
-    args[1] = (uint8_t *)strcat((char *)args[1], buffer_args);
+    args[1] = strcat(args[1], buffer_args);
     funct_server_bct(args, com->gui, com);
 }
 
@@ -57,7 +57,7 @@ static void call_function_gui(ia_t *ia, common_t *com,
     update_tile_gui(com, ia);
 }
 
-void funct_client_ia_incantation(ia_t *ia, uint8_t **args, common_t *com)
+void funct_client_ia_incantation(ia_t *ia, char **args, common_t *com)
 {
     msg_queue_t *new_msg = malloc(sizeof(msg_queue_t));
 

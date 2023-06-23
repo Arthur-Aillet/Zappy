@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-void funct_client_ia_look(ia_t *ia, uint8_t **args, common_t *com)
+void funct_client_ia_look(ia_t *ia, char **args, common_t *com)
 {
     msg_queue_t *new_msg = malloc(sizeof(msg_queue_t));
 

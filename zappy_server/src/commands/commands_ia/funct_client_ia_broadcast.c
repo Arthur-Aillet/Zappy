@@ -8,19 +8,19 @@
 #include "zappy.h"
 #include <string.h>
 
-static void fill_args(msg_queue_t *new_msg, uint8_t **args, int idx)
+static void fill_args(msg_queue_t *new_msg, char **args, int idx)
 {
-    new_msg->msg[idx] = malloc(sizeof(uint8_t) *
-                        (strlen((char*)args[idx]) + 1));
+    new_msg->msg[idx] = malloc(sizeof(char) *
+                        (strlen(args[idx]) + 1));
     if (new_msg->msg[idx] == NULL) {
         return;
     }
     new_msg->msg[idx][0] = '\0';
     new_msg->msg[idx] =
-        (uint8_t*)strcat((char*)new_msg->msg[idx], (char*)args[idx]);
+        strcat(new_msg->msg[idx], args[idx]);
 }
 
-void funct_client_ia_broadcast(ia_t *ia, uint8_t **args, common_t *com)
+void funct_client_ia_broadcast(ia_t *ia, char **args, common_t *com)
 {
     msg_queue_t *new_msg = malloc(sizeof(msg_queue_t));
 

@@ -70,10 +70,15 @@ static void free_map(map_t *map)
     free(map->density);
 }
 
+//FIXME - free message queue
 void free_gui(gui_t *gui)
 {
     free_map(&gui->map);
     basic_log("Map free", B, 0);
+    if (gui->buffer.bufferWrite.octets != NULL)
+        free(gui->buffer.bufferWrite.octets);
+    if (gui->buffer.bufferRead.octets != NULL)
+        free(gui->buffer.bufferRead.octets);
     free(gui);
     basic_log("GUI free", B, 0);
 }

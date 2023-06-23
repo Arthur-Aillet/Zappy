@@ -17,9 +17,9 @@ static int check_teams_name(const char *team_name, common_t *com, int idx)
     return 0;
 }
 
-static int check_graphic(uint8_t **command, common_t *com, int idx)
+static int check_graphic(char **command, common_t *com, int idx)
 {
-    if (strcmp((char*)command[0], "GRAPHIC") != 0 || command[1] != NULL)
+    if (strcmp(command[0], "GRAPHIC") != 0 || command[1] != NULL)
         return 0;
     com->client[idx].type = GUI;
     com->client[idx].str_cli = (gui_t *) &(com->gui);
@@ -34,7 +34,7 @@ static void response_start_ia(client_t client, common_t *com)
     char buffer_y[256];
     char buffer_nb_slot[256];
     int size = 0;
-    uint8_t *response;
+    char *response;
     player_t *player = (player_t *)client.str_cli;
 
     sprintf(buffer_nb_slot, "%ld",
@@ -42,22 +42,22 @@ static void response_start_ia(client_t client, common_t *com)
     sprintf(buffer_x, "%ld", com->gui->map.width);
     sprintf(buffer_y, "%ld", com->gui->map.height);
     size = strlen(buffer_nb_slot) + strlen(buffer_x) + strlen(buffer_y) + 4;
-    response = malloc(sizeof(uint8_t) * size);
+    response = malloc(sizeof(char) * size);
     if (response == NULL) {
         return;
     }
     response[0] = '\0';
-    sprintf((char*)response, "%s\n%s %s\n", buffer_nb_slot, buffer_x, buffer_y);
-    write(client.socket, response, strlen((char *)response));
+    sprintf(response, "%s\n%s %s\n", buffer_nb_slot, buffer_x, buffer_y);
+    write(client.socket, response, strlen(response));
 }
 
-int undefined_client_command(uint8_t **command, common_t *com, int idx)
+int undefined_client_command(char **command, common_t *com, int idx)
 {
     if (check_graphic(command, com, idx) == 1) {
         funct_server_msz(NULL, com->gui, com);
         funct_server_sgt(NULL, com->gui, com);
         funct_server_all_bct(NULL, com->gui, com);
-    } else if (check_teams_name((char*)command[0], com, idx) == 1){
+    } else if (check_teams_name(command[0], com, idx) == 1){
         response_start_ia(com->client[idx], com);
     } else {
         return error("Invalid command for defined the client", 0);

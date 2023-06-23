@@ -7,21 +7,21 @@
 
 #include "zappy.h"
 
-static void funct_prepare_res(gui_t *gui, uint8_t **args)
+static void funct_prepare_res(gui_t *gui, char **args)
 {
-    gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) + 6;
+    gui->buffer.bufferWrite.usedSize = strlen(args[0]) + 6;
     gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                    sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize + 1));
+                    sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }
     gui->buffer.bufferWrite.octets[0] = '\0';
-    strcat((char*)gui->buffer.bufferWrite.octets, "pfk ");
-    strcat((char*)gui->buffer.bufferWrite.octets, (char*)args[0]);
-    strcat((char*)gui->buffer.bufferWrite.octets, "\n\0");
+    strcat(gui->buffer.bufferWrite.octets, "pfk ");
+    strcat(gui->buffer.bufferWrite.octets, args[0]);
+    strcat(gui->buffer.bufferWrite.octets, "\n\0");
 }
 
-void funct_server_pfk(uint8_t **args, void *info, common_t *common)
+void funct_server_pfk(char **args, void *info, common_t *common)
 {
     gui_t *gui = (gui_t *)info;
     ia_t *tmp_ia = to_find_ia(args[0], common);

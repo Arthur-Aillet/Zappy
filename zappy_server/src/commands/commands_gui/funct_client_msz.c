@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-void funct_client_msz(gui_t *gui, uint8_t **args, common_t *com)
+void funct_client_msz(gui_t *gui, char **args, common_t *com)
 {
     (void)args;
     (void)com;

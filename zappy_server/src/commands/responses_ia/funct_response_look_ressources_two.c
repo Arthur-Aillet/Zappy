@@ -13,11 +13,11 @@ static void to_take_ressources_response_ia_linemate(ia_t *ia,
     for (size_t j = 0; j < com->gui->map.tiles[y][x].ressources[LINEMATE]; j++) {
         ia->buffer.bufferWrite.usedSize += 9;
         ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(u_int8_t) * ia->buffer.bufferWrite.usedSize);
+                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
         if (ia->buffer.bufferWrite.octets == NULL) {
             return;
         }
-        strcat((char *)ia->buffer.bufferWrite.octets, "linemate ");
+        strcat(ia->buffer.bufferWrite.octets, "linemate ");
     }
     to_take_ressources_response_ia_deraumere(ia, com, x, y);
 }
@@ -28,11 +28,11 @@ void to_take_ressources_response_ia_food(ia_t *ia,
     for (size_t j = 0; j < com->gui->map.tiles[y][x].ressources[FOOD]; j++) {
         ia->buffer.bufferWrite.usedSize += 5;
         ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(u_int8_t) * ia->buffer.bufferWrite.usedSize);
+                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
         if (ia->buffer.bufferWrite.octets == NULL) {
             return;
         }
-        strcat((char *)ia->buffer.bufferWrite.octets, "food ");
+        strcat(ia->buffer.bufferWrite.octets, "food ");
     }
     to_take_ressources_response_ia_linemate(ia, com, x, y);
 }

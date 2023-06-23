@@ -49,39 +49,39 @@ typedef struct common_s {
 typedef struct msg_queue_s {
     double time;
     time_t start;
-    uint8_t **msg;
-    void (*handler)(uint8_t **args, void *info, common_t *com);
+    char **msg;
+    void (*handler)(char **args, void *info, common_t *com);
     //NOTE - pointeur sur fonctione qu'on doit executer
     struct msg_queue_s *next_msg;
 } msg_queue_t;
 
 //-------------- Responses Gui -----------------------------------//
 
-void funct_server_msz(uint8_t **args, void *info, common_t *common);
-void funct_server_bct(uint8_t **args, void *info, common_t *common);
-void funct_server_all_bct(uint8_t **args, void *info, common_t *common);
-void funct_server_tna(uint8_t **args, void *info, common_t *common);
-void funct_server_pnw(uint8_t **args, void *info, common_t *common);
-void funct_server_ppo(uint8_t **args, void *info, common_t *common);
-void funct_server_plv(uint8_t **args, void *info, common_t *common);
-void funct_server_pin(uint8_t **args, void *info, common_t *common);
-void funct_server_pex(uint8_t **args, void *info, common_t *common);
-void funct_server_pbc(uint8_t **args, void *info, common_t *common);
-void funct_server_pic(uint8_t **args, void *info, common_t *common);
-void funct_server_pie(uint8_t **args, void *info, common_t *common);
-void funct_server_pfk(uint8_t **args, void *info, common_t *common);
-void funct_server_pdr(uint8_t **args, void *info, common_t *common);
-void funct_server_pgt(uint8_t **args, void *info, common_t *common);
-void funct_server_pdi(uint8_t **args, void *info, common_t *common);
-void funct_server_enw(uint8_t **args, void *info, common_t *common);
-void funct_server_ebo(uint8_t **args, void *info, common_t *common);
-void funct_server_edi(uint8_t **args, void *info, common_t *common);
-void funct_server_sgt(uint8_t **args, void *info, common_t *common);
-void funct_server_sst(uint8_t **args, void *info, common_t *common);
-void funct_server_seg(uint8_t **args, void *info, common_t *common);
-void funct_server_smg(uint8_t **args, void *info, common_t *common);
-void funct_server_suc(uint8_t **args, void *info, common_t *common);
-void funct_server_sbp(uint8_t **args, void *info, common_t *common);
+void funct_server_msz(char **args, void *info, common_t *common);
+void funct_server_bct(char **args, void *info, common_t *common);
+void funct_server_all_bct(char **args, void *info, common_t *common);
+void funct_server_tna(char **args, void *info, common_t *common);
+void funct_server_pnw(char **args, void *info, common_t *common);
+void funct_server_ppo(char **args, void *info, common_t *common);
+void funct_server_plv(char **args, void *info, common_t *common);
+void funct_server_pin(char **args, void *info, common_t *common);
+void funct_server_pex(char **args, void *info, common_t *common);
+void funct_server_pbc(char **args, void *info, common_t *common);
+void funct_server_pic(char **args, void *info, common_t *common);
+void funct_server_pie(char **args, void *info, common_t *common);
+void funct_server_pfk(char **args, void *info, common_t *common);
+void funct_server_pdr(char **args, void *info, common_t *common);
+void funct_server_pgt(char **args, void *info, common_t *common);
+void funct_server_pdi(char **args, void *info, common_t *common);
+void funct_server_enw(char **args, void *info, common_t *common);
+void funct_server_ebo(char **args, void *info, common_t *common);
+void funct_server_edi(char **args, void *info, common_t *common);
+void funct_server_sgt(char **args, void *info, common_t *common);
+void funct_server_sst(char **args, void *info, common_t *common);
+void funct_server_seg(char **args, void *info, common_t *common);
+void funct_server_smg(char **args, void *info, common_t *common);
+void funct_server_suc(char **args, void *info, common_t *common);
+void funct_server_sbp(char **args, void *info, common_t *common);
 
 
 //-------------- Common Functions --------------------------------//
@@ -89,9 +89,9 @@ void funct_server_sbp(uint8_t **args, void *info, common_t *common);
 common_t set_common(int ac, char *av[]);
 egg_t set_egg(int x, int y);
 void free_common(common_t *com);
-ia_t *to_find_ia(uint8_t *n, common_t *common);
+ia_t *to_find_ia(char *n, common_t *common);
 ia_t *to_find_ia_int(int n, common_t *common);
-void free_arg(int nbr, uint8_t **arg);
+void free_arg(int nbr, char **arg);
 
 //---------------------------------------------------------------//
 
@@ -99,17 +99,17 @@ void check_error_output(common_t *com, int output, char *error);
 
 void listening_sockets(common_t *com);
 
-uint8_t **get_message(server_t *server, client_t *client);
-int undefined_client_command(uint8_t **command, common_t *com, int idx);
+char **get_message(server_t *server, client_t *client);
+int undefined_client_command(char **command, common_t *com, int idx);
 int check_slot_and_create_player(common_t *com, int team_idx,int client_idx);
 
-int choose_ia_command(uint8_t **cmd, common_t *com, int i);
+int choose_ia_command(char **cmd, common_t *com, int i);
 
 void update_life(client_t *client, server_t *server,
                 size_t freq, common_t *com);
 
 void malloc_nbr_args(msg_queue_t *new_msg, size_t nbr_args);
-team_t *to_find_team_by_uint8_t(uint8_t *n, common_t *common);
+team_t *to_find_team_by_uint8_t(char *n, common_t *common);
 team_t *to_find_team_by_int(int n, common_t *common);
 
 void remove_player(player_t *ennemy, player_t *ia, common_t *com);
@@ -122,14 +122,14 @@ void inventory_deraumere(ia_t *ia);
 void inventory_linemate(ia_t *ia);
 void inventory_food(ia_t *ia);
 
-void next_if_funct_set(ia_t *ia, common_t *com, uint8_t **args);
+void next_if_funct_set(ia_t *ia, common_t *com, char **args);
 void response_set(ia_t *ia, int idx, common_t *com);
 
-void next_if_funct_take(ia_t *ia, common_t *com, uint8_t **args);
+void next_if_funct_take(ia_t *ia, common_t *com, char **args);
 void response_take(ia_t *ia, int idx, common_t *com);
 
-client_gui_t create_struct_client_gui(uint8_t **command);
-server_ia_t create_struct_client_ia(uint8_t **command);
+client_gui_t create_struct_client_gui(char **command);
+server_ia_t create_struct_client_ia(char **command);
 ia_t *find_ia_for_command(common_t *com, client_t *client);
 
 void to_check_command_exist_ia(server_ia_t *server_ia, ia_t *ia,
@@ -141,28 +141,28 @@ void check_msg_queue_ia(common_t *com);
 
 int to_check_ressources_bis(ia_t *ia, common_t *com, int x, int y);
 int to_check_ressources(ia_t *ia, common_t *com, int x, int y);
-u_int8_t *create_new_arg(int nbr, msg_queue_t *new_msg);
+char *create_new_arg(int nbr, msg_queue_t *new_msg);
 void status_level_one(ia_t *ia, common_t *com, msg_queue_t *new_msg);
 void status_level_two_tree(ia_t *ia,
                                 common_t *com, msg_queue_t *new_msg);
 void to_complete_ia_in_incantation(int nbr_ia,
-                                u_int8_t **arg, tile_t *tile);
+                                char **arg, tile_t *tile);
 void status_level_other(ia_t *ia, common_t *com, msg_queue_t *new_msg);
 void status_level_four_five(ia_t *ia, common_t *com, msg_queue_t *new_msg);
 void to_create_message_response_ia(msg_queue_t *new_msg);
 void to_complete_ia_in_incantation_bis(int nbr_ia,
-                                u_int8_t **arg, tile_t *tile);
+                                char **arg, tile_t *tile);
 int to_find_ia_incantation(common_t *com, ia_t *ia);
 
-void funct_server_pic_send_message(uint8_t **args, gui_t *gui);
+void funct_server_pic_send_message(char **args, gui_t *gui);
 
-u_int8_t *prepare_arg_response_gui(int x);
+char *prepare_arg_response_gui(int x);
 int set_nbr_ia(ia_t *ia);
 void remove_choose_player(player_t *ennemy, common_t *com,
-                                uint8_t **args, player_t *ia);
+                                char **args, player_t *ia);
 void free_msg_queue(msg_queue_t msg);
-void funct_server_pic_level_other(uint8_t **args, gui_t *gui);
-void funct_server_pic_level_four_five(uint8_t **args, gui_t *gui);
+void funct_server_pic_level_other(char **args, gui_t *gui);
+void funct_server_pic_level_four_five(char **args, gui_t *gui);
 
 void funct_level_1(ia_t *ia, common_t *com);
 void funct_prepare_response_gui_incantation(ia_t *ia, common_t *com, int r);

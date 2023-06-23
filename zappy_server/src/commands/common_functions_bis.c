@@ -7,7 +7,7 @@
 
 #include "zappy.h"
 
-void free_arg(int nbr, uint8_t **arg)
+void free_arg(int nbr, char **arg)
 {
     for (int i = 0; i < nbr; i++) {
         free(arg[i]);

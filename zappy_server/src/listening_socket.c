@@ -42,7 +42,7 @@ static int new_client(server_t *server, client_t *client)
     return 1;
 }
 
-static int check_command(uint8_t **command, common_t *com, int cli_idx)
+static int check_command(char **command, common_t *com, int cli_idx)
 {
     server_ia_t ia;
     client_gui_t gui;
@@ -67,7 +67,7 @@ static int check_command(uint8_t **command, common_t *com, int cli_idx)
 
 static int check_incoming_data(common_t *com)
 {
-    uint8_t **command;
+    char **command;
 
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (PC_SOCKET(i) > 0 && FD_ISSET(PC_SOCKET(i), &PS_READ)) {

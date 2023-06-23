@@ -13,10 +13,10 @@ static void funct_level_other_level_next(ia_t *ia, common_t *com)
 
     sprintf(level, "%ld", ia->player->level);
     ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat((char*)ia->buffer.bufferWrite.octets,
+    strcat(ia->buffer.bufferWrite.octets,
     "Elevation underway current level ");
-    strcat((char*)ia->buffer.bufferWrite.octets, level);
-    strcat((char*)ia->buffer.bufferWrite.octets, "\n\0");
+    strcat(ia->buffer.bufferWrite.octets, level);
+    strcat(ia->buffer.bufferWrite.octets, "\n\0");
     funct_prepare_response_gui_incantation(ia, com, 1);
 }
 
@@ -34,7 +34,7 @@ static void funct_level_other_level(ia_t *ia, common_t *com, int nbr_ia_level)
     sprintf(buffer_incantation, "%ld", ia->player->level);
     ia->buffer.bufferWrite.usedSize = 35 + strlen(buffer_incantation);
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(u_int8_t) * (ia->buffer.bufferWrite.usedSize));
+    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
@@ -58,19 +58,19 @@ static void funct_response_echec_incantation(ia_t *ia)
 {
     ia->buffer.bufferWrite.usedSize = 4;
     ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(uint8_t) * (ia->buffer.bufferWrite.usedSize));
+    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
     if (ia->buffer.bufferWrite.octets == NULL) {
         return;
     }
     ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat((char*)ia->buffer.bufferWrite.octets, "ko\n\0");
+    strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
 }
 
-void funct_response_ia_incantation(uint8_t **args, void *info, common_t *com)
+void funct_response_ia_incantation(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
 
-    if (strcmp((char *)args[0], "ok") == 0) {
+    if (strcmp(args[0], "ok") == 0) {
         if (ia->player->level == 1) {
             funct_level_1(ia, com);
         } else {

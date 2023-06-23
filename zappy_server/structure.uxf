@@ -76,7 +76,7 @@ bg=#800080
 group=group-9</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1038</x><y>600</y><w>126</w><h>36</h></coordinates><panel_attributes>error_handling_t: struct
 --
 int error;
-uint8_t *msg_error;
+char *msg_error;
 
 bg=red
 group=group-15</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>822</x><y>684</y><w>18</w><h>42</h></coordinates><panel_attributes>fg=green
@@ -112,8 +112,8 @@ lt=&lt;&lt;&lt;-
 </panel_attributes><additional_attributes>550;130;130;130;130;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1014</x><y>528</y><w>174</w><h>54</h></coordinates><panel_attributes>msg_queue_t: struct
 --
 time_t time;
-uint8_t **msg;
-void (*handler)(uint8_t **args) // à modifié
+char **msg;
+void (*handler)(char **args) // à modifié
 msg_queue_s *next_msg;
 
 bg=orange
@@ -198,11 +198,11 @@ lt=&lt;&lt;&lt;-
 </panel_attributes><additional_attributes>550;150;180;150;180;10;10;10</additional_attributes></element><element><id>UMLNote</id><coordinates><x>792</x><y>114</y><w>84</w><h>126</h></coordinates><panel_attributes>msq_queue
 -size_t time
 -time_t start
-- uint8_t **msg
+- char **msg
 - (*handler)
 
 (*handler) gui
-- uint8_t **args
+- char **args
 - size_t freq
 -  ia 
 - gui (côté gui)
@@ -329,15 +329,15 @@ bg=yellow
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1068</x><y>1542</y><w>174</w><h>54</h></coordinates><panel_attributes>msg_queue_t: struct
 --
 time_t time;
-uint8_t **msg;
-void (*handler)(uint8_t **args) // à modifié
+char **msg;
+void (*handler)(char **args) // à modifié
 msg_queue_s *next_msg;
 
 bg=orange
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1086</x><y>1638</y><w>126</w><h>36</h></coordinates><panel_attributes>error_handling_t: struct
 --
 int error;
-uint8_t *msg_error;
+char *msg_error;
 
 bg=red</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>756</x><y>1116</y><w>126</w><h>84</h></coordinates><panel_attributes>Common_Protocol: struct
 --
