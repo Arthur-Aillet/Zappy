@@ -16,8 +16,6 @@ client_t *find_client_by_id(int id, common_t *com)
         if (com->client[i].str_cli == NULL || com->client[i].type != IA)
             continue;
         player_t *player = (player_t*)&com->client[i].str_cli;
-        printf("client id: %d\n", player->id);
-        printf("player id: %d\n\n", id);
         if (player->id == id)
             return &com->client[i];
     }
@@ -48,6 +46,19 @@ static int player_is_dead(player_t *player, common_t *com)
     return 1;
 }
 
+static void send_pdi(player_t *player, common_t *com)
+{
+    uint8_t **args = malloc(sizeof(uint8_t*) * 2);
+    char buffer[256];
+    sprintf(buffer, "%d", player->id);
+    args[0] = malloc(sizeof(uint8_t) * (strlen(buffer) + 2));
+    args[0][0] = '\0';
+    sprintf((char*)args[0], "%d", player->id);
+    funct_server_pdi(args, (void*)com->gui, NULL);
+    free(args[0]);
+    free(args);
+}
+
 static int update_player_life(player_t *player, common_t *com)
 {
     time_t now = time(NULL);
@@ -64,6 +75,7 @@ static int update_player_life(player_t *player, common_t *com)
         else
             player->inventory[FOOD]--;
         if (player->life == 0) {
+            send_pdi(player, com);
             printf("%splayer %s%d%s is dead%s\n", G, B, player->id, G, N);
             return player_is_dead(player, com);
         }

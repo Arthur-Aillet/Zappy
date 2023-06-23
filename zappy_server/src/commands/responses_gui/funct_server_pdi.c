@@ -23,6 +23,6 @@ void funct_server_pdi(uint8_t **args, void *info, common_t *common)
     strcat((char*)gui->buffer.bufferWrite.octets, (char*)args[0]);
     strcat((char*)gui->buffer.bufferWrite.octets, "\n\0");
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-                                gui->buffer.bufferWrite.usedSize);
+                            strlen((char*)gui->buffer.bufferWrite.octets));
     printf("rentrer dans la fonctions funct_server_pdi\n");
 }
