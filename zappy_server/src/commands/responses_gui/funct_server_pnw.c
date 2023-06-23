@@ -22,6 +22,8 @@ static void funct_prepare_res(gui_t *gui, uint8_t **args)
     strcat((char*)gui->buffer.bufferWrite.octets, " ");
     strcat((char*)gui->buffer.bufferWrite.octets, (char*)args[1]);
     strcat((char*)gui->buffer.bufferWrite.octets, " ");
+    strcat((char*)gui->buffer.bufferWrite.octets, (char*)args[2]);
+    strcat((char*)gui->buffer.bufferWrite.octets, " ");
     strcat((char*)gui->buffer.bufferWrite.octets, (char*)args[3]);
     strcat((char*)gui->buffer.bufferWrite.octets, " ");
     strcat((char*)gui->buffer.bufferWrite.octets, (char*)args[4]);
@@ -37,7 +39,7 @@ void funct_server_pnw(uint8_t **args, void *info, common_t *common)
 
     gui->buffer.bufferWrite.usedSize = strlen((char*)args[0]) +
     strlen((char*)args[1]) + strlen((char*)args[2]) + strlen((char*)args[3]) +
-    strlen((char*)args[4]) + strlen((char*)args[5]) + 9;
+    strlen((char*)args[4]) + strlen((char*)args[5]) + 12;
     funct_prepare_res(gui, args);
     gui->buffer.bufferWrite.usedSize =
     strlen((char*)gui->buffer.bufferWrite.octets);

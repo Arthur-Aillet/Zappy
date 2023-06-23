@@ -28,18 +28,6 @@ static int check_graphic(uint8_t **command, common_t *com, int idx)
     return 1;
 }
 
-static void prepare_response_ia(uint8_t *response, char *buffer_nb_slot,
-                                char *buffer_x, char *buffer_y)
-{
-    response[0] = '\0';
-    response = (uint8_t *)strcat((char *)response, buffer_nb_slot);
-    response = (uint8_t *)strcat((char *)response, "\n");
-    response = (uint8_t *)strcat((char *)response, buffer_x);
-    response = (uint8_t *)strcat((char *)response, " ");
-    response = (uint8_t *)strcat((char *)response, buffer_y);
-    response = (uint8_t *)strcat((char *)response, "\n\0");
-}
-
 static void response_start_ia(client_t client, common_t *com)
 {
     char buffer_x[256];
@@ -58,8 +46,9 @@ static void response_start_ia(client_t client, common_t *com)
     if (response == NULL) {
         return;
     }
-    prepare_response_ia(response, buffer_nb_slot, buffer_x, buffer_y);
-    write(client.socket, response, size);
+    response[0] = '\0';
+    sprintf((char*)response, "%s\n%s %s\n", buffer_nb_slot, buffer_x, buffer_y);
+    write(client.socket, response, strlen((char *)response));
 }
 
 int undefined_client_command(uint8_t **command, common_t *com, int idx)
