@@ -33,8 +33,8 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     functions.insert("sst".to_string(), Zappy::set_time_unit);
     functions.insert("seg".to_string(), Zappy::end_of_game);
     functions.insert("smg".to_string(), Zappy::message_from_server);
-    //suc
-    //sbp
+    functions.insert("suc".to_string(), Zappy::invalid_command_sent);
+    functions.insert("sbp".to_string(), Zappy::invalid_arg_sent);
     functions
 }
 
@@ -56,10 +56,20 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn invalid_arg_sent(&mut self, _command: String, at: Duration) {
+        self.ui.network_messages.push((at, String::from("Server received invalid argument")));
+        println!("Server received invalid argument");
+    }
+
+    fn invalid_command_sent(&mut self, _command: String, at: Duration) {
+        self.ui.network_messages.push((at, String::from("Server received invalid command")));
+        println!("Server received invalid command");
+    }
+
     fn message_from_server(&mut self, command: String, at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
-        self.ui.broadcast_messages.push((at, String::from("Server"), 0, String::from(args[1])));
+        self.ui.network_messages.push((at, String::from(args[1])));
         println!("Server sent: {}", args[1]);
     }
 
