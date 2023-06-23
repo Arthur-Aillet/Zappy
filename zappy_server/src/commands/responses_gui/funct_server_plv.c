@@ -21,11 +21,8 @@ static void funct_prepare_res(gui_t *gui, ia_t *tmp_ia, uint8_t **args)
         return;
     }
     gui->buffer.bufferWrite.octets[0] = '\0';
-    strcat((char*)gui->buffer.bufferWrite.octets, "plv ");
-    strcat((char*)gui->buffer.bufferWrite.octets, (char*)args[0]);
-    strcat((char*)gui->buffer.bufferWrite.octets, " ");
-    strcat((char*)gui->buffer.bufferWrite.octets, str_level);
-    strcat((char*)gui->buffer.bufferWrite.octets, "\n\0");
+    sprintf((char*)gui->buffer.bufferWrite.octets, "plv %s %s\n",
+                                    (char*)args[0], str_level);
 }
 
 void funct_server_plv(uint8_t **args, void *info, common_t *common)
@@ -38,6 +35,6 @@ void funct_server_plv(uint8_t **args, void *info, common_t *common)
     }
     funct_prepare_res(gui, tmp_ia, args);
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-        gui->buffer.bufferWrite.usedSize);
+        strlen((char*)gui->buffer.bufferWrite.octets));
     printf("rentrer dans la fonctions funct_server_plv\n");
 }

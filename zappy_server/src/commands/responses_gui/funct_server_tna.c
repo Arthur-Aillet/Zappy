@@ -8,12 +8,12 @@
 #include "zappy.h"
 #include <string.h>
 
-static void funct_prepare_res(gui_t *gui, common_t *common)
+static void funct_prepare_res(gui_t *gui, common_t *com)
 {
     gui->buffer.bufferWrite.octets[0] = '\0';
-    for (size_t nbr_teams = 0; nbr_teams < common->nb_teams; nbr_teams++) {
+    for (size_t nbr_teams = 0; nbr_teams < com->nb_teams; nbr_teams++) {
         gui->buffer.bufferWrite.usedSize += 5 +
-                                strlen(common->teams[nbr_teams].name);
+                                strlen(com->teams[nbr_teams].name);
         gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets
         , sizeof(uint8_t) * (gui->buffer.bufferWrite.usedSize));
         if (gui->buffer.bufferWrite.octets == NULL) {
@@ -22,13 +22,13 @@ static void funct_prepare_res(gui_t *gui, common_t *common)
         strcat((char*)gui->buffer.bufferWrite.octets, "tna");
         strcat((char*)gui->buffer.bufferWrite.octets, " ");
         strcat((char*)gui->buffer.bufferWrite.octets,
-                common->teams[nbr_teams].name);
+                com->teams[nbr_teams].name);
         strcat((char*)gui->buffer.bufferWrite.octets, "\n");
     }
-    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize] = '\0';
+    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize - 1] = '\0';
 }
 
-void funct_server_tna(uint8_t **args, void *info, common_t *common)
+void funct_server_tna(uint8_t **args, void *info, common_t *com)
 {
     (void)args;
     gui_t *gui = (gui_t *)info;
@@ -39,7 +39,7 @@ void funct_server_tna(uint8_t **args, void *info, common_t *common)
     if (gui->buffer.bufferWrite.octets == NULL) {
         return;
     }
-    funct_prepare_res(gui, common);
+    funct_prepare_res(gui, com);
     write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
         gui->buffer.bufferWrite.usedSize);
     printf("rentrer dans la fonctions funct_server_tna\n");
