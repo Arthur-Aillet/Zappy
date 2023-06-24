@@ -9,36 +9,75 @@
     #define IA_H_
 
     #include "common.h"
+    #include "teams.h"
+    #include "error_handling.h"
 
-    #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
-
+typedef struct common_s common_t;
+typedef struct msg_queue_s msg_queue_t;
 typedef struct ia_s {
-    msg_queue_t *queue;
-    error_handling_t *error; //FIXME - chaque protocole à sa propre error handlig ? ou on crrer une seul error handling (on devra rajouter un pointeur) ?
+    player_t *player;
+    buffered_socket_t buffer;
+    msg_queue_t *msg_queue;
+    error_handling_t *error;
 } ia_t;
 
+typedef struct common_s common_t;
+void funct_response_ia_forward(char **args, void *info, common_t *com);
+void funct_response_ia_right(char **args, void *info, common_t *com);
+void funct_response_ia_left(char **args, void *info, common_t *com);
+void funct_response_ia_look(char **args, void *info, common_t *com);
+void funct_response_ia_inventory(char **args, void *info, common_t *com);
+void funct_response_ia_broadcast(char **args, void *info, common_t *com);
+void funct_response_ia_msg(char **args, void *info, common_t *com);
+void funct_response_ia_connect_nbr(char **args, void *info, common_t *com);
+void funct_response_ia_fork(char **args, void *info, common_t *com);
+void funct_response_ia_eject(char **args, void *info, common_t *com);
+void funct_response_ia_death(char **args, void *info, common_t *com);
+void funct_response_ia_take_obj(char **args, void *info, common_t *com);
+void funct_response_ia_set_obj(char **args, void *info, common_t *com);
+void funct_response_ia_incantation(char **args, void *info, common_t *com);
+void funct_response_ia_connect_bar(char **args, void *info, common_t *com);
+
 typedef struct server_ia_s {
-    const uint8_t *cmd_name;
-    void (*handler)(uint8_t **args); //FIXME - same question that in struct gui_t
+    char *comd;
+    char **args;
+    void (*handler)(ia_t *ia, char **args, common_t *com);
 } server_ia_t;
 
-// static const client_gui_t COMMAND_GESTION[] = {
-//     {"Forward", funct_client_msz},
-//     {"Right", funct_client_mct},
-//     {"Left", funct_client_tna},
-//     {"Look", funct_client_ppo},
-//     {"Inventory", funct_client_plv},
-//     {"Broadcast", funct_client_pin},
-//     {"message", funct_client_sgt},
-//     {"Connect_nbr", funct_client_sst},
-//     {"Fork", funct_client_sst},
-//     {"Eject", funct_client_sst},
-//     {"death", funct_client_sst},
-//     {"Take object", funct_client_sst},
-//     {"Set object", funct_client_sst},
-//     {"Incantation", funct_client_sst},
-//     {"Connect_nbr", funct_client_sst},
-// };
+void funct_client_ia_forward(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_right(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_left(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_look(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_inventory(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_broadcast(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_msg(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_connect_nbr(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_fork(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_eject(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_take_obj(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_set_obj(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_incantation(ia_t *ia, char **args, common_t *com);
+void funct_client_ia_connect_bar(ia_t *ia, char **args, common_t *com);
+
+static const server_ia_t COMMAND_GESTION_IA[] = {
+    {"Forward", NULL, funct_client_ia_forward},
+    {"Right", NULL, funct_client_ia_right},
+    {"Left", NULL, funct_client_ia_left},
+    {"Look", NULL, funct_client_ia_look},
+    {"Inventory", NULL, funct_client_ia_inventory},
+    {"Broadcast", NULL, funct_client_ia_broadcast},
+    {"message", NULL, funct_client_ia_msg},
+    {"Connect_nbr", NULL, funct_client_ia_connect_nbr},
+    {"Fork", NULL, funct_client_ia_fork},
+    {"Eject", NULL, funct_client_ia_eject},
+    {"Take", NULL, funct_client_ia_take_obj},
+    {"Set", NULL, funct_client_ia_set_obj},
+    {"Incantation", NULL, funct_client_ia_incantation},
+    {"Connect_nbr", NULL, funct_client_ia_connect_bar},
+};
+
+ia_t *set_ia(void);
+ia_t close_ia(void);
+void free_ia(ia_t *ia);
 
 #endif /* !IA_H_ */
-

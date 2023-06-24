@@ -5,13 +5,16 @@ mod ui;
 mod network;
 mod zappy;
 mod interpreter;
+mod arguments;
 
-use std::thread;
+use std::f32::consts::PI;
+use std::time::Duration;
 
 use crate::zappy::Zappy;
 
-use crate::network::loop_server;
 use rend_ox::app::{app, App};
+use rend_ox::Vec3;
+use crate::arguments::parse_arguments;
 
 fn zappy_key_pressed(app: &rend_ox::nannou::App, model: &mut App<Zappy>, key: rend_ox::nannou::event::Key) {
     if let rend_ox::nannou::event::Key::Space = key {
@@ -30,16 +33,17 @@ fn zappy_key_pressed(app: &rend_ox::nannou::App, model: &mut App<Zappy>, key: re
 }
 
 fn zappy_app(nannou_app: &rend_ox::nannou::App) -> App<Zappy> {
-    let mut app = app(nannou_app, Zappy::new())
+    let mut app: App<Zappy> = app(nannou_app, Zappy::new())
         .update(zappy::zappy_update)
         .key_pressed(zappy_key_pressed);
+    let (port, hostname) = parse_arguments();
+
+    app.user.hostname = hostname;
+    app.user.port = port;
     Zappy::load(&mut app);
-    if let Some(server) = &mut app.user.server {
-        let server_clone = server.access();
-        thread::spawn(move || {
-            loop_server(server_clone);
-        });
-    }
+    app.user.try_to_connect(Duration::from_millis(0));
+    app.camera.position = Vec3::new(app.user.map.size[0] as f32 / 200., app.user.map.size[1] as f32 / 200., 0.04);
+    app.camera.pitch = -PI/2.;
     app
 }
 
