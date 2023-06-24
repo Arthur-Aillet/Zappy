@@ -11,7 +11,8 @@
 static int check_teams_name(const char *team_name, common_t *com, int idx)
 {
     for (size_t i = 0; i < com->nb_teams; i++) {
-        if (strcmp(TEAM(i).name, team_name) == 0)
+        if (strcmp(TEAM(i).name, team_name) == 0 &&
+            (TEAM(i).nb_slot - TEAM(i).actif_player) > 0)
             return check_slot_and_create_player(com, i, idx);
     }
     return 0;
