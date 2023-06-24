@@ -4,6 +4,7 @@ use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
 use rend_ox::Vec3;
 
 use crate::tantorian::{generate_color_from_string, Tantorian};
+use crate::tantorian::PlayerState::{Alive, Egg};
 use crate::ui::State::{Connect, Disconnect, Nothing};
 
 pub(crate) struct ZappyUi {
@@ -163,7 +164,7 @@ impl ZappyUi {
         ui.end_row();
     }
 
-    fn tile_content(grid :&mut Ui, map: &crate::map::Map, selected: &[usize; 2]) {
+    fn tile_content(grid :&mut Ui, map: &crate::map::Map, selected: &[usize; 2], players: &Vec<Tantorian>) {
         ZappyUi::display_stat(grid,"Food", map.tiles[selected[0]][selected[1]].q0.len());
         ZappyUi::display_stat(grid,"Linemate", map.tiles[selected[0]][selected[1]].q1.len());
         ZappyUi::display_stat(grid,"Deraumere", map.tiles[selected[0]][selected[1]].q2.len());
@@ -171,6 +172,30 @@ impl ZappyUi {
         ZappyUi::display_stat(grid,"Mendiane", map.tiles[selected[0]][selected[1]].q4.len());
         ZappyUi::display_stat(grid,"Phiras", map.tiles[selected[0]][selected[1]].q5.len());
         ZappyUi::display_stat(grid,"Thystame", map.tiles[selected[0]][selected[1]].q6.len());
+
+        let mut players_present = String::from("");
+        let mut eggs_present = String::from("");
+
+        for player in players {
+            if &player.current_tile.as_uvec2().as_ref().map(|x| x as usize) == selected && player.state == Alive {
+                if players_present.is_empty() {
+                    players_present.push_str(&*format!("{}", player.number));
+                } else {
+                    players_present.push_str(&*format!(", {}", player.number));
+
+                }
+            }
+            if &player.current_tile.as_uvec2().as_ref().map(|x| x as usize) == selected && player.state == Egg {
+                if eggs_present.is_empty() {
+                    eggs_present.push_str(&*format!("[{}", player.number));
+                } else {
+                    eggs_present.push_str(&*format!(", {}", player.number));
+
+                }
+            }
+        }
+        ZappyUi::display_stat(grid,"Players", format!("[{}]", players_present));
+        ZappyUi::display_stat(grid,"Eggs", format!("[{}]", eggs_present));
     }
 
     pub(crate) fn refresh_settings(&mut self, ui: &mut Ui, auto_refresh: &mut bool, refresh_rate: &mut f32) -> bool {
@@ -199,7 +224,7 @@ impl ZappyUi {
         state
     }
 
-    pub(crate) fn tiles(&mut self, ctx: &CtxRef, auto_refresh: &mut bool, refresh_rate: &mut f32, map: &crate::map::Map, is_active: bool) -> bool {
+    pub(crate) fn tiles(&mut self, ctx: &CtxRef, auto_refresh: &mut bool, refresh_rate: &mut f32, map: &crate::map::Map, is_active: bool, players: &Vec<Tantorian>) -> bool {
         let mut state = false;
         egui::Window::new("Map").vscroll(true).enabled(!is_active).show(
             ctx, |ui| {
@@ -223,7 +248,7 @@ impl ZappyUi {
                         .spacing([40.0, 4.0])
                         .striped(true)
                         .show(ui, |grid| {
-                            ZappyUi::tile_content(grid, map, &selected);
+                            ZappyUi::tile_content(grid, map, &selected, players);
                         });
                 }
             },
@@ -251,14 +276,7 @@ impl ZappyUi {
                             }
                             ui_grid.end_row();
                             ZappyUi::display_stat(ui_grid, "Number", player.number);
-
-                            let state: &str;
-                            if player.alive {
-                                state = "alive";
-                            } else  {
-                                state = "dead";
-                            }
-                            ZappyUi::display_stat(ui_grid, "Status", state);
+                            ZappyUi::display_stat(ui_grid, "Status", player.state.as_string());
                             ZappyUi::display_stat(ui_grid, "Position", format!("{} {}", player.current_tile.x, player.current_tile.y));
                             ZappyUi::display_stat(ui_grid, "Level", format!("{}", player.level));
                             ZappyUi::display_stat(ui_grid, "Orientation", player.orientation.to_char());

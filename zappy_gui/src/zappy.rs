@@ -12,6 +12,7 @@ use rend_ox::nannou_egui::egui::CtxRef;
 
 use crate::map::Map;
 pub use crate::server::ServerConn;
+use crate::tantorian::PlayerState::{Alive, Egg};
 use crate::tantorian::Tantorian;
 use crate::ui;
 use crate::ui::ZappyUi;
@@ -23,6 +24,7 @@ pub struct Zappy {
     pub(crate) server: Option<ServerConn>,
     pub(crate) ui: ZappyUi,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
+    pub(crate) egg_mesh: Option<MeshDescriptor>,
     pub(crate) functions: HashMap<String, ServerFunction>,
     pub(crate) time_unit: f32,
     pub(crate) thread_handle: Option<JoinHandle<()>>,
@@ -89,6 +91,7 @@ impl Zappy {
             server: None,
             ui: ZappyUi::new(),
             tantorian_mesh: None,
+            egg_mesh: None,
             functions: create_hash_function(),
             time_unit: 100.,
             thread_handle: None,
@@ -128,34 +131,59 @@ impl Zappy {
             } else {
                 println!("Zappy: couldn't load batgnome.obj");
             }
+            if let Ok(md) = graphics.load_mesh("./obj/egg.obj") {
+                app.user.egg_mesh = Some(md);
+            } else {
+                println!("Zappy: couldn't load egg.obj");
+            }
         }
     }
 
     pub fn update_players(app: &mut App<Zappy>, update: &Update) {
         for player in &mut app.user.players {
             if let Some(movement_start) = &player.start_movement {
-                let mut new_pos: Vec2 = player.last_tile as Vec2;
-                let mut new_rot: f32 = player.last_orientation.as_radian();
-                let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
-                let modifier = 1. / (7. / app.user.time_unit);
+                if let Some(loops) = player.laying {
+                    let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
+                    let modifier = 1. / (42. / app.user.time_unit);
 
-                if progress >= 1. / modifier {
-                    progress = 1. / modifier;
-                    player.start_movement = None;
+                    if progress >= 1. / modifier {
+                        progress = 1. / modifier;
+                        player.start_movement = None;
+                    }
+
+                    let mut new_rot: f32 = player.orientation.as_radian();
+                    new_rot = lerp(new_rot, player.orientation.as_radian() + loops * PI * 2., (progress * modifier).powi(3));
+
+                    player.rotation = Vec3 {
+                        x: PI / 2.,
+                        y: new_rot,
+                        z: 0.,
+                    };
+                } else {
+                    let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
+                    let modifier = 1. / (7. / app.user.time_unit);
+
+                    if progress >= 1. / modifier {
+                        progress = 1. / modifier;
+                        player.start_movement = None;
+                    }
+
+                    let mut new_pos: Vec2 = player.last_tile as Vec2;
+                    let mut new_rot: f32 = player.last_orientation.as_radian();
+
+                    new_pos = new_pos.lerp(player.current_tile as Vec2, progress * modifier);
+                    new_rot = lerp(new_rot, player.orientation.as_radian(), progress * modifier);
+                    player.pos = Vec3 {
+                        x: new_pos.x as f32 + 0.5,
+                        y: new_pos.y as f32 + 0.5,
+                        z: 0.666,
+                    };
+                    player.rotation = Vec3 {
+                        x: PI / 2.,
+                        y: new_rot,
+                        z: 0.,
+                    };
                 }
-
-                new_pos = new_pos.lerp(player.current_tile as Vec2, progress * modifier);
-                new_rot = lerp(new_rot, player.orientation.as_radian(), progress * modifier);
-                player.pos = Vec3 {
-                    x: new_pos.x as f32 + 0.5,
-                    y: new_pos.y as f32 + 0.5,
-                    z: 0.666,
-                };
-                player.rotation = Vec3 {
-                    x: PI/2.,
-                    y: new_rot,
-                    z: 0.,
-                };
             }
         }
     }
@@ -167,9 +195,21 @@ impl Zappy {
         } else {
             return;
         }
+        let egg_mesh : &MeshDescriptor;
+        if let Some(mesh) = &app.user.egg_mesh {
+            egg_mesh = mesh
+        } else {
+            return;
+        }
 
         for player in &app.user.players {
-            app.draw_at(player_mesh, player.color.clone(), player.pos.clone(), player.rotation.clone(), Vec3::new(0.333, 0.333, 0.333));
+            if player.state == Alive {
+                app.draw_at(player_mesh, player.color.clone(), player.pos.clone(), player.rotation.clone(), Vec3::new(0.333, 0.333, 0.333));
+            } else if player.state == Egg {
+                let mut position = player.pos.clone();
+                position.z -= 0.333;
+                app.draw_at(egg_mesh, player.color.clone(), position, player.rotation.clone(), Vec3::new(0.333, 0.333, 0.333));
+            }
         }
         Map::render(app);
     }
@@ -195,7 +235,7 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
         zappy.user.following = None;
         look_at_player(zappy, &player_number, &team_name);
     }
-    let refresh_map = zappy.user.ui.tiles(ctx, &mut zappy.user.auto_update, &mut zappy.user.refresh_factor, &zappy.user.map, zappy.camera_is_active);
+    let refresh_map = zappy.user.ui.tiles(ctx, &mut zappy.user.auto_update, &mut zappy.user.refresh_factor, &zappy.user.map, zappy.camera_is_active, &zappy.user.players);
     if zappy.user.server.is_some() {
         zappy.user.ui.communications(ctx, zappy.camera_is_active);
     }

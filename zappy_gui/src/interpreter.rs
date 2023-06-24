@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use rend_ox::glam::{Vec2, Vec3Swizzles};
+use crate::tantorian::PlayerState::{Alive, Dead, Egg};
 
 pub type ServerFunction = fn(&mut Zappy, String, Duration);
 
@@ -18,17 +19,17 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     functions.insert("ppo".to_string(), Zappy::player_position);
     functions.insert("plv".to_string(), Zappy::player_level);
     functions.insert("pin".to_string(), Zappy::player_inventory);
-    //pex
+    functions.insert("pex".to_string(), Zappy::player_expulsion);
     functions.insert("pbc".to_string(), Zappy::broadcast);
     //pic
     //pie
-    //pfk
-    //pdr
-    //pgt
+    functions.insert("pfk".to_string(), Zappy::player_fork);
+    functions.insert("pdr".to_string(), Zappy::drop_resource);
+    functions.insert("pgt".to_string(), Zappy::collect_resource);
     functions.insert("pdi".to_string(), Zappy::death_of_player);
-    //enw
-    //ebo
-    //edi
+    functions.insert("enw".to_string(), Zappy::new_egg);
+    functions.insert("ebo".to_string(), Zappy::connection_to_egg);
+    functions.insert("edi".to_string(), Zappy::death_of_an_egg);
     functions.insert("sgt".to_string(), Zappy::set_time_unit);
     functions.insert("sst".to_string(), Zappy::set_time_unit);
     functions.insert("seg".to_string(), Zappy::end_of_game);
@@ -56,6 +57,206 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn player_fork(&mut self, command: String, at: Duration) {
+        let re = Regex::new(r"^pfk (-?\d+)$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, number, capture, "pfk: invalid player number");
+
+            let mut found = false;
+            for player in &mut self.players {
+                if player.number == number {
+                    player.laying = Some(5.0);
+                    player.start_movement = Some(at);
+                    found = true;
+                }
+            }
+            if !found {
+                println!("pfk: invalid command given");
+            }
+        } else {
+            println!("pfk: invalid command given");
+        }
+    }
+
+    fn player_expulsion(&mut self, command: String, at: Duration) {
+        let re = Regex::new(r"^pex (-?\d+)$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, number, capture, "pex: invalid player number");
+
+            let mut found = false;
+            let mut pos = [0;2];
+            let mut orientation = Orientation::N;
+            for player in &mut self.players {
+                if player.number == number && player.state == Alive {
+                    found = true;
+                    orientation = player.orientation;
+                    pos = [player.current_tile.x as usize, player.current_tile.y as usize];
+                }
+            }
+            if !found {
+                println!("pex: player not found");
+            }
+
+            for player in &mut self.players {
+                if [player.current_tile.x as usize, player.current_tile.y as usize] == pos && player.number != number {
+                    if player.state == Egg {
+                        player.state = Dead
+                    }
+                    if player.state == Alive {
+                        let mut x = player.current_tile.x + (orientation == Orientation::E) as u8 as f32 - (orientation == Orientation::W) as u8 as f32;
+                        let mut y = player.current_tile.y + (orientation == Orientation::N) as u8 as f32 - (orientation == Orientation::S) as u8 as f32;
+                        if x < 0. {
+                            x = self.map.size[0] as f32 - 1.;
+                        }
+                        if y < 0. {
+                            y = self.map.size[1] as f32 - 1.;
+                        }
+                        player.last_tile = player.pos.xy() - 0.5;
+                        player.current_tile = Vec2::new(x as f32, y as f32);
+                        player.start_movement = Some(at);
+                    }
+                }
+            }
+        } else {
+            println!("pex: invalid command given");
+        }
+    }
+
+    fn drop_resource(&mut self, command: String, _at: Duration) {
+        let re = Regex::new(r"^pdr (-?\d+) ([0-6])$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, number, capture, "pdr: invalid player number");
+            parse_capture!(usize, 2, ressource, capture, "pdr: invalid resource number");
+
+            for player in &mut self.players {
+                if player.number == number && player.state == Alive {
+                    let x = player.current_tile.as_uvec2().x as usize;
+                    let y = player.current_tile.as_uvec2().y as usize;
+                    let before_quantity = self.map.tiles[x][y].access_to_nth_resource(ressource).len();
+                    self.map.update_resources(x, y, ressource, before_quantity + player.access_nth_resource(ressource).clone() as usize);
+                    *player.access_nth_resource(ressource) = 0;
+                    return;
+                } else if player.number == number {
+                    println!("pdr: player not alive");
+                    return;
+                }
+            }
+            println!("pdr: player not found");
+        } else {
+            println!("pdr: invalid command given");
+        }
+    }
+
+    fn collect_resource(&mut self, command: String, _at: Duration) {
+        let re = Regex::new(r"^pgt (-?\d+) ([0-6])$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, number, capture, "pgt: invalid player number");
+            parse_capture!(usize, 2, ressource, capture, "pgt: invalid resource number");
+
+            for player in &mut self.players {
+                if player.number == number && player.state == Alive {
+                    let x = player.current_tile.as_uvec2().x as usize;
+                    let y = player.current_tile.as_uvec2().y as usize;
+                    *player.access_nth_resource(ressource) += self.map.tiles[x][y].access_to_nth_resource(ressource).len() as u32;
+                    self.map.update_resources(x, y, ressource, 0);
+                    return;
+                } else if player.number == number {
+                    println!("pgt: player not alive");
+                    return;
+                }
+            }
+            println!("pgt: player not found");
+        } else {
+            println!("pgt: invalid command given");
+        }
+    }
+
+    fn death_of_an_egg(&mut self, command: String, _at: Duration) {
+        let re = Regex::new(r"^edi (-?\d+)$")
+            .expect("Invalid regex");
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, egg_number, capture, "edi: invalid egg number");
+
+            for player in &mut self.players {
+                if player.number == egg_number && player.state == Egg {
+                    player.state = Dead;
+                    return;
+                } else if player.number == egg_number {
+                    println!("edi: player not an egg");
+                    return;
+                }
+            }
+            println!("edi: player not found");
+        } else {
+            println!("edi: invalid command given");
+        }
+    }
+
+    fn connection_to_egg(&mut self, command: String, _at: Duration) {
+        let re = Regex::new(r"^ebo (-?\d+)$")
+            .expect("Invalid regex");
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, egg_number, capture, "ebo: invalid egg number");
+
+            for player in &mut self.players {
+                if player.number == egg_number && player.state == Egg {
+                    player.state = Alive;
+                    return;
+                } else if player.number == egg_number {
+                    println!("ebo: player not an egg");
+                    return;
+                }
+            }
+            println!("ebo: player not found");
+        } else {
+            println!("ebo: invalid command given");
+        }
+    }
+
+    fn new_egg(&mut self, command: String, _at: Duration) {
+        let re = Regex::new(r"^enw (-?\d+) (-?\d+) (\d+) (\d+)$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, egg_number, capture, "enw: invalid egg number");
+            parse_capture!(i64, 2, number, capture, "enw: invalid player number");
+            parse_capture!(usize, 3, x, capture, "enw: invalid player x coordinate");
+            parse_capture!(usize, 4, y, capture, "enw: invalid player y coordinate");
+
+            if x > self.map.size[0] {
+                println!("enw: x coordinate out of bounds");
+                return;
+            }
+            if y > self.map.size[1] {
+                println!("enw: y coordinate out of bounds");
+                return;
+            }
+            let mut found = false;
+            for player in &self.players {
+                if player.number == number {
+                    found = true;
+                }
+            }
+            if !found {
+                println!("enw: player not found");
+                return;
+            }
+            if let Some(egg) = Tantorian::new_egg(egg_number, x, y, &self.map.size, number, &self.teams, &self.players) {
+                self.players.push(egg);
+            }
+        } else {
+            println!("enw: invalid command given");
+        }
+    }
+
     fn invalid_arg_sent(&mut self, _command: String, at: Duration) {
         self.ui.network_messages.push((at, String::from("Server received invalid argument")));
         println!("Server received invalid argument");
@@ -114,7 +315,7 @@ impl Zappy {
                     player.thystame = q6 as u32;
                 }
             }
-            if found == false {
+            if !found {
                 println!("pin: player not found");
             }
         } else {
@@ -137,7 +338,7 @@ impl Zappy {
                     player.level = level as u32;
                 }
             }
-            if found == false {
+            if !found {
                 println!("plv: player not found");
             }
         } else {
@@ -178,7 +379,7 @@ impl Zappy {
                     player.start_movement = Some(at);
                 }
             }
-            if found == false {
+            if !found {
                 println!("ppo: player not found");
             }
         } else {
@@ -197,7 +398,7 @@ impl Zappy {
             match maybe_number {
                 Ok(number) => {
                     for player in &mut self.players {
-                        if player.number == number && player.alive {
+                        if player.number == number && player.state == Alive {
                             self.ui.broadcast_messages.push((at, player.team_name.clone(), number, String::from(args[2])));
                             return;
                         }
@@ -236,7 +437,7 @@ impl Zappy {
                 Ok(number) => {
                     for player in &mut self.players {
                         if player.number == number {
-                            player.alive = false;
+                            player.state = Dead;
                         }
                     }
                 }

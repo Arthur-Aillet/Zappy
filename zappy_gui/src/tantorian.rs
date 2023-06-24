@@ -4,8 +4,9 @@ use rend_ox::glam::Vec2;
 use rend_ox::Vec3;
 use std::hash::{Hash, Hasher};
 use std::time::Duration;
+use crate::tantorian::PlayerState::{Alive, Dead, Egg};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum Orientation {
     N = 1,
     E = 2,
@@ -36,9 +37,9 @@ impl Orientation {
     pub fn as_radian(&self) -> f32 {
         match self {
             Orientation::N => 180. * PI/180.,
-            Orientation::E => 270. * PI/180.,
+            Orientation::E => 90. * PI/180.,
             Orientation::S => 0.,
-            Orientation::W => 90. * PI/180.,
+            Orientation::W => 270. * PI/180.,
         }
     }
 }
@@ -58,6 +59,23 @@ pub fn generate_color_from_string(string: &String) -> Vec3 {
     return Vec3::new(r as f32/255. , g as f32/255., b as f32/255.)
 }
 
+#[derive(Clone, Copy, PartialEq)]
+pub enum PlayerState {
+    Dead,
+    Alive,
+    Egg
+}
+
+impl PlayerState {
+    pub fn as_string(&self) -> &'static str {
+        match self {
+            Dead => {"dead"}
+            Alive => {"alive"}
+            PlayerState::Egg => {"egg"}
+        }
+    }
+}
+
 pub struct Tantorian {
     pub team_name: String,
     pub number: i64,
@@ -71,7 +89,9 @@ pub struct Tantorian {
     pub level: u32,
     pub orientation: Orientation,
     pub mesh_descriptor: u32,
-    pub alive: bool,
+    pub state: PlayerState,
+    pub parent: Option<i64>,
+    pub laying: Option<f32>,
     pub food: u32,
     pub linemate: u32,
     pub deraumere: u32,
@@ -82,26 +102,78 @@ pub struct Tantorian {
 }
 
 impl Tantorian {
-    /*pub fn new() -> Tantorian {
-        Tantorian {
-            team_name: "".to_string(),
-            number: 0,
-            pos: Vec3::new(0., 0., 0.),
-            color: Vec3::new(1., 1., 1.),
-            level: 0,
-            orientation: Orientation::N,
-            mesh_descriptor: 0,
-            current_tile: UVec2::new(0, 0),
-            alive: true,
-            food: 0,
-            linemate: 0,
-            deraumere: 0,
-            sibur: 0,
-            mendiane: 0,
-            phiras: 0,
-            thystame: 0,
+    pub fn access_nth_resource(&mut self, q: usize) -> &mut u32 {
+        match q {
+            0 => { &mut self.food}
+            1 => { &mut self.linemate}
+            2 => { &mut self.deraumere}
+            3 => { &mut self.sibur}
+            4 => { &mut self.mendiane}
+            5 => { &mut self.phiras}
+            6 => { &mut self.thystame}
+            _ => { panic!("Accessed to non existing resource") }
         }
-    }*/
+    }
+
+    pub fn new_egg(number: i64, x: usize, y: usize, map_size: &[usize; 2], parent_number: i64, teams: &Vec<(String, Vec3)>, players: &Vec<Tantorian>) -> Option<Tantorian> {
+        let mut parent_player: Option<&Tantorian> = None;
+        for player in players {
+            if player.number == number && player.state != Dead {
+                println!("Player number already attributed");
+                return None;
+            }
+            if player.number == parent_number {
+                parent_player = Some(player);
+            }
+        }
+        if let Some(parent) = parent_player {
+            if x >= map_size[0] || y >= map_size[1] {
+                println!("New player outside of map!");
+                return None;
+            }
+
+            let pos = Vec3 {
+                x: x as f32 + 0.5,
+                y: y as f32 + 0.5,
+                z: 0.666,
+            };
+            let rot = Vec3::new(PI / 2., parent.orientation.as_radian(), 0.);
+
+            let number_color = generate_color_from_string(&format!("{number}"));
+            let mut team_color = Vec3::default();
+            for (current_name, current_color) in teams {
+                if current_name == &parent.team_name {
+                    team_color = current_color.clone();
+                }
+            }
+            return Some(Tantorian {
+                team_name: parent.team_name.clone(),
+                number,
+                pos,
+                color: team_color.lerp(number_color, 0.2),
+                level: parent.level,
+                orientation: parent.orientation,
+                last_orientation: parent.orientation,
+                rotation: rot,
+                mesh_descriptor: 0,
+                current_tile: Vec2::new(x as f32, y as f32),
+                last_tile: Vec2::new(x as f32, y as f32),
+                start_movement: None,
+                state: Egg,
+                food: 0,
+                parent: Some(parent_number),
+                linemate: 0,
+                deraumere: 0,
+                sibur: 0,
+                mendiane: 0,
+                phiras: 0,
+                thystame: 0,
+                laying: None,
+            })
+        }
+        println!("Parent player not found");
+        None
+    }
 
     pub fn new_from_command(number: i64, x: usize, y: usize, orientation: Orientation, level : u32, team_name: String, teams: &Vec<(String, Vec3)>, map_size: &[usize; 2], players: &mut Vec<Tantorian>) -> Option<Tantorian> {
         if !teams.iter().any(|(name, _color)| *name == team_name) {
@@ -123,7 +195,7 @@ impl Tantorian {
         };
         let rot = Vec3::new(PI/2., orientation.as_radian(), 0.);
         for player in players {
-            if player.team_name == team_name && player.number == number && player.alive == true {
+            if player.team_name == team_name && player.number == number && player.state == Alive {
                 println!("New player number already attributed!");
                 return None;
             } else if player.team_name == team_name && player.number == number {
@@ -139,9 +211,11 @@ impl Tantorian {
                 player.current_tile = Vec2::new(x as f32, y as f32);
                 player.last_tile = Vec2::new(x as f32, y as f32);
                 player.start_movement = None;
-                player.alive = true;
+                player.laying = None;
+                player.state = Alive;
                 player.food = 0;
                 player.linemate = 0;
+                player.parent = None;
                 player.deraumere = 0;
                 player.sibur = 0;
                 player.mendiane = 0;
@@ -171,14 +245,16 @@ impl Tantorian {
             current_tile: Vec2::new(x as f32, y as f32),
             last_tile: Vec2::new(x as f32, y as f32),
             start_movement: None,
-            alive: true,
+            state: Alive,
             food: 0,
+            parent: None,
             linemate: 0,
             deraumere: 0,
             sibur: 0,
             mendiane: 0,
             phiras: 0,
             thystame: 0,
+            laying: None,
         })
     }
 }
