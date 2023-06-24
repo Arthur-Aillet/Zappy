@@ -13,19 +13,17 @@ void funct_response_ia_eject(char **args, void *info, common_t *com)
 
     (void)args;
     (void)com;
-    ia->buffer.bufferWrite.usedSize = 4;
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    SIZE = 4;
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL) {
         return;
     }
-    ia->buffer.bufferWrite.octets[0] = '\0';
+    OCTETS[0] = '\0';
     if (find_post(com, ia) == 0) {
-        strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
+        strcat(OCTETS, "ok\n\0");
     } else {
-        strcat(ia->buffer.bufferWrite.octets, "ko\n\0");
+        strcat(OCTETS, "ko\n\0");
     }
-    write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
-        ia->buffer.bufferWrite.usedSize);
+    write(ia->buffer.sock.sockfd, OCTETS, SIZE);
     printf("rentrer dans la fonctions funct_response_ia_eject\n");
 }

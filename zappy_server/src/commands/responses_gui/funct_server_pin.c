@@ -11,11 +11,11 @@
 
 static void funct_finish_response(gui_t *gui)
 {
-    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize - 2] = '\n';
-    gui->buffer.bufferWrite.usedSize += 1;
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                    sizeof(char) * (gui->buffer.bufferWrite.usedSize));
-    if (gui->buffer.bufferWrite.octets == NULL) {
+    GUI_OCTETS[GUI_SIZE - 2] = '\n';
+    GUI_SIZE += 1;
+    GUI_OCTETS = realloc(GUI_OCTETS,
+                    sizeof(char) * (GUI_SIZE));
+    if (GUI_OCTETS == NULL) {
         return;
     }
 }
@@ -26,14 +26,14 @@ static void funct_ressource_in_ia(gui_t *gui, ia_t *ia)
 
     for (int i = 0; i < 7; i++) {
         sprintf(str_ressource, "%ld", ia->player->inventory[i]);
-        gui->buffer.bufferWrite.usedSize += strlen(str_ressource) + 1;
-        gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets
-        , sizeof(char) * (gui->buffer.bufferWrite.usedSize));
-        if (gui->buffer.bufferWrite.octets == NULL) {
+        GUI_SIZE += strlen(str_ressource) + 1;
+        GUI_OCTETS = realloc(GUI_OCTETS
+        , sizeof(char) * (GUI_SIZE));
+        if (GUI_OCTETS == NULL) {
             return;
         }
-        strcat(gui->buffer.bufferWrite.octets, str_ressource);
-        strcat(gui->buffer.bufferWrite.octets, " ");
+        strcat(GUI_OCTETS, str_ressource);
+        strcat(GUI_OCTETS, " ");
     }
     funct_finish_response(gui);
 }
@@ -42,17 +42,17 @@ static void funct_prepare_res(gui_t *gui, ia_t *ia)
 {
     char buffer[1024];
     sprintf(buffer, "%d%d%d", ia->player->id, ia->player->x, ia->player->y);
-    gui->buffer.bufferWrite.usedSize = 8 + strlen(buffer);
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                        sizeof(char) * (gui->buffer.bufferWrite.usedSize));
-    if (gui->buffer.bufferWrite.octets == NULL) {
+    GUI_SIZE = 8 + strlen(buffer);
+    GUI_OCTETS = realloc(GUI_OCTETS,
+                        sizeof(char) * (GUI_SIZE));
+    if (GUI_OCTETS == NULL) {
         return;
     }
-    gui->buffer.bufferWrite.octets[0] = '\0';
-    sprintf(gui->buffer.bufferWrite.octets, "pin %d %d %d ",
+    GUI_OCTETS[0] = '\0';
+    sprintf(GUI_OCTETS, "pin %d %d %d ",
                     ia->player->id, ia->player->x, ia->player->y);
     funct_ressource_in_ia(gui, ia);
-    gui->buffer.bufferWrite.octets[gui->buffer.bufferWrite.usedSize - 1] = '\0';
+    GUI_OCTETS[GUI_SIZE - 1] = '\0';
 }
 
 void funct_server_pin(char **args, void *info, common_t *common)
@@ -64,7 +64,7 @@ void funct_server_pin(char **args, void *info, common_t *common)
         return;
     }
     funct_prepare_res(gui, ia);
-    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-        gui->buffer.bufferWrite.usedSize);
+    write(gui->buffer.sock.sockfd, GUI_OCTETS,
+        GUI_SIZE);
     printf("rentrer dans la fonctions funct_server_pin\n");
 }

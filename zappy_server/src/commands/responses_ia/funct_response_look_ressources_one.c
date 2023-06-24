@@ -11,34 +11,31 @@ static void to_take_ressources_response_ia_thystame(ia_t *ia,
                                         common_t *com, int x, int y)
 {
     for (size_t j = 0; j < com->gui->map.tiles[y][x].ressources[6]; j++) {
-        ia->buffer.bufferWrite.usedSize += 9;
-        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
-        if (ia->buffer.bufferWrite.octets == NULL) {
+        SIZE += 9;
+        OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
+        if (OCTETS == NULL) {
             return;
         }
-        strcat(ia->buffer.bufferWrite.octets, "thystame ");
+        strcat(OCTETS, "thystame ");
     }
-    if (ia->buffer.bufferWrite.octets[ia->buffer.bufferWrite.usedSize - 2] != ' ') {
-        ia->buffer.bufferWrite.usedSize += 1;
-        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
+    if (OCTETS[SIZE - 2] != ' ') {
+        SIZE += 1;
+        OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
     }
-    ia->buffer.bufferWrite.octets[ia->buffer.bufferWrite.usedSize - 2] = ',';
-    ia->buffer.bufferWrite.octets[ia->buffer.bufferWrite.usedSize - 1] = '\0';
+    OCTETS[SIZE - 2] = ',';
+    OCTETS[SIZE - 1] = '\0';
 }
 
 static void to_take_ressources_response_ia_phiras(ia_t *ia,
                                         common_t *com, int x, int y)
 {
     for (size_t j = 0; j < com->gui->map.tiles[y][x].ressources[5]; j++) {
-        ia->buffer.bufferWrite.usedSize += 7;
-        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
-        if (ia->buffer.bufferWrite.octets == NULL) {
+        SIZE += 7;
+        OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
+        if (OCTETS == NULL) {
             return;
         }
-        strcat(ia->buffer.bufferWrite.octets, "phiras ");
+        strcat(OCTETS, "phiras ");
     }
     to_take_ressources_response_ia_thystame(ia, com, x, y);
 }
@@ -47,13 +44,12 @@ static void to_take_ressources_response_ia_mendiane(ia_t *ia,
                                         common_t *com, int x, int y)
 {
     for (size_t j = 0; j < com->gui->map.tiles[y][x].ressources[4]; j++) {
-        ia->buffer.bufferWrite.usedSize += 9;
-        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
-        if (ia->buffer.bufferWrite.octets == NULL) {
+        SIZE += 9;
+        OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
+        if (OCTETS == NULL) {
             return;
         }
-        strcat(ia->buffer.bufferWrite.octets, "mendiane ");
+        strcat(OCTETS, "mendiane ");
     }
     to_take_ressources_response_ia_phiras(ia, com, x, y);
 }
@@ -62,13 +58,12 @@ static void to_take_ressources_response_ia_sibur(ia_t *ia,
                                         common_t *com, int x, int y)
 {
     for (size_t j = 0; j < com->gui->map.tiles[y][x].ressources[SIBUR]; j++) {
-        ia->buffer.bufferWrite.usedSize += 6;
-        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
-        if (ia->buffer.bufferWrite.octets == NULL) {
+        SIZE += 6;
+        OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
+        if (OCTETS == NULL) {
             return;
         }
-        strcat(ia->buffer.bufferWrite.octets, "sibur ");
+        strcat(OCTETS, "sibur ");
     }
     to_take_ressources_response_ia_mendiane(ia, com, x, y);
 }
@@ -77,13 +72,12 @@ void to_take_ressources_response_ia_deraumere(ia_t *ia,
                                         common_t *com, int x, int y)
 {
     for (size_t j = 0; j < com->gui->map.tiles[y][x].ressources[2]; j++) {
-        ia->buffer.bufferWrite.usedSize += 10;
-        ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(char) * ia->buffer.bufferWrite.usedSize);
-        if (ia->buffer.bufferWrite.octets == NULL) {
+        SIZE += 10;
+        OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
+        if (OCTETS == NULL) {
             return;
         }
-        strcat(ia->buffer.bufferWrite.octets, "deraumere ");
+        strcat(OCTETS, "deraumere ");
     }
     to_take_ressources_response_ia_sibur(ia, com, x, y);
 }

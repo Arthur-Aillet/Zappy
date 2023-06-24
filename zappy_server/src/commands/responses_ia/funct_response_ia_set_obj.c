@@ -13,19 +13,17 @@ void funct_response_ia_set_obj(char **args, void *info, common_t *com)
 
     (void)args;
     (void)com;
-    ia->buffer.bufferWrite.usedSize = 4;
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    ia->buffer.bufferWrite.octets[0] = '\0';
+    SIZE = 4;
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    OCTETS[0] = '\0';
     printf("$%s$\n", args[0]);
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    if (OCTETS == NULL) {
         return;
     } else if (strcmp(args[0], "food") == 0) {
         response_set(ia, 0, com);
     } else {
         next_if_funct_set(ia, com, args);
     }
-    write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
-        strlen(ia->buffer.bufferWrite.octets));
+    write(ia->buffer.sock.sockfd, OCTETS, strlen(OCTETS));
     basic_log("rentrer dans la fonctions funct_response_ia_set_obj", C, 0);
 }
