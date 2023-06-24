@@ -1,3 +1,4 @@
+use std::time::Duration;
 use rend_ox::glam::Vec2;
 
 pub enum IncantationState {
@@ -21,19 +22,22 @@ pub struct Incantation {
     pub(crate) level: u32,
     pub(crate) players: Vec<usize>,
     pub(crate) state: IncantationState,
+    pub(crate) since: Duration,
 }
 
 impl Incantation {
     pub fn new(
         pos: Vec2,
         level: u32,
-        players: Vec<usize>
+        players: Vec<usize>,
+        since: Duration,
     ) -> Incantation {
         Incantation {
             pos,
             level,
             players,
-            state: IncantationState::Running
+            state: IncantationState::Running,
+            since,
         }
     }
 }

@@ -7,6 +7,7 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use rend_ox::glam::{Vec2, Vec3Swizzles};
 use rend_ox::Vec3;
+use crate::incantation::{Incantation, IncantationState};
 use crate::message::{Arrows, Message};
 use crate::tantorian::PlayerState::{Alive, Dead, Egg};
 
@@ -24,8 +25,8 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     functions.insert("pin".to_string(), Zappy::player_inventory);
     functions.insert("pex".to_string(), Zappy::player_expulsion);
     functions.insert("pbc".to_string(), Zappy::broadcast);
-    //pic
-    //pie
+    functions.insert("pic".to_string(), Zappy::add_incantation);
+    functions.insert("pie".to_string(), Zappy::end_incantation);
     functions.insert("pfk".to_string(), Zappy::player_fork);
     functions.insert("pdr".to_string(), Zappy::drop_resource);
     functions.insert("pgt".to_string(), Zappy::collect_resource);
@@ -419,6 +420,64 @@ impl Zappy {
                     println!("pbc: player not found");
                 }
                 Err(_) => {println!("pbc: invalid player number");}
+            }
+        }
+    }
+
+    fn add_incantation(&mut self, command: String, at: Duration) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() != 2 {
+            println!("pic: wrong number of arguments");
+        } else {
+            let x : Result<u32, _> = args[1].to_string().parse();
+            let y : Result<u32, _> = args[2].to_string().parse();
+            let level : Result<u32, _> = args[3].to_string().parse();
+            let mut players : Vec<usize> = vec![];
+            for arg in args[4..] {
+                match arg.to_string().parse() : Result<usize, _> {
+                    Ok(p) => { players.push(p)}
+                    _ => { println!("pic: invalid player number"); return; }
+                }
+            }
+
+            if let (Ok(x), Ok(y), (Ok(level))) = (x, y, level) {
+                self.incantations.push(Incantation::new(
+                    Vec2::new(x as f32, y as f32),
+                    level,
+                    players,
+                    at
+                ));
+            } else {
+                println!("pic: invalid arguments");
+            }
+        }
+    }
+
+    fn end_incantation(&mut self, command: String, at: Duration) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() != 2 {
+            println!("pic: wrong number of arguments");
+        } else {
+            let x : Result<u32, _> = args[1].to_string().parse();
+            let y : Result<u32, _> = args[2].to_string().parse();
+            let state = match args[3] {
+                "Ok" => IncantationState::Success,
+                "KO" => IncantationState::Failed,
+                _ => IncantationState::Failed,
+            };
+
+            if let (Ok(x), Ok(y)) = (x, y) {
+                for incantation in &mut self.incantations {
+                    if incantation.pos.x as u32 == x && incantation.pos.y as u32 == y && incantation.state == IncantationState::Running {
+                        incantation.state = state;
+                        incantation.since = at;
+                        return;
+                    }
+                }
+            } else {
+                println!("pic: invalid arguments");
             }
         }
     }
