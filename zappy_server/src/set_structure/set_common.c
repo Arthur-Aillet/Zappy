@@ -78,7 +78,8 @@ common_t set_common(int ac, char *av[])
 void free_common(common_t *com)
 {
     free_gui(com->gui);
-    free_ia(com->ia);
+    for (int i = 0; i < MAX_CLIENTS; i++)
+        free_ia(&com->ia[1]);
     free_all_teams(com->teams, com->nb_teams);
     free_clients(com->client, &com->server);
 }

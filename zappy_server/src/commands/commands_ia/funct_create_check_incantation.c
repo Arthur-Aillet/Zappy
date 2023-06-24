@@ -46,7 +46,7 @@ void status_level_one(ia_t *ia, common_t *com, msg_queue_t *new_msg)
 {
     char **arg;
 
-    arg = malloc(sizeof(char *) * 4);
+    arg = malloc(sizeof(char *) * 5);
     if (arg == NULL) {
         to_create_message_response_ia(new_msg);
         return;
@@ -55,10 +55,11 @@ void status_level_one(ia_t *ia, common_t *com, msg_queue_t *new_msg)
     arg[1] = create_new_arg(ia->player->y, new_msg);
     arg[2] = create_new_arg(ia->player->level, new_msg);
     arg[3] = create_new_arg(ia->player->id, new_msg);
+    arg[4] = NULL;
     to_complete_ia_in_incantation(1, arg,
     &com->gui->map.tiles[ia->player->y][ia->player->x]);
     funct_server_pic(arg, com->gui, com);
-    free_arg(4, arg);
+    free_array((void **)arg);
 }
 
 static void status_level_two_tree_next(ia_t *ia,

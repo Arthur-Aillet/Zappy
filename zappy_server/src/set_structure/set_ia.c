@@ -39,6 +39,10 @@ ia_t *set_ia(void)
 
 void free_ia(ia_t *ia)
 {
+    if (ia->buffer.bufferRead.octets != NULL)
+        free(ia->buffer.bufferRead.octets);
+    if (OCTETS != NULL)
+        free(OCTETS);
     free(ia);
     basic_log("IA free", B, 0);
 }

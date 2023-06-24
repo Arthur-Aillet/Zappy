@@ -25,9 +25,11 @@ int find_post(common_t *com, ia_t *ia)
 {
     int tmp = 1;
 
-    for (size_t i = 0; i < com->nb_ia; i++) {
-        if (com->ia[i].player->x == ia->player->x &&
-            com->ia[i].player->y == ia->player->y) {
+    for (size_t i = 0; i < MAX_PLAYER; i++) {
+        if (com->ia[i].player == NULL)
+            continue;
+        if (com->ia[i].player->x != ia->player->x &&
+            com->ia[i].player->y != ia->player->y) {
             remove_player(com->ia[i].player, ia->player, com);
             tmp = 0;
         }

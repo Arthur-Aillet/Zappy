@@ -7,8 +7,7 @@
 
 #include "zappy.h"
 
-static void funct_response_gui(ia_t *ia, int idx,
-                        common_t *com, char **args)
+static void funct_response_gui(ia_t *ia, int idx, common_t *com, char **args)
 {
     char buffer_args[256];
 
@@ -26,12 +25,13 @@ static void funct_response_gui(ia_t *ia, int idx,
     }
     args[1][0] = '\0';
     strcat(args[1], buffer_args);
+    args[2] = NULL;
     funct_server_pdr(args, com->gui, com);
 }
 
 void response_set(ia_t *ia, int idx, common_t *com)
 {
-    char **args = malloc(sizeof(char *) * 2);
+    char **args = malloc(sizeof(char *) * 3);
 
     if (args == NULL) {
         return;
@@ -44,6 +44,7 @@ void response_set(ia_t *ia, int idx, common_t *com)
         update_tile_gui(com, ia);
     } else
         strcat(OCTETS, "ko\n\0");
+    free_array((void **)args);
 }
 
 static void next_if_funct_tree(ia_t *ia, common_t *com, char **args)

@@ -52,8 +52,7 @@ static void to_take_ressources_response_ia_bis(ia_t *ia, common_t *com,
     to_take_ressources_response_ia_food(ia, com, x, y);
 }
 
-void to_take_ressources_response_ia(ia_t *ia, common_t *com,
-                                                int x, int y)
+void to_take_ressources_response_ia(ia_t *ia, common_t *com, int x, int y)
 {
     int pos[2];
 

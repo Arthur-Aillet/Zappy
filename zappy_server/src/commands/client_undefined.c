@@ -49,6 +49,7 @@ static void response_start_ia(client_t client, common_t *com)
     response[0] = '\0';
     sprintf(response, "%s\n%s %s\n", buffer_nb_slot, buffer_x, buffer_y);
     write(client.socket, response, strlen(response));
+    free(response);
 }
 
 int undefined_client_command(char **command, common_t *com, int idx)

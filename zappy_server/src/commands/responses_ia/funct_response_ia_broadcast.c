@@ -41,7 +41,8 @@ static int calc_angle(ia_t *ia, player_t *player, map_t map)
     static int const idxes[3][3] = {{2, 1, 8},{3, 0, 7},{4, 5, 6}};
     float x = ia->player->x - player->x;
     float y = ia->player->y - player->y;
-
+    if (ia->player->x == player->x && ia->player->y == player->y)
+        return idxes[1][1];
     x = (x < 0) ? x + map.width : x;
     x = (x > map.width / 2) ? x - map.width : x;
     y = (y < 0) ? y + map.height : y;

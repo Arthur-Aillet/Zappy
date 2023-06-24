@@ -13,15 +13,13 @@ static void fill_args(msg_queue_t *new_msg, char **args, common_t *com)
         funct_server_sbp(NULL, com->gui, com);
         return;
     }
-    new_msg->msg[0] = malloc(sizeof(char) *
-                    (strlen(args[0]) + 1));
+    new_msg->msg[0] = malloc(sizeof(char) * (strlen(args[0]) + 1));
     if (new_msg->msg[0] == NULL) {
         return;
     }
     new_msg->msg[0][0] = '\0';
     new_msg->msg[0] = strcat(new_msg->msg[0], args[0]);
-    new_msg->msg[1] = malloc(sizeof(char) *
-                    (strlen(args[1]) + 1));
+    new_msg->msg[1] = malloc(sizeof(char) * (strlen(args[1]) + 1));
     if (new_msg->msg[1] == NULL) {
         return;
     }
@@ -44,5 +42,4 @@ void funct_client_bct(gui_t *gui, char **args, common_t *com)
     new_msg->handler = &funct_server_bct;
     new_msg->next_msg = gui->msg_queue;
     gui->msg_queue = new_msg;
-    printf("rentrer dans la funct_client_bct\n");
 }

@@ -28,7 +28,7 @@ static void status_level_four_five_bis(ia_t *ia,
 
 void status_level_four_five(ia_t *ia, common_t *com, msg_queue_t *new_msg)
 {
-    char **arg = malloc(sizeof(char *) * 7);
+    char **arg = malloc(sizeof(char *) * 5);
 
     if (arg == NULL) {
         to_create_message_response_ia(new_msg);
@@ -38,11 +38,13 @@ void status_level_four_five(ia_t *ia, common_t *com, msg_queue_t *new_msg)
     arg[1] = create_new_arg(ia->player->y, new_msg);
     arg[2] = create_new_arg(ia->player->level, new_msg);
     arg[3] = create_new_arg(ia->player->id, new_msg);
+    arg[4] = NULL;
     status_level_four_five_bis(ia, com, new_msg, arg);
+    free_array((void **)arg);
 }
 
-static void status_level_other_bis(ia_t *ia,
-            common_t *com, msg_queue_t *new_msg, char **arg)
+static void status_level_other_bis(ia_t *ia, common_t *com,
+                            msg_queue_t *new_msg, char **arg)
 {
     int result_ia = 0;
 
@@ -62,7 +64,7 @@ static void status_level_other_bis(ia_t *ia,
 
 void status_level_other(ia_t *ia, common_t *com, msg_queue_t *new_msg)
 {
-    char **arg = malloc(sizeof(char *) * 7);
+    char **arg = malloc(sizeof(char *) * 5);
 
     if (arg == NULL) {
         to_create_message_response_ia(new_msg);
@@ -72,5 +74,7 @@ void status_level_other(ia_t *ia, common_t *com, msg_queue_t *new_msg)
     arg[1] = create_new_arg(ia->player->y, new_msg);
     arg[2] = create_new_arg(ia->player->level, new_msg);
     arg[3] = create_new_arg(ia->player->id, new_msg);
+    arg[4] = NULL;
     status_level_other_bis(ia, com, new_msg, arg);
+    free_array((void **)arg);
 }

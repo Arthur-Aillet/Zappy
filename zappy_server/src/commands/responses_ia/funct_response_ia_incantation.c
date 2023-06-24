@@ -78,5 +78,6 @@ void funct_response_ia_incantation(char **args, void *info, common_t *com)
         }
     }
     write(ia->buffer.sock.sockfd, OCTETS, SIZE);
-    printf("rentrer dans la fonctions funct_response_ia_incantation\n");
+    printf("%sPlayer: %s%d%s level up to %s%ld%s\n", P, R, ia->player->id,
+            P, B, ia->player->level, N);
 }

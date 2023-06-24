@@ -34,8 +34,7 @@ static void remove_choose_player_est(player_t *ennemy, common_t *com)
     }
 }
 
-void remove_choose_player(player_t *ennemy, common_t *com,
-                                char **args, player_t *ia)
+void remove_choose_player(player_t *ennemy, common_t *com, player_t *ia)
 {
     if (ia->orientation == North) {
         if ((size_t)ennemy->y == com->gui->map.height) {
@@ -48,7 +47,6 @@ void remove_choose_player(player_t *ennemy, common_t *com,
     } else {
         remove_finish_choose_player(ennemy, ia, com);
     }
-    funct_server_pex(args, com->gui, com);
 }
 
 int set_nbr_ia(ia_t *ia)
