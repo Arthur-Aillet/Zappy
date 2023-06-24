@@ -17,6 +17,7 @@ use crate::map::Map;
 pub use crate::server::ServerConn;
 use crate::tantorian::PlayerState::{Alive, Egg};
 use crate::tantorian::Tantorian;
+use crate::incantation::Incantation;
 use crate::ui;
 use crate::ui::ZappyUi;
 
@@ -24,6 +25,7 @@ pub struct Zappy {
     pub(crate) map: Map,
     pub(crate) players: Vec<Tantorian>,
     pub(crate) teams: Vec<(String, Vec3)>,
+    pub(crate) incantations: Vec<Incantation>,
     pub(crate) server: Option<ServerConn>,
     pub(crate) ui: ZappyUi,
     pub(crate) messages: Vec<Message>,
@@ -73,6 +75,7 @@ impl Zappy {
             map: Map::new(0, 0),
             players: vec![],
             teams: vec![],
+            incantations: vec![],
             server: None,
             ui: ZappyUi::new(),
             messages: vec![],

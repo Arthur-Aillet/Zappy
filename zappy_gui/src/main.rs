@@ -7,6 +7,7 @@ mod zappy;
 mod interpreter;
 mod arguments;
 mod message;
+mod incantation;
 
 use std::f32::consts::PI;
 use std::time::Duration;
