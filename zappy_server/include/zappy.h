@@ -183,5 +183,6 @@ void funct_response_look_west(ia_t *ia, common_t *com);
 void update_map(common_t *com);
 
 void update_tile_gui(common_t *com, ia_t *ia);
+void send_message_to_player(common_t *com, ia_t *ia, int i, char **args);
 
 #endif /* !ZAPPY_H_ */
