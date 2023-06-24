@@ -14,14 +14,14 @@ static void funct_prepare_res(gui_t *gui, ia_t *tmp_ia, char **args)
     char str_level[3];
 
     sprintf(str_level, "%ld", tmp_ia->player->level);
-    gui->buffer.bufferWrite.usedSize += (strlen(str_level) + 7);
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-                sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
-    if (gui->buffer.bufferWrite.octets == NULL) {
+    GUI_SIZE += (strlen(str_level) + 7);
+    GUI_OCTETS = realloc(GUI_OCTETS,
+                sizeof(char) * (GUI_SIZE + 1));
+    if (GUI_OCTETS == NULL) {
         return;
     }
-    gui->buffer.bufferWrite.octets[0] = '\0';
-    sprintf(gui->buffer.bufferWrite.octets, "plv %s %s\n",
+    GUI_OCTETS[0] = '\0';
+    sprintf(GUI_OCTETS, "plv %s %s\n",
                                     args[0], str_level);
 }
 
@@ -34,7 +34,7 @@ void funct_server_plv(char **args, void *info, common_t *common)
         return;
     }
     funct_prepare_res(gui, tmp_ia, args);
-    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-        strlen(gui->buffer.bufferWrite.octets));
+    write(gui->buffer.sock.sockfd, GUI_OCTETS,
+        strlen(GUI_OCTETS));
     printf("rentrer dans la fonctions funct_server_plv\n");
 }

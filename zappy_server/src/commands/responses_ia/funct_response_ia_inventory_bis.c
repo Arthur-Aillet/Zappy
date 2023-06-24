@@ -12,15 +12,14 @@ void inventory_food(ia_t *ia)
     char buffer_inventory[256];
 
     sprintf(buffer_inventory, "%ld", ia->player->inventory[FOOD]);
-    ia->buffer.bufferWrite.usedSize = 9 + strlen(buffer_inventory);
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                        sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    SIZE = 9 + strlen(buffer_inventory);
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL) {
         return;
     }
-    strcat(ia->buffer.bufferWrite.octets, "[food ");
-    strcat(ia->buffer.bufferWrite.octets, buffer_inventory);
-    strcat(ia->buffer.bufferWrite.octets, ", ");
+    strcat(OCTETS, "[food ");
+    strcat(OCTETS, buffer_inventory);
+    strcat(OCTETS, ", ");
 }
 
 void inventory_linemate(ia_t *ia)
@@ -28,15 +27,14 @@ void inventory_linemate(ia_t *ia)
     char buffer_inventory[256];
 
     sprintf(buffer_inventory, "%ld", ia->player->inventory[LINEMATE]);
-    ia->buffer.bufferWrite.usedSize += 12 + strlen(buffer_inventory);
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    SIZE += 12 + strlen(buffer_inventory);
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL) {
         return;
     }
-    strcat(ia->buffer.bufferWrite.octets, "linemate ");
-    strcat(ia->buffer.bufferWrite.octets, buffer_inventory);
-    strcat(ia->buffer.bufferWrite.octets, ", ");
+    strcat(OCTETS, "linemate ");
+    strcat(OCTETS, buffer_inventory);
+    strcat(OCTETS, ", ");
 }
 
 void inventory_deraumere(ia_t *ia)
@@ -44,15 +42,14 @@ void inventory_deraumere(ia_t *ia)
     char buffer_inventory[256];
 
     sprintf(buffer_inventory, "%ld", ia->player->inventory[DERAUMERE]);
-    ia->buffer.bufferWrite.usedSize += 13 + strlen(buffer_inventory);
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    SIZE += 13 + strlen(buffer_inventory);
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL) {
         return;
     }
-    strcat(ia->buffer.bufferWrite.octets, "deraumere ");
-    strcat(ia->buffer.bufferWrite.octets, buffer_inventory);
-    strcat(ia->buffer.bufferWrite.octets, ", ");
+    strcat(OCTETS, "deraumere ");
+    strcat(OCTETS, buffer_inventory);
+    strcat(OCTETS, ", ");
 }
 
 void inventory_sibur(ia_t *ia)
@@ -60,15 +57,14 @@ void inventory_sibur(ia_t *ia)
     char buffer_inventory[256];
 
     sprintf(buffer_inventory, "%ld", ia->player->inventory[SIBUR]);
-    ia->buffer.bufferWrite.usedSize += 9 + strlen(buffer_inventory);
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    SIZE += 9 + strlen(buffer_inventory);
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL) {
         return;
     }
-    strcat(ia->buffer.bufferWrite.octets, "sibur ");
-    strcat(ia->buffer.bufferWrite.octets, buffer_inventory);
-    strcat(ia->buffer.bufferWrite.octets, ", ");
+    strcat(OCTETS, "sibur ");
+    strcat(OCTETS, buffer_inventory);
+    strcat(OCTETS, ", ");
 }
 
 void inventory_mendiane(ia_t *ia)
@@ -76,13 +72,12 @@ void inventory_mendiane(ia_t *ia)
     char buffer_inventory[256];
 
     sprintf(buffer_inventory, "%ld", ia->player->inventory[MENDIANE]);
-    ia->buffer.bufferWrite.usedSize += 12 + strlen(buffer_inventory);
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    SIZE += 12 + strlen(buffer_inventory);
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL) {
         return;
     }
-    strcat(ia->buffer.bufferWrite.octets, "mendiane ");
-    strcat(ia->buffer.bufferWrite.octets, buffer_inventory);
-    strcat(ia->buffer.bufferWrite.octets, ", ");
+    strcat(OCTETS, "mendiane ");
+    strcat(OCTETS, buffer_inventory);
+    strcat(OCTETS, ", ");
 }

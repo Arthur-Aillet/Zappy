@@ -47,7 +47,7 @@ static int check_command(char **command, common_t *com, int cli_idx)
     server_ia_t ia;
     client_gui_t gui;
 
-    if (command == NULL || command[0] == NULL)
+    if (command == NULL || command[0] == NULL || command[0][0] == '\0')
         return 1;
     if (com->client[cli_idx].type == IA) {
         printf("%sCheck in IA Command%s\n", B, N);

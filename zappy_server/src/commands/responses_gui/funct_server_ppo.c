@@ -17,15 +17,15 @@ static void funct_prepare_res(gui_t *gui, char **args, ia_t *tmp_ia)
     sprintf(buffer_x, "%d", tmp_ia->player->x);
     sprintf(buffer_y, "%d", tmp_ia->player->y);
     sprintf(buffer_o, "%ld", tmp_ia->player->orientation);
-    gui->buffer.bufferWrite.usedSize += (strlen(buffer_x) + strlen(buffer_y)
+    GUI_SIZE += (strlen(buffer_x) + strlen(buffer_y)
     + strlen(buffer_o) + 9);
-    gui->buffer.bufferWrite.octets = realloc(gui->buffer.bufferWrite.octets,
-    sizeof(char) * (gui->buffer.bufferWrite.usedSize + 1));
-    if (gui->buffer.bufferWrite.octets == NULL) {
+    GUI_OCTETS = realloc(GUI_OCTETS,
+    sizeof(char) * (GUI_SIZE + 1));
+    if (GUI_OCTETS == NULL) {
         return;
     }
-    gui->buffer.bufferWrite.octets[0] = '\0';
-    sprintf(gui->buffer.bufferWrite.octets, "ppo %s %s %s %s\n",
+    GUI_OCTETS[0] = '\0';
+    sprintf(GUI_OCTETS, "ppo %s %s %s %s\n",
             args[0], buffer_x, buffer_y, buffer_o);
 }
 
@@ -38,8 +38,8 @@ void funct_server_ppo(char **args, void *info, common_t *common)
         return;
     }
     funct_prepare_res(gui, args, tmp_ia);
-    printf("%s\n", gui->buffer.bufferWrite.octets);
-    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-        strlen(gui->buffer.bufferWrite.octets));
+    printf("%s\n", GUI_OCTETS);
+    write(gui->buffer.sock.sockfd, GUI_OCTETS,
+        strlen(GUI_OCTETS));
     printf("rentrer dans la fonctions funct_server_ppo\n");
 }
