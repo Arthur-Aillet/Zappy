@@ -215,7 +215,7 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
         zappy.user.following = None;
         look_at_player(zappy, &player_number, &team_name);
     }
-    let refresh_map = zappy.user.ui.tiles(ctx, &mut zappy.user.auto_update, &mut zappy.user.refresh_factor, &zappy.user.map, zappy.camera_is_active);
+    let refresh_map = zappy.user.ui.tiles(ctx, &mut zappy.user.auto_update, &mut zappy.user.refresh_factor, &zappy.user.map, zappy.camera_is_active, &zappy.user.players);
     if zappy.user.server.is_some() {
         zappy.user.ui.communications(ctx, zappy.camera_is_active);
     }

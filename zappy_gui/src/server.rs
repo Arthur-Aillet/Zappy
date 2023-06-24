@@ -79,8 +79,8 @@ impl ServerConn {
     //       Returns false in case of error, true if none.
     pub fn send_to_server(&mut self, s: String) -> bool {
         match write!(self.stream, "{}\n", s) {
-            Ok(_) => {true}
-            Err(_) => {false}
+            Ok(_) => true,
+            Err(e) => {println!("error in message sent: {e}"); false}
         }
     }
 

@@ -57,15 +57,15 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
-    fn new_egg(&mut self, command: String, at: Duration) {
+    fn new_egg(&mut self, command: String, _at: Duration) {
         let re = Regex::new(r"^enw (-?\d+) (-?\d+) (\d+) (\d+)$")
             .expect("Invalid regex");
 
         if let Some(capture) = re.captures(&*command) {
             parse_capture!(i64, 1, egg_number, capture, "enw: invalid egg number");
-            parse_capture!(i64, 1, number, capture, "enw: invalid player number");
-            parse_capture!(usize, 2, x, capture, "enw: invalid player x coordinate");
-            parse_capture!(usize, 3, y, capture, "enw: invalid player y coordinate");
+            parse_capture!(i64, 2, number, capture, "enw: invalid player number");
+            parse_capture!(usize, 3, x, capture, "enw: invalid player x coordinate");
+            parse_capture!(usize, 4, y, capture, "enw: invalid player y coordinate");
 
             if x > self.map.size[0] {
                 println!("enw: x coordinate out of bounds");
@@ -84,6 +84,9 @@ impl Zappy {
             if found == false {
                 println!("enw: player not found");
                 return;
+            }
+            if let Some(egg) = Tantorian::new_egg(egg_number, x, y, &self.map.size, number, &self.teams, &self.players) {
+                self.players.push(egg);
             }
         } else {
             println!("enw: invalid command given");
