@@ -23,7 +23,7 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     functions.insert("pbc".to_string(), Zappy::broadcast);
     //pic
     //pie
-    //pfk
+    functions.insert("pfk".to_string(), Zappy::player_fork);
     functions.insert("pdr".to_string(), Zappy::drop_resource);
     functions.insert("pgt".to_string(), Zappy::collect_resource);
     functions.insert("pdi".to_string(), Zappy::death_of_player);
@@ -57,6 +57,29 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn player_fork(&mut self, command: String, at: Duration) {
+        let re = Regex::new(r"^pfk (-?\d+)$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, number, capture, "pfk: invalid player number");
+
+            let mut found = false;
+            for player in &mut self.players {
+                if player.number == number {
+                    player.laying = Some(5.0);
+                    player.start_movement = Some(at);
+                    found = true;
+                }
+            }
+            if !found {
+                println!("pfk: invalid command given");
+            }
+        } else {
+            println!("pfk: invalid command given");
+        }
+    }
+
     fn player_expulsion(&mut self, command: String, at: Duration) {
         let re = Regex::new(r"^pex (-?\d+)$")
             .expect("Invalid regex");
@@ -74,7 +97,7 @@ impl Zappy {
                     pos = [player.current_tile.x as usize, player.current_tile.y as usize];
                 }
             }
-            if found == false {
+            if !found {
                 println!("pex: player not found");
             }
 
@@ -222,7 +245,7 @@ impl Zappy {
                     found = true;
                 }
             }
-            if found == false {
+            if !found {
                 println!("enw: player not found");
                 return;
             }
@@ -292,7 +315,7 @@ impl Zappy {
                     player.thystame = q6 as u32;
                 }
             }
-            if found == false {
+            if !found {
                 println!("pin: player not found");
             }
         } else {
@@ -315,7 +338,7 @@ impl Zappy {
                     player.level = level as u32;
                 }
             }
-            if found == false {
+            if !found {
                 println!("plv: player not found");
             }
         } else {
@@ -356,7 +379,7 @@ impl Zappy {
                     player.start_movement = Some(at);
                 }
             }
-            if found == false {
+            if !found {
                 println!("ppo: player not found");
             }
         } else {

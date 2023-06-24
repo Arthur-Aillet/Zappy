@@ -142,28 +142,48 @@ impl Zappy {
     pub fn update_players(app: &mut App<Zappy>, update: &Update) {
         for player in &mut app.user.players {
             if let Some(movement_start) = &player.start_movement {
-                let mut new_pos: Vec2 = player.last_tile as Vec2;
-                let mut new_rot: f32 = player.last_orientation.as_radian();
-                let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
-                let modifier = 1. / (7. / app.user.time_unit);
+                if let Some(loops) = player.laying {
+                    let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
+                    let modifier = 1. / (42. / app.user.time_unit);
 
-                if progress >= 1. / modifier {
-                    progress = 1. / modifier;
-                    player.start_movement = None;
+                    if progress >= 1. / modifier {
+                        progress = 1. / modifier;
+                        player.start_movement = None;
+                    }
+
+                    let mut new_rot: f32 = player.orientation.as_radian();
+                    new_rot = lerp(new_rot, player.orientation.as_radian() + loops * PI * 2., (progress * modifier).powi(3));
+
+                    player.rotation = Vec3 {
+                        x: PI / 2.,
+                        y: new_rot,
+                        z: 0.,
+                    };
+                } else {
+                    let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
+                    let modifier = 1. / (7. / app.user.time_unit);
+
+                    if progress >= 1. / modifier {
+                        progress = 1. / modifier;
+                        player.start_movement = None;
+                    }
+
+                    let mut new_pos: Vec2 = player.last_tile as Vec2;
+                    let mut new_rot: f32 = player.last_orientation.as_radian();
+
+                    new_pos = new_pos.lerp(player.current_tile as Vec2, progress * modifier);
+                    new_rot = lerp(new_rot, player.orientation.as_radian(), progress * modifier);
+                    player.pos = Vec3 {
+                        x: new_pos.x as f32 + 0.5,
+                        y: new_pos.y as f32 + 0.5,
+                        z: 0.666,
+                    };
+                    player.rotation = Vec3 {
+                        x: PI / 2.,
+                        y: new_rot,
+                        z: 0.,
+                    };
                 }
-
-                new_pos = new_pos.lerp(player.current_tile as Vec2, progress * modifier);
-                new_rot = lerp(new_rot, player.orientation.as_radian(), progress * modifier);
-                player.pos = Vec3 {
-                    x: new_pos.x as f32 + 0.5,
-                    y: new_pos.y as f32 + 0.5,
-                    z: 0.666,
-                };
-                player.rotation = Vec3 {
-                    x: PI/2.,
-                    y: new_rot,
-                    z: 0.,
-                };
             }
         }
     }

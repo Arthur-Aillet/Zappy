@@ -91,6 +91,7 @@ pub struct Tantorian {
     pub mesh_descriptor: u32,
     pub state: PlayerState,
     pub parent: Option<i64>,
+    pub laying: Option<f32>,
     pub food: u32,
     pub linemate: u32,
     pub deraumere: u32,
@@ -167,6 +168,7 @@ impl Tantorian {
                 mendiane: 0,
                 phiras: 0,
                 thystame: 0,
+                laying: None,
             })
         }
         println!("Parent player not found");
@@ -209,6 +211,7 @@ impl Tantorian {
                 player.current_tile = Vec2::new(x as f32, y as f32);
                 player.last_tile = Vec2::new(x as f32, y as f32);
                 player.start_movement = None;
+                player.laying = None;
                 player.state = Alive;
                 player.food = 0;
                 player.linemate = 0;
@@ -251,6 +254,7 @@ impl Tantorian {
             mendiane: 0,
             phiras: 0,
             thystame: 0,
+            laying: None,
         })
     }
 }
