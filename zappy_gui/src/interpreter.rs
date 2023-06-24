@@ -58,40 +58,44 @@ macro_rules! parse_capture {
 
 impl Zappy {
     fn death_of_an_egg(&mut self, command: String, _at: Duration) {
-        let re = Regex::new(r"^ebp (-?\d+)$")
+        let re = Regex::new(r"^edi (-?\d+)$")
             .expect("Invalid regex");
         if let Some(capture) = re.captures(&*command) {
             parse_capture!(i64, 1, egg_number, capture, "edi: invalid egg number");
 
             for player in &mut self.players {
-                if player.number == number && player.state == Egg {
+                if player.number == egg_number && player.state == Egg {
                     player.state = Dead;
                     return;
-                } else if player.number == number {
+                } else if player.number == egg_number {
                     println!("edi: player not an egg");
                     return;
                 }
             }
             println!("edi: player not found");
+        } else {
+            println!("edi: invalid command given");
         }
     }
 
     fn connection_to_egg(&mut self, command: String, _at: Duration) {
-        let re = Regex::new(r"^ebp (-?\d+)$")
+        let re = Regex::new(r"^ebo (-?\d+)$")
             .expect("Invalid regex");
         if let Some(capture) = re.captures(&*command) {
             parse_capture!(i64, 1, egg_number, capture, "ebo: invalid egg number");
 
             for player in &mut self.players {
-                if player.number == number && player.state == Egg {
+                if player.number == egg_number && player.state == Egg {
                     player.state = Alive;
                     return;
-                } else if player.number == number {
+                } else if player.number == egg_number {
                     println!("ebo: player not an egg");
                     return;
                 }
             }
             println!("ebo: player not found");
+        } else {
+            println!("ebo: invalid command given");
         }
     }
 
