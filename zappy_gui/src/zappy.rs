@@ -1,21 +1,24 @@
-use rend_ox::app::App;
-use rend_ox::Vec3;
-use rend_ox::mesh::MeshDescriptor;
-use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
 use std::f32::consts::PI;
 use std::thread::JoinHandle;
 use std::time::Duration;
+
+use rend_ox::app::App;
+use rend_ox::Vec3;
+use rend_ox::mesh::MeshDescriptor;
 use rend_ox::glam::Vec2;
 use rend_ox::nannou::event::Update;
 use rend_ox::nannou_egui::egui::CtxRef;
 
+use crate::message::Message;
+use crate::interpreter::{create_hash_function, ServerFunction};
 use crate::map::Map;
-pub use crate::server::ServerConn;
 use crate::tantorian::PlayerState::{Alive, Egg};
 use crate::tantorian::Tantorian;
 use crate::ui;
 use crate::ui::ZappyUi;
+
+pub use crate::server::ServerConn;
 
 pub struct Zappy {
     pub(crate) map: Map,
@@ -23,6 +26,8 @@ pub struct Zappy {
     pub(crate) teams: Vec<(String, Vec3)>,
     pub(crate) server: Option<ServerConn>,
     pub(crate) ui: ZappyUi,
+    pub(crate) messages: Vec<Message>,
+    pub(crate) message_mesh: Option<MeshDescriptor>,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
     pub(crate) egg_mesh: Option<MeshDescriptor>,
     pub(crate) functions: HashMap<String, ServerFunction>,
@@ -90,6 +95,8 @@ impl Zappy {
             teams: vec![],
             server: None,
             ui: ZappyUi::new(),
+            messages: vec![],
+            message_mesh: None,
             tantorian_mesh: None,
             egg_mesh: None,
             functions: create_hash_function(),
@@ -136,6 +143,30 @@ impl Zappy {
             } else {
                 println!("Zappy: couldn't load egg.obj");
             }
+            if let Ok(md) = graphics.load_mesh("./obj/message.obj") {
+                app.user.message_mesh = Some(md);
+            } else {
+                println!("Zappy: couldn't load message.obj");
+            }
+        }
+    }
+
+    pub fn update_messages(app: &mut App<Zappy>, update: &Update) {
+        let mut ended: Vec<usize> = vec![];
+
+        for (elem, message) in app.user.messages.iter_mut().enumerate() {
+            let mut progress= update.since_start.as_secs_f32() - message.start.as_secs_f32();
+            let modifier = 1. / (7. / app.user.time_unit);
+
+            if progress >= 1. / modifier {
+                progress = 1. / modifier;
+                ended.push(elem);
+            }
+
+            message.scale = Vec3::new(1., 1., 1.).lerp( Vec3::new(16., 16., 0.), (progress * modifier).powi(2));
+        }
+        for to_end in ended.iter().rev()  {
+            app.user.messages.remove(*to_end);
         }
     }
 
@@ -189,6 +220,7 @@ impl Zappy {
     }
 
     pub fn render(app: &mut App<Zappy>) {
+        Map::render(app);
         let player_mesh : &MeshDescriptor;
         if let Some(mesh) = &app.user.tantorian_mesh {
             player_mesh = mesh
@@ -211,7 +243,15 @@ impl Zappy {
                 app.draw_at(egg_mesh, player.color.clone(), position, player.rotation.clone(), Vec3::new(0.333, 0.333, 0.333));
             }
         }
-        Map::render(app);
+        let message_mesh : &MeshDescriptor;
+        if let Some(mesh) = &app.user.message_mesh {
+            message_mesh = mesh
+        } else {
+            return;
+        }
+        for message in &app.user.messages {
+            app.draw_at(message_mesh, message.color, message.pos, Vec3::new(0., 0., 0.), message.scale);
+        }
     }
 }
 
@@ -340,9 +380,10 @@ pub(crate) fn zappy_update(
     }
     rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
     following(nannou_app, zappy);
-    Zappy::render(zappy);
     Zappy::update_players(zappy, &update);
+    Zappy::update_messages(zappy, &update);
     zappy.user.interpret_commands(update.since_start);
     ask_for_update(&mut zappy.user, update.since_start);
+    Zappy::render(zappy);
     display_ui(zappy, update.since_start, ctx);
 }

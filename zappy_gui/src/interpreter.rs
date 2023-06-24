@@ -5,6 +5,8 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use rend_ox::glam::{Vec2, Vec3Swizzles};
+use rend_ox::Vec3;
+use crate::message::Message;
 use crate::tantorian::PlayerState::{Alive, Dead, Egg};
 
 pub type ServerFunction = fn(&mut Zappy, String, Duration);
@@ -399,6 +401,12 @@ impl Zappy {
                 Ok(number) => {
                     for player in &mut self.players {
                         if player.number == number && player.state == Alive {
+                            self.messages.push(Message{
+                                pos: Vec3::new(player.pos.x, player.pos.y, 0.),
+                                scale: Vec3::new(1., 1., 1.),
+                                color: player.color.clone(),
+                                start: at.clone()
+                            });
                             self.ui.broadcast_messages.push((at, player.team_name.clone(), number, String::from(args[2])));
                             return;
                         }
