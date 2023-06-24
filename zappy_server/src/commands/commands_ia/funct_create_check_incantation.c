@@ -7,6 +7,14 @@
 
 #include "zappy.h"
 
+/**
+ @brief to find ia for the incantation and create new args for the response gui for the level 6 and 7
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param int nbr_ia: nbr d'ia
+ @param char **arg: the arguments receive with the command ia
+ @param tile_t *tile: each box of the maps
+ @return void
+**/
 void to_complete_ia_in_incantation(int nbr_ia, char **arg, tile_t *tile)
 {
     if (nbr_ia == 1) {
@@ -27,6 +35,13 @@ void to_complete_ia_in_incantation(int nbr_ia, char **arg, tile_t *tile)
     to_complete_ia_in_incantation_bis(nbr_ia, arg, tile);
 }
 
+/**
+ @brief to find ia for the incantation and create new args for the response gui for the level 6 and 7
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param int nbr: nbr d'arguments
+ @param msg_queue_t *new_msg: recording of the new order in the pending queue
+ @return void
+**/
 char *create_new_arg(int nbr, msg_queue_t *new_msg)
 {
     char buffer_player[256];
@@ -42,6 +57,14 @@ char *create_new_arg(int nbr, msg_queue_t *new_msg)
     return strcat(arg, buffer_player);
 }
 
+/**
+ @brief create new args for the level 1
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: structure of ia
+ @param common_t *com: structure commun -> this structure gathers all the server data
+ @param msg_queue_t *new_msg: recording of the new order in the pending queue
+ @return void
+**/
 void status_level_one(ia_t *ia, common_t *com, msg_queue_t *new_msg)
 {
     char **arg;
@@ -62,6 +85,15 @@ void status_level_one(ia_t *ia, common_t *com, msg_queue_t *new_msg)
     free_array((void **)arg);
 }
 
+/**
+ @brief to find ia for the incantation and create new args for the response gui for the level 2 and 3
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: structure of ia
+ @param common_t *com: structure commun -> this structure gathers all the server data
+ @param msg_queue_t *new_msg: recording of the new order in the pending queue
+ @param char **args: the arguments receive with the command ia
+ @return void
+**/
 static void status_level_two_tree_next(ia_t *ia,
             common_t *com, msg_queue_t *new_msg, char **arg)
 {
@@ -79,6 +111,14 @@ static void status_level_two_tree_next(ia_t *ia,
     free_arg(5, arg);
 }
 
+/**
+ @brief create new args for the level 2 and 3
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: structure of ia
+ @param common_t *com: structure commun -> this structure gathers all the server data
+ @param msg_queue_t *new_msg: recording of the new order in the pending queue
+ @return void
+**/
 void status_level_two_tree(ia_t *ia,
                                 common_t *com, msg_queue_t *new_msg)
 {

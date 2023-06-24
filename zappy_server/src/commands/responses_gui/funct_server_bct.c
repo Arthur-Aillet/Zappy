@@ -52,6 +52,7 @@ void funct_server_bct(char **args, void *info, common_t *common)
 {
     (void)common;
     gui_t *gui = (gui_t *)info;
+
     if (args == NULL || args[0] == NULL || args[1] == NULL) {
         error("Invalid arguments", 0);
         return;

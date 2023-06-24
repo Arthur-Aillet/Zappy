@@ -7,6 +7,15 @@
 
 #include "zappy.h"
 
+/**
+ @brief check the resources it takes to get to level 7
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia : structure of ia
+ @param common_t *com: the arguments receive with the command ia
+ @param int x: position ressources x on the map
+ @param int y: position ressources y on the map
+ @return void
+**/
 static int to_check_ressources_six(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 7) {
@@ -28,6 +37,15 @@ static int to_check_ressources_six(ia_t *ia, common_t *com, int x, int y)
     return -1;
 }
 
+/**
+ @brief check the resources it takes to get to level 6
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia : structure of ia
+ @param common_t *com: the arguments receive with the command ia
+ @param int x: position ressources x on the map
+ @param int y: position ressources y on the map
+ @return void
+**/
 static int to_check_ressources_five(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 6) {
@@ -45,6 +63,15 @@ static int to_check_ressources_five(ia_t *ia, common_t *com, int x, int y)
     return to_check_ressources_six(ia, com, x, y);
 }
 
+/**
+ @brief check the resources it takes to get to level 5
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia : structure of ia
+ @param common_t *com: the arguments receive with the command ia
+ @param int x: position ressources x on the map
+ @param int y: position ressources y on the map
+ @return void
+**/
 static int to_check_ressources_four(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 5) {
@@ -62,6 +89,15 @@ static int to_check_ressources_four(ia_t *ia, common_t *com, int x, int y)
     return to_check_ressources_five(ia, com, x, y);
 }
 
+/**
+ @brief check the resources it takes to get to level 4
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia : structure of ia
+ @param common_t *com: the arguments receive with the command ia
+ @param int x: position ressources x on the map
+ @param int y: position ressources y on the map
+ @return void
+**/
 static int to_check_ressources_tree(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 4) {
@@ -79,6 +115,15 @@ static int to_check_ressources_tree(ia_t *ia, common_t *com, int x, int y)
     return to_check_ressources_four(ia, com, x, y);
 }
 
+/**
+ @brief check the resources it takes to get to level 3
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia : structure of ia
+ @param common_t *com: the arguments receive with the command ia
+ @param int x: position ressources x on the map
+ @param int y: position ressources y on the map
+ @return void
+**/
 int to_check_ressources_bis(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 3) {

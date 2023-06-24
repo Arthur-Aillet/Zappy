@@ -7,6 +7,15 @@
 
 #include "zappy.h"
 
+/**
+ @brief to find ia for the incantation and create new args for the response gui for the level 4 and 5
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: structure of ia
+ @param common_t *com: structure commun -> this structure gathers all the server data
+ @param msg_queue_t *new_msg: recording of the new order in the pending queue
+ @param char **args: the arguments receive with the command ia
+ @return void
+**/
 static void status_level_four_five_bis(ia_t *ia,
             common_t *com, msg_queue_t *new_msg, char **arg)
 {
@@ -26,6 +35,14 @@ static void status_level_four_five_bis(ia_t *ia,
     free_arg(7, arg);
 }
 
+/**
+ @brief create new args for the level 4 and 5
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: structure of ia
+ @param common_t *com: structure commun -> this structure gathers all the server data
+ @param msg_queue_t *new_msg: recording of the new order in the pending queue
+ @return void
+**/
 void status_level_four_five(ia_t *ia, common_t *com, msg_queue_t *new_msg)
 {
     char **arg = malloc(sizeof(char *) * 5);
@@ -43,6 +60,15 @@ void status_level_four_five(ia_t *ia, common_t *com, msg_queue_t *new_msg)
     free_array((void **)arg);
 }
 
+/**
+ @brief to find ia for the incantation and create new args for the response gui for the level 6 and 7
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: structure of ia
+ @param common_t *com: structure commun -> this structure gathers all the server data
+ @param msg_queue_t *new_msg: recording of the new order in the pending queue
+ @param char **args: the arguments receive with the command ia
+ @return void
+**/
 static void status_level_other_bis(ia_t *ia, common_t *com,
                             msg_queue_t *new_msg, char **arg)
 {
@@ -62,6 +88,14 @@ static void status_level_other_bis(ia_t *ia, common_t *com,
     free_arg(9, arg);
 }
 
+/**
+ @brief create new args for the level 6 and 7
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: structure of ia
+ @param common_t *com: structure commun -> this structure gathers all the server data
+ @param msg_queue_t *new_msg: recording of the new order in the pending queue
+ @return void
+**/
 void status_level_other(ia_t *ia, common_t *com, msg_queue_t *new_msg)
 {
     char **arg = malloc(sizeof(char *) * 5);
