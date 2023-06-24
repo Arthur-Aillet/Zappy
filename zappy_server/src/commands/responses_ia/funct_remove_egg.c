@@ -10,8 +10,6 @@
 static void funct_find_egg(egg_t *new_eggs, size_t nb_eggs,
                             egg_t *old_eggs, egg_t egg)
 {
-    size_t nb = 0;
-
     if (new_eggs == NULL) {
         return;
     }
@@ -20,14 +18,17 @@ static void funct_find_egg(egg_t *new_eggs, size_t nb_eggs,
             new_eggs[tmp].egg_id = old_eggs[tmp].egg_id;
             new_eggs[tmp].x = old_eggs[tmp].x;
             new_eggs[tmp].y = old_eggs[tmp].y;
-            nb++;
         }
     }
 }
 
 egg_t *remove_egg(egg_t egg, egg_t *old_eggs, size_t nb_eggs, common_t *com)
 {
-    egg_t *new_eggs = malloc(sizeof(egg_t) * (nb_eggs - 1));
+    egg_t *new_eggs;
+    if (nb_eggs - 1 == 0)
+        new_eggs = NULL;
+    else
+        new_eggs = malloc(sizeof(egg_t) * (nb_eggs - 1));
     char **args = malloc(sizeof(char *) * 2);
     char buffer_egg[256];
 

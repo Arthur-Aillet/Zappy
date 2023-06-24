@@ -21,7 +21,6 @@ static void funct_prepare_res(gui_t *gui)
     }
     GUI_OCTETS[0] = '\0';
     sprintf(GUI_OCTETS, "msz %s %s\n", buffer_x, buffer_y);
-    free(GUI_OCTETS);
 }
 
 void funct_server_msz(char **args, void *info, common_t *common)
@@ -32,4 +31,5 @@ void funct_server_msz(char **args, void *info, common_t *common)
 
     funct_prepare_res(gui);
     write(gui->buffer.sock.sockfd, GUI_OCTETS, strlen(GUI_OCTETS));
+    free(GUI_OCTETS);
 }

@@ -39,10 +39,14 @@ ia_t *set_ia(void)
 
 void free_ia(ia_t *ia)
 {
-    if (ia->buffer.bufferRead.octets != NULL)
-        free(ia->buffer.bufferRead.octets);
-    if (OCTETS != NULL)
-        free(OCTETS);
+    if (ia == NULL)
+        return;
+    for (int i = 0; i < MAX_PLAYER; i++) {
+        if (ia[i].buffer.bufferRead.octets != NULL)
+            free(ia->buffer.bufferRead.octets);
+        if (ia[i].buffer.bufferWrite.octets != NULL)
+            free(ia[i].buffer.bufferWrite.octets);
+    }
     free(ia);
     basic_log("IA free", B, 0);
 }

@@ -18,6 +18,7 @@ static void call_function_gui(ia_t *ia, common_t *com)
     sprintf(buffer_player, "%d", ia->player->id);
     arg[0] = malloc(sizeof(char) * (strlen(buffer_player) + 1));
     if (arg[0] == NULL) {
+        return;
     }
     arg[0][0] = '\0';
     arg[1] = NULL;

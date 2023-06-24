@@ -77,8 +77,6 @@ void free_gui(gui_t *gui)
 {
     free_map(&gui->map);
     basic_log("Map free", B, 0);
-    if (GUI_OCTETS != NULL)
-        free(GUI_OCTETS);
     if (gui->buffer.bufferRead.octets != NULL)
         free(gui->buffer.bufferRead.octets);
     free(gui);

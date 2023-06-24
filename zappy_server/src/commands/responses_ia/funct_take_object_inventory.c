@@ -33,7 +33,7 @@ static void funct_response_gui(ia_t *ia, int idx,
 void response_take(ia_t *ia, int idx, common_t *com)
 {
     char **args = malloc(sizeof(char *) * 3);
-
+    args[0] = NULL;
     if (args == NULL) {
         return;
     }
