@@ -90,8 +90,8 @@ pub struct Tantorian {
     pub orientation: Orientation,
     pub mesh_descriptor: u32,
     pub state: PlayerState,
-    pub food: u32,
     pub parent: Option<i64>,
+    pub food: u32,
     pub linemate: u32,
     pub deraumere: u32,
     pub sibur: u32,
@@ -101,6 +101,19 @@ pub struct Tantorian {
 }
 
 impl Tantorian {
+    pub fn access_nth_resource(&mut self, q: usize) -> &mut u32 {
+        match q {
+            0 => { &mut self.food}
+            1 => { &mut self.linemate}
+            2 => { &mut self.deraumere}
+            3 => { &mut self.sibur}
+            4 => { &mut self.mendiane}
+            5 => { &mut self.phiras}
+            6 => { &mut self.thystame}
+            _ => { panic!("Accessed to non existing resource") }
+        }
+    }
+
     pub fn new_egg(number: i64, x: usize, y: usize, map_size: &[usize; 2], parent_number: i64, teams: &Vec<(String, Vec3)>, players: &Vec<Tantorian>) -> Option<Tantorian> {
         let mut parent_player: Option<&Tantorian> = None;
         for player in players {

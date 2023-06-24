@@ -19,6 +19,19 @@ pub struct Tile {
 }
 
 impl Tile {
+    pub fn access_to_nth_resource(&mut self, q: usize) -> &mut Vec<Mat4> {
+        match q {
+            0 => { &mut self.q0}
+            1 => { &mut self.q1}
+            2 => { &mut self.q2}
+            3 => { &mut self.q3}
+            4 => { &mut self.q4}
+            5 => { &mut self.q5}
+            6 => { &mut self.q6}
+            _ => { panic!("Accessed to non existing resource") }
+        }
+    }
+
     pub fn new() -> Self {
         Self {
             x: 0,
@@ -103,16 +116,7 @@ impl Map {
 
     pub fn update_resources(&mut self, x: usize, y: usize, q: usize, n:usize) {
         let tile = &mut self.tiles[x][y];
-        let resource = match q {
-            0 => { &mut tile.q0}
-            1 => { &mut tile.q1}
-            2 => { &mut tile.q2}
-            3 => { &mut tile.q3}
-            4 => { &mut tile.q4}
-            5 => { &mut tile.q5}
-            6 => { &mut tile.q6}
-            _ => { return }
-        };
+        let resource = tile.access_to_nth_resource(q);
         let diff = n as i32 - resource.len() as i32;
         if diff > 0 {
             for _ in 0..diff {

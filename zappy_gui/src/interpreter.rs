@@ -24,8 +24,8 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     //pic
     //pie
     //pfk
-    //pdr
-    //pgt
+    functions.insert("pdr".to_string(), Zappy::drop_resource);
+    functions.insert("pgt".to_string(), Zappy::collect_resource);
     functions.insert("pdi".to_string(), Zappy::death_of_player);
     functions.insert("enw".to_string(), Zappy::new_egg);
     functions.insert("ebo".to_string(), Zappy::connection_to_egg);
@@ -57,6 +57,59 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn drop_resource(&mut self, command: String, _at: Duration) {
+        let re = Regex::new(r"^pdr (-?\d+) ([0-6])$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, number, capture, "pdr: invalid player number");
+            parse_capture!(usize, 2, ressource, capture, "pdr: invalid resource number");
+
+            for player in &mut self.players {
+                if player.number == number && player.state == Alive {
+                    let x = player.current_tile.as_uvec2().x as usize;
+                    let y = player.current_tile.as_uvec2().y as usize;
+                    let before_quantity = self.map.tiles[x][y].access_to_nth_resource(ressource).len();
+                    self.map.update_resources(x, y, ressource, before_quantity + player.access_nth_resource(ressource).clone() as usize);
+                    *player.access_nth_resource(ressource) = 0;
+                    return;
+                } else if player.number == number {
+                    println!("pdr: player not alive");
+                    return;
+                }
+            }
+            println!("pdr: player not found");
+        } else {
+            println!("pdr: invalid command given");
+        }
+    }
+
+    fn collect_resource(&mut self, command: String, _at: Duration) {
+        let re = Regex::new(r"^pgt (-?\d+) ([0-6])$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, number, capture, "pgt: invalid player number");
+            parse_capture!(usize, 2, ressource, capture, "pgt: invalid resource number");
+
+            for player in &mut self.players {
+                if player.number == number && player.state == Alive {
+                    let x = player.current_tile.as_uvec2().x as usize;
+                    let y = player.current_tile.as_uvec2().y as usize;
+                    *player.access_nth_resource(ressource) += self.map.tiles[x][y].access_to_nth_resource(ressource).len() as u32;
+                    self.map.update_resources(x, y, ressource, 0);
+                    return;
+                } else if player.number == number {
+                    println!("pgt: player not alive");
+                    return;
+                }
+            }
+            println!("pgt: player not found");
+        } else {
+            println!("pgt: invalid command given");
+        }
+    }
+
     fn death_of_an_egg(&mut self, command: String, _at: Duration) {
         let re = Regex::new(r"^edi (-?\d+)$")
             .expect("Invalid regex");
