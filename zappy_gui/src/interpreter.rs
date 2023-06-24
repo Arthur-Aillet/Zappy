@@ -98,11 +98,13 @@ impl Zappy {
                     found = true;
                     orientation = player.orientation;
                     pos = [player.current_tile.x as usize, player.current_tile.y as usize];
+                    self.arrows.push(Arrows::new_from_direction(Vec3::new(0., 0., -player.orientation.as_radian()), player.pos.x, player.pos.y, player.color.clone(), at.clone()));
                 }
             }
             if !found {
                 println!("pex: player not found");
             }
+
 
             for player in &mut self.players {
                 if [player.current_tile.x as usize, player.current_tile.y as usize] == pos && player.number != number {
@@ -144,13 +146,7 @@ impl Zappy {
                     let before_quantity = self.map.tiles[x][y].access_to_nth_resource(ressource).len();
                     self.map.update_resources(x, y, ressource, before_quantity + player.access_nth_resource(ressource).clone() as usize);
                     *player.access_nth_resource(ressource) = 0;
-                    self.arrows.push(Arrows{
-                        pos: Vec3::new(player.pos.x, player.pos.y, 2.),
-                        scale: Vec3::new(1., 1., 1.),
-                        rot: Vec3::new(-PI/2., 0., 0.),
-                        color: player.color.clone(),
-                        start: at.clone()
-                    });
+                    self.arrows.push(Arrows::new_from_direction(Vec3::new(-PI/2., 0., 0.), player.pos.x, player.pos.y, player.color.clone(), at.clone()));
                     return;
                 } else if player.number == number {
                     println!("pdr: player not alive");
@@ -163,7 +159,7 @@ impl Zappy {
         }
     }
 
-    fn collect_resource(&mut self, command: String, _at: Duration) {
+    fn collect_resource(&mut self, command: String, at: Duration) {
         let re = Regex::new(r"^pgt (-?\d+) ([0-6])$")
             .expect("Invalid regex");
 
@@ -177,6 +173,7 @@ impl Zappy {
                     let y = player.current_tile.as_uvec2().y as usize;
                     *player.access_nth_resource(ressource) += self.map.tiles[x][y].access_to_nth_resource(ressource).len() as u32;
                     self.map.update_resources(x, y, ressource, 0);
+                    self.arrows.push(Arrows::new_from_direction(Vec3::new(PI/2., 0., 0.), player.pos.x, player.pos.y, player.color.clone(), at.clone()));
                     return;
                 } else if player.number == number {
                     println!("pgt: player not alive");

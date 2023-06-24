@@ -141,43 +141,6 @@ impl Zappy {
         }
     }
 
-    pub fn update_arrows(app: &mut App<Zappy>, update: &Update) {
-        let mut ended: Vec<usize> = vec![];
-
-        for (elem, arrow) in app.user.arrows.iter_mut().enumerate() {
-            let mut progress = update.since_start.as_secs_f32() - arrow.start.as_secs_f32();
-            let modifier = 1. / (7. / app.user.time_unit);
-
-            if progress >= 1. / modifier {
-                progress = 1. / modifier;
-                ended.push(elem);
-            }
-            //arrow.pos = Vec3::new(1., 1., 1.).lerp(Vec3::new(16., 16., 0.), (progress * modifier).powi(2));
-        }
-        for to_end in ended.iter().rev() {
-            app.user.arrows.remove(*to_end);
-        }
-    }
-
-    pub fn update_messages(app: &mut App<Zappy>, update: &Update) {
-        let mut ended: Vec<usize> = vec![];
-
-        for (elem, message) in app.user.messages.iter_mut().enumerate() {
-            let mut progress= update.since_start.as_secs_f32() - message.start.as_secs_f32();
-            let modifier = 1. / (7. / app.user.time_unit);
-
-            if progress >= 1. / modifier {
-                progress = 1. / modifier;
-                ended.push(elem);
-            }
-
-            message.scale = Vec3::new(1., 1., 1.).lerp( Vec3::new(16., 16., 0.), (progress * modifier).powi(2));
-        }
-        for to_end in ended.iter().rev()  {
-            app.user.messages.remove(*to_end);
-        }
-    }
-
     pub fn update_players(app: &mut App<Zappy>, update: &Update) {
         for player in &mut app.user.players {
             if let Some(movement_start) = &player.start_movement {
@@ -227,8 +190,24 @@ impl Zappy {
 
     pub fn render(app: &mut App<Zappy>) {
         Map::render(app);
-        let player_instances : Vec<Mat4> = app.user.players.iter().filter(|p|p.state == Alive).map(|p| Mat4::from_scale_rotation_translation(Vec3::new(0.333, 0.333, 0.333), Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z), p.pos)).collect();
-        let egg_instances : Vec<Mat4> = app.user.players.iter().filter(|p|p.state == Egg).map(|p| Mat4::from_scale_rotation_translation(Vec3::new(0.333, 0.333, 0.333), Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z), p.pos)).collect();
+        let player_instances : Vec<Mat4> = app.user.players
+            .iter()
+            .filter(|p|p.state == Alive)
+            .map(|p|
+                Mat4::from_scale_rotation_translation(
+                    Vec3::new(0.333, 0.333, 0.333),
+                    Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z),
+                    p.pos))
+            .collect();
+        let egg_instances : Vec<Mat4> = app.user.players
+            .iter()
+            .filter(|p|p.state == Egg)
+            .map(|p|
+                Mat4::from_scale_rotation_translation(
+                    Vec3::new(0.333, 0.333, 0.333),
+                    Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z),
+                    p.pos))
+            .collect();
         let player_colors : Vec<Vec3> = app.user.players.iter().filter(|p|p.state == Alive).map(|p| p.color).collect();
         let egg_colors : Vec<Vec3> = app.user.players.iter().filter(|p|p.state == Egg).map(|p| p.color).collect();
 
