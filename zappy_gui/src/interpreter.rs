@@ -19,7 +19,7 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     functions.insert("ppo".to_string(), Zappy::player_position);
     functions.insert("plv".to_string(), Zappy::player_level);
     functions.insert("pin".to_string(), Zappy::player_inventory);
-    //pex
+    functions.insert("pex".to_string(), Zappy::player_expulsion);
     functions.insert("pbc".to_string(), Zappy::broadcast);
     //pic
     //pie
@@ -57,6 +57,52 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn player_expulsion(&mut self, command: String, at: Duration) {
+        let re = Regex::new(r"^pex (-?\d+)$")
+            .expect("Invalid regex");
+
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, number, capture, "pex: invalid player number");
+
+            let mut found = false;
+            let mut pos = [0;2];
+            let mut orientation = Orientation::N;
+            for player in &mut self.players {
+                if player.number == number && player.state == Alive {
+                    found = true;
+                    orientation = player.orientation;
+                    pos = [player.current_tile.x as usize, player.current_tile.y as usize];
+                }
+            }
+            if found == false {
+                println!("pex: player not found");
+            }
+
+            for player in &mut self.players {
+                if [player.current_tile.x as usize, player.current_tile.y as usize] == pos && player.number != number {
+                    if player.state == Egg {
+                        player.state = Dead
+                    }
+                    if player.state == Alive {
+                        let mut x = player.current_tile.x + (orientation == Orientation::E) as u8 as f32 - (orientation == Orientation::W) as u8 as f32;
+                        let mut y = player.current_tile.y + (orientation == Orientation::N) as u8 as f32 - (orientation == Orientation::S) as u8 as f32;
+                        if x < 0. {
+                            x = self.map.size[0] as f32 - 1.;
+                        }
+                        if y < 0. {
+                            y = self.map.size[1] as f32 - 1.;
+                        }
+                        player.last_tile = player.pos.xy() - 0.5;
+                        player.current_tile = Vec2::new(x as f32, y as f32);
+                        player.start_movement = Some(at);
+                    }
+                }
+            }
+        } else {
+            println!("pex: invalid command given");
+        }
+    }
+
     fn drop_resource(&mut self, command: String, _at: Duration) {
         let re = Regex::new(r"^pdr (-?\d+) ([0-6])$")
             .expect("Invalid regex");

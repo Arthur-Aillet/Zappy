@@ -6,7 +6,7 @@ use std::hash::{Hash, Hasher};
 use std::time::Duration;
 use crate::tantorian::PlayerState::{Alive, Dead, Egg};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum Orientation {
     N = 1,
     E = 2,
@@ -37,9 +37,9 @@ impl Orientation {
     pub fn as_radian(&self) -> f32 {
         match self {
             Orientation::N => 180. * PI/180.,
-            Orientation::E => 270. * PI/180.,
+            Orientation::E => 90. * PI/180.,
             Orientation::S => 0.,
-            Orientation::W => 90. * PI/180.,
+            Orientation::W => 270. * PI/180.,
         }
     }
 }
