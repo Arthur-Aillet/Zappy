@@ -92,7 +92,7 @@ impl Zappy {
         if let Ok(mut md) = app.load_mesh("./obj/plane.obj") {
             let mut mat = MaterialDescriptor::new();
             mat.shader = Some("./src/shaders/map.wgsl".into());
-            mat.maps.push("./textures/happy-tree.png".into());
+            mat.maps.push("./textures/green-grass.png".into());
             if let Ok(material) = app.load_material(mat) {
                 // if let Ok(shader) = app.load_shader("./src/shaders/map.wgsl") {
                 app.bind_material_to_mesh(&mut md, &material);

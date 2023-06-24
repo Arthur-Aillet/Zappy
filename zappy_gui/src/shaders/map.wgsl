@@ -33,7 +33,7 @@ var s_diffuse: sampler;
 fn main(tx: Texel) -> [[location(0)]] vec4<f32> {
     let color = vec3<f32>(1., 1., 1.);
 
-    let color = textureSample(t_diffuse, s_diffuse, tx.uv.xy).xyz;
+    let color = textureSample(t_diffuse, s_diffuse, tx.pos.xy).xyz;
 //    let light: vec3<f32> = vec3<f32>(0.5, 1.0, 2.0);
 //    let color: vec3<f32> = normal.xyz * 0.5 + 0.5;0
 //    let color: vec3<f32> = uv.xyz;
@@ -47,6 +47,6 @@ fn main(tx: Texel) -> [[location(0)]] vec4<f32> {
     let dark1: i32 = i32((tx.pos.x)) % 2 - 1;
     let dark2: i32 = i32((tx.pos.y)) % 2 - 1;
     let dark3 = darken_amount * f32(abs(dark1 - dark2)) + 1.0 - darken_amount;
-    let color = vec4<f32>((tx.normal.z * 0.5 + 0.5) * dark3 * color * tx.color, 1.0);
+    let color = vec4<f32>((tx.normal.z * 0.5 + 0.5) * dark3 * color, 1.0);
     return color;
 }
