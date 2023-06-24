@@ -6,12 +6,12 @@ use std::time::Duration;
 use rend_ox::app::App;
 use rend_ox::{Mat4, Vec3};
 use rend_ox::mesh::MeshDescriptor;
-use rend_ox::glam::Vec2;
+use rend_ox::glam::{EulerRot, Quat, Vec2};
 use rend_ox::nannou::event::Update;
 use rend_ox::nannou_egui::egui::CtxRef;
 use rend_ox::material::MaterialDescriptor;
 
-use crate::message::Message;
+use crate::message::{Arrows, Message};
 use crate::interpreter::{create_hash_function, ServerFunction};
 use crate::map::Map;
 pub use crate::server::ServerConn;
@@ -27,9 +27,11 @@ pub struct Zappy {
     pub(crate) server: Option<ServerConn>,
     pub(crate) ui: ZappyUi,
     pub(crate) messages: Vec<Message>,
+    pub(crate) arrows: Vec<Arrows>,
     pub(crate) message_mesh: Option<MeshDescriptor>,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
     pub(crate) egg_mesh: Option<MeshDescriptor>,
+    pub(crate) arrow_mesh: Option<MeshDescriptor>,
     pub(crate) functions: HashMap<String, ServerFunction>,
     pub(crate) time_unit: f32,
     pub(crate) thread_handle: Option<JoinHandle<()>>,
@@ -74,9 +76,11 @@ impl Zappy {
             server: None,
             ui: ZappyUi::new(),
             messages: vec![],
+            arrows: vec![],
             message_mesh: None,
             tantorian_mesh: None,
             egg_mesh: None,
+            arrow_mesh: None,
             functions: create_hash_function(),
             time_unit: 100.,
             thread_handle: None,
@@ -129,6 +133,29 @@ impl Zappy {
             app.user.message_mesh = Some(md);
         } else {
             println!("Zappy: couldn't load message.obj");
+        }
+        if let Ok(md) = app.load_mesh("./obj/arrow.obj") {
+            app.user.arrow_mesh = Some(md);
+        } else {
+            println!("Zappy: couldn't load arrow.obj");
+        }
+    }
+
+    pub fn update_arrows(app: &mut App<Zappy>, update: &Update) {
+        let mut ended: Vec<usize> = vec![];
+
+        for (elem, arrow) in app.user.arrows.iter_mut().enumerate() {
+            let mut progress = update.since_start.as_secs_f32() - arrow.start.as_secs_f32();
+            let modifier = 1. / (7. / app.user.time_unit);
+
+            if progress >= 1. / modifier {
+                progress = 1. / modifier;
+                ended.push(elem);
+            }
+            //arrow.pos = Vec3::new(1., 1., 1.).lerp(Vec3::new(16., 16., 0.), (progress * modifier).powi(2));
+        }
+        for to_end in ended.iter().rev() {
+            app.user.arrows.remove(*to_end);
         }
     }
 
@@ -200,9 +227,8 @@ impl Zappy {
 
     pub fn render(app: &mut App<Zappy>) {
         Map::render(app);
-        let mat = Mat4::from_rotation_x(std::f32::consts::PI * 0.5);
-        let player_instances : Vec<Mat4> = app.user.players.iter().filter(|p|p.state == Alive).map(|p| Mat4::from_translation(p.pos + Vec3::new(0., 0., 2.)) * mat).collect();
-        let egg_instances : Vec<Mat4> = app.user.players.iter().filter(|p|p.state == Egg).map(|p| Mat4::from_translation(p.pos + Vec3::new(0., 0., 2.)) * mat).collect();
+        let player_instances : Vec<Mat4> = app.user.players.iter().filter(|p|p.state == Alive).map(|p| Mat4::from_scale_rotation_translation(Vec3::new(0.333, 0.333, 0.333), Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z), p.pos)).collect();
+        let egg_instances : Vec<Mat4> = app.user.players.iter().filter(|p|p.state == Egg).map(|p| Mat4::from_scale_rotation_translation(Vec3::new(0.333, 0.333, 0.333), Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z), p.pos)).collect();
         let player_colors : Vec<Vec3> = app.user.players.iter().filter(|p|p.state == Alive).map(|p| p.color).collect();
         let egg_colors : Vec<Vec3> = app.user.players.iter().filter(|p|p.state == Egg).map(|p| p.color).collect();
 
@@ -212,14 +238,15 @@ impl Zappy {
         if let Some(egg_mesh) = &app.user.tantorian_mesh {
             app.draw_instances(egg_mesh, egg_instances.clone(), egg_colors.clone());
         }
-        let message_mesh : &MeshDescriptor;
         if let Some(mesh) = &app.user.message_mesh {
-            message_mesh = mesh
-        } else {
-            return;
+            for message in &app.user.messages {
+                app.draw_at(mesh, message.color, message.pos, Vec3::new(0., 0., 0.), message.scale);
+            }
         }
-        for message in &app.user.messages {
-            app.draw_at(message_mesh, message.color, message.pos, Vec3::new(0., 0., 0.), message.scale);
+        if let Some(mesh) = &app.user.arrow_mesh {
+            for arrow in &app.user.arrows {
+                app.draw_at(mesh, arrow.color, arrow.pos, arrow.rot, arrow.scale);
+            }
         }
     }
 }
@@ -351,6 +378,7 @@ pub(crate) fn zappy_update(
     following(nannou_app, zappy);
     Zappy::update_players(zappy, &update);
     Zappy::update_messages(zappy, &update);
+    Zappy::update_arrows(zappy, &update);
     zappy.user.interpret_commands(update.since_start);
     ask_for_update(&mut zappy.user, update.since_start);
     Zappy::render(zappy);

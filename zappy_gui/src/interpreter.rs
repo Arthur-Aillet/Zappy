@@ -2,11 +2,12 @@ use crate::tantorian::{generate_color_from_string, Orientation, Tantorian};
 use crate::zappy::Zappy;
 use regex::Regex;
 use std::collections::HashMap;
+use std::f32::consts::PI;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use rend_ox::glam::{Vec2, Vec3Swizzles};
 use rend_ox::Vec3;
-use crate::message::Message;
+use crate::message::{Arrows, Message};
 use crate::tantorian::PlayerState::{Alive, Dead, Egg};
 
 pub type ServerFunction = fn(&mut Zappy, String, Duration);
@@ -128,7 +129,7 @@ impl Zappy {
         }
     }
 
-    fn drop_resource(&mut self, command: String, _at: Duration) {
+    fn drop_resource(&mut self, command: String, at: Duration) {
         let re = Regex::new(r"^pdr (-?\d+) ([0-6])$")
             .expect("Invalid regex");
 
@@ -143,6 +144,13 @@ impl Zappy {
                     let before_quantity = self.map.tiles[x][y].access_to_nth_resource(ressource).len();
                     self.map.update_resources(x, y, ressource, before_quantity + player.access_nth_resource(ressource).clone() as usize);
                     *player.access_nth_resource(ressource) = 0;
+                    self.arrows.push(Arrows{
+                        pos: Vec3::new(player.pos.x, player.pos.y, 2.),
+                        scale: Vec3::new(1., 1., 1.),
+                        rot: Vec3::new(-PI/2., 0., 0.),
+                        color: player.color.clone(),
+                        start: at.clone()
+                    });
                     return;
                 } else if player.number == number {
                     println!("pdr: player not alive");

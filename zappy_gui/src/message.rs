@@ -8,3 +8,11 @@ pub(crate) struct Message {
     pub(crate) color: Vec3,
     pub(crate) start: Duration,
 }
+
+pub(crate) struct Arrows {
+    pub(crate) pos: Vec3,
+    pub(crate) scale: Vec3,
+    pub(crate) rot: Vec3,
+    pub(crate) color: Vec3,
+    pub(crate) start: Duration,
+}
