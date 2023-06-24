@@ -18,26 +18,6 @@ from queen_loop import queen_loop, take_new_role_in_account
 from warrior_loop import warrior_loop
 from butler_loop import butler_loop
 
-def look_arround():
-    found_obj = -1
-    for i in range(4):
-        found_obj = look
-        if (found_obj != -1):
-            return found_obj
-    return found_obj
-
-
-def loop(switch, spiral_len):
-    switch += 1
-    if switch % 2 == 0:
-        spiral_len += 1
-    if spiral(spiral_len):
-        go_to(look)
-        pick_up()
-        while look_arround != -1:
-            go_to(look_arround)
-            pick_up()
-
 def mainloop(ai: Session): # mainloop peut return True si elle est enfant de fork / false si stop
     looping = True
     last_actions = []
