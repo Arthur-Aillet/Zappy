@@ -25,14 +25,13 @@ static void funct_prepare_res(team_t *team, ia_t *ia)
     to_add_new_egg(ia, team);
     team->nb_eggs += 1;
     team->nb_slot += 1;
-    ia->buffer.bufferWrite.usedSize = 4;
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    SIZE = 4;
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL) {
         return;
     }
-    ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat(ia->buffer.bufferWrite.octets, "ok\n\0");
+    OCTETS[0] = '\0';
+    strcat(OCTETS, "ok\n\0");
 }
 
 static char *create_args_for_response_gui(int arg)
@@ -68,7 +67,6 @@ void funct_response_ia_fork(char **args, void *info, common_t *com)
     arg[3] = create_args_for_response_gui(ia->player->y);
     funct_server_enw(arg, com->gui, com);
     free_arg(4, arg);
-    write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
-        ia->buffer.bufferWrite.usedSize);
+    write(ia->buffer.sock.sockfd, OCTETS, SIZE);
     printf("Lay an egg\n");
 }

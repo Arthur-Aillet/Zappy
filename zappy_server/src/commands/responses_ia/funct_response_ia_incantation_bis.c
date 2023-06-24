@@ -53,19 +53,18 @@ void funct_level_1(ia_t *ia, common_t *com)
 
     ia->player->level += 1;
     sprintf(buffer_incantation, "%ld", ia->player->level);
-    ia->buffer.bufferWrite.usedSize = 35 + strlen(buffer_incantation);
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    SIZE = 35 + strlen(buffer_incantation);
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL) {
         return;
     }
     char level[3];
     sprintf(level, "%ld", ia->player->level);
-    ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat(ia->buffer.bufferWrite.octets,
+    OCTETS[0] = '\0';
+    strcat(OCTETS,
     "Elevation underway current level ");
-    strcat(ia->buffer.bufferWrite.octets, level);
-    strcat(ia->buffer.bufferWrite.octets, "\n\0");
+    strcat(OCTETS, level);
+    strcat(OCTETS, "\n\0");
     funct_prepare_response_gui_incantation(ia, com, 1);
     funct_server_seg(NULL, ia, com);
 }

@@ -15,16 +15,14 @@ void funct_response_ia_connect_nbr(char **args, void *info, common_t *com)
     char buffer_nb_slot[256];
 
     sprintf(buffer_nb_slot, "%ld", (team->nb_slot - team->actif_player));
-    ia->buffer.bufferWrite.usedSize = strlen(buffer_nb_slot) + 2;
-    ia->buffer.bufferWrite.octets = realloc(ia->buffer.bufferWrite.octets,
-                    sizeof(char) * (ia->buffer.bufferWrite.usedSize));
-    if (ia->buffer.bufferWrite.octets == NULL) {
+    SIZE = strlen(buffer_nb_slot) + 2;
+    OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
+    if (OCTETS == NULL) {
         return;
     }
-    ia->buffer.bufferWrite.octets[0] = '\0';
-    strcat(ia->buffer.bufferWrite.octets, buffer_nb_slot);
-    strcat(ia->buffer.bufferWrite.octets, "\n\0");
-    write(ia->buffer.sock.sockfd, ia->buffer.bufferWrite.octets,
-            ia->buffer.bufferWrite.usedSize);
+    OCTETS[0] = '\0';
+    strcat(OCTETS, buffer_nb_slot);
+    strcat(OCTETS, "\n\0");
+    write(ia->buffer.sock.sockfd, OCTETS, SIZE);
     printf("rentrer dans la fonctions funct_response_ia_connect_nbr\n");
 }

@@ -14,7 +14,7 @@ void funct_server_pic_send_message(char **args, gui_t *gui)
     } else if (atoi(args[2]) == 6 || atoi(args[2]) == 7) {
         funct_server_pic_level_other(args, gui);
     }
-    write(gui->buffer.sock.sockfd, gui->buffer.bufferWrite.octets,
-    gui->buffer.bufferWrite.usedSize);
+    write(gui->buffer.sock.sockfd, GUI_OCTETS,
+    GUI_SIZE);
     printf("rentrer dans la fonctions funct_server_pic\n");
 }
