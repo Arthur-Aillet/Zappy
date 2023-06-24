@@ -176,7 +176,7 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session):
     if creature.looked:
         if (stockpile_contains(ascending_objectives(creature.level), creature.last_look[0])):
             if creature.called == False:
-                call the closest level apropriate people to base_pos. priority on butler then gatherers then warriors then babys then queen
+                # call the closest level apropriate people to base_pos. priority on butler then gatherers then warriors then babys then queen
                 creature.called = True
     if creature.called == True and creature.confirmed == ascending_objectives(creature.level).get("number"):
         pick_up_list()

@@ -11,7 +11,8 @@ from communication import getmsginfo
 from server_get import *
 from server_action import *
 from sys import stderr
-from datatypes import Session, ActionType, Creature
+from action_type import ActionType
+from datatypes import Session, Creature
 from gatherer_loop import gatherer_loop
 from queen_loop import queen_loop, take_new_role_in_account
 from warrior_loop import warrior_loop
@@ -43,7 +44,7 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
     creature = Creature()
 
     while looping:
-        message = ai.client.recv().decode() # peut être mettre un timeout pour éviter de rester perdu sur une interrupt de co
+        message = ai.client.recv(1024).decode() # peut être mettre un timeout pour éviter de rester perdu sur une interrupt de co
 
         # gestion des envois inopinés du serveur
         if message.startswith("Message "):
@@ -88,6 +89,4 @@ if __name__ == "__main__":
             stderr.write("ko: no places in the team\n")
             exit(84)
         session = Session(client)
-        client.inventory()
-        print(session.client.recv().decode())
-        # run = mainloop() # boucle principale (return en cas de fork)
+        run = mainloop(session) # boucle principale (return en cas de fork)
