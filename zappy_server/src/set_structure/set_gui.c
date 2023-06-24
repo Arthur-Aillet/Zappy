@@ -5,10 +5,9 @@
 ** set_gui.c
 */
 
-#include "gui.h"
 #include <stdlib.h>
 #include <string.h>
-#include "error_handling.h"
+#include "zappy.h"
 
 static size_t *set_ressources(void)
 {
@@ -75,6 +74,17 @@ static void free_map(map_t *map)
 //FIXME - free message queue
 void free_gui(gui_t *gui)
 {
+    msg_queue_t *current = gui->msg_queue;
+    msg_queue_t *next;
+
+    while (current != NULL) {
+        if (current->msg != NULL) {
+            free_array((void**)current->msg);
+        }
+        next = current->next_msg;
+        free(current);
+        current = next;
+    }
     free_map(&gui->map);
     basic_log("Map free", B, 0);
     if (gui->buffer.bufferRead.octets != NULL)

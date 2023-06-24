@@ -33,7 +33,6 @@ static int player_is_dead(player_t *player, common_t *com)
     if (ia == NULL)
         return error("Bad player id", 0);
 
-    *ia = close_ia();
     sprintf(buffer_args, "%d", player->id);
     args[0] = malloc(sizeof(char) * strlen(buffer_args) + 1);
     if (args[0] == NULL)
@@ -43,6 +42,7 @@ static int player_is_dead(player_t *player, common_t *com)
     strcat(args[0], buffer_args);
     funct_server_pdi(args, com->gui, com);
     funct_response_ia_death(args, ia, com);
+    *ia = close_ia();
     free_array((void **)args);
     return 1;
 }

@@ -72,8 +72,7 @@ int main_loop(common_t *com)
         check_msg_queue_ia(com);
         check_msg_queue_gui(com);
         update_map(com);
-        //FIXME - decommenter la fonction update_life
-        // update_life(com->client, &com->server, com->freq, com);
+        update_life(com->client, &com->server, com->freq, com);
     }
     return 0;
 }

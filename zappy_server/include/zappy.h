@@ -102,7 +102,7 @@ void check_error_output(common_t *com, int output, char *error);
 
 void listening_sockets(common_t *com);
 
-char **get_message(server_t *server, client_t *client);
+char **get_message(server_t *server, client_t *client, common_t *com);
 int undefined_client_command(char **command, common_t *com, int idx);
 int check_slot_and_create_player(common_t *com, int team_idx,int client_idx);
 
