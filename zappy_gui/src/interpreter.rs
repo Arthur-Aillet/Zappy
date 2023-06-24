@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use rend_ox::glam::{Vec2, Vec3Swizzles};
-use crate::tantorian::PlayerState::{Alive, Dead};
+use crate::tantorian::PlayerState::{Alive, Dead, Egg};
 
 pub type ServerFunction = fn(&mut Zappy, String, Duration);
 
@@ -28,8 +28,8 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     //pgt
     functions.insert("pdi".to_string(), Zappy::death_of_player);
     functions.insert("enw".to_string(), Zappy::new_egg);
-    //ebo
-    //edi
+    functions.insert("ebo".to_string(), Zappy::connection_to_egg);
+    functions.insert("edi".to_string(), Zappy::death_of_an_egg);
     functions.insert("sgt".to_string(), Zappy::set_time_unit);
     functions.insert("sst".to_string(), Zappy::set_time_unit);
     functions.insert("seg".to_string(), Zappy::end_of_game);
@@ -57,6 +57,44 @@ macro_rules! parse_capture {
 }
 
 impl Zappy {
+    fn death_of_an_egg(&mut self, command: String, _at: Duration) {
+        let re = Regex::new(r"^ebp (-?\d+)$")
+            .expect("Invalid regex");
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, egg_number, capture, "edi: invalid egg number");
+
+            for player in &mut self.players {
+                if player.number == number && player.state == Egg {
+                    player.state = Dead;
+                    return;
+                } else if player.number == number {
+                    println!("edi: player not an egg");
+                    return;
+                }
+            }
+            println!("edi: player not found");
+        }
+    }
+
+    fn connection_to_egg(&mut self, command: String, _at: Duration) {
+        let re = Regex::new(r"^ebp (-?\d+)$")
+            .expect("Invalid regex");
+        if let Some(capture) = re.captures(&*command) {
+            parse_capture!(i64, 1, egg_number, capture, "ebo: invalid egg number");
+
+            for player in &mut self.players {
+                if player.number == number && player.state == Egg {
+                    player.state = Alive;
+                    return;
+                } else if player.number == number {
+                    println!("ebo: player not an egg");
+                    return;
+                }
+            }
+            println!("ebo: player not found");
+        }
+    }
+
     fn new_egg(&mut self, command: String, _at: Duration) {
         let re = Regex::new(r"^enw (-?\d+) (-?\d+) (\d+) (\d+)$")
             .expect("Invalid regex");
@@ -76,7 +114,7 @@ impl Zappy {
                 return;
             }
             let mut found = false;
-            for player in &mut self.players {
+            for player in &self.players {
                 if player.number == number {
                     found = true;
                 }
