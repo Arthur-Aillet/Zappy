@@ -26,5 +26,5 @@ void funct_response_ia_look(char **args, void *info, common_t *com)
             funct_response_look_west(ia, com);
     }
     write(ia->buffer.sock.sockfd, OCTETS, strlen(OCTETS));
-    printf("rentrer dans la fonctions funct_response_ia_look\n");
+    printf("%sPlayer: %s%d%s look around%s\n", P, R, ia->player->id, P, N);
 }

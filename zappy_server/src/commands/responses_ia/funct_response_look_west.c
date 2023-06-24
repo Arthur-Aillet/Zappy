@@ -11,8 +11,7 @@ static void funct_complete_look_tile_west(ia_t *ia, common_t *com,
                                     int nbr_tiles, int *post_tile)
 {
     for (int tmp = 0; tmp < nbr_tiles; tmp++) {
-        to_take_ressources_response_ia(ia, com,
-                                    post_tile[0], post_tile[1]);
+        to_take_ressources_response_ia(ia, com, post_tile[0], post_tile[1]);
         post_tile[1] = (post_tile[1] - 1 < 0) ? (int)com->gui->map.height - 1 :
                                             post_tile[1] - 1;
     }
@@ -30,11 +29,11 @@ static void funct_response_look_west_bis(ia_t *ia, common_t *com)
         nbr_tiles = 3 + level * 2;
         nbr_tiles_left = (nbr_tiles - 1) / 2;
         post_tile[1] = ia->player->y + nbr_tiles_left;
-        if (post_tile[1] > (int)com->gui->map.height) {
-            post_tile[1] = post_tile[1] % com->gui->map.height - 1;
+        if (post_tile[1] >= (int)com->gui->map.height) {
+            post_tile[1] = post_tile[1] % com->gui->map.height;
         }
         if (post_tile[0] < 0) {
-            post_tile[0] = com->gui->map.width - 1;
+            post_tile[0] = com->gui->map.width + post_tile[0];
         }
         funct_complete_look_tile_west(ia, com, nbr_tiles, post_tile);
         post_tile[0] -= 1;

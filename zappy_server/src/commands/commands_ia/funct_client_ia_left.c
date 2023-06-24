@@ -22,5 +22,4 @@ void funct_client_ia_left(ia_t *ia, char **args, common_t *com)
     new_msg->handler = &funct_response_ia_left;
     new_msg->next_msg = ia->msg_queue;
     ia->msg_queue = new_msg;
-    basic_log("rentrer dans la funct_client_ia_left", C, 0);
 }

@@ -21,7 +21,7 @@ static void call_function_gui_bis(ia_t *ia, common_t *com,
 
 void update_tile_gui(common_t *com, ia_t *ia)
 {
-    char **args = malloc(sizeof(char *) * 2);
+    char **args = malloc(sizeof(char *) * 3);
     char buffer_args[256];
 
     if (args == NULL)
@@ -38,11 +38,12 @@ void update_tile_gui(common_t *com, ia_t *ia)
         return;
     args[1][0] = '\0';
     args[1] = strcat(args[1], buffer_args);
+    args[2] = NULL;
     funct_server_bct(args, com->gui, com);
+    free_array((void **)args);
 }
 
-static void call_function_gui(ia_t *ia, common_t *com,
-                                msg_queue_t *new_msg)
+static void call_function_gui(ia_t *ia, common_t *com, msg_queue_t *new_msg)
 {
     if (to_check_ressources(ia, com, ia->player->x, ia->player->y) == -1) {
         return to_create_message_response_ia(new_msg);
@@ -73,5 +74,4 @@ void funct_client_ia_incantation(ia_t *ia, char **args, common_t *com)
     new_msg->time = 300. / (double)com->freq;
     new_msg->start = 0;
     new_msg->handler = &funct_response_ia_incantation;
-    basic_log("rentrer dans la funct_client_ia_incantation", C, 0);
 }

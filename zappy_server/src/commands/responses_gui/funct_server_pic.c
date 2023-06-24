@@ -22,8 +22,7 @@ void funct_server_pic_level_four_five(char **args, gui_t *gui)
     }
     GUI_OCTETS[GUI_SIZE] = '\n';
     GUI_SIZE += 1;
-    GUI_OCTETS = realloc(GUI_OCTETS,
-                sizeof(char) * (GUI_SIZE + 1));
+    GUI_OCTETS = realloc(GUI_OCTETS, sizeof(char) * (GUI_SIZE + 1));
     if (GUI_OCTETS == NULL) {
         return;
     }
@@ -45,8 +44,7 @@ void funct_server_pic_level_other(char **args, gui_t *gui)
     }
     GUI_OCTETS[GUI_SIZE] = '\n';
     GUI_SIZE += 1;
-    GUI_OCTETS = realloc(GUI_OCTETS,
-                sizeof(char) * (GUI_SIZE + 1));
+    GUI_OCTETS = realloc(GUI_OCTETS, sizeof(char) * (GUI_SIZE + 1));
     if (GUI_OCTETS == NULL) {
         return;
     }
@@ -68,8 +66,7 @@ static void funct_server_pic_level_two_three(char **args, gui_t *gui)
     }
     GUI_OCTETS[GUI_SIZE] = '\n';
     GUI_SIZE += 1;
-    GUI_OCTETS = realloc(GUI_OCTETS,
-                sizeof(char) * (GUI_SIZE + 1));
+    GUI_OCTETS = realloc(GUI_OCTETS, sizeof(char) * (GUI_SIZE + 1));
     if (GUI_OCTETS == NULL) {
         return;
     }
@@ -80,9 +77,7 @@ static void funct_server_pic_next(char **args, gui_t *gui)
 {
     if (atoi(args[2]) == 1) {
         GUI_SIZE += strlen(args[3]) + 2;
-        GUI_OCTETS =
-                    realloc(GUI_OCTETS,
-                    sizeof(char) * (GUI_SIZE + 1));
+        GUI_OCTETS = realloc(GUI_OCTETS, sizeof(char) * (GUI_SIZE + 1));
         if (GUI_OCTETS == NULL) {
             return;
         }
@@ -100,10 +95,8 @@ void funct_server_pic(char **args, void *info, common_t *common)
 
     (void)args;
     (void)common;
-    GUI_SIZE = strlen(args[0]) +
-                strlen(args[1]) + strlen(args[2]) + 7;
-    GUI_OCTETS = realloc(GUI_OCTETS,
-                sizeof(char) * (GUI_SIZE + 1));
+    GUI_SIZE = strlen(args[0]) + strlen(args[1]) + strlen(args[2]) + 7;
+    GUI_OCTETS = malloc(sizeof(char) * (GUI_SIZE + 1));
     if (GUI_OCTETS == NULL) {
         return;
     }
@@ -116,4 +109,5 @@ void funct_server_pic(char **args, void *info, common_t *common)
     strcat(GUI_OCTETS, args[2]);
     strcat(GUI_OCTETS, " ");
     funct_server_pic_next(args, gui);
+    free(GUI_OCTETS);
 }

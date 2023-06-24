@@ -10,20 +10,28 @@
 void funct_response_ia_eject(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
+    char buffer_ennemy[256];
 
-    (void)args;
-    (void)com;
     SIZE = 4;
+    args = malloc(sizeof(char *) * 2);
     OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
-    if (OCTETS == NULL) {
+    if (OCTETS == NULL || args == NULL)
         return;
-    }
     OCTETS[0] = '\0';
+    sprintf(buffer_ennemy, "%d", ia->player->id);
+    args[0] = malloc(sizeof(char) * (strlen(buffer_ennemy) + 1));
+    if (args[0] == NULL)
+        return;
+    args[0][0] = '\0';
+    args[1] = NULL;
+    strcat(args[0], buffer_ennemy);
     if (find_post(com, ia) == 0) {
         strcat(OCTETS, "ok\n\0");
     } else {
         strcat(OCTETS, "ko\n\0");
     }
+    funct_server_pex(args, com->gui, com);
     write(ia->buffer.sock.sockfd, OCTETS, SIZE);
-    printf("rentrer dans la fonctions funct_response_ia_eject\n");
+    printf("%sPlayer: %s%d%s Eject%s\n", P, R, ia->player->id, P, N);
+    free_array((void **)args);
 }

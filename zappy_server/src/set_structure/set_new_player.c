@@ -48,12 +48,13 @@ static void send_to_gui(int status, common_t *com, team_t *team, int i)
     char **args;
     if (i == -1)
         return;
-    args = (status != 0) ? malloc(sizeof(char *) * 1) :
-                            malloc(sizeof(char *) * 6);
+    args = (status != 0) ? malloc(sizeof(char *) * 2) :
+                            malloc(sizeof(char *) * 7);
     if (args == NULL)
         error("Memory allocation failed", 0);
     if (status != 0) {
         send_to_gui_buffer(status, NULL, &args[0]);
+        args[1] = NULL;
         funct_server_ebo(args, com->gui, com);
     } else {
         send_to_gui_buffer(team->players[i].id, NULL, &args[0]);
@@ -62,9 +63,10 @@ static void send_to_gui(int status, common_t *com, team_t *team, int i)
         send_to_gui_buffer(team->players[i].orientation, NULL, &args[3]);
         send_to_gui_buffer(team->players[i].level, NULL, &args[4]);
         send_to_gui_buffer(0, team->name, &args[5]);
+        args[6] = NULL;
         funct_server_pnw(args, com->gui, com);
-        free_arg(6, args);
     }
+    free_array((void **)args);
 }
 
 static int add_new_player(team_t *team, size_t max_x, size_t max_y,

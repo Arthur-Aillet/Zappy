@@ -34,5 +34,4 @@ void funct_client_ppo(gui_t *gui, char **args, common_t *com)
     new_msg->handler = &funct_server_ppo;
     new_msg->next_msg = gui->msg_queue;
     gui->msg_queue = new_msg;
-    printf("rentrer dans la funct_client_ppo\n");
 }

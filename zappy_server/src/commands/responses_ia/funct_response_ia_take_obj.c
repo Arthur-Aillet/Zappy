@@ -25,5 +25,5 @@ void funct_response_ia_take_obj(char **args, void *info, common_t *com)
         next_if_funct_take(ia, com, args);
     }
     write(ia->buffer.sock.sockfd, OCTETS, SIZE);
-    basic_log("rentrer dans la fonctions funct_response_ia_take_obj", C, 0);
+    printf("%sPlayer: %s%d%s take an object%s\n", P, R, ia->player->id, P, N);
 }

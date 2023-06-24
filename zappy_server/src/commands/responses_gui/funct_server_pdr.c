@@ -9,10 +9,8 @@
 
 static void funct_prepare_res(char **args, gui_t *gui)
 {
-    GUI_SIZE = strlen(args[0]) +
-                                strlen(args[1]) + 7;
-    GUI_OCTETS = realloc(GUI_OCTETS,
-                sizeof(char) * (GUI_SIZE + 1));
+    GUI_SIZE = strlen(args[0]) + strlen(args[1]) + 7;
+    GUI_OCTETS = malloc(sizeof(char) * (GUI_SIZE + 1));
     if (GUI_OCTETS == NULL) {
         return;
     }
@@ -33,7 +31,6 @@ void funct_server_pdr(char **args, void *info, common_t *common)
         return;
     }
     funct_prepare_res(args, gui);
-    write(gui->buffer.sock.sockfd, GUI_OCTETS,
-        GUI_SIZE);
-    printf("rentrer dans la fonctions funct_server_pdr\n");
+    write(gui->buffer.sock.sockfd, GUI_OCTETS, GUI_SIZE);
+    free(GUI_OCTETS);
 }

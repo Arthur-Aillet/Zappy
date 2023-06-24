@@ -16,7 +16,6 @@ void funct_response_ia_set_obj(char **args, void *info, common_t *com)
     SIZE = 4;
     OCTETS = realloc(OCTETS, sizeof(char) * (SIZE));
     OCTETS[0] = '\0';
-    printf("$%s$\n", args[0]);
     if (OCTETS == NULL) {
         return;
     } else if (strcmp(args[0], "food") == 0) {
@@ -25,5 +24,5 @@ void funct_response_ia_set_obj(char **args, void *info, common_t *com)
         next_if_funct_set(ia, com, args);
     }
     write(ia->buffer.sock.sockfd, OCTETS, strlen(OCTETS));
-    basic_log("rentrer dans la fonctions funct_response_ia_set_obj", C, 0);
+    printf("%sPlayer: %s%d%s set an object%s\n", P, R, ia->player->id, P, N);
 }

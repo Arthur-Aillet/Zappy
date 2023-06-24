@@ -23,6 +23,8 @@ static void to_take_ressources_response_ia_player(player_t *player, ia_t *ia,
 static void to_take_ressources_response_ia_egg(int *pos, int *post_tmp,
                                                 ia_t *ia, common_t *com)
 {
+    if (com->teams[post_tmp[0]].egg == NULL)
+        return;
     if (com->teams[post_tmp[0]].egg[post_tmp[1]].x == pos[0] &&
         com->teams[post_tmp[0]].egg[post_tmp[1]].y == pos[1]) {
         SIZE += 4;
@@ -52,8 +54,7 @@ static void to_take_ressources_response_ia_bis(ia_t *ia, common_t *com,
     to_take_ressources_response_ia_food(ia, com, x, y);
 }
 
-void to_take_ressources_response_ia(ia_t *ia, common_t *com,
-                                                int x, int y)
+void to_take_ressources_response_ia(ia_t *ia, common_t *com, int x, int y)
 {
     int pos[2];
 

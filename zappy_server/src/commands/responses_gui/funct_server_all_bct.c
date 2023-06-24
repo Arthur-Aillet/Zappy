@@ -25,14 +25,13 @@ void funct_server_all_bct(char **args, void *info, common_t *common)
     (void)common;
     (void)args;
     GUI_SIZE = 1;
-    GUI_OCTETS = realloc(GUI_OCTETS,
-                    sizeof(char) * (GUI_SIZE));
+    GUI_OCTETS = malloc(sizeof(char) * (GUI_SIZE));
     if (GUI_OCTETS == NULL) {
         return;
     }
     GUI_OCTETS[0] = '\0';
     funct_for_on_tiles(gui);
     GUI_OCTETS[GUI_SIZE - 1] = '\0';
-    write(gui->buffer.sock.sockfd, GUI_OCTETS,
-            strlen(GUI_OCTETS));
+    write(gui->buffer.sock.sockfd, GUI_OCTETS, strlen(GUI_OCTETS));
+    free(GUI_OCTETS);
 }

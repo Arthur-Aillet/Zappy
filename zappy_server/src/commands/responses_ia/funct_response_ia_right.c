@@ -7,6 +7,27 @@
 
 #include "zappy.h"
 
+static void right_log(ia_t *ia)
+{
+    char dir[10];
+
+    switch (ia->player->orientation) {
+        case 1: sprintf(dir, "%s", "North");
+            break;
+        case 2: sprintf(dir, "%s", "East");
+            break;
+        case 3: sprintf(dir, "%s", "South");
+            break;
+        case 4: sprintf(dir, "%s", "Weast");
+            break;
+        default: sprintf(dir, "%s", "Undef");
+            break;
+    }
+    printf("%sPlayer: %s%d%s turn to the left in %s%s%s\n", P, R,
+            ia->player->id, P, B, dir, N);
+}
+
+
 void funct_response_ia_right(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
@@ -21,5 +42,5 @@ void funct_response_ia_right(char **args, void *info, common_t *com)
     OCTETS[0] = '\0';
     strcat(OCTETS, "ok\n\0");
     write(ia->buffer.sock.sockfd, OCTETS, SIZE);
-    basic_log("rentrer dans la fonctions funct_response_ia_right", C, 0);
+    right_log(ia);
 }

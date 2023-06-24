@@ -13,8 +13,7 @@ static void funct_finish_response(gui_t *gui)
 {
     GUI_OCTETS[GUI_SIZE - 2] = '\n';
     GUI_SIZE += 1;
-    GUI_OCTETS = realloc(GUI_OCTETS,
-                    sizeof(char) * (GUI_SIZE));
+    GUI_OCTETS = realloc(GUI_OCTETS, sizeof(char) * (GUI_SIZE));
     if (GUI_OCTETS == NULL) {
         return;
     }
@@ -43,14 +42,13 @@ static void funct_prepare_res(gui_t *gui, ia_t *ia)
     char buffer[1024];
     sprintf(buffer, "%d%d%d", ia->player->id, ia->player->x, ia->player->y);
     GUI_SIZE = 8 + strlen(buffer);
-    GUI_OCTETS = realloc(GUI_OCTETS,
-                        sizeof(char) * (GUI_SIZE));
+    GUI_OCTETS = malloc(sizeof(char) * (GUI_SIZE));
     if (GUI_OCTETS == NULL) {
         return;
     }
     GUI_OCTETS[0] = '\0';
     sprintf(GUI_OCTETS, "pin %d %d %d ",
-                    ia->player->id, ia->player->x, ia->player->y);
+            ia->player->id, ia->player->x, ia->player->y);
     funct_ressource_in_ia(gui, ia);
     GUI_OCTETS[GUI_SIZE - 1] = '\0';
 }
@@ -64,7 +62,7 @@ void funct_server_pin(char **args, void *info, common_t *common)
         return;
     }
     funct_prepare_res(gui, ia);
-    write(gui->buffer.sock.sockfd, GUI_OCTETS,
-        GUI_SIZE);
-    printf("rentrer dans la fonctions funct_server_pin\n");
+    write(gui->buffer.sock.sockfd, GUI_OCTETS, GUI_SIZE);
+    basic_log("pin send", C, 0);
+    free(GUI_OCTETS);
 }

@@ -14,5 +14,4 @@ void funct_response_ia_msg(char **args, void *info, common_t *com)
     (void)args;
     (void)info;
     (void)com;
-    printf("rentrer dans la fonctions funct_response_ia_msg\n");
 }

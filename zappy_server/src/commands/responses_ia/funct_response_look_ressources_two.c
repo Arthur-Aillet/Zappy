@@ -21,12 +21,14 @@ static void to_take_ressources_response_ia_linemate(ia_t *ia,
     to_take_ressources_response_ia_deraumere(ia, com, x, y);
 }
 
-void to_take_ressources_response_ia_food(ia_t *ia,
-                                    common_t *com, int x, int y)
+void to_take_ressources_response_ia_food(ia_t *ia, common_t *com, int x, int y)
 {
+    printf("x: %d y: %d\n", x, y);
+    if (OCTETS == NULL)
+        OCTETS = malloc(sizeof(char));
     for (size_t j = 0; j < C_RESSOURCES(y, x)[FOOD]; j++) {
         SIZE += 5;
-        OCTETS = realloc(OCTETS, sizeof(char) * SIZE);
+        OCTETS = realloc(OCTETS, sizeof(char) * (SIZE + 1));
         if (OCTETS == NULL) {
             return;
         }

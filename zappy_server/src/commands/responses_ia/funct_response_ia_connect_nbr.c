@@ -24,5 +24,4 @@ void funct_response_ia_connect_nbr(char **args, void *info, common_t *com)
     strcat(OCTETS, buffer_nb_slot);
     strcat(OCTETS, "\n\0");
     write(ia->buffer.sock.sockfd, OCTETS, SIZE);
-    printf("rentrer dans la fonctions funct_response_ia_connect_nbr\n");
 }

@@ -9,7 +9,7 @@
 
 static void call_function_gui(ia_t *ia, common_t *com)
 {
-    char **arg = malloc(sizeof(char *) * 1);
+    char **arg = malloc(sizeof(char *) * 2);
     char buffer_player[256];
 
     if (arg == NULL) {
@@ -18,11 +18,13 @@ static void call_function_gui(ia_t *ia, common_t *com)
     sprintf(buffer_player, "%d", ia->player->id);
     arg[0] = malloc(sizeof(char) * (strlen(buffer_player) + 1));
     if (arg[0] == NULL) {
+        return;
     }
     arg[0][0] = '\0';
+    arg[1] = NULL;
     strcat(arg[0], buffer_player);
     funct_server_pfk(arg, com->gui, com);
-    free_arg(1, arg);
+    free_array((void **)arg);
 }
 
 void funct_client_ia_fork(ia_t *ia, char **args, common_t *com)

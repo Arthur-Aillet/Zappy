@@ -7,10 +7,9 @@
 
 #include "zappy.h"
 
-static void funct_prepare_response_gui(player_t *ia,
-                                    common_t *com, int r)
+static void funct_prepare_response_gui(player_t *ia, common_t *com, int r)
 {
-    char **args = malloc(sizeof(char *) * 3);
+    char **args = malloc(sizeof(char *) * 4);
 
     if (args == NULL) {
         return;
@@ -18,7 +17,9 @@ static void funct_prepare_response_gui(player_t *ia,
     args[0] = prepare_arg_response_gui(ia->x);
     args[1] = prepare_arg_response_gui(ia->y);
     args[2] = prepare_arg_response_gui(r);
+    args[3] = NULL;
     funct_server_pie(args, com->gui, com);
+    free_array((void **)args);
 }
 
 static int funct_status_master(ia_t *ia_tmp)
@@ -52,7 +53,7 @@ static void to_check_status_incantation(common_t *com, player_t *ia)
 {
     int i = set_nbr_ia(to_find_ia_int(com->gui->map.tiles
     [ia->y][ia->x].nb_player_incantations[0], com));
-    char **args = malloc(sizeof(char *) * 1);
+    char **args = malloc(sizeof(char *) * 2);
 
     if (args == NULL) {
         return;
@@ -62,28 +63,17 @@ static void to_check_status_incantation(common_t *com, player_t *ia)
         return;
     }
     args[0][0] = '\0';
-    args[0] = strcat(args[0], "ko");
+    args[1] = NULL;
+    strcat(args[0], "ko");
     funct_status_incantation(i, com, ia, args);
     funct_prepare_response_gui(ia, com, 0);
+    free_array((void **)args);
 }
 
 void remove_player(player_t *ennemy, player_t *ia, common_t *com)
 {
-    char **args = malloc(sizeof(char *));
-    char buffer_ennemy[256];
-
-    if (args == NULL) {
-        return;
-    }
     if (ennemy->incantation != NO) {
         to_check_status_incantation(com, ia);
     }
-    sprintf(buffer_ennemy, "%d", ennemy->id);
-    args[0] = malloc(sizeof(char) * (strlen(buffer_ennemy) + 1));
-    if (args[0] == NULL) {
-        return;
-    }
-    args[0][0] = '\0';
-    strcat(args[0], buffer_ennemy);
-    remove_choose_player(ennemy, com, args, ia);
+    remove_choose_player(ennemy, com, ia);
 }
