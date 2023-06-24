@@ -19,6 +19,30 @@ from warrior_loop import warrior_loop
 from butler_loop import butler_loop
 
 def mainloop(ai: Session): # mainloop peut return True si elle est enfant de fork / false si stop
+    """!
+    The function mainloop will run the main algorithm of the AI.
+    The loop is made like so :
+    Reception :
+        reception of incoming messages of all types from the server.
+        The algorithm stores what actions it made to expect answers from the server.
+        By example, if it sent a command asking for the inventory, it knows that the next hypotetic
+        answer from the server is an inventory, and can parse it.
+        The mainloop function also accepts unexpected messages from the server, like incomming broadcasts,
+        that need to be processed too.
+    Action :
+        The reception part updates all needed values in the Session object.
+        The action part will launch if needed all actions functions from the algorithm
+    Fork :
+        A special type of action, fork. It allow the AI to replicate itself on an egg.
+        The parent part can continue the loop.
+        The child part need to return True, it will restart the program loop and reset values
+    Quit :
+        Return False to quit.
+
+    @param ai AI Session
+
+    @return a boolean value.
+    """
     looping = True
     last_actions = []
     creature = Creature()
