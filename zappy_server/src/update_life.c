@@ -40,7 +40,6 @@ static int player_is_dead(player_t *player, common_t *com)
     args[0][0] = '\0';
     args[1] = NULL;
     strcat(args[0], buffer_args);
-    funct_server_pdi(args, com->gui, com);
     funct_response_ia_death(args, ia, com);
     *ia = close_ia();
     free_array((void **)args);
