@@ -138,7 +138,9 @@ def distance_to_base(creature: Creature):
     return abs(creature.pos_x - creature.spawn_pos_x) + abs(creature.pos_y - creature.spawn_pos_y)
 
 def call_all_roles(creature: Creature, ai: Session):
+    creature.other_creatures_old = creature.other_creatures.copy()
     creature.other_creatures = [{"lvl": 1, "role": Creature.Types.QUEEN, "id": 0, "messages": 0}]
+    creature.other_creatures_age = 0
     ai.call_all()
 
 def take_new_role_in_account(msg_info: str, creature: Creature):
@@ -157,6 +159,7 @@ def take_new_role_in_account(msg_info: str, creature: Creature):
 def queen_loop(creature: Creature, last_Action: list, ia: Session):
     creature.var += 1
     creature.var %= 20;
+    creature.other_creatures_age += 1
 
     if (id != 0) :
         creature.type = Creature.Types.BUTLER
