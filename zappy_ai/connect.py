@@ -48,6 +48,7 @@ def connect(ip, port, team_name):
     print("server message 2:", client_num, x, y)
     client_num, x, y = int(client_num), int(x), int(y)
     print("clientnum x y", client_num, x, y)
+    client.settimeout(0.07)
     if (client_num >= 1):
         return client, client_num, x, y
     return client, 0, x, y
@@ -67,4 +68,5 @@ def send_server(client, message):
     constant. If the maximum number of retries is reached and the answer is still 'ko\\n', an error
     message will be printed to the standard error output.
     """
+    print("sent to server :", message)
     client.send(bytes(message + "\n", "utf-8"))

@@ -10,7 +10,6 @@ from connect import connect
 from server_get import *
 from server_action import *
 from sys import stderr
-from commun import *
 from communication import *
 from datatypes import Creature, Session
 
@@ -105,7 +104,6 @@ def go_to_base(creature: Creature, ia:Session, last_action: list):
                 creature.orientation %= 4
         fowards(ia.client)
     creature.var = 0
-
 
 def drop_all(creature: Creature, last_actions: list, ia: Session):
     invfood = creature.inventory.get("food")

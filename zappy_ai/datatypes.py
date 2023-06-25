@@ -44,7 +44,9 @@ class Creature:
         self.looked = False
         self.called = False
         self.confirmed = 0
+        self.other_creatures_old = [{"lvl": 1, "role": Creature.Types.QUEEN, "id": 0, "messages": 0}]
         self.other_creatures = [{"lvl": 1, "role": Creature.Types.QUEEN, "id": 0, "messages": 0}]
+        self.other_creatures_age = 0
         self.message_index = 0
 
 # Holds the size of the map (x,y)
@@ -98,7 +100,7 @@ class Session:
     # communication :
 
     def call_all(self):
-        output = com.call_all(self.client, self.id, self.msg_nb)
+        output = com.role_call(self.client, self.id, self.msg_nb)
         self.msg_nb += 1
         return output
     def say_type(self):

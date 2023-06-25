@@ -10,7 +10,7 @@ from connect import connect
 from server_get import *
 from server_action import *
 from sys import stderr
-from datatypes import Session, ActionType, Creature
+from datatypes import Session, Creature
 
 def go_to(i,creature: Creature, ia:Session, last_actions: list):
     row_max = 1

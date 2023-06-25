@@ -77,8 +77,8 @@ def objectives(i: int):
         return {'food': 0, 'linemate': 2, 'deraumere': 2, 'sibur': 2, 'mendiane': 2, 'phiras': 2, 'thystame': 1}
     return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
 
-def parrot(ia: Session, creature: Creature, last_action: list):
-    last_action.append(broadcast(creature.strvar))
+def parrot(ai: Session, creature: Creature, last_action: list):
+    last_action.append(broadcast(ai.client, creature.strvar))
 
 def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
     last_actions.append(look(ia.client))
@@ -137,9 +137,28 @@ def pick_up_list(objective: dict[str, int], last_action: list, ai: Session):
 def distance_to_base(creature: Creature):
     return abs(creature.pos_x - creature.spawn_pos_x) + abs(creature.pos_y - creature.spawn_pos_y)
 
+def call_all_roles(creature: Creature, ai: Session):
+    creature.other_creatures_old = creature.other_creatures.copy()
+    creature.other_creatures = [{"lvl": 1, "role": Creature.Types.QUEEN, "id": 0, "messages": 0}]
+    creature.other_creatures_age = 0
+    ai.call_all()
+
+def take_new_role_in_account(msg_info: str, creature: Creature):
+    temp_info = msg_info.text.split()
+    for i in creature.other_creatures:
+        if i["id"] == msg_info.id:
+            return
+    if msg_info.text.startswith("my job is "):
+        creature.other_creatures.append({
+            "lvl": temp_info[4],
+            "role": temp_info[3],
+            "id": msg_info.id,
+            "messages": msg_info.number
+        })
 def queen_loop(creature: Creature, last_Action: list, ia: Session, message: messageinfo):
     creature.var += 1
     creature.var %= 20;
+    creature.other_creatures_age += 1
 
     if (id != 0) :
         creature.type = Creature.Types.BUTLER
@@ -149,14 +168,14 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
             last_Action.append(pick_up(ia.client, "food"))
         else:
             parrot(ia, creature, last_Action)
-    if distance_to_base > 0:
+    if distance_to_base(creature) > 0:
         go_to_base(creature, ia, last_Action)
     if (creature.var == 0) :
         return True
     if creature.looked:
         if (stockpile_contains(ascending_objectives(creature.level), creature.last_look[0])):
             if creature.called == False:
-                call the closest level apropriate people to base_pos. priority on butler then gatherers then warriors then babys then queen
+                # call the closest level apropriate people to base_pos. priority on butler then gatherers then warriors then babys then queen
                 creature.called = True
     if creature.called == True and creature.confirmed == ascending_objectives(creature.level).get("number"):
         pick_up_list()
