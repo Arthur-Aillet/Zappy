@@ -24,6 +24,6 @@ doc:
 
 doc-f:
 	cargo doc
-	firefox --new-window target/doc/rend_ox/all.html
+	firefox --new-window target/doc/rend_ox/index.html
 
 .PHONY: all re clean fclean

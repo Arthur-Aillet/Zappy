@@ -173,8 +173,8 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
     creature.var %= 20;
     creature.other_creatures_age += 1
 
-    if (id != 0) :
-        creature.type = Creature.Types.BUTLER
+    # if (id != 0) :
+    #     creature.type = Creature.Types.BUTLER
 
     if creature.food < 10:
         if (look_for(creature, last_Action, ia, "food") == 0):
@@ -184,19 +184,19 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
     if distance_to_base(creature) > 0:
         go_to_base(creature, ia, last_Action)
     if (creature.var == 0) :
-        return True
+        if fork_ai(ia.client) == 0:
+            return True
+        last_Action.append(ActionType.FORK)
     if creature.looked:
         if (stockpile_contains(ascending_objectives(creature.level), creature.last_look[0])):
             if creature.called == False:
                 creature.confirmed = 0
-                selected = select_n_people_of_level(creature, creature.level)
+                selected = select_n_people_of_level(creature,ascending_objectives(creature.level).get("number"), ascending_objectives(creature.level).get("level") )
                 for crt in selected:
                     move_to_base(ia.client, creature.id, creature.message_index, crt.get("id"))
                     creature.message_index += 1
                 creature.called = True
     if messageinfo.valid and messageinfo.text.startswith("bien arrive"):
-        take_this(ia.client, creature.id, creature.message_index, dict_to_str(objectives(ascending_objectives(creature.level).get("level"))))
-        creature.message_index += 1
         creature.confirmed += 1
     if creature.called == True and creature.confirmed == ascending_objectives(creature.level).get("number"):
         last_Action.append(ritual_in(ia.client, creature.id, creature.message_index, 11))
@@ -215,7 +215,7 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
     if creature.var == 10:
         last_Action.append(role_call(ia.client, creature.id, creature.message_index))
         creature.message_index += 1
-        role_weighting(creature.other_creatures)
-    if message.valid == False:
+        role_weighting(creature.other_creatures, last_Action, ia, creature)
+    if message.valid == False and message.text != "":
         creature.strvar = message.text
     return False

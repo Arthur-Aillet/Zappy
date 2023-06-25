@@ -22,9 +22,6 @@ static int check_graphic(char **command, common_t *com, int idx)
 {
     if (strcmp(command[0], "GRAPHIC") != 0 || command[1] != NULL)
         return 0;
-    if (com->gui->buffer.sock.sockfd > 0) {
-        return error("Graphic client already connected", 0);
-    }
     com->client[idx].type = GUI;
     com->client[idx].str_cli = (gui_t *) &(com->gui);
     com->gui->buffer.sock.sockfd = com->client[idx].socket;

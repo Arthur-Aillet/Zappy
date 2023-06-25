@@ -17,3 +17,5 @@ class ActionType: #enum
     INVENTORY  = 3
     CALL_ALL = 4
     FORK = 5
+
+# action_time = [0, 1, 0.07, 0.07, 0.14, 40*0.07]

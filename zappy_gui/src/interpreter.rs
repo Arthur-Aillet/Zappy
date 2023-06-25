@@ -62,7 +62,7 @@ macro_rules! parse_capture {
 
 impl Zappy {
     fn player_fork(&mut self, command: String, at: Duration) {
-        let re = Regex::new(r"^pfk (-?\d+)$")
+        let re = Regex::new(r"^pfk #?(-?\d+)$")
             .expect("Invalid regex");
 
         if let Some(capture) = re.captures(&*command) {
@@ -85,7 +85,7 @@ impl Zappy {
     }
 
     fn player_expulsion(&mut self, command: String, at: Duration) {
-        let re = Regex::new(r"^pex (-?\d+)$")
+        let re = Regex::new(r"^pex #?(-?\d+)$")
             .expect("Invalid regex");
 
         if let Some(capture) = re.captures(&*command) {
@@ -133,7 +133,7 @@ impl Zappy {
     }
 
     fn drop_resource(&mut self, command: String, at: Duration) {
-        let re = Regex::new(r"^pdr (-?\d+) ([0-6])$")
+        let re = Regex::new(r"^pdr #?(-?\d+) ([0-6])$")
             .expect("Invalid regex");
 
         if let Some(capture) = re.captures(&*command) {
@@ -161,7 +161,7 @@ impl Zappy {
     }
 
     fn collect_resource(&mut self, command: String, at: Duration) {
-        let re = Regex::new(r"^pgt (-?\d+) ([0-6])$")
+        let re = Regex::new(r"^pgt #?(-?\d+) ([0-6])$")
             .expect("Invalid regex");
 
         if let Some(capture) = re.captures(&*command) {
@@ -188,7 +188,7 @@ impl Zappy {
     }
 
     fn death_of_an_egg(&mut self, command: String, _at: Duration) {
-        let re = Regex::new(r"^edi (-?\d+)$")
+        let re = Regex::new(r"^edi #?(-?\d+)$")
             .expect("Invalid regex");
         if let Some(capture) = re.captures(&*command) {
             parse_capture!(i64, 1, egg_number, capture, "edi: invalid egg number");
@@ -209,7 +209,7 @@ impl Zappy {
     }
 
     fn connection_to_egg(&mut self, command: String, _at: Duration) {
-        let re = Regex::new(r"^ebo (-?\d+)$")
+        let re = Regex::new(r"^ebo #?(-?\d+)$")
             .expect("Invalid regex");
         if let Some(capture) = re.captures(&*command) {
             parse_capture!(i64, 1, egg_number, capture, "ebo: invalid egg number");
@@ -230,7 +230,7 @@ impl Zappy {
     }
 
     fn new_egg(&mut self, command: String, _at: Duration) {
-        let re = Regex::new(r"^enw (-?\d+) (-?\d+) (\d+) (\d+)$")
+        let re = Regex::new(r"^enw #?(-?\d+) #?(-?\d+) (\d+) (\d+)$")
             .expect("Invalid regex");
 
         if let Some(capture) = re.captures(&*command) {
@@ -283,7 +283,7 @@ impl Zappy {
     }
 
     fn player_inventory(&mut self, command: String, at: Duration) {
-        let re = Regex::new(r"^pin (-?\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)$")
+        let re = Regex::new(r"^pin #?(-?\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)$")
             .expect("Invalid regex");
 
         if let Some(capture) = re.captures(&*command) {
@@ -332,7 +332,7 @@ impl Zappy {
     }
 
     fn player_level(&mut self, command: String, _at: Duration) {
-        let re = Regex::new(r"^plv (-?\d+) ([1-8])$")
+        let re = Regex::new(r"^plv #?(-?\d+) ([1-8])$")
             .expect("Invalid regex");
 
         if let Some(capture) = re.captures(&*command) {
@@ -355,7 +355,7 @@ impl Zappy {
     }
 
     fn player_position(&mut self, command: String, at: Duration) {
-        let re = Regex::new(r"^ppo (-?\d+) (\d+) (\d+) ([1-4])$")
+        let re = Regex::new(r"^ppo #?(-?\d+) (\d+) (\d+) ([1-4])$")
             .expect("Invalid regex");
 
         if let Some(capture) = re.captures(&*command) {
