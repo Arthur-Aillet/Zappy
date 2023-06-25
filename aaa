@@ -1,0 +1,58 @@
+
+msg: [nb msg] [ordre] [insulte optionelle]
+
+ordre:  -[id] deviens [type de creature] | "et plus vite que ca"
+        -[id] retour a la base | "viens ici toi"
+        -[id] arrive a destination | "en position"
+        -[id] prend [liste de materiaux] | "ramasse ca"
+        -enemy spoted in [x, y] | "allez lui voler ses cailloux" | "plus de rotules pour toi" | "throngle him"
+        -base bouge de [x, y] | "on demenage"
+        -status jobs | "@everyone"
+        -need info | "quoi qui se passe" | "huh? euh... me when the uu. the me huh?" | "oh i have dementia? i dont remember asking!"
+        -info [infos necessaires] | "quoicoubeh"
+        -rituel dans [t] | "autobots roll out"
+        -[id]: my job is [job] | "engagez vous qu'ils disaient"
+
+jobs:
+
+    number:
+            -queen      | 1
+            -baby       | any <- base
+            -butler     | 1
+            -gatherer   | 80%   |
+            -warrior    | 20%   |-> rest
+
+    auto changes:
+        warrior or scout low on food becomes a gatherer
+        baby of level 3 becomes a warrior scout or gatherer
+
+    behaviors:
+        queen does not move and handles communication. if nothing has to be dont she yells enemy communication
+        butler is a gatherer that periodically brings food to the food pile.
+        gatherer searches for gems and goes back to the food pile when low on food. picks up food for itself.
+        warrior searches for enemies and pushes them.when low on food searches for food
+
+    movements:
+        queen moves to base coordonates if not on base coordonates. for her not to move she needs to be fed by the butler
+        butler searches for food and goes back to base to give it to the queen. limited range in order to stay close to the queen
+        gatherer explores searching for gems. periodically return to base. scans methodically the terrain in an allocated zone to not interfere with other gatherers
+        warrior wanders searching for enememies and goes to a spotted enemy if nearby. spiral may be more appropriate
+
+    oreders:
+        queen:
+            - change other creature's jobs
+            - ask to return to base
+            - ask to pick up
+            - ritual timing
+            - ask inventory status
+            - base move
+            - job status
+            - infos
+            - mimics enemy message
+            -food request
+
+        all:
+            -enemy spoted
+            -need info
+            -reponse inventaire
+            -job response
