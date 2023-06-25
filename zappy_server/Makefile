@@ -84,6 +84,7 @@ COMMAND	=	src/commands/check_command.c									\
 			src/commands/commands_ia/funct_client_ia_set_obj.c				\
 			src/commands/commands_ia/funct_client_ia_take_obj.c				\
 			src/commands/responses_ia/funct_response_ia_broadcast.c			\
+			src/commands/responses_ia/funct_response_ia_broadcast_bis.c		\
 			src/commands/responses_ia/funct_remove_player.c					\
 			src/commands/responses_ia/funct_remove_player_bis.c				\
 			src/commands/responses_ia/funct_find_post.c						\

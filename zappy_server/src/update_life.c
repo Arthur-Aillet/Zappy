@@ -24,32 +24,26 @@ client_t *find_client_by_id(int id, common_t *com)
 
 static int player_is_dead(player_t *player, common_t *com)
 {
-    char buffer_args[256];
-    char **args = malloc(sizeof(char *) * 2);
     ia_t *ia = to_find_ia_int(player->id, com);
+    team_t *team = to_find_team_by_int(player->id, com);
 
-    if (args == NULL)
-        return error("Memory allocation failed", 0);
-    if (ia == NULL)
+    if (ia == NULL || team == NULL)
         return error("Bad player id", 0);
 
-    *ia = close_ia();
-    sprintf(buffer_args, "%d", player->id);
-    args[0] = malloc(sizeof(char) * strlen(buffer_args) + 1);
-    if (args[0] == NULL)
-        return error("Memory allocation failed", 0);
-    args[0][0] = '\0';
-    args[1] = NULL;
-    strcat(args[0], buffer_args);
-    funct_server_pdi(args, com->gui, com);
-    funct_response_ia_death(args, ia, com);
-    free_array((void **)args);
+    team->actif_player -= 1;
+    free_msg_queue(ia->msg_queue);
+    close_ia(ia);
     return 1;
 }
 
 static void send_pdi(player_t *player, common_t *com)
 {
     char **args = malloc(sizeof(char*) * 2);
+    ia_t *ia = to_find_ia_int(player->id, com);
+
+    if (args == NULL || ia == NULL) {
+        return;
+    }
     char buffer[256];
     sprintf(buffer, "%d", player->id);
     args[0] = malloc(sizeof(char) * (strlen(buffer) + 2));
@@ -57,6 +51,7 @@ static void send_pdi(player_t *player, common_t *com)
     args[1] = NULL;
     sprintf(args[0], "%d", player->id);
     funct_server_pdi(args, (void*)com->gui, NULL);
+    funct_response_ia_death(args, ia, com);
     free_array((void **)args);
 }
 
@@ -77,10 +72,9 @@ static int update_player_life(player_t *player, common_t *com)
             player->inventory[FOOD]--;
         if (player->life == 0) {
             send_pdi(player, com);
-            printf("%sPlayer %s%d%s is dead%s\n", G, B, player->id, G, N);
             return player_is_dead(player, com);
-        }
-        player->start = time(NULL);
+        } else
+            player->start = time(NULL);
     }
     return 0;
 }
