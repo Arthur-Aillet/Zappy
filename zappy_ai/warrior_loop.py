@@ -42,15 +42,22 @@ def check_food(creature: Creature, last_actions: list, ia: Session):
     if (creature.inventory.get('food') < 10) :
         creature.type = Creature.Types.GATHERER
 
-def warrior_loop(creature: Creature, last_actions: list, ia: Session):
+def warrior_loop(creature: Creature, last_actions: list, ia: Session, message: messageinfo):
     #add answer to messages
     if (creature.var % 10 == 0) :
         check_food()
     last_actions.append(fowards(ia.client))
     enemypos = look_for(creature, last_actions, ia, "enemy")
     if (enemypos != -1):
-    #or if message for enemy position received and near that position
-        broadcast(ia.client, "enemy_spotted" + creature.pos_x + " " + creature.pos_y)
+        enemy_spotted(ia.client, creature.id, creature.message_index, creature.pos_x)
+        creature.confirmed = 3
+    if creature.confirmed == 0:
         go_to(enemypos)
+        send_server(ia.client, "Eject\n")
+        creature.confirmed = -1
+    if creature.confirmed >= 0:
+        creature.confirmed -= 1
+        if messageinfo.valid and messageinfo.text.startswith("don't shoot"):
+            creature.confirmed = -1
     last_actions.append(fowards(ia.client))
     return False

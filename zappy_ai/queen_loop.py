@@ -130,14 +130,14 @@ def stockpile_contains(objective: dict[str, int], tile: str):
 
 def pick_up_list(objective: dict[str, int], last_action: list, ai: Session):
     for key in objective :
-        if key != "number" :
+        if key != "number":
             for _ in objective[key]:
                 last_action.append(pick_up(ai.client, key))
 
 def distance_to_base(creature: Creature):
     return abs(creature.pos_x - creature.spawn_pos_x) + abs(creature.pos_y - creature.spawn_pos_y)
 
-def queen_loop(creature: Creature, last_Action: list, ia: Session):
+def queen_loop(creature: Creature, last_Action: list, ia: Session, message: messageinfo):
     creature.var += 1
     creature.var %= 20;
 
@@ -162,6 +162,16 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session):
         pick_up_list()
         last_Action.append(ritual_in(ia.client, creature.id, creature.message_index))
         creature.message_index += 1
+    if message.valid and message.text.startswith("here's info"):
+        orientation = creature.orientation
+        if message.direction == 3:
+            orientation -= 1
+        if message.direction == 5:
+            orientation -= 2
+        if message.direction == 7:
+            orientation -= 3
+        orientation %= 4
+        give_info(ia.client, creature.id, creature.message_index, message.id, creature, orientation, Creature.Types.BUTLER)
     if creature.var == 10:
         last_Action.append(role_call(ia.client, creature.id, creature.message_index))
         creature.message_index += 1
@@ -170,6 +180,6 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session):
         #     take random people from too numerous groups and change their profession
     # if (someone need info)
     #     say infos
-    else:
-        parrot();
+    if message.valid == False:
+        creature.strvar = message.text
     return False
