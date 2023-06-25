@@ -59,7 +59,7 @@ void to_check_command_exist_ia(server_ia_t *server_ia, ia_t *ia,
         }
     }
     if (value == 0) {
-        error("500 Unknow command.", 0);
+        printf("%sInvalid command: %s%s%s\n", R, G, server_ia->comd, N);
     }
     free(server_ia->comd);
     free_array((void**)server_ia->args);
