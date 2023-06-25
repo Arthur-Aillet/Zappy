@@ -46,10 +46,15 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
     looping = True
     last_actions = []
     creature = Creature()
+    first = True
+    message = ""
 
     while looping:
-        message = ai.client.recv(1024).decode() # peut être mettre un timeout pour éviter de rester perdu sur une interrupt de co
-
+        if not first:
+            message = ai.client.recv(1024).decode() # peut être mettre un timeout pour éviter de rester perdu sur une interrupt de co
+            print("got message :", message)
+        else:
+            first = False
         # gestion des envois inopinés du serveur
         if message.startswith("Message "):
             creature.strvar = message
@@ -88,7 +93,11 @@ if __name__ == "__main__":
     run = True
     while (run): ## point de retour en cas de fork
         print("start")
-        client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 4242, "gigateam")
+        try:
+            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 1234, "Team1")
+        except:
+            print("connection refused")
+            exit(84)
         if nb == 0:
             stderr.write("ko: no places in the team\n")
             exit(84)
