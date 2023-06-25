@@ -1,4 +1,4 @@
-use std::{io, thread};
+use std::{io, thread, time};
 use std::collections::HashMap;
 use std::thread::JoinHandle;
 use std::time::Duration;
@@ -49,6 +49,15 @@ impl Zappy {
 pub(crate) fn loop_server(mut server: ServerConn) {
     server.recv_from_server().expect("Error received for welcome");
     server.send_to_server(format!("GRAPHIC"));
+    thread::sleep(time::Duration::from_millis(100));
+    server.send_to_server(format!("tna"));
+    thread::sleep(time::Duration::from_millis(100));
+    server.send_to_server(format!("msz"));
+    thread::sleep(time::Duration::from_millis(100));
+    server.send_to_server(format!("mct"));
+    thread::sleep(time::Duration::from_millis(100));
+    server.send_to_server(format!("sgt"));
+    thread::sleep(time::Duration::from_millis(100));
     loop {
         match server.recv_from_server() {
             Ok(string) => {
