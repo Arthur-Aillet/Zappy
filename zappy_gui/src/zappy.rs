@@ -3,7 +3,7 @@ use std::f32::consts::PI;
 use std::mem::take;
 use std::thread::JoinHandle;
 use std::time::Duration;
-use fork::{daemon, Fork, fork};
+use fork::{Fork, fork};
 use std::process::{Command, exit};
 
 use rend_ox::app::App;
@@ -20,9 +20,8 @@ use crate::map::Map;
 pub use crate::server::ServerConn;
 use crate::tantorian::PlayerState::{Alive, Egg};
 use crate::tantorian::Tantorian;
-use crate::incantation::{Incantation, IncantationState};
+use crate::incantation::{Incantation};
 use crate::ui;
-use crate::ui::State::Nothing;
 use crate::ui::ZappyUi;
 
 pub struct Zappy {
@@ -160,7 +159,7 @@ impl Zappy {
     }
 
     pub fn update_players(app: &mut App<Zappy>, update: &Update) {
-        for (idx, player) in &mut app.user.players {
+        for (_, player) in &mut app.user.players {
             if let Some(movement_start) = &player.start_movement {
                 if let Some(loops) = player.laying {
                     let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
@@ -267,7 +266,7 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
         .players(ctx, &mut zappy.user.players, &mut zappy.user.teams, &mut zappy.user.player_auto_update, &mut zappy.user.player_refresh_factor, zappy.camera_is_active);
     let refresh_player = action == crate::ui::PlayerAction::Refresh;
     if action == crate::ui::PlayerAction::Follow {
-        for (idx, player) in &zappy.user.players {
+        for (_, player) in &zappy.user.players {
             if player.team_name == team_name && player.number == player_number {
                 zappy.user.following = Some((player_number, team_name));
                 break;
@@ -293,7 +292,7 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
             match fork() {
                 Ok(Fork::Child) => {
                         println!("executing process: -p {}", zappy.user.port);
-                    let p = Command::new("../zappy_server/zappy_server")
+                    let _p = Command::new("../zappy_server/zappy_server")
                         .arg("-p")
                         .arg(zappy.user.port.clone()).status();
                         println!("execution over;");
@@ -316,7 +315,7 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
             server.send_to_server(format!("mct"));
         }
         if refresh_player {
-            for (idx, player) in &zappy.user.players {
+            for (_, player) in &zappy.user.players {
                 server.send_to_server(format!("ppo #{}", player.number));
             }
         }
@@ -334,7 +333,7 @@ fn ask_for_update(zappy: &mut Zappy, at: Duration) {
         if zappy.player_auto_update == true {
             if zappy.last_player_update.as_secs_f32() + 7. / zappy.time_unit * zappy.player_refresh_factor < at.as_secs_f32() {
                 zappy.last_player_update = at;
-                for (idx, player) in &zappy.players {
+                for (_, player) in &zappy.players {
                     server.send_to_server(format!("ppo #{}", player.number));
                 }
             }
@@ -343,7 +342,7 @@ fn ask_for_update(zappy: &mut Zappy, at: Duration) {
 }
 
 fn look_at_player(model: &mut App<Zappy>, number: &i64, team_name: &String) {
-    for (idx, player) in &model.user.players {
+    for (_, player) in &model.user.players {
         if &player.team_name == team_name && &player.number == number {
             model.camera.position = Vec3 {
                 x: player.pos.x / 100.,
