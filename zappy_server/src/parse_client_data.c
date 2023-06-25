@@ -18,7 +18,8 @@ static void close_client_data(server_t *server, client_t *client,
     }
     if (client->type == IA) {
         ia_t *ia = find_ia_for_command(com, client);
-        *ia = close_ia();
+        free_msg_queue(ia->msg_queue);
+        close_ia(ia);
     }
     client->socket = close_client(client->socket, server);
     client->type = UNDEFINED;

@@ -74,17 +74,7 @@ static void free_map(map_t *map)
 //FIXME - free message queue
 void free_gui(gui_t *gui)
 {
-    msg_queue_t *current = gui->msg_queue;
-    msg_queue_t *next;
-
-    while (current != NULL) {
-        if (current->msg != NULL) {
-            free_array((void**)current->msg);
-        }
-        next = current->next_msg;
-        free(current);
-        current = next;
-    }
+    free_msg_queue(gui->msg_queue);
     free_map(&gui->map);
     basic_log("Map free", B, 0);
     if (gui->buffer.bufferRead.octets != NULL)

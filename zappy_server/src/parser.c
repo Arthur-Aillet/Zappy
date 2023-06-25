@@ -16,7 +16,7 @@
 
 static void set_teams_name(parser_t *p, int ac, char *av[])
 {
-    p->teams_name = malloc((ac - optind + 1) * sizeof(char*));
+    p->teams_name = malloc((ac - optind + 2) * sizeof(char*));
     p->teams_name[p->nb_teams] = av[optind - 1];
     p->nb_teams++;
     while (optind < ac && av[optind][0] != '-') {

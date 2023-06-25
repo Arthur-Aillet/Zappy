@@ -31,7 +31,8 @@ static int player_is_dead(player_t *player, common_t *com)
         return error("Bad player id", 0);
 
     team->actif_player -= 1;
-    *ia = close_ia();
+    free_msg_queue(ia->msg_queue);
+    close_ia(ia);
     return 1;
 }
 

@@ -80,7 +80,7 @@ static const server_ia_t COMMAND_GESTION_IA[] = {
 };
 
 ia_t *set_ia(void);
-ia_t close_ia(void);
+void close_ia(ia_t *ia);
 void free_ia(ia_t *ia);
 
 #endif /* !IA_H_ */

@@ -7,6 +7,22 @@
 
 #include "zappy.h"
 
+void free_msg_queue(msg_queue_t *msg_queue)
+{
+    msg_queue_t *current = msg_queue;
+    msg_queue_t *next;
+
+    while (current != NULL) {
+        if (current->msg != NULL) {
+            free_array((void**)current->msg);
+        }
+        next = current->next_msg;
+        free(current);
+        current = next;
+    }
+    msg_queue = NULL;
+}
+
 static void update_msg_queue(ia_t *ia, common_t *com)
 {
     msg_queue_t *msg;
