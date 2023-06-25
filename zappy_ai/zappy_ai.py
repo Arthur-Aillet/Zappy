@@ -19,40 +19,7 @@ from gatherer_loop import gatherer_loop
 from queen_loop import queen_loop, take_new_role_in_account
 from warrior_loop import warrior_loop
 from butler_loop import butler_loop
-
-def pick_up_list(objective: dict[str, int], last_action: list, ai: Session):
-    for key in objective :
-        if key != "number" :
-            for _ in objective[key]:
-                last_action.append(pick_up(ai.client, key))
-
-def distance_to_base(creature: Creature):
-    return abs(creature.pos_x - creature.spawn_pos_x) + abs(creature.pos_y - creature.spawn_pos_y)
-
-def go_to_base(creature: Creature, ia:Session, last_action: list):
-    while (distance_to_base(creature) != 0):
-        if (creature.pos_y < creature.spawn_pos_y):
-            while (creature.orientation != 0) :
-                last_action.append(left(ia.client))
-                creature.orientation -= 1
-                creature.orientation %= 4
-        elif (creature.pos_x < creature.spawn_pos_x):
-            while (creature.orientation != 1) :
-                last_action.append(left(ia.client))
-                creature.orientation -= 1
-                creature.orientation %= 4
-        elif (creature.pos_y > creature.spawn_pos_y):
-            while (creature.orientation != 2) :
-                last_action.append(left(ia.client))
-                creature.orientation -= 1
-                creature.orientation %= 4
-        elif (creature.pos_x > creature.spawn_pos_x):
-            while (creature.orientation != 3) :
-                last_action.append(left(ia.client))
-                creature.orientation -= 1
-                creature.orientation %= 4
-        fowards(ia.client)
-    creature.var = 0
+from common import *
 
 def mainloop(ai: Session): # mainloop peut return True si elle est enfant de fork / false si stop
     """!

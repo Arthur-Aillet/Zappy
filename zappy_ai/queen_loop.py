@@ -12,6 +12,7 @@ from server_action import *
 from sys import stderr
 from communication import *
 from datatypes import Creature, Session
+from common import *
 
 def ascending_objectives(i: int):
     if (i == 0):
@@ -60,59 +61,9 @@ def ascending_objectives(i: int):
         return {'number': 6, 'linemate': 12, 'deraumere': 12, 'sibur': 12, 'mendiane': 12, 'phiras': 12, 'thystame': 6, "level": 5}
     return {'number': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
 
-def objectives(i: int):
-    if (i == 0):
-        return {'food': 0, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
-    if (i == 1):
-        return {'food': 0, 'linemate': 1, 'deraumere': 1, 'sibur': 1, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
-    if (i == 2):
-        return {'food': 0, 'linemate': 2, 'deraumere': 0, 'sibur': 1, 'mendiane': 0, 'phiras': 2, 'thystame': 0}
-    if (i == 3):
-        return {'food': 0, 'linemate': 1, 'deraumere': 1, 'sibur': 2, 'mendiane': 0, 'phiras': 1, 'thystame': 0}
-    if (i == 4):
-        return {'food': 0, 'linemate': 1, 'deraumere': 2, 'sibur': 1, 'mendiane': 3, 'phiras': 0, 'thystame': 0}
-    if (i == 5):
-        return {'food': 0, 'linemate': 1, 'deraumere': 2, 'sibur': 3, 'mendiane': 0, 'phiras': 1, 'thystame': 0}
-    if (i == 6):
-        return {'food': 0, 'linemate': 2, 'deraumere': 2, 'sibur': 2, 'mendiane': 2, 'phiras': 2, 'thystame': 1}
-    return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
-
 def parrot(ai: Session, creature: Creature, last_action: list):
     last_action.append(broadcast(ai.client, creature.strvar))
     creature.message_index += 1
-
-def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
-    last_actions.append(look(ia.client))
-    if creature.looked:
-        for item in creature.last_look:
-            if item.__contains__(target):
-                return item.indexs
-    return -1
-
-def go_to_base(creature: Creature, ia:Session, last_action: list):
-    while (distance_to_base(creature) != 0):
-        if (creature.pos_y < creature.spawn_pos_y):
-            while (creature.orientation != 0) :
-                last_action.append(left(ia.client))
-                creature.orientation -= 1
-                creature.orientation %= 4
-        elif (creature.pos_x < creature.spawn_pos_x):
-            while (creature.orientation != 1) :
-                last_action.append(left(ia.client))
-                creature.orientation -= 1
-                creature.orientation %= 4
-        elif (creature.pos_y > creature.spawn_pos_y):
-            while (creature.orientation != 2) :
-                last_action.append(left(ia.client))
-                creature.orientation -= 1
-                creature.orientation %= 4
-        elif (creature.pos_x > creature.spawn_pos_x):
-            while (creature.orientation != 3) :
-                last_action.append(left(ia.client))
-                creature.orientation -= 1
-                creature.orientation %= 4
-        fowards(ia.client)
-    creature.var = 0
 
 def stockpile_contains(objective: dict[str, int], tile: str):
     if objective.get("linemate") < tile.count("linemate"):
@@ -128,15 +79,6 @@ def stockpile_contains(objective: dict[str, int], tile: str):
     if objective.get("thystame") < tile.count("thystame"):
         return False
     return True
-
-def pick_up_list(objective: dict[str, int], last_action: list, ai: Session):
-    for key in objective :
-        if key != "number":
-            for _ in objective[key]:
-                last_action.append(pick_up(ai.client, key))
-
-def distance_to_base(creature: Creature):
-    return abs(creature.pos_x - creature.spawn_pos_x) + abs(creature.pos_y - creature.spawn_pos_y)
 
 def call_all_roles(creature: Creature, ai: Session):
     creature.other_creatures_old = creature.other_creatures.copy()
