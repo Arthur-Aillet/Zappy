@@ -158,9 +158,9 @@ impl Zappy {
                     let mut new_rot: f32 = player.orientation.as_radian();
                     new_rot = lerp(new_rot, player.orientation.as_radian() + loops * PI * 2., (progress * modifier).powi(3));
                     player.rotation = Vec3 {
-                        x: PI / 2.,
-                        y: new_rot,
-                        z: 0.,
+                        x: 0.,
+                        y: 0.,
+                        z: new_rot,
                     };
                 } else {
                     let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
@@ -179,12 +179,12 @@ impl Zappy {
                     player.pos = Vec3 {
                         x: new_pos.x as f32 + 0.5,
                         y: new_pos.y as f32 + 0.5,
-                        z: 0.666,
+                        z: 0.0,
                     };
                     player.rotation = Vec3 {
-                        x: PI / 2.,
-                        y: new_rot,
-                        z: 0.,
+                        x: 0.,
+                        y: 0.,
+                        z: new_rot,
                     };
                 }
             }
@@ -198,7 +198,7 @@ impl Zappy {
             .filter(|p|p.state == Alive)
             .map(|p|
                 Mat4::from_scale_rotation_translation(
-                    Vec3::new(0.333, 0.333, 0.333),
+                    Vec3::new(1., 1., 1.),
                     Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z),
                     p.pos))
             .collect();
@@ -207,7 +207,7 @@ impl Zappy {
             .filter(|p|p.state == Egg)
             .map(|p|
                 Mat4::from_scale_rotation_translation(
-                    Vec3::new(0.333, 0.333, 0.333),
+                    Vec3::new(1., 1., 1.),
                     Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z),
                     p.pos))
             .collect();
@@ -217,7 +217,7 @@ impl Zappy {
         if let Some(player_mesh) = &app.user.tantorian_mesh {
             app.draw_instances(player_mesh, player_instances.clone(), player_colors.clone());
         }
-        if let Some(egg_mesh) = &app.user.tantorian_mesh {
+        if let Some(egg_mesh) = &app.user.egg_mesh {
             app.draw_instances(egg_mesh, egg_instances.clone(), egg_colors.clone());
         }
         if let Some(mesh) = &app.user.message_mesh {

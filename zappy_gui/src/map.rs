@@ -47,7 +47,9 @@ impl Tile {
     }
 
     fn spawn_resource_mat(&self) -> Mat4 {
-        Mat4::from_rotation_translation(
+        let s = random_range(0.8, 1.5) as f32;
+        Mat4::from_scale_rotation_translation(
+            Vec3::new(s, s, s),
             Quat::from_rotation_z(random_range(0., std::f32::consts::PI * 2.)),
             Vec3::new(random_range(0.1, 0.9) + self.x as f32, random_range(0.1, 0.9) + self.y as f32, 0.))
     }
