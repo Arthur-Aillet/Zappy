@@ -43,6 +43,7 @@ static int player_is_dead(player_t *player, common_t *com)
     strcat(args[0], buffer_args);
     funct_server_pdi(args, com->gui, com);
     funct_response_ia_death(args, ia, com);
+    free_array((void **)args);
     return 1;
 }
 
@@ -53,10 +54,10 @@ static void send_pdi(player_t *player, common_t *com)
     sprintf(buffer, "%d", player->id);
     args[0] = malloc(sizeof(char) * (strlen(buffer) + 2));
     args[0][0] = '\0';
+    args[1] = NULL;
     sprintf(args[0], "%d", player->id);
     funct_server_pdi(args, (void*)com->gui, NULL);
-    free(args[0]);
-    free(args);
+    free_array((void **)args);
 }
 
 static int update_player_life(player_t *player, common_t *com)
@@ -76,7 +77,7 @@ static int update_player_life(player_t *player, common_t *com)
             player->inventory[FOOD]--;
         if (player->life == 0) {
             send_pdi(player, com);
-            printf("%splayer %s%d%s is dead%s\n", G, B, player->id, G, N);
+            printf("%sPlayer %s%d%s is dead%s\n", G, B, player->id, G, N);
             return player_is_dead(player, com);
         }
         player->start = time(NULL);

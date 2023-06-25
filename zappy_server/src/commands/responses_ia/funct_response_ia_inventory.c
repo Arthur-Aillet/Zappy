@@ -55,7 +55,7 @@ static void inventory_egg(ia_t *ia)
 
 static void funct_result_response_ia_inventory(ia_t *ia)
 {
-    OCTETS = malloc(sizeof(char));
+    OCTETS = realloc(OCTETS, sizeof(char));
     OCTETS[0] = '\0';
     inventory_food(ia);
     inventory_linemate(ia);

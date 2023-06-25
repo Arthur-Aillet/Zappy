@@ -10,19 +10,22 @@
 
     #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
-    #define S_SOCKET        com.server.socket
-    #define S_READ          com.server.read_fd
-    #define S_MAX           com.server.maxsd
+    #define S_SOCKET            com.server.socket
+    #define S_READ              com.server.read_fd
+    #define S_MAX               com.server.maxsd
 
-    #define PS_SOCKET       com->server.socket
-    #define PS_READ         com->server.read_fd
-    #define PS_MAX          com->server.maxsd
+    #define PS_SOCKET           com->server.socket
+    #define PS_READ             com->server.read_fd
+    #define PS_MAX              com->server.maxsd
 
-    #define PC_SOCKET(i)    com->client[i].socket
+    #define PC_SOCKET(i)        com->client[i].socket
 
-    #define SOCKET(i)       client[i].socket
+    #define SOCKET(i)           client[i].socket
 
-    #define TEAM(i)         com->teams[i]
+    #define TEAM(i)             com->teams[i]
+
+    #define C_DENSITY           com->gui->map.density
+    #define C_RESSOURCES(y, x)  com->gui->map.tiles[y][x].ressources
 
     #include <stdio.h>
     #include <stdlib.h>
@@ -158,8 +161,7 @@ void funct_server_pic_send_message(char **args, gui_t *gui);
 
 char *prepare_arg_response_gui(int x);
 int set_nbr_ia(ia_t *ia);
-void remove_choose_player(player_t *ennemy, common_t *com,
-                                char **args, player_t *ia);
+void remove_choose_player(player_t *ennemy, common_t *com, player_t *ia);
 void free_msg_queue(msg_queue_t msg);
 void funct_server_pic_level_other(char **args, gui_t *gui);
 void funct_server_pic_level_four_five(char **args, gui_t *gui);

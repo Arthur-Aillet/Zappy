@@ -7,6 +7,13 @@
 
 #include "zappy.h"
 
+/**
+ @brief fill in the arguments in the char **msg in the new command save to queue
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param msg_queue_t ne_msg : recording of the new order in the pending queue
+ @param char **args: the arguments given as parameters with the command sent by the gui
+ @return void
+**/
 static void fill_args(msg_queue_t *new_msg, char **args)
 {
     new_msg->msg[0] = malloc(sizeof(char) *
@@ -18,6 +25,14 @@ static void fill_args(msg_queue_t *new_msg, char **args)
     new_msg->msg[0] = strcat(new_msg->msg[0], args[0]);
 }
 
+/**
+ @brief receive and prepare the elements needed to prepare the order that will be processed by the server for the command sst
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui : structure of gui
+ @param char **args: the arguments receive with the command gui
+ @param common_t com : structure commun -> this structure gathers all the server data
+ @return void
+**/
 void funct_client_sst(gui_t *gui, char **args, common_t *com)
 {
     msg_queue_t *new_msg = malloc(sizeof(msg_queue_t));
@@ -34,5 +49,4 @@ void funct_client_sst(gui_t *gui, char **args, common_t *com)
     new_msg->handler = &funct_server_sst;
     new_msg->next_msg = gui->msg_queue;
     gui->msg_queue = new_msg;
-    printf("rentrer dans la funct_client_sst\n");
 }

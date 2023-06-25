@@ -7,11 +7,17 @@
 
 #include "zappy.h"
 
+/**
+ @brief prepare response for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @return void
+**/
 static void funct_prepare_res(gui_t *gui, char **args)
 {
     GUI_SIZE = strlen(args[0]) + 6;
-    GUI_OCTETS = realloc(GUI_OCTETS,
-                    sizeof(char) * (GUI_SIZE + 1));
+    GUI_OCTETS = malloc(sizeof(char) * (GUI_SIZE + 1));
     if (GUI_OCTETS == NULL) {
         return;
     }
@@ -21,6 +27,14 @@ static void funct_prepare_res(gui_t *gui, char **args)
     strcat(GUI_OCTETS, "\n\0");
 }
 
+/**
+ @brief pfk command response to gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the gui structure
+ @return void
+**/
 void funct_server_pfk(char **args, void *info, common_t *common)
 {
     gui_t *gui = (gui_t *)info;
@@ -35,7 +49,6 @@ void funct_server_pfk(char **args, void *info, common_t *common)
         return;
     }
     funct_prepare_res(gui, args);
-    write(gui->buffer.sock.sockfd, GUI_OCTETS,
-            GUI_SIZE);
-    printf("rentrer dans la fonctions funct_server_pfk\n");
+    write(gui->buffer.sock.sockfd, GUI_OCTETS, GUI_SIZE);
+    free(GUI_OCTETS);
 }

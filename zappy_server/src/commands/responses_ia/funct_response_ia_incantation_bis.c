@@ -7,44 +7,46 @@
 
 #include "zappy.h"
 
-static void funct_prepare_response_gui_next(ia_t *ia,
-                                char **args, common_t *com, int r)
+static void funct_prepare_response_gui_next(ia_t *ia, char **args,
+                                            common_t *com, int r)
 {
     char buffer_args[256];
 
     sprintf(buffer_args, "%d", ia->player->y);
-    args[1] = malloc(sizeof(char) * strlen(buffer_args));
+    args[1] = malloc(sizeof(char) * (strlen(buffer_args) + 1));
     if (args[1] == NULL) {
         return;
     }
     args[1][0] = '\0';
     strcat(args[1], buffer_args);
     sprintf(buffer_args, "%d", r);
-    args[1] = malloc(sizeof(char) * strlen(buffer_args));
-    if (args[1] == NULL) {
+    args[2] = malloc(sizeof(char) * (strlen(buffer_args) + 1));
+    if (args[2] == NULL) {
         return;
     }
-    args[1][0] = '\0';
-    strcat(args[1], buffer_args);
+    args[2][0] = '\0';
+    strcat(args[2], buffer_args);
+    args[3] = NULL;
     funct_server_pie(args, com->gui, com);
 }
 
 void funct_prepare_response_gui_incantation(ia_t *ia, common_t *com, int r)
 {
-    char **args = malloc(sizeof(char *) * 3);
+    char **args = malloc(sizeof(char *) * 4);
     char buffer_args[256];
 
     if (args == NULL) {
         return;
     }
     sprintf(buffer_args, "%d", ia->player->x);
-    args[0] = malloc(sizeof(char) * strlen(buffer_args));
+    args[0] = malloc(sizeof(char) * (strlen(buffer_args) + 1));
     if (args[0] == NULL) {
         return;
     }
     args[0][0] = '\0';
     strcat(args[0], buffer_args);
     funct_prepare_response_gui_next(ia, args, com, r);
+    free_array((void **)args);
 }
 
 void funct_level_1(ia_t *ia, common_t *com)
@@ -61,8 +63,7 @@ void funct_level_1(ia_t *ia, common_t *com)
     char level[3];
     sprintf(level, "%ld", ia->player->level);
     OCTETS[0] = '\0';
-    strcat(OCTETS,
-    "Elevation underway current level ");
+    strcat(OCTETS, "Elevation underway current level ");
     strcat(OCTETS, level);
     strcat(OCTETS, "\n\0");
     funct_prepare_response_gui_incantation(ia, com, 1);

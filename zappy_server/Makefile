@@ -129,7 +129,7 @@ LDLIBS = -lm
 CFLAGS += -Wall -Wextra
 
 debug:	fclean $(OBJ) $(MAINOBJ)
-	$(CC) -o $(NAME) $(OBJ) $(MAINOBJ) $(CFLAGS) -g3 $(LDFLAGS) $(LDLIBS)
+	$(CC) -o $(NAME) $(OBJ) $(MAINOBJ) $(CFLAGS) -g3 $(LDFLAGS) $(LDLIBS) -g
 
 all: $(NAME)
 

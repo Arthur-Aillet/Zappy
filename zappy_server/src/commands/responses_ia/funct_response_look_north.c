@@ -11,9 +11,8 @@ static void funct_complete_look_tile_north(ia_t *ia, common_t *com,
                                     int nbr_tiles, int *post_tile)
 {
     for (int tmp = 0; tmp < nbr_tiles; tmp++) {
-        to_take_ressources_response_ia(ia, com,
-                                    post_tile[0], post_tile[1]);
-        post_tile[0] = (post_tile[0] + 1 == (int)com->gui->map.width) ? 0 :
+        to_take_ressources_response_ia(ia, com, post_tile[0], post_tile[1]);
+        post_tile[0] = (post_tile[0] + 1 >= (int)com->gui->map.width) ? 0 :
                                             post_tile[0] + 1;
     }
 }

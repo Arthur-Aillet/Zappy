@@ -50,16 +50,13 @@ static int check_command(char **command, common_t *com, int cli_idx)
     if (command == NULL || command[0] == NULL || command[0][0] == '\0')
         return 1;
     if (com->client[cli_idx].type == IA) {
-        printf("%sCheck in IA Command%s\n", B, N);
         ia = create_struct_client_ia(command);
         to_check_command_exist_ia(&ia,
                 find_ia_for_command(com, &com->client[cli_idx]), com);
     } else if (com->client[cli_idx].type == GUI) {
-        printf("%sCheck in GUI Command%s\n", B, N);
         gui = create_struct_client_gui(command);
         to_check_command_exist_gui(&gui, com->gui, com);
     } else {
-        printf("%sCheck in Command for unknown client type%s\n", B, N);
         undefined_client_command(command, com, cli_idx);
     }
     return 1;

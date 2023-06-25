@@ -12,8 +12,6 @@ void funct_response_ia_look(char **args, void *info, common_t *com)
     ia_t *ia = (ia_t *)info;
 
     (void)args;
-    OCTETS = realloc(OCTETS, sizeof(char) * 1);
-    OCTETS[0] = '\0';
     switch (ia->player->orientation) {
         case North:
             funct_response_look_north(ia, com);
@@ -27,7 +25,6 @@ void funct_response_ia_look(char **args, void *info, common_t *com)
         default:
             funct_response_look_west(ia, com);
     }
-    write(ia->buffer.sock.sockfd, OCTETS,
-        strlen(OCTETS));
-    printf("rentrer dans la fonctions funct_response_ia_look\n");
+    write(ia->buffer.sock.sockfd, OCTETS, strlen(OCTETS));
+    printf("%sPlayer: %s%d%s look around%s\n", P, R, ia->player->id, P, N);
 }

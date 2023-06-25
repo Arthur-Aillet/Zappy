@@ -26,25 +26,27 @@ static void funct_response_gui(ia_t *ia, int idx,
     }
     args[1][0] = '\0';
     strcat(args[1], buffer_args);
+    args[2] = NULL;
     funct_server_pgt(args, com->gui, com);
 }
 
 void response_take(ia_t *ia, int idx, common_t *com)
 {
-    char **args = malloc(sizeof(char *) * 2);
-
+    char **args = malloc(sizeof(char *) * 3);
+    args[0] = NULL;
     if (args == NULL) {
         return;
     }
     if (com->gui->map.tiles[ia->player->y][ia->player->x].ressources[idx]
                                                                         > 0) {
         ia->player->inventory[idx] += 1;
-        update_density(&com->gui->map.density[idx], &com->gui->map.tiles[ia->player->y][ia->player->x].ressources[idx], -1);
+        update_density(&C_DENSITY[idx], &com->gui->map.tiles[ia->player->y][ia->player->x].ressources[idx], -1);
         funct_response_gui(ia, idx, com, args);
         update_tile_gui(com, ia);
         strcat(OCTETS, "ok\n\0");
     } else
         strcat(OCTETS, "ko\n\0");
+    free_array((void **)args);
 }
 
 static void next_if_funct_tree(ia_t *ia, common_t *com, char **args)

@@ -8,6 +8,13 @@
 #include "zappy.h"
 #include <string.h>
 
+/**
+ @brief fill in the arguments in the char **msg in the new command save to queue
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param msg_queue_t *new_msg: structure of ia
+ @param char **args: the arguments given as parameters with the command sent by the ia
+ @return void
+**/
 static void fill_args(msg_queue_t *new_msg, char **args)
 {
     new_msg->msg[0] = malloc(sizeof(char) *
@@ -27,6 +34,14 @@ static void fill_args(msg_queue_t *new_msg, char **args)
     new_msg->msg[1] = strcat(new_msg->msg[0], args[1]);
 }
 
+/**
+ @brief receive and prepare the elements needed to prepare the order that will be processed by the server for the command msg
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: structure of ia
+ @param char **args: the arguments receive with the command ia
+ @param common_t com: structure commun -> this structure gathers all the server data
+ @return void
+**/
 void funct_client_ia_msg(ia_t *ia, char **args, common_t *com)
 {
     msg_queue_t *new_msg = malloc(sizeof(msg_queue_t));
@@ -44,5 +59,4 @@ void funct_client_ia_msg(ia_t *ia, char **args, common_t *com)
     new_msg->handler = &funct_response_ia_msg;
     new_msg->next_msg = ia->msg_queue;
     ia->msg_queue = new_msg;
-    basic_log("rentrer dans la funct_client_ia_msg", C, 0);
 }

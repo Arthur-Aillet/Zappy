@@ -38,6 +38,7 @@ static map_t set_map(int height, int width, int freq)
             exit(error("Failed to allocate tiles map", 84));
         for (int j = 0; j < width; j++) {
             map.tiles[i][j].ressources = set_ressources();
+            map.tiles[i][j].nb_player_incantations = set_ressources();
         }
     }
     return map;
@@ -63,6 +64,7 @@ static void free_map(map_t *map)
     for (size_t i = 0; i < map->height; i++) {
         for (size_t j = 0; j < map->width; j++) {
             free(map->tiles[i][j].ressources);
+            free(map->tiles[i][j].nb_player_incantations);
         }
         free(map->tiles[i]);
     }
@@ -75,8 +77,6 @@ void free_gui(gui_t *gui)
 {
     free_map(&gui->map);
     basic_log("Map free", B, 0);
-    if (GUI_OCTETS != NULL)
-        free(GUI_OCTETS);
     if (gui->buffer.bufferRead.octets != NULL)
         free(gui->buffer.bufferRead.octets);
     free(gui);

@@ -21,5 +21,5 @@ void funct_response_ia_death(char **args, void *info, common_t *com)
     OCTETS[0] = '\0';
     strcat(OCTETS, "dead\n\0");
     write(ia->buffer.sock.sockfd, OCTETS, SIZE);
-    printf("rentrer dans la fonctions funct_response_ia_death\n");
+    printf("%sPlayer: %s%d%s is dead%s\n", P, R, ia->player->id, P, N);
 }

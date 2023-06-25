@@ -11,7 +11,8 @@
 static int check_teams_name(const char *team_name, common_t *com, int idx)
 {
     for (size_t i = 0; i < com->nb_teams; i++) {
-        if (strcmp(TEAM(i).name, team_name) == 0)
+        if (strcmp(TEAM(i).name, team_name) == 0 &&
+            (TEAM(i).nb_slot - TEAM(i).actif_player) > 0)
             return check_slot_and_create_player(com, i, idx);
     }
     return 0;
@@ -49,6 +50,7 @@ static void response_start_ia(client_t client, common_t *com)
     response[0] = '\0';
     sprintf(response, "%s\n%s %s\n", buffer_nb_slot, buffer_x, buffer_y);
     write(client.socket, response, strlen(response));
+    free(response);
 }
 
 int undefined_client_command(char **command, common_t *com, int idx)

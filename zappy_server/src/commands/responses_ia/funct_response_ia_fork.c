@@ -53,20 +53,19 @@ void funct_response_ia_fork(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
     team_t *team = to_find_team_by_int(ia->player->id, com);
-    char **arg = malloc(sizeof(char *) * 4);
+    args = malloc(sizeof(char *) * 5);
 
-    (void)args;
-    (void)com;
-    if (arg == NULL || team == NULL) {
+    if (args == NULL || team == NULL)
         return;
-    }
     funct_prepare_res(team, ia);
-    arg[0] = create_args_for_response_gui(team->egg[team->nb_eggs - 1].egg_id);
-    arg[1] = create_args_for_response_gui(ia->player->id);
-    arg[2] = create_args_for_response_gui(ia->player->x);
-    arg[3] = create_args_for_response_gui(ia->player->y);
-    funct_server_enw(arg, com->gui, com);
-    free_arg(4, arg);
+    args[0] = create_args_for_response_gui(team->egg[team->nb_eggs - 1].egg_id);
+    args[1] = create_args_for_response_gui(ia->player->id);
+    args[2] = create_args_for_response_gui(ia->player->x);
+    args[3] = create_args_for_response_gui(ia->player->y);
+    args[4] = NULL;
+    funct_server_enw(args, com->gui, com);
     write(ia->buffer.sock.sockfd, OCTETS, SIZE);
-    printf("Lay an egg\n");
+    printf("%sPlayer %s%d%s lay an egg in %s%d %d%s\n", P, R, ia->player->id,
+            P, B, ia->player->x, ia->player->y, N);
+    free_array((void **)args);
 }
