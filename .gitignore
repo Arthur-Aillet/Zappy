@@ -1,4 +1,4 @@
-zappy_server
+zappy_server/zappy_server
 *.o
 .vscode
 .clion
