@@ -38,7 +38,8 @@ void response_set(ia_t *ia, int idx, common_t *com)
     }
     if (ia->player->inventory[idx] > 0) {
         ia->player->inventory[idx] -= 1;
-        update_density(&C_DENSITY[idx], &com->gui->map.tiles[ia->player->y][ia->player->x].ressources[idx], 1);
+        update_density(&C_DENSITY[idx],
+        &C_RESSOURCES(ia->player->y, ia->player->x)[idx], 1);
         funct_response_gui(ia, idx, com, args);
         strcat(OCTETS, "ok\n\0");
         update_tile_gui(com, ia);

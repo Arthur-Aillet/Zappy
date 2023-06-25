@@ -102,7 +102,7 @@ void check_error_output(common_t *com, int output, char *error);
 
 void listening_sockets(common_t *com);
 
-char **get_message(server_t *server, client_t *client);
+char **get_message(server_t *server, client_t *client, common_t *com);
 int undefined_client_command(char **command, common_t *com, int idx);
 int check_slot_and_create_player(common_t *com, int team_idx,int client_idx);
 
@@ -183,5 +183,6 @@ void funct_response_look_west(ia_t *ia, common_t *com);
 void update_map(common_t *com);
 
 void update_tile_gui(common_t *com, ia_t *ia);
+void send_message_to_player(common_t *com, ia_t *ia, int i, char **args);
 
 #endif /* !ZAPPY_H_ */

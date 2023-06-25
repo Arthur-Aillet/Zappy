@@ -24,8 +24,7 @@ static void fill_args(msg_queue_t *new_msg, char **args, int idx)
         return;
     }
     new_msg->msg[idx][0] = '\0';
-    new_msg->msg[idx] =
-        strcat(new_msg->msg[idx], args[idx]);
+    strcat(new_msg->msg[idx], args[idx]);
 }
 
 /**
