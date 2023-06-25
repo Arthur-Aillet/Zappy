@@ -11,6 +11,14 @@
 #include <time.h>
 #include "error_handling.h"
 
+/**
+ * @brief Set a player and these values
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param size_t x: position of the player in x
+ * @param size_t y: position of the player in y
+ * @param size_t freq: frequency of the player
+ * @return player
+*/
 player_t set_player(size_t x, size_t y, size_t freq)
 {
     player_t new;
@@ -34,6 +42,13 @@ player_t set_player(size_t x, size_t y, size_t freq)
     return new;
 }
 
+/**
+ * @brief reset player data
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param player_t *player: the player reset
+ * @param int freq: the frequency of all actions in the game
+ * @return int
+*/
 void reset_player(player_t *player, size_t freq)
 {
     if (player->inventory != NULL)
@@ -41,6 +56,12 @@ void reset_player(player_t *player, size_t freq)
     *player = set_player(-1, -1, freq);
 }
 
+/**
+ * @brief free all players
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param team_t *team: the array of all teams
+ * @return void
+*/
 void free_all_players(team_t * team)
 {
     if (team->players == NULL)

@@ -9,6 +9,12 @@
 #include <string.h>
 #include "zappy.h"
 
+/**
+ * @brief Set tthe array of possible ressources for one tiles of the map
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param void
+ * @return size_t *
+*/
 static size_t *set_ressources(void)
 {
     size_t *resources = malloc(sizeof(size_t) * 7);
@@ -19,6 +25,14 @@ static size_t *set_ressources(void)
     return resources;
 }
 
+/**
+ * @brief Set the map structure and all these values
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param int height: the height of the map
+ * @param int width: the width of the map
+ * @param int freq: the frequency of all actions of ia
+ * @return map_t
+*/
 static map_t set_map(int height, int width, int freq)
 {
     map_t map;
@@ -43,6 +57,14 @@ static map_t set_map(int height, int width, int freq)
     return map;
 }
 
+/**
+ * @brief Set the gui_t structure and all these values
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param int height: the height of the map
+ * @param int width: the width of the map
+ * @param int freq: the frequency of all actions of ia
+ * @return gui_t *
+*/
 gui_t *set_gui(int height, int width, int freq)
 {
     gui_t *gui = malloc(sizeof(gui_t));
@@ -58,6 +80,12 @@ gui_t *set_gui(int height, int width, int freq)
     return gui;
 }
 
+/**
+ * @brief Free the map of the game
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param map_t *map: The map to free
+ * @return void
+*/
 static void free_map(map_t *map)
 {
     for (size_t i = 0; i < map->height; i++) {
@@ -72,6 +100,12 @@ static void free_map(map_t *map)
 }
 
 //FIXME - free message queue
+/**
+ * @brief Free the structure gui_t*
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param gui_t *gui: contain all specified data for the graphique
+ * @return void
+*/
 void free_gui(gui_t *gui)
 {
     free_msg_queue(gui->msg_queue);

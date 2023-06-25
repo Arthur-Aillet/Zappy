@@ -8,6 +8,12 @@
 #include "zappy.h"
 #include <stdlib.h>
 
+/**
+ * @brief set value of a client_t structure
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param void
+ * @return client_t
+*/
 static client_t set_client(void)
 {
     client_t cli;
@@ -18,6 +24,12 @@ static client_t set_client(void)
     return cli;
 }
 
+/**
+ * @brief set the array of client_t
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param void
+ * @return client_t *client
+*/
 client_t *set_all_clients(void)
 {
     client_t *client = malloc(sizeof(client_t) * (MAX_CLIENTS + 1));
@@ -30,6 +42,14 @@ client_t *set_all_clients(void)
     return client;
 }
 
+
+/**
+ * @brief close the connection to the server of the specified client
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param int client_socket: the socket descriptor
+ * @param server_t *server: used for disconnect all clients connections
+ * @return int: 0 (used for reset socket descriptor)
+ */
 int close_client(int client_socket, server_t *server)
 {
     if (client_socket != 0) {
@@ -40,6 +60,13 @@ int close_client(int client_socket, server_t *server)
     return 0;
 }
 
+/**
+ * @brief close all connections socket and free the array of client_t
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param client_t *cli: free this array of client_t
+ * @param server_t *server: used for disconnect all clients connections
+ * @return void
+ */
 void free_clients(client_t *cli, server_t *server)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
