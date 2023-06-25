@@ -434,8 +434,8 @@ impl Zappy {
             let y : Result<u32, _> = args[2].to_string().parse();
             let level : Result<u32, _> = args[3].to_string().parse();
             let mut players : Vec<usize> = vec![];
-            for arg in args[4..] {
-                match arg.to_string().parse() : Result<usize, _> {
+            for arg in &args[4..] {
+                match arg.to_string().parse() {
                     Ok(p) => { players.push(p)}
                     _ => { println!("pic: invalid player number"); return; }
                 }

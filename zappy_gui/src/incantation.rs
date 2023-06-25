@@ -1,6 +1,7 @@
 use std::time::Duration;
 use rend_ox::glam::Vec2;
 
+#[derive(PartialEq)]
 pub enum IncantationState {
     Running,
     Success,
