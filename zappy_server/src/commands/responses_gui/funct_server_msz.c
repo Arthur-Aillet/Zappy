@@ -7,6 +7,12 @@
 
 #include "zappy.h"
 
+/**
+ @brief prepare response for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui: common structure of all server data
+ @return void
+**/
 static void funct_prepare_res(gui_t *gui)
 {
     char buffer_x[256];
@@ -23,6 +29,14 @@ static void funct_prepare_res(gui_t *gui)
     sprintf(GUI_OCTETS, "msz %s %s\n", buffer_x, buffer_y);
 }
 
+/**
+ @brief msz command response to gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the gui structure
+ @return void
+**/
 void funct_server_msz(char **args, void *info, common_t *common)
 {
     (void)common;
