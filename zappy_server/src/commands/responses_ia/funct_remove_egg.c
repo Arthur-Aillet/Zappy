@@ -42,11 +42,8 @@ static void funct_find_egg(egg_t *new_eggs, size_t nb_eggs,
 **/
 egg_t *remove_egg(egg_t egg, egg_t *old_eggs, size_t nb_eggs, common_t *com)
 {
-    egg_t *new_eggs;
-    if (nb_eggs - 1 == 0)
-        new_eggs = NULL;
-    else
-        new_eggs = malloc(sizeof(egg_t) * (nb_eggs - 1));
+    egg_t *new_eggs = (nb_eggs - 1 == 0) ? NULL :
+                        malloc(sizeof(egg_t) * (nb_eggs - 1));
     char **args = malloc(sizeof(char *) * 2);
     char buffer_egg[256];
 
