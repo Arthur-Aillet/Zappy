@@ -69,7 +69,7 @@ impl Zappy {
             parse_capture!(i64, 1, number, capture, "pfk: invalid player number");
 
             let mut found = false;
-            for player in &mut self.players {
+            for (idx, player) in &mut self.players {
                 if player.number == number {
                     player.laying = Some(5.0);
                     player.start_movement = Some(at);
@@ -94,7 +94,7 @@ impl Zappy {
             let mut found = false;
             let mut pos = [0;2];
             let mut orientation = Orientation::N;
-            for player in &mut self.players {
+            for (idx, player) in &mut self.players {
                 if player.number == number && player.state == Alive {
                     found = true;
                     orientation = player.orientation;
@@ -107,7 +107,7 @@ impl Zappy {
             }
 
 
-            for player in &mut self.players {
+            for (idx, player) in &mut self.players {
                 if [player.current_tile.x as usize, player.current_tile.y as usize] == pos && player.number != number {
                     if player.state == Egg {
                         player.state = Dead
@@ -140,7 +140,7 @@ impl Zappy {
             parse_capture!(i64, 1, number, capture, "pdr: invalid player number");
             parse_capture!(usize, 2, ressource, capture, "pdr: invalid resource number");
 
-            for player in &mut self.players {
+            for (idx, player) in &mut self.players {
                 if player.number == number && player.state == Alive {
                     let x = player.current_tile.as_uvec2().x as usize;
                     let y = player.current_tile.as_uvec2().y as usize;
@@ -168,7 +168,7 @@ impl Zappy {
             parse_capture!(i64, 1, number, capture, "pgt: invalid player number");
             parse_capture!(usize, 2, ressource, capture, "pgt: invalid resource number");
 
-            for player in &mut self.players {
+            for (idx, player) in &mut self.players {
                 if player.number == number && player.state == Alive {
                     let x = player.current_tile.as_uvec2().x as usize;
                     let y = player.current_tile.as_uvec2().y as usize;
@@ -193,7 +193,7 @@ impl Zappy {
         if let Some(capture) = re.captures(&*command) {
             parse_capture!(i64, 1, egg_number, capture, "edi: invalid egg number");
 
-            for player in &mut self.players {
+            for (idx, player) in &mut self.players {
                 if player.number == egg_number && player.state == Egg {
                     player.state = Dead;
                     return;
@@ -214,7 +214,7 @@ impl Zappy {
         if let Some(capture) = re.captures(&*command) {
             parse_capture!(i64, 1, egg_number, capture, "ebo: invalid egg number");
 
-            for player in &mut self.players {
+            for (idx, player) in &mut self.players {
                 if player.number == egg_number && player.state == Egg {
                     player.state = Alive;
                     return;
@@ -248,7 +248,7 @@ impl Zappy {
                 return;
             }
             let mut found = false;
-            for player in &self.players {
+            for (idx, player) in &self.players {
                 if player.number == number {
                     found = true;
                 }
@@ -258,7 +258,7 @@ impl Zappy {
                 return;
             }
             if let Some(egg) = Tantorian::new_egg(egg_number, x, y, &self.map.size, number, &self.teams, &self.players) {
-                self.players.push(egg);
+                self.players.insert(egg_number, egg);
             }
         } else {
             println!("enw: invalid command given");
@@ -308,7 +308,7 @@ impl Zappy {
                 return;
             }
             let mut found = false;
-            for player in &mut self.players {
+            for (idx, player) in &mut self.players {
                 if player.number == number {
                     found = true;
                     player.last_tile = player.pos.xy() - 0.5;
@@ -340,7 +340,7 @@ impl Zappy {
             parse_capture!(usize, 2, level, capture, "plv: invalid player level coordinate");
 
             let mut found = false;
-            for player in &mut self.players {
+            for (idx, player) in &mut self.players {
                 if player.number == number {
                     found = true;
                     player.level = level as u32;
@@ -377,7 +377,7 @@ impl Zappy {
                 return;
             }
             let mut found = false;
-            for player in &mut self.players {
+            for (idx, player) in &mut self.players {
                 if player.number == number {
                     found = true;
                     player.last_tile = player.pos.xy() - 0.5;
@@ -405,7 +405,7 @@ impl Zappy {
 
             match maybe_number {
                 Ok(number) => {
-                    for player in &mut self.players {
+                    for (idx, player) in &mut self.players {
                         if player.number == number && player.state == Alive {
                             self.messages.push(Message{
                                 pos: Vec3::new(player.pos.x, player.pos.y, 0.),
@@ -433,7 +433,7 @@ impl Zappy {
             let x : Result<u32, _> = args[1].to_string().parse();
             let y : Result<u32, _> = args[2].to_string().parse();
             let level : Result<u32, _> = args[3].to_string().parse();
-            let mut players : Vec<usize> = vec![];
+            let mut players : Vec<i64> = vec![];
             for arg in &args[4..] {
                 match arg.to_string().parse() {
                     Ok(p) => { players.push(p)}
@@ -507,7 +507,7 @@ impl Zappy {
 
             match maybe_number {
                 Ok(number) => {
-                    for player in &mut self.players {
+                    for (idx, player) in &mut self.players {
                         if player.number == number {
                             player.state = Dead;
                         }
@@ -553,7 +553,7 @@ impl Zappy {
                 &self.map.size,
                 &mut self.players,
             ) {
-                self.players.push(new_player)
+                self.players.insert(number, new_player);
             }
         } else {
             println!("pnw: invalid command given")

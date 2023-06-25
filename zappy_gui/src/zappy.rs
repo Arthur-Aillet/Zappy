@@ -23,7 +23,7 @@ use crate::ui::ZappyUi;
 
 pub struct Zappy {
     pub(crate) map: Map,
-    pub(crate) players: Vec<Tantorian>,
+    pub(crate) players: HashMap<i64, Tantorian>,
     pub(crate) teams: Vec<(String, Vec3)>,
     pub(crate) incantations: Vec<Incantation>,
     pub(crate) server: Option<ServerConn>,
@@ -34,6 +34,7 @@ pub struct Zappy {
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
     pub(crate) egg_mesh: Option<MeshDescriptor>,
     pub(crate) arrow_mesh: Option<MeshDescriptor>,
+    pub(crate) magic_mesh: Option<MeshDescriptor>,
     pub(crate) functions: HashMap<String, ServerFunction>,
     pub(crate) time_unit: f32,
     pub(crate) thread_handle: Option<JoinHandle<()>>,
@@ -73,7 +74,7 @@ impl Zappy {
     pub fn new() -> Zappy {
         Zappy {
             map: Map::new(0, 0),
-            players: vec![],
+            players: HashMap::new(),
             teams: vec![],
             incantations: vec![],
             server: None,
@@ -84,6 +85,7 @@ impl Zappy {
             tantorian_mesh: None,
             egg_mesh: None,
             arrow_mesh: None,
+            magic_mesh: None,
             functions: create_hash_function(),
             time_unit: 100.,
             thread_handle: None,
@@ -145,7 +147,7 @@ impl Zappy {
     }
 
     pub fn update_players(app: &mut App<Zappy>, update: &Update) {
-        for player in &mut app.user.players {
+        for (idx, player) in &mut app.user.players {
             if let Some(movement_start) = &player.start_movement {
                 if let Some(loops) = player.laying {
                     let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
@@ -195,8 +197,8 @@ impl Zappy {
         Map::render(app);
         let player_instances : Vec<Mat4> = app.user.players
             .iter()
-            .filter(|p|p.state == Alive)
-            .map(|p|
+            .filter(|(_, p)|p.state == Alive)
+            .map(|(_, p)|
                 Mat4::from_scale_rotation_translation(
                     Vec3::new(1., 1., 1.),
                     Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z),
@@ -204,15 +206,15 @@ impl Zappy {
             .collect();
         let egg_instances : Vec<Mat4> = app.user.players
             .iter()
-            .filter(|p|p.state == Egg)
-            .map(|p|
+            .filter(|(_, p)|p.state == Egg)
+            .map(|(_, p)|
                 Mat4::from_scale_rotation_translation(
                     Vec3::new(1., 1., 1.),
                     Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z),
                     p.pos))
             .collect();
-        let player_colors : Vec<Vec3> = app.user.players.iter().filter(|p|p.state == Alive).map(|p| p.color).collect();
-        let egg_colors : Vec<Vec3> = app.user.players.iter().filter(|p|p.state == Egg).map(|p| p.color).collect();
+        let player_colors : Vec<Vec3> = app.user.players.iter().filter(|(_, p)|p.state == Alive).map(|(_, p)| p.color).collect();
+        let egg_colors : Vec<Vec3> = app.user.players.iter().filter(|(_, p)|p.state == Egg).map(|(_, p)| p.color).collect();
 
         if let Some(player_mesh) = &app.user.tantorian_mesh {
             app.draw_instances(player_mesh, player_instances.clone(), player_colors.clone());
@@ -243,7 +245,7 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
         .players(ctx, &mut zappy.user.players, &mut zappy.user.teams, &mut zappy.user.player_auto_update, &mut zappy.user.player_refresh_factor, zappy.camera_is_active);
     let refresh_player = action == crate::ui::PlayerAction::Refresh;
     if action == crate::ui::PlayerAction::Follow {
-        for player in &zappy.user.players {
+        for (idx, player) in &zappy.user.players {
             if player.team_name == team_name && player.number == player_number {
                 zappy.user.following = Some((player_number, team_name));
                 break;
@@ -273,7 +275,7 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
             server.send_to_server(format!("mct"));
         }
         if refresh_player {
-            for player in &zappy.user.players {
+            for (idx, player) in &zappy.user.players {
                 server.send_to_server(format!("ppo #{}", player.number));
             }
         }
@@ -291,7 +293,7 @@ fn ask_for_update(zappy: &mut Zappy, at: Duration) {
         if zappy.player_auto_update == true {
             if zappy.last_player_update.as_secs_f32() + 7. / zappy.time_unit * zappy.player_refresh_factor < at.as_secs_f32() {
                 zappy.last_player_update = at;
-                for player in &zappy.players {
+                for (idx, player) in &zappy.players {
                     server.send_to_server(format!("ppo #{}", player.number));
                 }
             }
@@ -300,7 +302,7 @@ fn ask_for_update(zappy: &mut Zappy, at: Duration) {
 }
 
 fn look_at_player(model: &mut App<Zappy>, number: &i64, team_name: &String) {
-    for player in &model.user.players {
+    for (idx, player) in &model.user.players {
         if &player.team_name == team_name && &player.number == number {
             model.camera.position = Vec3 {
                 x: player.pos.x / 100.,

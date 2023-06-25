@@ -1,4 +1,5 @@
 use std::collections::hash_map::DefaultHasher;
+use std::collections::HashMap;
 use std::f32::consts::PI;
 use rend_ox::glam::Vec2;
 use rend_ox::Vec3;
@@ -115,9 +116,9 @@ impl Tantorian {
         }
     }
 
-    pub fn new_egg(number: i64, x: usize, y: usize, map_size: &[usize; 2], parent_number: i64, teams: &Vec<(String, Vec3)>, players: &Vec<Tantorian>) -> Option<Tantorian> {
+    pub fn new_egg(number: i64, x: usize, y: usize, map_size: &[usize; 2], parent_number: i64, teams: &Vec<(String, Vec3)>, players: &HashMap<i64, Tantorian>) -> Option<Tantorian> {
         let mut parent_player: Option<&Tantorian> = None;
-        for player in players {
+        for (idx, player) in players {
             if player.number == number && player.state != Dead {
                 println!("Player number already attributed");
                 return None;
@@ -175,7 +176,7 @@ impl Tantorian {
         None
     }
 
-    pub fn new_from_command(number: i64, x: usize, y: usize, orientation: Orientation, level : u32, team_name: String, teams: &Vec<(String, Vec3)>, map_size: &[usize; 2], players: &mut Vec<Tantorian>) -> Option<Tantorian> {
+    pub fn new_from_command(number: i64, x: usize, y: usize, orientation: Orientation, level : u32, team_name: String, teams: &Vec<(String, Vec3)>, map_size: &[usize; 2], players: &mut HashMap<i64, Tantorian>) -> Option<Tantorian> {
         if !teams.iter().any(|(name, _color)| *name == team_name) {
             println!("New player team name does not exist!");
             return None;
@@ -194,7 +195,7 @@ impl Tantorian {
             z: 0.0,
         };
         let rot = Vec3::new(0., 0., orientation.as_radian());
-        for player in players {
+        for (idx, player) in players {
             if player.team_name == team_name && player.number == number && player.state == Alive {
                 println!("New player number already attributed!");
                 return None;

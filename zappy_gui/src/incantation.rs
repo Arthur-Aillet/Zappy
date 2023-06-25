@@ -21,7 +21,7 @@ impl IncantationState {
 pub struct Incantation {
     pub(crate) pos: Vec2,
     pub(crate) level: u32,
-    pub(crate) players: Vec<usize>,
+    pub(crate) players: Vec<i64>,
     pub(crate) state: IncantationState,
     pub(crate) since: Duration,
 }
@@ -30,7 +30,7 @@ impl Incantation {
     pub fn new(
         pos: Vec2,
         level: u32,
-        players: Vec<usize>,
+        players: Vec<i64>,
         since: Duration,
     ) -> Incantation {
         Incantation {

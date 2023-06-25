@@ -1,4 +1,5 @@
 use std::{io, thread};
+use std::collections::HashMap;
 use std::thread::JoinHandle;
 use std::time::Duration;
 use crate::server::ServerConn;
@@ -7,7 +8,7 @@ use crate::zappy::Zappy;
 impl Zappy {
     pub(crate) fn reset_server_data(&mut self) {
         self.teams = vec![];
-        self.players = vec![];
+        self.players = HashMap::new();
         self.time_unit = 100.0;
         self.map.resize(10, 10);
         self.winner_team = None;
