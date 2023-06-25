@@ -147,12 +147,13 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
         if creature.time_to_ritual >= 0 :
             creature.time_to_ritual -= 1;
         if (creature.type == Creature.Types.QUEEN) :
-            queen_loop(creature, last_actions, session, communication)
+            if queen_loop(creature, last_actions, session, communication):
+                return True
         if creature.type == Creature.Types.BABY:
             creature.var += 1
             if creature.var >= 15:
                 creature.type = Creature.Types.QUEEN
-            ask_for_info(ai.client, -1, creature.message_index)
+            ask_for_info(ai.client, creature.id, creature.message_index)
             if messageinfo.valid and messageinfo.text.startswith("here's info"):
                 parse_info(messageinfo, creature)
         if (creature.type == Creature.Types.BUTLER) :
@@ -170,7 +171,7 @@ if __name__ == "__main__":
     while (run): ## point de retour en cas de fork
         print("start")
         try:
-            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 4444, "Team1")
+            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 5556, "Team1")
         except:
             print("connection refused")
             exit(84)

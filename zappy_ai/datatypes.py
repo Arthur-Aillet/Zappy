@@ -12,6 +12,7 @@ import server_action as sa
 import server_get as sg
 import communication as com
 import uuid
+from time import time
 
 
 # class for a creature
@@ -36,7 +37,7 @@ class Creature:
         self.var = 0
         self.time_to_ritual = -1
         self.food = 0
-        self.id = 0
+        self.id = time()
         self.orientation = 0
         self.level = 1
         self.inventory = {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
@@ -59,7 +60,7 @@ class Map:
 # It also holds aliases for client to server functions to use directly with the
 # AI socket client.
 class Session:
-    def __init__(self, client, type=Creature.Types.QUEEN, pos=[0,0], direction=0):
+    def __init__(self, client, type=Creature.Types.BABY, pos=[0,0], direction=0):
         assert len(pos) == 2, "Session pos parameter should be of type [int,int]"
         assert isinstance(pos[0], int), "Session pos parameter should be of type [int,int]"
         assert isinstance(pos[1], int), "Session pos parameter should be of type [int,int]"

@@ -184,7 +184,9 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
     if distance_to_base(creature) > 0:
         go_to_base(creature, ia, last_Action)
     if (creature.var == 0) :
-        return True
+        if fork_ai(ia.client) == 0:
+            return True
+        last_Action.append(ActionType.FORK)
     if creature.looked:
         if (stockpile_contains(ascending_objectives(creature.level), creature.last_look[0])):
             if creature.called == False:
@@ -216,6 +218,6 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
         last_Action.append(role_call(ia.client, creature.id, creature.message_index))
         creature.message_index += 1
         role_weighting(creature.other_creatures, last_Action, ia, creature)
-    if message.valid == False:
+    if message.valid == False and message.text != "":
         creature.strvar = message.text
     return False

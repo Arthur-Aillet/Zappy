@@ -12,7 +12,7 @@
 
 import socket
 from sys import stderr
-
+from time import sleep
 
 ## Number of times to retry on connexion break
 RETRY = 5
@@ -70,3 +70,4 @@ def send_server(client, message):
     """
     print("sent to server :", message)
     client.send(bytes(message + "\n", "utf-8"))
+    sleep(0.07)
