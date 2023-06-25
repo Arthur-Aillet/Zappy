@@ -232,6 +232,15 @@ impl Zappy {
                 app.draw_at(mesh, arrow.color, arrow.pos, arrow.rot, arrow.scale);
             }
         }
+        if let Some(mesh) = &app.user.magic_mesh {
+            for incantation in &app.user.incantations {
+                for i in &incantation.players {
+                    if let Some(player) = app.user.players.get(i as &i64) {
+                        app.draw_at(mesh, Vec3::new(0.1, 1.5, 0.9), player.pos, Vec3::ZERO, Vec3::ONE);
+                    }
+                }
+            }
+        }
     }
 }
 
