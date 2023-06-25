@@ -48,6 +48,7 @@ def connect(ip, port, team_name):
     print("server message 2:", client_num, x, y)
     client_num, x, y = int(client_num), int(x), int(y)
     print("clientnum x y", client_num, x, y)
+    client.settimeout(3)
     if (client_num >= 1):
         return client, client_num, x, y
     return client, 0, x, y

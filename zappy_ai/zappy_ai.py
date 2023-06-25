@@ -6,6 +6,7 @@
 ## zappy_ai
 ##
 
+import socket
 from connect import connect
 from communication import getmsginfo
 from server_get import *
@@ -50,12 +51,27 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
     message = ""
 
     while looping:
-        if not first:
+        try:
             message = ai.client.recv(1024).decode() # peut être mettre un timeout pour éviter de rester perdu sur une interrupt de co
             print("got message :", message)
+        except socket.timeout:
+            # err = e.args[0]
+            # this next if/else is a bit redundant, but illustrates how the
+            # timeout exception is setup
+            print ('(recv timed out)')
+        except socket.error:
+            # Something else happened, handle error, exit, etc.
+            print("socket error")
+            return False
         else:
-            first = False
+            if len(message) == 0:
+                print ('server shutdown')
+                return False
+
         # gestion des envois inopinés du serveur
+        if message == "dead":
+            print("dead !")
+            return False
         if message.startswith("Message "):
             creature.strvar = message
             msg_info = getmsginfo(message, creature)
@@ -94,7 +110,7 @@ if __name__ == "__main__":
     while (run): ## point de retour en cas de fork
         print("start")
         try:
-            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 1234, "Team1")
+            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 2223, "Team1")
         except:
             print("connection refused")
             exit(84)
