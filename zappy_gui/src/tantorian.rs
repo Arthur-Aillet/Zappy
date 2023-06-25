@@ -118,7 +118,7 @@ impl Tantorian {
 
     pub fn new_egg(number: i64, x: usize, y: usize, map_size: &[usize; 2], parent_number: i64, teams: &Vec<(String, Vec3)>, players: &HashMap<i64, Tantorian>) -> Option<Tantorian> {
         let mut parent_player: Option<&Tantorian> = None;
-        for (idx, player) in players {
+        for (_, player) in players {
             if player.number == number && player.state != Dead {
                 println!("Player number already attributed");
                 return None;
@@ -195,7 +195,7 @@ impl Tantorian {
             z: 0.0,
         };
         let rot = Vec3::new(0., 0., orientation.as_radian());
-        for (idx, player) in players {
+        for (_, player) in players {
             if player.team_name == team_name && player.number == number && player.state == Alive {
                 println!("New player number already attributed!");
                 return None;

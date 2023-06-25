@@ -10,7 +10,7 @@ pub enum IncantationState {
 }
 
 impl IncantationState {
-    pub fn as_string(&self) -> &'static str {
+    pub fn _as_string(&self) -> &'static str {
         match self {
             IncantationState::Running => {"running"},
             IncantationState::Success => {"success"},
@@ -21,7 +21,7 @@ impl IncantationState {
 
 pub struct Incantation {
     pub(crate) pos: Vec2,
-    pub(crate) level: u32,
+    pub(crate) _level: u32,
     pub(crate) players: Vec<i64>,
     pub(crate) state: IncantationState,
     pub(crate) since: Duration,
@@ -36,7 +36,7 @@ impl Incantation {
     ) -> Incantation {
         Incantation {
             pos,
-            level,
+            _level: level,
             players,
             state: IncantationState::Running,
             since,

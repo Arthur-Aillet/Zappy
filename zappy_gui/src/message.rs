@@ -1,8 +1,7 @@
 use std::f32::consts::PI;
 use std::time::Duration;
 use rend_ox::app::App;
-use rend_ox::glam::{EulerRot, Quat, Vec3Swizzles};
-use rend_ox::mesh::MeshDescriptor;
+use rend_ox::glam::{EulerRot, Quat};
 use rend_ox::nannou::event::Update;
 use rend_ox::Vec3;
 use crate::zappy::Zappy;

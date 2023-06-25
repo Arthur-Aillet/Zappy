@@ -189,7 +189,7 @@ impl ZappyUi {
         let mut players_present = String::from("");
         let mut eggs_present = String::from("");
 
-        for (idx, player) in players {
+        for (_, player) in players {
             if &player.current_tile.as_uvec2().as_ref().map(|x| x as usize) == selected && player.state == Alive {
                 if players_present.is_empty() {
                     players_present.push_str(&*format!("{}", player.number));
@@ -273,7 +273,7 @@ impl ZappyUi {
     pub(crate) fn team(ui :&mut Ui, players: &mut HashMap<i64, Tantorian>, team: &(String, Vec3)) -> (PlayerAction, i64, String) {
         let mut state = (PlayerAction::Nothing, 0, String::from(""));
 
-        for (idx, player) in players.iter_mut().filter(|(_, x)| {x.team_name == team.0}) {
+        for (_, player) in players.iter_mut().filter(|(_, x)| {x.team_name == team.0}) {
             egui::CollapsingHeader::new(player.number)
                 .default_open(false)
                 .show(ui, |col| {
@@ -336,7 +336,7 @@ impl ZappyUi {
                 }
             });
         if let Some(team_index) = what_team_color_regenerate {
-            for (idx, player) in players {
+            for (_, player) in players {
                 if player.team_name == teams[team_index].0 {
                     player.color = teams[team_index].1.lerp(generate_color_from_string(&format!("{}", player.number)), 0.2);
                 }
