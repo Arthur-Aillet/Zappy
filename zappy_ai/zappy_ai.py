@@ -110,7 +110,7 @@ if __name__ == "__main__":
     while (run): ## point de retour en cas de fork
         print("start")
         try:
-            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 2223, "Team1")
+            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 2224, "Team1")
         except:
             print("connection refused")
             exit(84)

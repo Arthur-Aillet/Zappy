@@ -84,8 +84,8 @@ def drop_all_food(creature: Creature, last_actions: list, ia: Session):
 def butler_loop(creature: Creature, last_actions: list, ia: Session) :
     food_spotted = 0
     creature.var += 1
-    spiral(creature.var)
-    if (distance_to_base() > 90) :
+    spiral(creature.var, ia, last_actions)
+    if (distance_to_base(creature) > 90) :
         go_to_base(creature, ia, last_actions)
         drop_all_food(creature, last_actions, ia)
     food_spotted = look_for(creature, last_actions, ia, "food")

@@ -68,4 +68,5 @@ def send_server(client, message):
     constant. If the maximum number of retries is reached and the answer is still 'ko\\n', an error
     message will be printed to the standard error output.
     """
+    print("sent to server :", message)
     client.send(bytes(message + "\n", "utf-8"))
