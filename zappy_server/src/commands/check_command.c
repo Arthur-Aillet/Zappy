@@ -41,6 +41,8 @@ void to_check_command_exist_gui(client_gui_t *client_gui,
     if (value == 0) {
         funct_server_suc(NULL, gui, com);
     }
+    free(client_gui->comd);
+    free_array((void**)client_gui->args);
 }
 
 void to_check_command_exist_ia(server_ia_t *server_ia, ia_t *ia,
@@ -59,4 +61,6 @@ void to_check_command_exist_ia(server_ia_t *server_ia, ia_t *ia,
     if (value == 0) {
         error("500 Unknow command.", 0);
     }
+    free(server_ia->comd);
+    free_array((void**)server_ia->args);
 }
