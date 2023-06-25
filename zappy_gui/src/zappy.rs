@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::f32::consts::PI;
+use std::mem::take;
 use std::thread::JoinHandle;
 use std::time::Duration;
 
@@ -17,7 +18,7 @@ use crate::map::Map;
 pub use crate::server::ServerConn;
 use crate::tantorian::PlayerState::{Alive, Egg};
 use crate::tantorian::Tantorian;
-use crate::incantation::Incantation;
+use crate::incantation::{Incantation, IncantationState};
 use crate::ui;
 use crate::ui::ZappyUi;
 
@@ -144,6 +145,11 @@ impl Zappy {
         } else {
             println!("Zappy: couldn't load arrow.obj");
         }
+    }
+
+    pub fn update_incantations(app: &mut App<Zappy>, update: &Update) {
+        let incantations = take(&mut app.user.incantations);
+        app.user.incantations = incantations.into_iter().filter(|i|i.is_remain(app.user.time_unit, update)).collect();
     }
 
     pub fn update_players(app: &mut App<Zappy>, update: &Update) {
