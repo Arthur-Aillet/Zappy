@@ -125,7 +125,7 @@ OBJ = $(SRC:.c=.o)
 MAINOBJ = $(MAIN:.c=.o)
 
 NAME = zappy_server
-CPPFLAGS = -I include/
+CPPFLAGS = -I include/ -Wall -Wextra
 LDLIBS = -lm
 CFLAGS += -Wall -Wextra
 

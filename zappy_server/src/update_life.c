@@ -89,7 +89,7 @@ void update_life(client_t *client, server_t *server, size_t freq, common_t *com)
         if (client[i].type == IA && res == 1) {
             res = 0;
             client[i].type = UNDEFINED;
-            reset_player((player_t *)client->str_cli, freq);
+            reset_player((player_t *)client[i].str_cli, freq);
             client[i].socket = close_client(client[i].socket, server);
         }
     }
