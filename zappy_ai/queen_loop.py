@@ -191,7 +191,7 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
         if (stockpile_contains(ascending_objectives(creature.level), creature.last_look[0])):
             if creature.called == False:
                 creature.confirmed = 0
-                selected = select_n_people_of_level(creature, creature.level)
+                selected = select_n_people_of_level(creature,ascending_objectives(creature.level).get("number"), ascending_objectives(creature.level).get("level") )
                 for crt in selected:
                     move_to_base(ia.client, creature.id, creature.message_index, crt.get("id"))
                     creature.message_index += 1

@@ -41,7 +41,7 @@ class Creature:
         self.orientation = 0
         self.level = 1
         self.inventory = {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
-        self.last_look = []
+        self.last_look = [""]
         self.looked = False
         self.called = False
         self.confirmed = 0

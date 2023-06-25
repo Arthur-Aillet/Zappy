@@ -41,19 +41,21 @@ def go_to(i,creature: Creature, ia:Session, last_actions: list):
         creature.pos_x, creature.pos_y = go_fowards(creature.pos_x, creature.pos_y, creature.orientation)
 
 def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
-    last_actions.append(look(ia.client))
-    if creature.looked:
-        for item in creature.last_look:
-            if item.__contains__(target):
-                return item.index
+    if creature.looked == False:
+        creature.last_look = look(ia.client)
+        creature.looked = True
+    for item in creature.last_look:
+        if item.__contains__(target):
+            return item.index
     return -1
 
 def closest_resource(creature: Creature, last_actions: list, ia: Session):
-    last_actions.append(look(ia.client))
-    if creature.looked:
-        for item in creature.last_look:
-            if item != "" and item != "player":
-                return item.index, item
+    if creature.looked == False:
+        creature.last_look = look(ia.client)
+        creature.looked = True
+    for item in creature.last_look:
+        if item != "" and item != "player":
+            return item.index, item
     return -1
 
 def spiral(i, ia: Session, last_action: list, creature: Creature):

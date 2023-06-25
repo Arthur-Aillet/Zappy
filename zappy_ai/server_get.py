@@ -12,6 +12,26 @@
 ##
 from action_type import ActionType
 from connect import send_server
+from server_action import reception
+
+def parse_look(answer):
+    """!
+    Zappy Look function
+
+    The AI will look in front of itself. (parses the answer of the server)
+
+    @param client Socket client
+
+    @return Return an array representing the field of view of the AI conformed to the
+    Zappy documentation.
+    """
+    try:
+        answer = answer[4:-6].split(", ")
+        for i in range(len(answer)):
+            answer[i] = answer[i].split()
+        return answer
+    except:
+        return []
 
 def look(client):
     """!
@@ -25,23 +45,33 @@ def look(client):
     Zappy documentation.
     """
     send_server(client, "Look")
-    return ActionType.LOOK
+    return parse_look(reception(client))
 
-def parse_look(answer):
+
+def parse_inventory(answer):
     """!
-    Zappy Look function
+    Zappy inventory function
 
-    The AI will look in front of itself. (parses the answer of the server)
+    Gives the actual inventory of the AI. (parses the answer of the server)
 
     @param client Socket client
 
-    @return Return an array representing the field of view of the AI conformed to the
-    Zappy documentation.
+    @return Return a dict representing the inventory of the AI for each type of ressource,
+    conformed to the Zappy documentation.
     """
-    answer = answer[4:-6].split(", ")
-    for i in range(len(answer)):
-        answer[i] = answer[i].split()
-    return answer
+    try:
+        answer = str(answer)[4:-6].split(", ")
+        if len(answer) < 5:
+            return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
+        answer = str(answer)[4:-5].replace(',', '').split()
+        if len(answer) % 2 != 0:
+            return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
+        output = {}
+        for i in range(0, len(answer), 2):
+            output[answer[i]] = int(answer[i + 1])
+        return output
+    except:
+        return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
 
 def inventory(client):
     """!
@@ -55,26 +85,5 @@ def inventory(client):
     conformed to the Zappy documentation.
     """
     send_server(client, "Inventory")
-    return ActionType.INVENTORY
+    return parse_inventory(reception(client))
 
-def parse_inventory(answer):
-    """!
-    Zappy inventory function
-
-    Gives the actual inventory of the AI. (parses the answer of the server)
-
-    @param client Socket client
-
-    @return Return a dict representing the inventory of the AI for each type of ressource,
-    conformed to the Zappy documentation.
-    """
-    answer = str(answer)[4:-6].split(", ")
-    if len(answer) < 5:
-        return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
-    answer = str(answer)[4:-5].replace(',', '').split()
-    if len(answer) % 2 != 0:
-        return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
-    output = {}
-    for i in range(0, len(answer), 2):
-        output[answer[i]] = int(answer[i + 1])
-    return output

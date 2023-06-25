@@ -39,12 +39,15 @@ def get_validation(message:str, creature: Creature):
             return id, number, False
 
 def getmsginfo(message: str, creature: Creature):
-    splitted = re.split(",||", message)
-    result = messageinfo()
-    result.direction = splitted[0].split(" ")[1]
-    result.id, result.number, result.valid = get_validation(splitted[1], creature)
-    result.text = splitted[2]
-    return result
+    try:
+        splitted = re.split(",||", message)
+        result = messageinfo()
+        result.direction = splitted[0].split(" ")[1]
+        result.id, result.number, result.valid = get_validation(splitted[1], creature)
+        result.text = splitted[2]
+        return result
+    except:
+        return messageinfo()
 
 def role_call(client, id, nb):
     """!
