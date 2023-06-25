@@ -153,7 +153,7 @@ if __name__ == "__main__":
         print("start")
         unexpected.init()
         try:
-            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 6666, "Team1")
+            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 4242, "Team1")
         except:
             print("connection refused")
             exit(84)

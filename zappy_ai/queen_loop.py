@@ -197,8 +197,6 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
                     creature.message_index += 1
                 creature.called = True
     if messageinfo.valid and messageinfo.text.startswith("bien arrive"):
-        take_this(ia.client, creature.id, creature.message_index, dict_to_str(objectives(ascending_objectives(creature.level).get("level"))))
-        creature.message_index += 1
         creature.confirmed += 1
     if creature.called == True and creature.confirmed == ascending_objectives(creature.level).get("number"):
         last_Action.append(ritual_in(ia.client, creature.id, creature.message_index, 11))

@@ -70,4 +70,3 @@ def send_server(client, message):
     """
     print("sent to server :", message)
     client.send(bytes(message + "\n", "utf-8"))
-    sleep(0.08)
