@@ -7,6 +7,15 @@
 
 #include "zappy.h"
 
+/**
+ @brief retrieve the number of resources according to their type on the tile
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui: common structure of all server data
+ @param size_t x: position x on the tiles
+ @param size_t y: position y on the tiles
+ @param char *buf_x: receives the new argument to be put in the response to the gui
+ @return void
+**/
 static void funct_ressources_on_tiles(gui_t *gui, size_t x,
                                         size_t y, char *buf_x)
 {
@@ -23,6 +32,14 @@ static void funct_ressources_on_tiles(gui_t *gui, size_t x,
     strcat(GUI_OCTETS, "\n");
 }
 
+/**
+ @brief prepare the message for the reply to the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui: common structure of all server data
+ @param char *buf_x: position x on the tiles
+ @param char *buf_y: position y on the tiles
+ @return void
+**/
 static void funct_post_tiles(char *buf_x, char *buf_y, gui_t *gui)
 {
     GUI_SIZE += 7 + strlen(buf_x) + strlen(buf_y);
@@ -37,6 +54,14 @@ static void funct_post_tiles(char *buf_x, char *buf_y, gui_t *gui)
     strcat(GUI_OCTETS, buf_y);
 }
 
+/**
+ @brief prepare response for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui: common structure of all server data
+ @param size_t x: position x on the tiles
+ @param size_t y: position y on the tiles
+ @return void
+**/
 void funct_prepare_response(gui_t *gui, size_t x, size_t y)
 {
     char buf_y[256];
@@ -48,6 +73,14 @@ void funct_prepare_response(gui_t *gui, size_t x, size_t y)
     funct_ressources_on_tiles(gui, x, y, buf_x);
 }
 
+/**
+ @brief bct command response to gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the gui structure
+ @return void
+**/
 void funct_server_bct(char **args, void *info, common_t *common)
 {
     (void)common;

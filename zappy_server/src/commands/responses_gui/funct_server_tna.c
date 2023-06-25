@@ -8,6 +8,13 @@
 #include "zappy.h"
 #include <string.h>
 
+/**
+ @brief prepare response for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui: common structure of all server data
+ @param common_t *com: the arguments you need to answer the gui
+ @return void
+**/
 static void funct_prepare_res(gui_t *gui, common_t *com)
 {
     GUI_SIZE = 1;
@@ -31,6 +38,14 @@ static void funct_prepare_res(gui_t *gui, common_t *com)
     GUI_OCTETS[GUI_SIZE - 1] = '\0';
 }
 
+/**
+ @brief tna command response to gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the gui structure
+ @return void
+**/
 void funct_server_tna(char **args, void *info, common_t *com)
 {
     (void)args;

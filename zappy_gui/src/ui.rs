@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fmt::Display;
 use std::time::Duration;
 use rend_ox::nannou_egui::egui::{self, CtxRef, Ui};
@@ -164,7 +165,7 @@ impl ZappyUi {
         ui.end_row();
     }
 
-    fn tile_content(grid :&mut Ui, map: &crate::map::Map, selected: &[usize; 2], players: &Vec<Tantorian>) {
+    fn tile_content(grid :&mut Ui, map: &crate::map::Map, selected: &[usize; 2], players: &HashMap<i64, Tantorian>) {
         ZappyUi::display_stat(grid,"Food", map.tiles[selected[0]][selected[1]].q0.len());
         ZappyUi::display_stat(grid,"Linemate", map.tiles[selected[0]][selected[1]].q1.len());
         ZappyUi::display_stat(grid,"Deraumere", map.tiles[selected[0]][selected[1]].q2.len());
@@ -176,7 +177,7 @@ impl ZappyUi {
         let mut players_present = String::from("");
         let mut eggs_present = String::from("");
 
-        for player in players {
+        for (idx, player) in players {
             if &player.current_tile.as_uvec2().as_ref().map(|x| x as usize) == selected && player.state == Alive {
                 if players_present.is_empty() {
                     players_present.push_str(&*format!("{}", player.number));
@@ -224,7 +225,7 @@ impl ZappyUi {
         state
     }
 
-    pub(crate) fn tiles(&mut self, ctx: &CtxRef, auto_refresh: &mut bool, refresh_rate: &mut f32, map: &crate::map::Map, is_active: bool, players: &Vec<Tantorian>) -> bool {
+    pub(crate) fn tiles(&mut self, ctx: &CtxRef, auto_refresh: &mut bool, refresh_rate: &mut f32, map: &crate::map::Map, is_active: bool, players: &HashMap<i64, Tantorian>) -> bool {
         let mut state = false;
         egui::Window::new("Map").vscroll(true).enabled(!is_active).show(
             ctx, |ui| {
@@ -257,10 +258,10 @@ impl ZappyUi {
     }
 
 
-    pub(crate) fn team(ui :&mut Ui, players: &mut Vec<Tantorian>, team: &(String, Vec3)) -> (PlayerAction, i64, String) {
+    pub(crate) fn team(ui :&mut Ui, players: &mut HashMap<i64, Tantorian>, team: &(String, Vec3)) -> (PlayerAction, i64, String) {
         let mut state = (PlayerAction::Nothing, 0, String::from(""));
 
-        for player in players.iter_mut().filter(|x| {x.team_name == team.0}) {
+        for (idx, player) in players.iter_mut().filter(|(_, x)| {x.team_name == team.0}) {
             egui::CollapsingHeader::new(player.number)
                 .default_open(false)
                 .show(ui, |col| {
@@ -299,7 +300,7 @@ impl ZappyUi {
         state
     }
 
-    pub(crate) fn players(&mut self, ctx: &CtxRef, players: &mut Vec<Tantorian>, teams: &mut Vec<(String, Vec3)>, auto_refresh: &mut bool, refresh_rate: &mut f32, is_active: bool) -> (PlayerAction, i64, String) {
+    pub(crate) fn players(&mut self, ctx: &CtxRef, players: &mut HashMap<i64, Tantorian>, teams: &mut Vec<(String, Vec3)>, auto_refresh: &mut bool, refresh_rate: &mut f32, is_active: bool) -> (PlayerAction, i64, String) {
         let mut state = (PlayerAction::Nothing, 0, String::from(""));
         let mut what_team_color_regenerate: Option<usize> = None;
         egui::Window::new("Players")
@@ -323,7 +324,7 @@ impl ZappyUi {
                 }
             });
         if let Some(team_index) = what_team_color_regenerate {
-            for player in players {
+            for (idx, player) in players {
                 if player.team_name == teams[team_index].0 {
                     player.color = teams[team_index].1.lerp(generate_color_from_string(&format!("{}", player.number)), 0.2);
                 }

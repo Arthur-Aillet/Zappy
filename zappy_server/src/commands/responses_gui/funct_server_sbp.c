@@ -8,6 +8,14 @@
 #include "zappy.h"
 #include <string.h>
 
+/**
+ @brief sbp command response to gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the gui structure
+ @return void
+**/
 void funct_server_sbp(char **args, void *info, common_t *common)
 {
     (void)args;

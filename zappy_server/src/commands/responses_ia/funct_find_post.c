@@ -7,6 +7,15 @@
 
 #include "zappy.h"
 
+/**
+ @brief check if an egg is on the same size as the ai that made the request
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param int tmp: lets you know if an egg has been found
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: structure ia
+ @param int i: team number
+ @return int
+**/
 static int find_post_egg(int tmp, common_t *com, ia_t *ia, int i)
 {
     for (size_t j = 0; j < com->teams[i].nb_eggs; j++) {
@@ -21,6 +30,13 @@ static int find_post_egg(int tmp, common_t *com, ia_t *ia, int i)
     return tmp;
 }
 
+/**
+ @brief check if an ai is on the same size as the ai that made the request
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the arguments you need to answer the gui
+ @return int
+**/
 int find_post(common_t *com, ia_t *ia)
 {
     int tmp = 1;
