@@ -21,6 +21,15 @@ static int is_valid_opt_gui(size_t i, gui_t *gui,
 static int is_valid_opt_ia(size_t i, ia_t *ia,
         server_ia_t *server_ia, common_t *com)
 {
+    int count = 0;
+    msg_queue_t *msg = ia->msg_queue;
+    while (msg != NULL) {
+        count++;
+        msg = msg->next_msg;
+    }
+    if (count == 10) {
+        return error("the maximum number of orders possible is reached", 1);
+    }
     if (strcmp(server_ia->comd, COMMAND_GESTION_IA[i].comd) == 0) {
         COMMAND_GESTION_IA[i].handler(ia, server_ia->args, com);
         return 1;
