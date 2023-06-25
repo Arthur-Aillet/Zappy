@@ -1,4 +1,10 @@
-zappy_server
+zappy_server/zappy_server
 *.o
 .vscode
+.clion
+.idea
+*.swp
+__pycache__
+zappy_ai/zappy_server
+html/
 vgcore*
