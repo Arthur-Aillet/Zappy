@@ -113,6 +113,7 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
         if messageinfo.valid:
             if messageinfo.text.startswith("role call"):
                 status_report(ai.client, creature.id, creature.message_index, creature.type, creature.level)
+                creature.message_index += 1
             if messageinfo.text.__contains__(" deviens "):
                 change_split = messageinfo.text.split(" ")
                 if creature.id == change_split[0] :
@@ -138,6 +139,7 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
                 enemy_y = enemy_split[3]
                 if enemy_x == creature.pos_x and enemy_y == creature.pos_y:
                     dont_shoot(ai.client, creature.id, creature.message_index)
+                    creature.message_index += 1
             if messageinfo.text.startswith("base moved to"):
                 move_split = messageinfo.text.split(" ")
                 creature.spawn_pos_x = move_split[3]

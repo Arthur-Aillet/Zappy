@@ -13,6 +13,16 @@ from sys import stderr
 from communication import *
 from datatypes import Creature, Session
 
+def go_fowards(x, y, direction):
+    if direction == 0:
+        return x, y + 1
+    if direction == 1:
+        return x + 1, y
+    if direction == 2:
+        return x, y - 1
+    if direction == 3:
+        return x - 1, y
+
 def objectives(i: int):
     if (i == 0):
         return {'food': 0, 'linemate': 1, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
@@ -61,6 +71,7 @@ def go_to(i,creature: Creature, ia:Session, last_actions: list):
         creature.orientation %= 4
     for n in range(abs(row_max - (i))):
         last_actions.append(fowards(ia.client))
+        creature.pos_x, creature.pos_y = go_fowards(creature.pos_x, creature.pos_y, creature.orientation)
 
 def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
     last_actions.append(look(ia.client))
@@ -69,13 +80,6 @@ def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
             if item.__contains__(target):
                 return item.index
     return -1
-
-def spiral(i, ia: Session, last_action: list):
-    while i > 0:
-        i -= 1
-        last_action.append(fowards(ia.client))
-    last_action.append(right(ia.client))
-    return False
 
 def distance_to_base(creature: Creature):
     return abs(creature.pos_x - creature.spawn_pos_x) + abs(creature.pos_y - creature.spawn_pos_y)
@@ -120,8 +124,6 @@ def closest_resource(creature: Creature, last_actions: list, ia: Session):
     last_actions.append(look(ia.client))
     if creature.looked:
         for item in creature.last_look:
-            if item == 'enemy':
-                last_actions.append(broadcast(ia.client, "enemy_spotted" + creature.pos_x + " " + creature.pos_y))
             if item != "" and item != "player":
                 return item.index, item
     return -1
@@ -133,10 +135,12 @@ def check_food(creature: Creature, last_actions: list, ia: Session):
 def gatherer_loop(creature: Creature, last_actions: list, ia: Session) :
     resource_spotted = -1
     last_actions.append(fowards(ia.client))
+    creature.pos_x, creature.pos_y = go_fowards(creature.pos_x, creature.pos_y, creature.orientation)
     creature.var += 1
     if (creature.var % creature.map.size_x == 0) :
         last_actions.append(left(ia.client))
         last_actions.append(fowards(ia.client))
+        creature.pos_x, creature.pos_y = go_fowards(creature.pos_x, creature.pos_y, creature.orientation)
         last_actions.append(right(ia.client))
     resource_spotted, tile: str = closest_resource(creature, last_actions, ia, "")
     if (resource_spotted != -1) :

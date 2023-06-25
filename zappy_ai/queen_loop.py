@@ -79,6 +79,7 @@ def objectives(i: int):
 
 def parrot(ai: Session, creature: Creature, last_action: list):
     last_action.append(broadcast(ai.client, creature.strvar))
+    creature.message_index += 1
 
 def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
     last_actions.append(look(ia.client))
@@ -155,6 +156,64 @@ def take_new_role_in_account(msg_info: str, creature: Creature):
             "id": msg_info.id,
             "messages": msg_info.number
         })
+
+def role_weighting(creatures: list[dict[str, int]], last_action: list, ai: Session, ordering_creature: Creature):
+    queen = 0
+    butler = 0
+    warrior = 0
+    gatherer = 0
+    total = 0
+    for creature in creatures:
+        if creature.get("role") == Creature.Types.QUEEN:
+            queen += 1
+        if creature.get("role") == Creature.Types.BUTLER:
+            butler += 1
+        if creature.get("role") == Creature.Types.WARRIOR:
+            warrior += 1
+        if creature.get("role") == Creature.Types.GATHERER:
+            gatherer += 1
+    if len(creatures) > 5 :
+        while queen > 1:
+            selected: dict[str, int]
+            for creature in creatures:
+                if creature.get("role") == Creature.Types.QUEEN:
+                    selected = creature
+            change_profession(ai.client, ordering_creature.id, ordering_creature.message_index, creature.get("id"), Creature.Types.GATHERER)
+            ordering_creature.message_index += 1
+            queen -= 1
+        while butler > 1:
+            selected: dict[str, int]
+            for creature in creatures:
+                if creature.get("role") == Creature.Types.BUTLER:
+                    selected = creature
+            change_profession(ai.client, ordering_creature.id, ordering_creature.message_index, creature.get("id"), Creature.Types.GATHERER)
+            ordering_creature.message_index += 1
+            butler -= 1
+        while butler < 1:
+            selected: dict[str, int]
+            for creature in creatures:
+                if creature.get("role") != Creature.Types.BUTLER and creature.get("role") != Creature.Types.QUEEN:
+                    selected = creature
+            change_profession(ai.client, ordering_creature.id, ordering_creature.message_index, creature.get("id"), Creature.Types.BUTLER)
+            ordering_creature.message_index += 1
+            butler += 1
+        while warrior / warrior + gatherer > 0.3:
+            selected: dict[str, int]
+            for creature in creatures:
+                if creature.get("role") == Creature.Types.WARRIOR:
+                    selected = creature
+            change_profession(ai.client, ordering_creature.id, ordering_creature.message_index, creature.get("id"), Creature.Types.GATHERER)
+            ordering_creature.message_index += 1
+            warrior -= 1
+        while warrior / warrior + gatherer < 0.2:
+            selected: dict[str, int]
+            for creature in creatures:
+                if creature.get("role") == Creature.Types.GATHERER:
+                    selected = creature
+            change_profession(ai.client, ordering_creature.id, ordering_creature.message_index, creature.get("id"), Creature.Types.WARRIOR)
+            ordering_creature.message_index += 1
+            warrior += 1
+
 def queen_loop(creature: Creature, last_Action: list, ia: Session, message: messageinfo):
     creature.var += 1
     creature.var %= 20;
@@ -178,8 +237,7 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
                 # call the closest level apropriate people to base_pos. priority on butler then gatherers then warriors then babys then queen
                 creature.called = True
     if creature.called == True and creature.confirmed == ascending_objectives(creature.level).get("number"):
-        pick_up_list()
-        last_Action.append(ritual_in(ia.client, creature.id, creature.message_index))
+        last_Action.append(ritual_in(ia.client, creature.id, creature.message_index, 2))
         creature.message_index += 1
     if message.valid and message.text.startswith("here's info"):
         orientation = creature.orientation
@@ -191,14 +249,11 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
             orientation -= 3
         orientation %= 4
         give_info(ia.client, creature.id, creature.message_index, message.id, creature, orientation, Creature.Types.BUTLER)
+        creature.message_index += 1
     if creature.var == 10:
         last_Action.append(role_call(ia.client, creature.id, creature.message_index))
         creature.message_index += 1
-        # get responses;
-        # if (percentages are not good)
-        #     take random people from too numerous groups and change their profession
-    # if (someone need info)
-    #     say infos
+        role_weighting(creature.other_creatures)
     if message.valid == False:
         creature.strvar = message.text
     return False

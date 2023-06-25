@@ -26,7 +26,7 @@ class Creature:
         WARRIOR = 4
 
     def __init__(self):
-        self.type = Creature.Types.QUEEN
+        self.type = Creature.Types.BABY
         self.spawn_pos_x = 0
         self.spawn_pos_y = 0
         self.pos_x = 0

@@ -14,6 +14,16 @@ from datatypes import Creature, Session
 from communication import *
 from common import *
 
+def go_fowards(x, y, direction):
+    if direction == 0:
+        return x, y + 1
+    if direction == 1:
+        return x + 1, y
+    if direction == 2:
+        return x, y - 1
+    if direction == 3:
+        return x - 1, y
+
 def go_to(i,creature: Creature, ia:Session, last_actions: list):
     row_max = 1
     while i < row_max :
@@ -29,6 +39,7 @@ def go_to(i,creature: Creature, ia:Session, last_actions: list):
         creature.orientation %= 4
     for n in range(abs(row_max - (i))):
         last_actions.append(fowards(ia.client))
+        creature.pos_x, creature.pos_y = go_fowards(creature.pos_x, creature.pos_y, creature.orientation)
 
 def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
     last_actions.append(look(ia.client))
@@ -38,11 +49,14 @@ def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
                 return item.index
     return -1
 
-def spiral(i, ia: Session, last_action: list):
+def spiral(i, ia: Session, last_action: list, creature: Creature):
     while i > 0:
         i -= 1
         last_action.append(fowards(ia.client))
+        creature.pos_x, creature.pos_y = go_fowards(creature.pos_x, creature.pos_y, creature.orientation)
     last_action.append(right(ia.client))
+    creature.orientation += 1
+    creature.orientation %= 4
     return False
 
 def distance_to_base(creature: Creature):
@@ -84,7 +98,7 @@ def drop_all_food(creature: Creature, last_actions: list, ia: Session):
 def butler_loop(creature: Creature, last_actions: list, ia: Session) :
     food_spotted = 0
     creature.var += 1
-    spiral(creature.var, ia, last_actions)
+    spiral(creature.var, ia, last_actions, creature)
     if (distance_to_base(creature) > 90) :
         go_to_base(creature, ia, last_actions)
         drop_all_food(creature, last_actions, ia)
