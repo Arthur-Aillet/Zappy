@@ -427,7 +427,7 @@ impl Zappy {
     fn add_incantation(&mut self, command: String, at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
-        if args.len() != 2 {
+        if args.len() < 4 {
             println!("pic: wrong number of arguments");
         } else {
             let x : Result<u32, _> = args[1].to_string().parse();
@@ -435,6 +435,7 @@ impl Zappy {
             let level : Result<u32, _> = args[3].to_string().parse();
             let mut players : Vec<i64> = vec![];
             for arg in &args[4..] {
+                println!("pic: player: {}:  {:?}", arg, arg.to_string().parse() as Result<i64, _>);
                 match arg.to_string().parse() {
                     Ok(p) => { players.push(p)}
                     _ => { println!("pic: invalid player number"); return; }
@@ -457,7 +458,7 @@ impl Zappy {
     fn end_incantation(&mut self, command: String, at: Duration) {
         let args: Vec<&str> = command.split(" ").collect();
 
-        if args.len() != 2 {
+        if args.len() != 4 {
             println!("pic: wrong number of arguments");
         } else {
             let x : Result<u32, _> = args[1].to_string().parse();

@@ -145,6 +145,11 @@ impl Zappy {
         } else {
             println!("Zappy: couldn't load arrow.obj");
         }
+        if let Ok(md) = app.load_mesh("./obj/sparkles.obj") {
+            app.user.magic_mesh = Some(md);
+        } else {
+            println!("Zappy: couldn't load sparkles.obj");
+        }
     }
 
     pub fn update_incantations(app: &mut App<Zappy>, update: &Update) {
@@ -241,8 +246,8 @@ impl Zappy {
         if let Some(mesh) = &app.user.magic_mesh {
             for incantation in &app.user.incantations {
                 for i in &incantation.players {
-                    if let Some(player) = app.user.players.get(i as &i64) {
-                        app.draw_at(mesh, Vec3::new(0.1, 1.5, 0.9), player.pos, Vec3::ZERO, Vec3::ONE);
+                    if let Some(player) = app.user.players.get(i) {
+                        app.draw_at(mesh, player.color * 2., player.pos, Vec3::ZERO, Vec3::ONE);
                     }
                 }
             }
@@ -376,6 +381,7 @@ pub(crate) fn zappy_update(
     rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
     following(nannou_app, zappy);
     Zappy::update_players(zappy, &update);
+    Zappy::update_incantations(zappy, &update);
     Zappy::update_messages(zappy, &update);
     Zappy::update_arrows(zappy, &update);
     zappy.user.interpret_commands(update.since_start);
