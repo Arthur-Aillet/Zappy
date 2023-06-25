@@ -6,7 +6,7 @@ use rend_ox::Vec3;
 
 use crate::tantorian::{generate_color_from_string, Tantorian};
 use crate::tantorian::PlayerState::{Alive, Egg};
-use crate::ui::State::{Connect, Disconnect, Nothing};
+use crate::ui::State::{Connect, Disconnect, Launching, Nothing, SpawnAI};
 
 pub(crate) struct ZappyUi {
     pub selected_tile: Option<[usize; 2]>,
@@ -20,6 +20,8 @@ pub(crate) enum State {
     Nothing,
     Connect,
     Disconnect,
+    Launching,
+    SpawnAI,
 }
 
 #[derive(PartialEq)]
@@ -75,19 +77,33 @@ impl ZappyUi {
             .enabled(!is_active)
             .resizable(false)
             .show(ctx, |ui| {
+
                 ui.add(egui::TextEdit::singleline(port).hint_text("port"));
                 ui.add(egui::TextEdit::singleline(hostname).hint_text("hostname"));
+                ui.add_space(10.);
+
                 if status {
                     ui.add(egui::Label::new(format!("Current status: Connected")));
+                } else {
+                    ui.add(egui::Label::new(format!("Current status: Disconnected")));
+                }
+                egui::Grid::new("actions").num_columns(2).show(ui, |ui| {
+                if status {
                     if ui.add(egui::Button::new("Disconnect")).clicked() {
                         state = Disconnect;
                     }
+                    if ui.add(egui::Button::new("Add ai")).clicked() {
+                        state = SpawnAI;
+                    }
                 } else {
-                    ui.add(egui::Label::new(format!("Current status: Disconnected")));
                     if ui.add(egui::Button::new("Connect")).clicked() {
                         state = Connect;
                     }
+                    if ui.add(egui::Button::new("Launch")).clicked() {
+                        state = Launching;
+                    }
                 }
+                });
                 ui.add(egui::Label::new("________________________________________________").strong());
                 ui.add_space(10.);
                 egui::ScrollArea::vertical()
