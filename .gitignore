@@ -1,5 +1,4 @@
-.bins
-.subjects
+zappy_server
+*.o
 .vscode
-.clion
-.idea
+vgcore*

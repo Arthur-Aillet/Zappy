@@ -7,6 +7,14 @@
 
 #include "zappy.h"
 
+/**
+ @brief receive and prepare the elements needed to prepare the order that will be processed by the server for the command msz
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui : structure of gui
+ @param char **args: the arguments receive with the command gui -> NULL because there are no parameters for this command
+ @param common_t com : structure commun -> this structure gathers all the server data -> not use
+ @return void
+**/
 void funct_client_msz(gui_t *gui, char **args, common_t *com)
 {
     (void)args;

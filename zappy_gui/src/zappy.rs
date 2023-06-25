@@ -1,19 +1,23 @@
-use rend_ox::app::App;
-use rend_ox::Vec3;
-use rend_ox::mesh::MeshDescriptor;
-use crate::interpreter::{create_hash_function, ServerFunction};
 use std::collections::HashMap;
 use std::f32::consts::PI;
 use std::thread::JoinHandle;
 use std::time::Duration;
-use rend_ox::glam::Vec2;
+
+use rend_ox::app::App;
+use rend_ox::{Mat4, Vec3};
+use rend_ox::mesh::MeshDescriptor;
+use rend_ox::glam::{EulerRot, Quat, Vec2};
 use rend_ox::nannou::event::Update;
 use rend_ox::nannou_egui::egui::CtxRef;
+use rend_ox::material::MaterialDescriptor;
 
+use crate::message::{Arrows, Message};
+use crate::interpreter::{create_hash_function, ServerFunction};
 use crate::map::Map;
 pub use crate::server::ServerConn;
 use crate::tantorian::PlayerState::{Alive, Egg};
 use crate::tantorian::Tantorian;
+use crate::incantation::Incantation;
 use crate::ui;
 use crate::ui::ZappyUi;
 
@@ -21,10 +25,15 @@ pub struct Zappy {
     pub(crate) map: Map,
     pub(crate) players: Vec<Tantorian>,
     pub(crate) teams: Vec<(String, Vec3)>,
+    pub(crate) incantations: Vec<Incantation>,
     pub(crate) server: Option<ServerConn>,
     pub(crate) ui: ZappyUi,
+    pub(crate) messages: Vec<Message>,
+    pub(crate) arrows: Vec<Arrows>,
+    pub(crate) message_mesh: Option<MeshDescriptor>,
     pub(crate) tantorian_mesh: Option<MeshDescriptor>,
     pub(crate) egg_mesh: Option<MeshDescriptor>,
+    pub(crate) arrow_mesh: Option<MeshDescriptor>,
     pub(crate) functions: HashMap<String, ServerFunction>,
     pub(crate) time_unit: f32,
     pub(crate) thread_handle: Option<JoinHandle<()>>,
@@ -38,28 +47,6 @@ pub struct Zappy {
     pub(crate) last_player_update: Duration,
     pub(crate) winner_team: Option<String>,
     pub(crate) following: Option<(i64, String)>,
-}
-
-fn _hsv_to_rgb(source: Vec3) -> Vec3
-{
-    let mut r = ((source.x) * 1. * std::f32::consts::PI).cos();
-    let mut g = ((source.x - (1. / 3.)) * 1. * std::f32::consts::PI).cos();
-    let mut b = ((source.x - (2. / 3.)) * 1. * std::f32::consts::PI).cos();
-
-    // r = source.y * r + source.y - 1.;
-    // g = source.y * g + source.y - 1.;
-    // b = source.y * b + source.y - 1.;
-
-    r = source.z * r;
-    g = source.z * g;
-    b = source.z * b;
-
-    // ((source.x) * 2. * std::f32::consts::PI).cos();
-    // ((source.x - (1. / 3.)) * 2. * std::f32::consts::PI).cos();
-    // ((source.x - (2. / 3.)) * 2. * std::f32::consts::PI).cos();
-
-
-    Vec3::new(r, g, b)
 }
 
 fn _hsv2rgb(source: Vec3) -> Vec3/* h,s,v) */ {
@@ -88,10 +75,15 @@ impl Zappy {
             map: Map::new(0, 0),
             players: vec![],
             teams: vec![],
+            incantations: vec![],
             server: None,
             ui: ZappyUi::new(),
+            messages: vec![],
+            arrows: vec![],
+            message_mesh: None,
             tantorian_mesh: None,
             egg_mesh: None,
+            arrow_mesh: None,
             functions: create_hash_function(),
             time_unit: 100.,
             thread_handle: None,
@@ -110,32 +102,45 @@ impl Zappy {
 
     pub fn load(app: &mut App<Zappy>) {
         app.user.map.resize(10, 10);
-        if let Ok(mut graphics) = app.graphics.try_borrow_mut() {
-            if let Ok(mut md) = graphics.load_mesh("./obj/plane.obj") {
-                if let Ok(shader) = graphics.load_shader("./src/shaders/map.wgsl") {
-                    graphics.bind_shader_to_mesh(&mut md, &shader);
-                } else {
-                    println!("Zappy: couldn't load map shader ");
-                }
-                app.user.map.mesh = Some(md);
+        if let Ok(mut md) = app.load_mesh("./obj/plane.obj") {
+            let mut mat = MaterialDescriptor::new();
+            mat.shader = Some("./src/shaders/map.wgsl".into());
+            mat.maps.push("./textures/green-grass.png".into());
+            if let Ok(material) = app.load_material(mat) {
+                // if let Ok(shader) = app.load_shader("./src/shaders/map.wgsl") {
+                app.bind_material_to_mesh(&mut md, &material);
             } else {
-                println!("Zappy: couldn't load plane.obj");
+                println!("Zappy: couldn't load map shader ");
             }
-            if let Ok(md) = graphics.load_mesh("./obj/rock.obj") {
-                app.user.map.rock_mesh = Some(md);
-            } else {
-                println!("Zappy: couldn't load rock.obj");
-            }
-            if let Ok(md) = graphics.load_mesh("./obj/batgnome.obj") {
-                app.user.tantorian_mesh = Some(md);
-            } else {
-                println!("Zappy: couldn't load batgnome.obj");
-            }
-            if let Ok(md) = graphics.load_mesh("./obj/egg.obj") {
-                app.user.egg_mesh = Some(md);
-            } else {
-                println!("Zappy: couldn't load egg.obj");
-            }
+            app.user.map.mesh = Some(md);
+        } else {
+            println!("Zappy: couldn't load plane.obj");
+        }
+        if let Ok(md) = app.load_mesh("./obj/rock.obj") {
+            app.user.map.rock_mesh = Some(md);
+        } else {
+            println!("Zappy: couldn't load rock.obj");
+        }
+        if let Ok(md) = app.load_mesh("./obj/batgnome.obj") {
+            println!("Zappy: loaded bat.obj");
+            app.user.tantorian_mesh = Some(md);
+        } else {
+            println!("Zappy: couldn't load batgnome.obj");
+        }
+        if let Ok(md) = app.load_mesh("./obj/egg.obj") {
+            app.user.egg_mesh = Some(md);
+        } else {
+            println!("Zappy: couldn't load egg.obj");
+        }
+        if let Ok(md) = app.load_mesh("./obj/message.obj") {
+            app.user.message_mesh = Some(md);
+        } else {
+            println!("Zappy: couldn't load message.obj");
+        }
+        if let Ok(md) = app.load_mesh("./obj/arrow.obj") {
+            app.user.arrow_mesh = Some(md);
+        } else {
+            println!("Zappy: couldn't load arrow.obj");
         }
     }
 
@@ -150,10 +155,8 @@ impl Zappy {
                         progress = 1. / modifier;
                         player.start_movement = None;
                     }
-
                     let mut new_rot: f32 = player.orientation.as_radian();
                     new_rot = lerp(new_rot, player.orientation.as_radian() + loops * PI * 2., (progress * modifier).powi(3));
-
                     player.rotation = Vec3 {
                         x: PI / 2.,
                         y: new_rot,
@@ -189,29 +192,44 @@ impl Zappy {
     }
 
     pub fn render(app: &mut App<Zappy>) {
-        let player_mesh : &MeshDescriptor;
-        if let Some(mesh) = &app.user.tantorian_mesh {
-            player_mesh = mesh
-        } else {
-            return;
-        }
-        let egg_mesh : &MeshDescriptor;
-        if let Some(mesh) = &app.user.egg_mesh {
-            egg_mesh = mesh
-        } else {
-            return;
-        }
+        Map::render(app);
+        let player_instances : Vec<Mat4> = app.user.players
+            .iter()
+            .filter(|p|p.state == Alive)
+            .map(|p|
+                Mat4::from_scale_rotation_translation(
+                    Vec3::new(0.333, 0.333, 0.333),
+                    Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z),
+                    p.pos))
+            .collect();
+        let egg_instances : Vec<Mat4> = app.user.players
+            .iter()
+            .filter(|p|p.state == Egg)
+            .map(|p|
+                Mat4::from_scale_rotation_translation(
+                    Vec3::new(0.333, 0.333, 0.333),
+                    Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z),
+                    p.pos))
+            .collect();
+        let player_colors : Vec<Vec3> = app.user.players.iter().filter(|p|p.state == Alive).map(|p| p.color).collect();
+        let egg_colors : Vec<Vec3> = app.user.players.iter().filter(|p|p.state == Egg).map(|p| p.color).collect();
 
-        for player in &app.user.players {
-            if player.state == Alive {
-                app.draw_at(player_mesh, player.color.clone(), player.pos.clone(), player.rotation.clone(), Vec3::new(0.333, 0.333, 0.333));
-            } else if player.state == Egg {
-                let mut position = player.pos.clone();
-                position.z -= 0.333;
-                app.draw_at(egg_mesh, player.color.clone(), position, player.rotation.clone(), Vec3::new(0.333, 0.333, 0.333));
+        if let Some(player_mesh) = &app.user.tantorian_mesh {
+            app.draw_instances(player_mesh, player_instances.clone(), player_colors.clone());
+        }
+        if let Some(egg_mesh) = &app.user.tantorian_mesh {
+            app.draw_instances(egg_mesh, egg_instances.clone(), egg_colors.clone());
+        }
+        if let Some(mesh) = &app.user.message_mesh {
+            for message in &app.user.messages {
+                app.draw_at(mesh, message.color, message.pos, Vec3::new(0., 0., 0.), message.scale);
             }
         }
-        Map::render(app);
+        if let Some(mesh) = &app.user.arrow_mesh {
+            for arrow in &app.user.arrows {
+                app.draw_at(mesh, arrow.color, arrow.pos, arrow.rot, arrow.scale);
+            }
+        }
     }
 }
 
@@ -340,9 +358,11 @@ pub(crate) fn zappy_update(
     }
     rend_ox::camera_controller::default_camera(nannou_app, zappy, &update);
     following(nannou_app, zappy);
-    Zappy::render(zappy);
     Zappy::update_players(zappy, &update);
+    Zappy::update_messages(zappy, &update);
+    Zappy::update_arrows(zappy, &update);
     zappy.user.interpret_commands(update.since_start);
     ask_for_update(&mut zappy.user, update.since_start);
+    Zappy::render(zappy);
     display_ui(zappy, update.since_start, ctx);
 }

@@ -7,6 +7,14 @@
 
 #include "zappy.h"
 
+/**
+ @brief find a ia for the incantation continuation
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: structure of ia
+ @param common_t *com: the arguments receive with the command ia
+ @param team_t *team: team where we check the ai
+ @return int
+**/
 static int to_find_ia_incantation_bis(common_t *com, ia_t *ia, team_t *team)
 {
     for (size_t tmp = 0; tmp < com->nb_ia; tmp++) {
@@ -21,6 +29,13 @@ static int to_find_ia_incantation_bis(common_t *com, ia_t *ia, team_t *team)
     return -1;
 }
 
+/**
+ @brief find a ia for the incantation
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia : structure of ia
+ @param common_t *com: the arguments receive with the command ia
+ @return int
+**/
 int to_find_ia_incantation(common_t *com, ia_t *ia)
 {
     team_t *team = to_find_team_by_int(ia->player->id, com);
@@ -37,6 +52,12 @@ int to_find_ia_incantation(common_t *com, ia_t *ia)
     return to_find_ia_incantation_bis(com, ia, team);
 }
 
+/**
+ @brief create a message for the response ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param msg_queue_t new_msg: recording of the new order in the pending queue
+ @return void
+**/
 void to_create_message_response_ia(msg_queue_t *new_msg)
 {
     new_msg->msg = malloc(sizeof(char *) * 1);
@@ -51,6 +72,15 @@ void to_create_message_response_ia(msg_queue_t *new_msg)
     new_msg->msg[0] = strcat(new_msg->msg[0], "ko\0");
 }
 
+/**
+ @brief check the resources it takes to get to level 1 and 2
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia : structure of ia
+ @param common_t *com: the arguments receive with the command ia
+ @param int x: position ressources x on the map
+ @param int y: position ressources y on the map
+ @return int
+**/
 int to_check_ressources(ia_t *ia, common_t *com, int x, int y)
 {
     if (ia->player->level == 1) {
@@ -74,6 +104,14 @@ int to_check_ressources(ia_t *ia, common_t *com, int x, int y)
     return to_check_ressources_bis(ia, com, x, y);
 }
 
+/**
+ @brief complete the arguments needed for the incantation
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param tile_t *tile: each box of the maps
+ @param char **args: the arguments given as parameters with the command sent by the ia
+ @param int nbr_ia: numbre ia
+ @return void
+**/
 void to_complete_ia_in_incantation_bis(int nbr_ia,
                                 char **arg, tile_t *tile)
 {

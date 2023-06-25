@@ -8,6 +8,13 @@
 #include "zappy.h"
 #include <string.h>
 
+/**
+ @brief prepare response for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui: common structure of all server data
+ @param ia_t *tmp_ia: structure ia
+ @return void
+**/
 static void funct_prepare_res(gui_t *gui, char **args, ia_t *tmp_ia)
 {
     char buffer_x[256];
@@ -27,6 +34,14 @@ static void funct_prepare_res(gui_t *gui, char **args, ia_t *tmp_ia)
             args[0], buffer_x, buffer_y, buffer_o);
 }
 
+/**
+ @brief ppo command response to gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the gui structure
+ @return void
+**/
 void funct_server_ppo(char **args, void *info, common_t *common)
 {
     gui_t *gui = (gui_t *)info;

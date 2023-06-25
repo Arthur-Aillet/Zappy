@@ -2,9 +2,13 @@ use crate::tantorian::{generate_color_from_string, Orientation, Tantorian};
 use crate::zappy::Zappy;
 use regex::Regex;
 use std::collections::HashMap;
+use std::f32::consts::PI;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use rend_ox::glam::{Vec2, Vec3Swizzles};
+use rend_ox::Vec3;
+use crate::incantation::{Incantation, IncantationState};
+use crate::message::{Arrows, Message};
 use crate::tantorian::PlayerState::{Alive, Dead, Egg};
 
 pub type ServerFunction = fn(&mut Zappy, String, Duration);
@@ -21,8 +25,8 @@ pub(crate) fn create_hash_function() -> HashMap<String, ServerFunction> {
     functions.insert("pin".to_string(), Zappy::player_inventory);
     functions.insert("pex".to_string(), Zappy::player_expulsion);
     functions.insert("pbc".to_string(), Zappy::broadcast);
-    //pic
-    //pie
+    functions.insert("pic".to_string(), Zappy::add_incantation);
+    functions.insert("pie".to_string(), Zappy::end_incantation);
     functions.insert("pfk".to_string(), Zappy::player_fork);
     functions.insert("pdr".to_string(), Zappy::drop_resource);
     functions.insert("pgt".to_string(), Zappy::collect_resource);
@@ -95,11 +99,13 @@ impl Zappy {
                     found = true;
                     orientation = player.orientation;
                     pos = [player.current_tile.x as usize, player.current_tile.y as usize];
+                    self.arrows.push(Arrows::new_from_direction(Vec3::new(0., 0., -player.orientation.as_radian()), player.pos.x, player.pos.y, player.color.clone(), at.clone()));
                 }
             }
             if !found {
                 println!("pex: player not found");
             }
+
 
             for player in &mut self.players {
                 if [player.current_tile.x as usize, player.current_tile.y as usize] == pos && player.number != number {
@@ -126,7 +132,7 @@ impl Zappy {
         }
     }
 
-    fn drop_resource(&mut self, command: String, _at: Duration) {
+    fn drop_resource(&mut self, command: String, at: Duration) {
         let re = Regex::new(r"^pdr (-?\d+) ([0-6])$")
             .expect("Invalid regex");
 
@@ -141,6 +147,7 @@ impl Zappy {
                     let before_quantity = self.map.tiles[x][y].access_to_nth_resource(ressource).len();
                     self.map.update_resources(x, y, ressource, before_quantity + player.access_nth_resource(ressource).clone() as usize);
                     *player.access_nth_resource(ressource) = 0;
+                    self.arrows.push(Arrows::new_from_direction(Vec3::new(-PI/2., 0., 0.), player.pos.x, player.pos.y, player.color.clone(), at.clone()));
                     return;
                 } else if player.number == number {
                     println!("pdr: player not alive");
@@ -153,7 +160,7 @@ impl Zappy {
         }
     }
 
-    fn collect_resource(&mut self, command: String, _at: Duration) {
+    fn collect_resource(&mut self, command: String, at: Duration) {
         let re = Regex::new(r"^pgt (-?\d+) ([0-6])$")
             .expect("Invalid regex");
 
@@ -167,6 +174,7 @@ impl Zappy {
                     let y = player.current_tile.as_uvec2().y as usize;
                     *player.access_nth_resource(ressource) += self.map.tiles[x][y].access_to_nth_resource(ressource).len() as u32;
                     self.map.update_resources(x, y, ressource, 0);
+                    self.arrows.push(Arrows::new_from_direction(Vec3::new(PI/2., 0., 0.), player.pos.x, player.pos.y, player.color.clone(), at.clone()));
                     return;
                 } else if player.number == number {
                     println!("pgt: player not alive");
@@ -399,6 +407,12 @@ impl Zappy {
                 Ok(number) => {
                     for player in &mut self.players {
                         if player.number == number && player.state == Alive {
+                            self.messages.push(Message{
+                                pos: Vec3::new(player.pos.x, player.pos.y, 0.),
+                                scale: Vec3::new(1., 1., 1.),
+                                color: player.color.clone(),
+                                start: at.clone()
+                            });
                             self.ui.broadcast_messages.push((at, player.team_name.clone(), number, String::from(args[2])));
                             return;
                         }
@@ -406,6 +420,64 @@ impl Zappy {
                     println!("pbc: player not found");
                 }
                 Err(_) => {println!("pbc: invalid player number");}
+            }
+        }
+    }
+
+    fn add_incantation(&mut self, command: String, at: Duration) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() != 2 {
+            println!("pic: wrong number of arguments");
+        } else {
+            let x : Result<u32, _> = args[1].to_string().parse();
+            let y : Result<u32, _> = args[2].to_string().parse();
+            let level : Result<u32, _> = args[3].to_string().parse();
+            let mut players : Vec<usize> = vec![];
+            for arg in &args[4..] {
+                match arg.to_string().parse() {
+                    Ok(p) => { players.push(p)}
+                    _ => { println!("pic: invalid player number"); return; }
+                }
+            }
+
+            if let (Ok(x), Ok(y), (Ok(level))) = (x, y, level) {
+                self.incantations.push(Incantation::new(
+                    Vec2::new(x as f32, y as f32),
+                    level,
+                    players,
+                    at
+                ));
+            } else {
+                println!("pic: invalid arguments");
+            }
+        }
+    }
+
+    fn end_incantation(&mut self, command: String, at: Duration) {
+        let args: Vec<&str> = command.split(" ").collect();
+
+        if args.len() != 2 {
+            println!("pic: wrong number of arguments");
+        } else {
+            let x : Result<u32, _> = args[1].to_string().parse();
+            let y : Result<u32, _> = args[2].to_string().parse();
+            let state = match args[3] {
+                "Ok" => IncantationState::Success,
+                "KO" => IncantationState::Failed,
+                _ => IncantationState::Failed,
+            };
+
+            if let (Ok(x), Ok(y)) = (x, y) {
+                for incantation in &mut self.incantations {
+                    if incantation.pos.x as u32 == x && incantation.pos.y as u32 == y && incantation.state == IncantationState::Running {
+                        incantation.state = state;
+                        incantation.since = at;
+                        return;
+                    }
+                }
+            } else {
+                println!("pic: invalid arguments");
             }
         }
     }
