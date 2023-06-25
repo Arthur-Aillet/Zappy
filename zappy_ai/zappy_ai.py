@@ -132,8 +132,9 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
                 queen_loop(creature, last_actions, session, communication)
             if creature.type == Creature.Types.BABY:
                 creature.var += 1
-                if creature.var >= 15:
+                if creature.var >= 5:
                     creature.type = Creature.Types.QUEEN
+                    creature.var = 0
                 ask_for_info(ai.client, creature.id, creature.message_index)
                 if messageinfo.valid and messageinfo.text.startswith("here's info"):
                     parse_info(messageinfo, creature)
