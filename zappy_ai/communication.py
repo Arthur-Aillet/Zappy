@@ -16,11 +16,11 @@ from datatypes import Creature
 import re
 
 class messageinfo:
-    valid : bool
-    text : str
-    id : int
-    number : int
-    direction: int
+    valid : bool = False
+    text : str = ""
+    id : int = -1
+    number : int = 0
+    direction: int = 0
 
 def get_validation(message:str, creature: Creature):
     split = message.split("-")
@@ -39,12 +39,15 @@ def get_validation(message:str, creature: Creature):
             return id, number, False
 
 def getmsginfo(message: str, creature: Creature):
-    splitted = re.split(",||", message)
-    result = messageinfo()
-    result.direction = splitted[0].split(" ")[1]
-    result.id, result.number, result.valid = get_validation(splitted[1], creature)
-    result.text = splitted[2]
-    return result
+    try:
+        splitted = re.split(",||", message)
+        result = messageinfo()
+        result.direction = splitted[0].split(" ")[1]
+        result.id, result.number, result.valid = get_validation(splitted[1], creature)
+        result.text = splitted[2]
+        return result
+    except:
+        return messageinfo()
 
 def role_call(client, id, nb):
     """!

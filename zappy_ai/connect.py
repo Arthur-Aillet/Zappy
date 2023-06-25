@@ -12,7 +12,7 @@
 
 import socket
 from sys import stderr
-
+from time import sleep
 
 ## Number of times to retry on connexion break
 RETRY = 5
