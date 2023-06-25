@@ -12,7 +12,8 @@
         new command save to queue
  @author Laetitia Bousch/ Ludo De-Chavagnac
  @param msg_queue_t ne_msg : recording of the new order in the pending queue
- @param char **args: the arguments given as parameters with the command sent by the gui
+ @param char **args: the arguments given as parameters with the
+                    command sent by the gui
  @return void
 **/
 static void fill_args(msg_queue_t *new_msg, char **args)

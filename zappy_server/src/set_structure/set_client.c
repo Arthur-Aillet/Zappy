@@ -42,7 +42,6 @@ client_t *set_all_clients(void)
     return client;
 }
 
-
 /**
  * @brief close the connection to the server of the specified client
  * @author Laetitia Bousch/ Ludo De-Chavagnac

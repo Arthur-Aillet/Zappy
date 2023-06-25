@@ -39,11 +39,13 @@ static void fill_args(msg_queue_t *new_msg, char **args, common_t *com)
 }
 
 /**
- @brief receive and prepare the elements needed to prepare the order that will be processed by the server for the command bct
+ @brief receive and prepare the elements needed to prepare the order that*
+ will be processed by the server for the command bct
  @author Laetitia Bousch/ Ludo De-Chavagnac
  @param gui_t *gui : structure of gui
  @param char **args: the arguments receive with the command gui
- @param common_t com : structure commun -> this structure gathers all the server data
+ @param common_t com : structure commun -> this structure gather
+ all the server data
  @return void
 **/
 void funct_client_bct(gui_t *gui, char **args, common_t *com)
