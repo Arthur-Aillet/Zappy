@@ -306,7 +306,6 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
             std::thread::sleep(Duration::from_secs_f32(2.0));
             zappy.user.try_to_connect(at);
         },
-        ui::State::SpawnAI => {}
     }
     if let Some(team) = &zappy.user.winner_team {
         zappy.user.ui.win(ctx, team, zappy.camera_is_active);

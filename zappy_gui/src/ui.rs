@@ -6,7 +6,7 @@ use rend_ox::Vec3;
 
 use crate::tantorian::{generate_color_from_string, Tantorian};
 use crate::tantorian::PlayerState::{Alive, Egg};
-use crate::ui::State::{Connect, Disconnect, Launching, Nothing, SpawnAI};
+use crate::ui::State::{Connect, Disconnect, Launching, Nothing};
 
 pub(crate) struct ZappyUi {
     pub selected_tile: Option<[usize; 2]>,
@@ -21,7 +21,6 @@ pub(crate) enum State {
     Connect,
     Disconnect,
     Launching,
-    SpawnAI,
 }
 
 #[derive(PartialEq)]
@@ -91,9 +90,6 @@ impl ZappyUi {
                 if status {
                     if ui.add(egui::Button::new("Disconnect")).clicked() {
                         state = Disconnect;
-                    }
-                    if ui.add(egui::Button::new("Add ai")).clicked() {
-                        state = SpawnAI;
                     }
                 } else {
                     if ui.add(egui::Button::new("Connect")).clicked() {
