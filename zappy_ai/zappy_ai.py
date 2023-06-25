@@ -22,6 +22,7 @@ from queen_loop import queen_loop, take_new_role_in_account
 from warrior_loop import warrior_loop
 from butler_loop import butler_loop
 from common import *
+from sys import argv, exit
 
 def mainloop(ai: Session): # mainloop peut return True si elle est enfant de fork / false si stop
     """!
@@ -149,12 +150,20 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
         # action, faite par l'algo, qui devra append à last_actions
 
 if __name__ == "__main__":
+    port = 4242
+    if (len(argv) > 1):
+        try:
+            port = int(argv[1])
+        except:
+            exit(84)
+    if (port < 1000 or port > 9999):
+        exit (84)
     run = True
     while (run): ## point de retour en cas de fork
         print("start")
         unexpected.init()
         try:
-            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 4242, "Team1")
+            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", port, "Team1")
         except:
             print("connection refused")
             exit(84)
