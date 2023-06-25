@@ -53,14 +53,16 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
     invtimer = 0
     communication: messageinfo = messageinfo()
     while looping:
+        print("in loop for", creature.id, creature.type)
         try:
-            message = ai.client.recv(1024).decode() # peut être mettre un timeout pour éviter de rester perdu sur une interrupt de co
+            message = ai.client.recv(1024).decode()
             print("got message :", message)
         except socket.timeout:
             # err = e.args[0]
             # this next if/else is a bit redundant, but illustrates how the
             # timeout exception is setup
             print ('(recv timed out)')
+            message = ""
         except socket.error:
             # Something else happened, handle error, exit, etc.
             print("socket error")
@@ -120,6 +122,7 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
         creature.looked = False
         if invtimer % 10 == 0:
             last_actions.append(inventory(ai.client))
+        invtimer += 1
 
 
         # gestion des envois prévus du serveur (si une récéption est prévue)
@@ -128,11 +131,11 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
         if (not message == "") and last_actions[0] == ActionType.NONE:
             last_actions.pop(0)
             continue
-        if (last_actions[0] == ActionType.INVENTORY):
+        if (len(last_actions) != 0 and last_actions[0] == ActionType.INVENTORY):
             last_actions.pop(0)
             creature.inventory = parse_inventory(message)
             continue
-        if last_actions[0] == ActionType.LOOK:
+        if len(last_actions) != 0 and last_actions[0] == ActionType.LOOK:
             last_actions.pop(0)
             creature.last_look = parse_look(message)
             creature.looked = True
@@ -144,7 +147,7 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
         if creature.time_to_ritual >= 0 :
             creature.time_to_ritual -= 1;
         if (creature.type == Creature.Types.QUEEN) :
-            queen_loop(creature, last_actions, session)
+            queen_loop(creature, last_actions, session, communication)
         if creature.type == Creature.Types.BABY:
             creature.var += 1
             if creature.var >= 15:

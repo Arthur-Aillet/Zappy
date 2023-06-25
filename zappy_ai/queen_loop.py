@@ -173,8 +173,8 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
     creature.var %= 20;
     creature.other_creatures_age += 1
 
-    if (id != 0) :
-        creature.type = Creature.Types.BUTLER
+    # if (id != 0) :
+    #     creature.type = Creature.Types.BUTLER
 
     if creature.food < 10:
         if (look_for(creature, last_Action, ia, "food") == 0):
@@ -215,7 +215,7 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
     if creature.var == 10:
         last_Action.append(role_call(ia.client, creature.id, creature.message_index))
         creature.message_index += 1
-        role_weighting(creature.other_creatures)
+        role_weighting(creature.other_creatures, last_Action, ia, creature)
     if message.valid == False:
         creature.strvar = message.text
     return False
