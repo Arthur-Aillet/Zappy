@@ -135,9 +135,9 @@ impl Tantorian {
             let pos = Vec3 {
                 x: x as f32 + 0.5,
                 y: y as f32 + 0.5,
-                z: 0.666,
+                z: 0.,
             };
-            let rot = Vec3::new(PI / 2., parent.orientation.as_radian(), 0.);
+            let rot = Vec3::new(0., 0., parent.orientation.as_radian());
 
             let number_color = generate_color_from_string(&format!("{number}"));
             let mut team_color = Vec3::default();
@@ -191,9 +191,9 @@ impl Tantorian {
         let pos = Vec3 {
             x: x as f32 + 0.5,
             y: y as f32 + 0.5,
-            z: 0.666,
+            z: 0.0,
         };
-        let rot = Vec3::new(PI/2., orientation.as_radian(), 0.);
+        let rot = Vec3::new(0., 0., orientation.as_radian());
         for player in players {
             if player.team_name == team_name && player.number == number && player.state == Alive {
                 println!("New player number already attributed!");
