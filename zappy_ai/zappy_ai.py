@@ -51,7 +51,7 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
     creature = Creature()
     message = ""
     invtimer = 0
-    communication : messageinfo()
+    communication: messageinfo = messageinfo()
     while looping:
         try:
             message = ai.client.recv(1024).decode() # peut être mettre un timeout pour éviter de rester perdu sur une interrupt de co

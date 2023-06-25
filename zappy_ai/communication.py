@@ -16,11 +16,11 @@ from datatypes import Creature
 import re
 
 class messageinfo:
-    valid : bool
-    text : str
-    id : int
-    number : int
-    direction: int
+    valid : bool = False
+    text : str = ""
+    id : int = -1
+    number : int = 0
+    direction: int = 0
 
 def get_validation(message:str, creature: Creature):
     split = message.split("-")
