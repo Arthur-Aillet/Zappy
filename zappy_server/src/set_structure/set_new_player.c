@@ -29,7 +29,7 @@ static int egg_position(int *x, int *y, team_t *team)
     return 0;
 }
 
-static void send_to_gui_buffer(int num, char *value, char **arg)
+static void* send_to_gui_buffer(int num, char *value, char **arg)
 {
     char buffer_args[256];
     if (value == NULL)
@@ -41,6 +41,7 @@ static void send_to_gui_buffer(int num, char *value, char **arg)
         error("Memory allocation failed", 0);
     *arg[0] = '\0';
     strcat(*arg, buffer_args);
+    return NULL;
 }
 
 static void send_to_gui(int status, common_t *com, team_t *team, int i)
@@ -53,8 +54,7 @@ static void send_to_gui(int status, common_t *com, team_t *team, int i)
     if (args == NULL)
         error("Memory allocation failed", 0);
     if (status != 0) {
-        send_to_gui_buffer(status, NULL, &args[0]);
-        args[1] = NULL;
+        args[1] = send_to_gui_buffer(status, NULL, &args[0]);
         funct_server_ebo(args, com->gui, com);
     } else {
         send_to_gui_buffer(team->players[i].id, NULL, &args[0]);
@@ -62,8 +62,7 @@ static void send_to_gui(int status, common_t *com, team_t *team, int i)
         send_to_gui_buffer(team->players[i].y, NULL, &args[2]);
         send_to_gui_buffer(team->players[i].orientation, NULL, &args[3]);
         send_to_gui_buffer(team->players[i].level, NULL, &args[4]);
-        send_to_gui_buffer(0, team->name, &args[5]);
-        args[6] = NULL;
+        args[6] = send_to_gui_buffer(0, team->name, &args[5]);
         funct_server_pnw(args, com->gui, com);
     }
     free_array((void **)args);
@@ -83,8 +82,6 @@ static int add_new_player(team_t *team, size_t max_x, size_t max_y,
     for (; i < MAX_PLAYER; i++) {
         if (team->players[i].x == -1 && team->players[i].y == -1) {
             team->players[i] = set_player(x, y, com->freq);
-            printf("%sPlayer #%d position: %d %d orientation: %ld level: %ld%s\n", C, team->players[i].id,
-                        team->players[i].x, team->players[i].y, team->players[i].orientation, team->players[i].level , N);
             team->actif_player++;
             ret = i;
             break;

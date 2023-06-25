@@ -27,7 +27,6 @@ static void right_log(ia_t *ia)
             ia->player->id, P, B, dir, N);
 }
 
-
 void funct_response_ia_right(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;

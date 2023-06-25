@@ -71,10 +71,9 @@ static int update_player_life(player_t *player, common_t *com)
             player->inventory[FOOD]--;
         if (player->life == 0) {
             send_pdi(player, com);
-            printf("%sPlayer %s%d%s is dead%s\n", G, B, player->id, G, N);
             return player_is_dead(player, com);
-        }
-        player->start = time(NULL);
+        } else
+            player->start = time(NULL);
     }
     return 0;
 }

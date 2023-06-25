@@ -55,7 +55,6 @@ static int check_ctrl_d(void)
 int main_loop(common_t *com)
 {
     struct timeval timeout;
-
     while (1) {
         if (check_ctrl_d() == 1)
             break;

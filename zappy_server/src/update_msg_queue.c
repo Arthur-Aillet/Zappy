@@ -25,7 +25,9 @@ static void update_msg_queue(ia_t *ia, common_t *com)
 
 void check_msg_queue_ia(common_t *com)
 {
-    for (int i = 0; i < MAX_CLIENTS; i++) {
+    if (com->ia == NULL)
+        return;
+    for (int i = 0; i < MAX_PLAYER; i++) {
         if (com->ia[i].msg_queue != NULL) {
             update_msg_queue(&com->ia[i], com);
         }
