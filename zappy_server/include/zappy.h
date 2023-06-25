@@ -95,6 +95,7 @@ void free_common(common_t *com);
 ia_t *to_find_ia(char *n, common_t *common);
 ia_t *to_find_ia_int(int n, common_t *common);
 void free_arg(int nbr, char **arg);
+void free_msg_queue(msg_queue_t *msg_queue);
 
 //---------------------------------------------------------------//
 
@@ -102,7 +103,7 @@ void check_error_output(common_t *com, int output, char *error);
 
 void listening_sockets(common_t *com);
 
-char **get_message(server_t *server, client_t *client);
+char **get_message(server_t *server, client_t *client, common_t *com);
 int undefined_client_command(char **command, common_t *com, int idx);
 int check_slot_and_create_player(common_t *com, int team_idx,int client_idx);
 
@@ -162,7 +163,6 @@ void funct_server_pic_send_message(char **args, gui_t *gui);
 char *prepare_arg_response_gui(int x);
 int set_nbr_ia(ia_t *ia);
 void remove_choose_player(player_t *ennemy, common_t *com, player_t *ia);
-void free_msg_queue(msg_queue_t msg);
 void funct_server_pic_level_other(char **args, gui_t *gui);
 void funct_server_pic_level_four_five(char **args, gui_t *gui);
 
@@ -183,5 +183,6 @@ void funct_response_look_west(ia_t *ia, common_t *com);
 void update_map(common_t *com);
 
 void update_tile_gui(common_t *com, ia_t *ia);
+void send_message_to_player(common_t *com, ia_t *ia, int i, char **args);
 
 #endif /* !ZAPPY_H_ */

@@ -19,7 +19,7 @@ static void funct_prepare_response_gui(player_t *ia, common_t *com, int r)
     args[2] = prepare_arg_response_gui(r);
     args[3] = NULL;
     funct_server_pie(args, com->gui, com);
-    free_array((void **)args);
+    free_array((void**)args);
 }
 
 static int funct_status_master(ia_t *ia_tmp)
@@ -41,7 +41,7 @@ static void funct_status_incantation(int i, common_t *com,
         nb_player_incantations[tmp], com);
         if (ia_tmp->player->incantation == MASTER) {
             cmp = funct_status_master(ia_tmp);
-            free_msg_queue(ia_tmp->msg_queue[cmp]);
+            free_msg_queue(&ia_tmp->msg_queue[cmp]);
             ia_tmp->msg_queue[cmp - 1].next_msg = NULL;
             funct_response_ia_incantation(args, com->gui, com);
         }
@@ -67,7 +67,7 @@ static void to_check_status_incantation(common_t *com, player_t *ia)
     strcat(args[0], "ko");
     funct_status_incantation(i, com, ia, args);
     funct_prepare_response_gui(ia, com, 0);
-    free_array((void **)args);
+    free_array((void**)args);
 }
 
 void remove_player(player_t *ennemy, player_t *ia, common_t *com)

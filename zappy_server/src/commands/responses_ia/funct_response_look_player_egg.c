@@ -7,8 +7,7 @@
 
 #include "zappy.h"
 
-static void to_take_ressources_response_ia_player(player_t *player, ia_t *ia,
-                                                 int *pos)
+static void take_ressources_res_ia_player(player_t *player, ia_t *ia, int *pos)
 {
     if (player->x == pos[0] && player->y == pos[1]) {
         SIZE += 7;
@@ -63,7 +62,7 @@ void to_take_ressources_response_ia(ia_t *ia, common_t *com, int x, int y)
     for (size_t j = 0; j < MAX_PLAYER; j++) {
         if (com->ia[j].player == NULL)
             continue;
-        to_take_ressources_response_ia_player(com->ia[j].player, ia, pos);
+        take_ressources_res_ia_player(com->ia[j].player, ia, pos);
     }
     to_take_ressources_response_ia_bis(ia, com, x, y);
 }
