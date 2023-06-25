@@ -3,6 +3,8 @@ use std::f32::consts::PI;
 use std::mem::take;
 use std::thread::JoinHandle;
 use std::time::Duration;
+use fork::{daemon, Fork, fork};
+use std::process::{Command, exit};
 
 use rend_ox::app::App;
 use rend_ox::{Mat4, Vec3};
@@ -20,6 +22,7 @@ use crate::tantorian::PlayerState::{Alive, Egg};
 use crate::tantorian::Tantorian;
 use crate::incantation::{Incantation, IncantationState};
 use crate::ui;
+use crate::ui::State::Nothing;
 use crate::ui::ZappyUi;
 
 pub struct Zappy {
@@ -279,12 +282,31 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
         zappy.user.ui.communications(ctx, zappy.camera_is_active);
     }
     let state = zappy.user.ui.network_status(ctx, zappy.camera_is_active, &mut zappy.user.port, &mut zappy.user.hostname, zappy.user.server.is_some());
-    if state == ui::State::Connect {
-        zappy.user.try_to_connect(at);
-    }
-    if state == ui::State::Disconnect {
-        zappy.user.close_connection(at);
-        zappy.user.reset_server_data();
+    match state {
+        ui::State::Nothing => {},
+        ui::State::Connect => zappy.user.try_to_connect(at),
+        ui::State::Disconnect => {
+            zappy.user.close_connection(at);
+            zappy.user.reset_server_data();
+        },
+        ui::State::Launching => {
+            match fork() {
+                Ok(Fork::Child) => {
+                        println!("executing process: -p {}", zappy.user.port);
+                    let p = Command::new("../zappy_server/zappy_server")
+                        .arg("-p")
+                        .arg(zappy.user.port.clone()).status();
+                        println!("execution over;");
+                        exit(0);
+                }
+                Ok(Fork::Parent(_)) => println!("forked"),
+                Err(_) => println!("failed to fork"),
+            }
+            zappy.user.hostname = "127.0.0.1".into();
+            std::thread::sleep(Duration::from_secs_f32(2.0));
+            zappy.user.try_to_connect(at);
+        },
+        ui::State::SpawnAI => {}
     }
     if let Some(team) = &zappy.user.winner_team {
         zappy.user.ui.win(ctx, team, zappy.camera_is_active);

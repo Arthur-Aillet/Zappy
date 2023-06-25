@@ -10,6 +10,13 @@
 #include "zappy.h"
 #include "error_handling.h"
 
+/**
+ * @brief find a client by this id
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param int *id: the player id
+ * @param common_t *com: the common structure of all server data
+ * @return int
+*/
 client_t *find_client_by_id(int id, common_t *com)
 {
     for (size_t i = 0; i < MAX_CLIENTS; i++) {
@@ -22,6 +29,13 @@ client_t *find_client_by_id(int id, common_t *com)
     return NULL;
 }
 
+/**
+ * @brief reset data of the ia of player dead
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param player_t *player: the player dead
+ * @param common_t *com: the common structure of all server data
+ * @return int
+*/
 static int player_is_dead(player_t *player, common_t *com)
 {
     ia_t *ia = to_find_ia_int(player->id, com);
@@ -36,6 +50,13 @@ static int player_is_dead(player_t *player, common_t *com)
     return 1;
 }
 
+/**
+ * @brief Send command pdi to the gui
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param player_t *player: the player dead
+ * @param common_t *com: the common structure of all server data
+ * @return void
+*/
 static void send_pdi(player_t *player, common_t *com)
 {
     char **args = malloc(sizeof(char*) * 2);
@@ -55,6 +76,13 @@ static void send_pdi(player_t *player, common_t *com)
     free_array((void **)args);
 }
 
+/**
+ * @brief Modife the life or the food of the player
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param player_t *player: the player to check his life
+ * @param common_t *com: the common structure of all server data
+ * @return int
+*/
 static int update_player_life(player_t *player, common_t *com)
 {
     time_t now = time(NULL);
@@ -79,6 +107,15 @@ static int update_player_life(player_t *player, common_t *com)
     return 0;
 }
 
+/**
+ * @brief Update the life of all players
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param client_t *client: array of clients
+ * @param server_t *server: strcuture containing server connexion data
+ * @param int freq: the frequency of all actions of ia
+ * @param common_t *com: the common structure of all server data
+ * @return void
+*/
 void update_life(client_t *client, server_t *server, size_t freq, common_t *com)
 {
     int res = 0;

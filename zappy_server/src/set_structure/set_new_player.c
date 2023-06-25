@@ -11,6 +11,14 @@
 #include "error_handling.h"
 #include "zappy.h"
 
+/**
+ * @brief Modified x and y value if an egg is find in the team
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param int *x: x position of the player
+ * @param int *y: y position of the player
+ * @param team_t *team: the team of the player
+ * @return int
+*/
 static int egg_position(int *x, int *y, team_t *team)
 {
     if (team->nb_eggs > 0) {
@@ -29,6 +37,14 @@ static int egg_position(int *x, int *y, team_t *team)
     return 0;
 }
 
+/**
+ * @brief Create a buffer containing all data to send to the gui
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param int num: if the value to stock is a number
+ * @param char *value: if the value to stock is a string (default is NULL)
+ * @param char **arg: the array containing all data to send
+ * @return void*
+*/
 static void* send_to_gui_buffer(int num, char *value, char **arg)
 {
     char buffer_args[256];
@@ -44,6 +60,16 @@ static void* send_to_gui_buffer(int num, char *value, char **arg)
     return NULL;
 }
 
+/**
+ * @brief Send data the new player to the gui
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param int status: 0 the player created by an egg otherwise,
+ *                      it spwan randomly
+ * @param common_t *com: the common structure of all server data
+ * @param team_t *team: the specific team that the player joined
+ * @param int i: the player idx in the list of players
+ * @return void
+*/
 static void send_to_gui(int status, common_t *com, team_t *team, int i)
 {
     char **args;
@@ -68,6 +94,15 @@ static void send_to_gui(int status, common_t *com, team_t *team, int i)
     free_array((void **)args);
 }
 
+/**
+ * @brief Create a new player and choose this position in the map
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param team_t *team: the team that the player join
+ * @param size_t max_x: the size of the map in width
+ * @param size_t max_y: the size of the map in height
+ * @param common_t *com: the common structure of all server data
+ * @return int
+*/
 static int add_new_player(team_t *team, size_t max_x, size_t max_y,
                             common_t *com)
 {
@@ -91,6 +126,15 @@ static int add_new_player(team_t *team, size_t max_x, size_t max_y,
     return ret;
 }
 
+/**
+ * @brief Check if a slot for a new player into a specific team is available
+ * and create a new player if it is possible
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param common_t *com: common structure of all server data
+ * @param int t_idx: the index of the team in the array of team_t*
+ * @param int client_idx: the index of the client in the array of client_t*
+ * @return int
+*/
 int check_slot_and_create_player(common_t *com, int t_idx,int client_idx)
 {
     int res = add_new_player(&TEAM(t_idx), com->gui->map.height,

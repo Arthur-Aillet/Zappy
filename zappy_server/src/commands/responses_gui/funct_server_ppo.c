@@ -37,9 +37,9 @@ static void funct_prepare_res(gui_t *gui, char **args, ia_t *tmp_ia)
 /**
  @brief ppo command response to gui
  @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param char **args: array of data to send
+ @param void *info: poiter to guit_t*
  @param common_t *common: common structure of all server data
- @param char **args: the arguments you need to answer the gui
- @param void *info: matches the gui structure
  @return void
 **/
 void funct_server_ppo(char **args, void *info, common_t *common)
@@ -51,7 +51,6 @@ void funct_server_ppo(char **args, void *info, common_t *common)
         return;
     }
     funct_prepare_res(gui, args, tmp_ia);
-    printf("%s\n", GUI_OCTETS);
     write(gui->buffer.sock.sockfd, GUI_OCTETS, strlen(GUI_OCTETS));
     basic_log("ppo send", C, 0);
     free(GUI_OCTETS);
