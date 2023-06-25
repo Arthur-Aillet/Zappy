@@ -37,10 +37,10 @@ impl Orientation {
 
     pub fn as_radian(&self) -> f32 {
         match self {
+            Orientation::S => 0. * PI/180.,
+            Orientation::E => 270. * PI/180.,
             Orientation::N => 180. * PI/180.,
-            Orientation::E => 90. * PI/180.,
-            Orientation::S => 0.,
-            Orientation::W => 270. * PI/180.,
+            Orientation::W => 90. * PI/180.,
         }
     }
 }

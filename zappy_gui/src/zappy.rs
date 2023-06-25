@@ -294,6 +294,8 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
             server.send_to_server(format!("mct"));
         }
         if refresh_player {
+            println!("clicked");
+
             for (idx, player) in &zappy.user.players {
                 server.send_to_server(format!("ppo #{}", player.number));
             }
