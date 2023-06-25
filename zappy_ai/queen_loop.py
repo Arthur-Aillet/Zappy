@@ -77,8 +77,8 @@ def objectives(i: int):
         return {'food': 0, 'linemate': 2, 'deraumere': 2, 'sibur': 2, 'mendiane': 2, 'phiras': 2, 'thystame': 1}
     return {'food': 0, 'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0}
 
-def parrot(ia: Session, creature: Creature, last_action: list):
-    last_action.append(broadcast(creature.strvar))
+def parrot(ai: Session, creature: Creature, last_action: list):
+    last_action.append(broadcast(ai.client, creature.strvar))
 
 def look_for(creature: Creature, last_actions: list, ia: Session, target: str):
     last_actions.append(look(ia.client))
@@ -169,7 +169,7 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session):
             last_Action.append(pick_up(ia.client, "food"))
         else:
             parrot(ia, creature, last_Action)
-    if distance_to_base > 0:
+    if distance_to_base(creature) > 0:
         go_to_base(creature, ia, last_Action)
     if (creature.var == 0) :
         return True
@@ -191,5 +191,5 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session):
     # if (someone need info)
     #     say infos
     else:
-        parrot();
+        parrot(ia, creature, last_Action);
     return False

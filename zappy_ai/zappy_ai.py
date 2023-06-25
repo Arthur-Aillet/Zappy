@@ -47,7 +47,6 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
     looping = True
     last_actions = []
     creature = Creature()
-    first = True
     message = ""
 
     while looping:
@@ -79,10 +78,11 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
                 take_new_role_in_account(msg_info, creature)
             continue # traiter le maissage
 
+
         # gestion des envois prévus du serveur (si une récéption est prévue)
-        if (len(last_actions) == 0):
+        if (not message == "") and len(last_actions) == 0:
             continue
-        if (last_actions[0] == ActionType.NONE):
+        if (not message == "") and last_actions[0] == ActionType.NONE:
             last_actions.pop(0)
             continue
 
@@ -92,13 +92,13 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
         if creature.time_to_ritual >= 0 :
             creature.time_to_ritual -= 1;
         if (creature.type == Creature.Types.QUEEN) :
-            queen_loop(creature, last_actions)
+            queen_loop(creature, last_actions, session)
         if (creature.type == Creature.Types.BUTLER) :
-            butler_loop(creature, last_actions)
+            butler_loop(creature, last_actions, session)
         if (creature.type == Creature.Types.GATHERER) :
-            gatherer_loop(creature, last_actions)
+            gatherer_loop(creature, last_actions, session)
         if (creature.type == Creature.Types.WARRIOR) :
-            warrior_loop(creature, last_actions)
+            warrior_loop(creature, last_actions, session)
         # traitement de tous les cas de reception en fonction de last_action[0]
 
         # action, faite par l'algo, qui devra append à last_actions
