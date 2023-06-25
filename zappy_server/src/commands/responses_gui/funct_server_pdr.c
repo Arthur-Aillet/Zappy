@@ -7,6 +7,13 @@
 
 #include "zappy.h"
 
+/**
+ @brief prepare response for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @return void
+**/
 static void funct_prepare_res(char **args, gui_t *gui)
 {
     GUI_SIZE = strlen(args[0]) + strlen(args[1]) + 7;
@@ -22,6 +29,14 @@ static void funct_prepare_res(char **args, gui_t *gui)
     strcat(GUI_OCTETS, "\n\0");
 }
 
+/**
+ @brief pdr command response to gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the gui structure
+ @return void
+**/
 void funct_server_pdr(char **args, void *info, common_t *common)
 {
     ia_t *tmp_ia = to_find_ia(args[0], common);
