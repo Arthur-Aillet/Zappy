@@ -16,7 +16,7 @@
 
 static void set_teams_name(parser_t *p, int ac, char *av[])
 {
-    p->teams_name = malloc((ac - optind + 1) * sizeof(char*));
+    p->teams_name = malloc((ac - optind + 2) * sizeof(char*));
     p->teams_name[p->nb_teams] = av[optind - 1];
     p->nb_teams++;
     while (optind < ac && av[optind][0] != '-') {
@@ -55,12 +55,10 @@ static void default_teams(parser_t *parser)
 {
     parser->nb_teams = 4;
     parser->teams_name = malloc(sizeof(char *) * (parser->nb_teams + 1));
-    for (size_t i = 0; i < parser->nb_teams; i++)
-        parser->teams_name[i] = malloc(sizeof(char) * 6);
-    strcpy(parser->teams_name[0], "Team1");
-    strcpy(parser->teams_name[1], "Team2");
-    strcpy(parser->teams_name[2], "Team3");
-    strcpy(parser->teams_name[3], "Team4");
+    parser->teams_name[0] = "Team1";
+    parser->teams_name[1] = "Team2";
+    parser->teams_name[2] = "Team3";
+    parser->teams_name[3] = "Team4";
     parser->teams_name[4] = NULL;
 }
 
@@ -73,7 +71,7 @@ void get_parameters(int ac, char *av[], parser_t *parser)
     if (parser->nb_teams == 0)
         default_teams(parser);
     if (parser->port == 0 || parser->height == 0 || parser->width == 0
-    || parser->client_nb == 0 || parser->freq == 0) {
+        || parser->client_nb == 0 || parser->freq == 0) {
         fprintf(stderr, "Bad argument for one flag.\n");
         exit(84);
     }
