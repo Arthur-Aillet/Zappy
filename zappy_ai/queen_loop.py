@@ -157,6 +157,18 @@ def take_new_role_in_account(msg_info: str, creature: Creature):
             "messages": msg_info.number
         })
 
+def select_n_people_of_level(creature: Creature, n: int, lvl: int):
+    result: list[dict[str, int]] = []
+    selected = 0
+    for crt in creature.other_creatures:
+        if crt.get("lvl") == lvl and selected < n and crt.get("role") != Creature.Types.QUEEN:
+            result.append(crt)
+            selected += 1
+    if selected < n:
+        return []
+    else:
+        return result
+
 def role_weighting(creatures: list[dict[str, int]], last_action: list, ai: Session, ordering_creature: Creature):
     queen = 0
     butler = 0
@@ -234,10 +246,18 @@ def queen_loop(creature: Creature, last_Action: list, ia: Session, message: mess
     if creature.looked:
         if (stockpile_contains(ascending_objectives(creature.level), creature.last_look[0])):
             if creature.called == False:
-                # call the closest level apropriate people to base_pos. priority on butler then gatherers then warriors then babys then queen
+                creature.confirmed = 0
+                selected = select_n_people_of_level(creature, creature.level)
+                for crt in selected:
+                    move_to_base(ia.client, creature.id, creature.message_index, crt.get("id"))
+                    creature.message_index += 1
                 creature.called = True
+    if messageinfo.valid and messageinfo.text.startswith("bien arrive"):
+        take_this(ia.client, creature.id, creature.message_index, dict_to_str(objectives(ascending_objectives(creature.level).get("level"))))
+        creature.message_index += 1
+        creature.confirmed += 1
     if creature.called == True and creature.confirmed == ascending_objectives(creature.level).get("number"):
-        last_Action.append(ritual_in(ia.client, creature.id, creature.message_index, 2))
+        last_Action.append(ritual_in(ia.client, creature.id, creature.message_index, 11))
         creature.message_index += 1
     if message.valid and message.text.startswith("here's info"):
         orientation = creature.orientation
