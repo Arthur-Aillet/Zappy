@@ -7,6 +7,15 @@
 
 #include "zappy.h"
 
+/**
+ @brief prepare response for sud facing look next
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param int nbr_tiles: number of tiles to watch per line
+ @param int *post_tile: position of the first tile to watch
+ @return void
+**/
 static void funct_complete_look_tile_sud(ia_t *ia, common_t *com,
                                     int nbr_tiles, int *post_tile)
 {
@@ -17,6 +26,13 @@ static void funct_complete_look_tile_sud(ia_t *ia, common_t *com,
     }
 }
 
+/**
+ @brief prepare response for sud facing look next
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 static void funct_response_look_sud_bis(ia_t *ia, common_t *com)
 {
     int nbr_tiles = 0;
@@ -40,6 +56,14 @@ static void funct_response_look_sud_bis(ia_t *ia, common_t *com)
     }
 }
 
+/**
+ @brief prepare response for sud facing look
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the ia structure
+ @return void
+**/
 void funct_response_look_sud(ia_t *ia, common_t *com)
 {
     SIZE = 2;

@@ -8,11 +8,13 @@
 #include "zappy.h"
 
 /**
- @brief receive and prepare the elements needed to prepare the order that will be processed by the server for the command nbr
+ @brief receive and prepare the elements needed to prepare the order
+        that will be processed by the server for the command nbr
  @author Laetitia Bousch/ Ludo De-Chavagnac
  @param ia_t *ia: structure of ia
  @param char **args: the arguments receive with the command ia
- @param common_t com: structure commun -> this structure gathers all the server data
+ @param common_t com: structure commun -> this structure gathers
+                        all the server data
  @return void
 **/
 void funct_client_ia_connect_nbr(ia_t *ia, char **args, common_t *com)

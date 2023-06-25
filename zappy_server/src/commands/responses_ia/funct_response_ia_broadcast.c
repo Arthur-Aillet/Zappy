@@ -7,6 +7,14 @@
 
 #include "zappy.h"
 
+/**
+ @brief send messages all players
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param ia_t *ia: matches the ia structure
+ @return void
+**/
 static void send_message_to_players(common_t *com, char **args, ia_t *ia)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
@@ -14,6 +22,14 @@ static void send_message_to_players(common_t *com, char **args, ia_t *ia)
     }
 }
 
+/**
+ @brief broadcast command response to gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the ia structure
+ @return void
+**/
 void funct_response_ia_broadcast(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;

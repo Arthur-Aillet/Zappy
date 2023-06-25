@@ -7,6 +7,13 @@
 
 #include "zappy.h"
 
+/**
+ @brief to move ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 static void to_move_ia(ia_t *ia, common_t *com)
 {
     if (ia->player->orientation == North) {
@@ -31,6 +38,14 @@ static void to_move_ia(ia_t *ia, common_t *com)
     }
 }
 
+/**
+ @brief forward command response to ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the ia structure
+ @return void
+**/
 void funct_response_ia_forward(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;

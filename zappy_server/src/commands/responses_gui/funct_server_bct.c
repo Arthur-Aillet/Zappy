@@ -8,12 +8,14 @@
 #include "zappy.h"
 
 /**
- @brief retrieve the number of resources according to their type on the tile
+ @brief retrieve the number of resources according to
+ their type on the tile
  @author Laetitia Bousch/ Ludo De-Chavagnac
  @param gui_t *gui: common structure of all server data
  @param size_t x: position x on the tiles
  @param size_t y: position y on the tiles
- @param char *buf_x: receives the new argument to be put in the response to the gui
+ @param char *buf_x: receives the new argument to be put
+ in the response to the gui
  @return void
 **/
 static void funct_ressources_on_tiles(gui_t *gui, size_t x,

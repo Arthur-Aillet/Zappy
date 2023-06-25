@@ -7,6 +7,15 @@
 
 #include "zappy.h"
 
+/**
+ @brief prepare response for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: structure ia
+ @param int r: number orientation ia
+ @param char **args: arguments for the response gui
+ @return void
+**/
 static void funct_prepare_response_gui_next(ia_t *ia, char **args,
                                             common_t *com, int r)
 {
@@ -30,6 +39,14 @@ static void funct_prepare_response_gui_next(ia_t *ia, char **args,
     funct_server_pie(args, com->gui, com);
 }
 
+/**
+ @brief prepapre response gui incantation
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: structure ia
+ @param int r: number orientation ia
+ @return void
+**/
 void funct_prepare_response_gui_incantation(ia_t *ia, common_t *com, int r)
 {
     char **args = malloc(sizeof(char *) * 4);
@@ -49,6 +66,13 @@ void funct_prepare_response_gui_incantation(ia_t *ia, common_t *com, int r)
     free_array((void **)args);
 }
 
+/**
+ @brief set up data needs for level 1 incantation
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: structure ia
+ @return void
+**/
 void funct_level_1(ia_t *ia, common_t *com)
 {
     char buffer_incantation[256];

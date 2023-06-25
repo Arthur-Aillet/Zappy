@@ -7,6 +7,15 @@
 
 #include "zappy.h"
 
+/**
+ @brief check if there are thystame on the tile
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param int x: position x of tile
+ @param int y: position y of tile
+ @return void
+**/
 static void to_take_ressources_response_ia_thystame(ia_t *ia,
                                         common_t *com, int x, int y)
 {
@@ -28,6 +37,15 @@ static void to_take_ressources_response_ia_thystame(ia_t *ia,
     OCTETS[SIZE - 1] = '\0';
 }
 
+/**
+ @brief check if there are phiras on the tile
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param int x: position x of tile
+ @param int y: position y of tile
+ @return void
+**/
 static void to_take_ressources_response_ia_phiras(ia_t *ia,
                                         common_t *com, int x, int y)
 {
@@ -42,6 +60,15 @@ static void to_take_ressources_response_ia_phiras(ia_t *ia,
     to_take_ressources_response_ia_thystame(ia, com, x, y);
 }
 
+/**
+ @brief check if there are mendiane on the tile
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param int x: position x of tile
+ @param int y: position y of tile
+ @return void
+**/
 static void to_take_ressources_response_ia_mendiane(ia_t *ia,
                                         common_t *com, int x, int y)
 {
@@ -56,6 +83,15 @@ static void to_take_ressources_response_ia_mendiane(ia_t *ia,
     to_take_ressources_response_ia_phiras(ia, com, x, y);
 }
 
+/**
+ @brief check if there are sibur on the tile
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param int x: position x of tile
+ @param int y: position y of tile
+ @return void
+**/
 static void to_take_ressources_response_ia_sibur(ia_t *ia,
                                         common_t *com, int x, int y)
 {
@@ -70,6 +106,15 @@ static void to_take_ressources_response_ia_sibur(ia_t *ia,
     to_take_ressources_response_ia_mendiane(ia, com, x, y);
 }
 
+/**
+ @brief check if there are deraumere on the tile
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param int x: position x of tile
+ @param int y: position y of tile
+ @return void
+**/
 void to_take_ressources_response_ia_deraumere(ia_t *ia,
                                         common_t *com, int x, int y)
 {

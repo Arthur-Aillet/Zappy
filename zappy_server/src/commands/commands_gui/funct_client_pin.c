@@ -8,7 +8,8 @@
 #include "zappy.h"
 
 /**
- @brief fill in the arguments in the char **msg in the new command save to queue
+ @brief fill in the arguments in the char **msg in the
+        new command save to queue
  @author Laetitia Bousch/ Ludo De-Chavagnac
  @param msg_queue_t ne_msg : recording of the new order in the pending queue
  @param char **args: the arguments given as parameters with the command sent by the gui
@@ -25,11 +26,13 @@ static void fill_args(msg_queue_t *new_msg, char **args)
 }
 
 /**
- @brief receive and prepare the elements needed to prepare the order that will be processed by the server for the command pin
+ @brief receive and prepare the elements needed to prepare
+    the order that will be processed by the server for the command pin
  @author Laetitia Bousch/ Ludo De-Chavagnac
  @param gui_t *gui : structure of gui
  @param char **args: the arguments receive with the command gui
- @param common_t com : structure commun -> this structure gathers all the server data
+ @param common_t com : structure commun -> this structure
+                                        gathers all the server data
  @return void
 **/
 void funct_client_pin(gui_t *gui, char **args, common_t *com)

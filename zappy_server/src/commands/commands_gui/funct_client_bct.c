@@ -8,11 +8,14 @@
 #include "zappy.h"
 
 /**
- @brief fill in the arguments in the char **msg in the new command save to queue
+ @brief fill in the arguments in the char **msg in the new command
+        save to queue
  @author Laetitia Bousch/ Ludo De-Chavagnac
  @param msg_queue_t ne_msg : recording of the new order in the pending queue
- @param char **args: the arguments given as parameters with the command sent by the gui
- @param common_t com : structure commun -> this structure gathers all the server data
+ @param char **args: the arguments given as parameters with the command
+                    sent by the gui
+ @param common_t com : structure commun -> this structure gathers all
+                        the server data
  @return void
 **/
 static void fill_args(msg_queue_t *new_msg, char **args, common_t *com)

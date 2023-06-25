@@ -7,6 +7,13 @@
 
 #include "zappy.h"
 
+/**
+ @brief set up data needs for level 6 and 7 incantation next
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: structure ia
+ @return void
+**/
 static void funct_level_other_level_next(ia_t *ia, common_t *com)
 {
     char level[3];
@@ -20,6 +27,14 @@ static void funct_level_other_level_next(ia_t *ia, common_t *com)
     funct_prepare_response_gui_incantation(ia, com, 1);
 }
 
+/**
+ @brief set up data needs for level 6 and 7 incantation
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: structure ia
+ @param int nbr_ia_level: number of i need
+ @return void
+**/
 static void funct_level_other_level(ia_t *ia, common_t *com, int nbr_ia_level)
 {
     char buffer_incantation[256];
@@ -40,6 +55,13 @@ static void funct_level_other_level(ia_t *ia, common_t *com, int nbr_ia_level)
     funct_level_other_level_next(ia, com);
 }
 
+/**
+ @brief choose the function according to level
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: structure ia
+ @return void
+**/
 static void funct_response_ia_incantation_bis(ia_t *ia, common_t *com)
 {
     if (ia->player->level == 2 || ia->player->level == 3) {
@@ -53,6 +75,12 @@ static void funct_response_ia_incantation_bis(ia_t *ia, common_t *com)
     }
 }
 
+/**
+ @brief prepapre response for the echec incantation
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: structure ia
+ @return void
+**/
 static void funct_response_echec_incantation(ia_t *ia)
 {
     SIZE = 4;
@@ -64,6 +92,14 @@ static void funct_response_echec_incantation(ia_t *ia)
     strcat(OCTETS, "ko\n\0");
 }
 
+/**
+ @brief incantation command response to ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the ia structure
+ @return void
+**/
 void funct_response_ia_incantation(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;
