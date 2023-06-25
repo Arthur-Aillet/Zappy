@@ -7,6 +7,15 @@
 
 #include "zappy.h"
 
+/**
+ @brief prepare the message for the reply to the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param char *buffer_x: position x on the ia
+ @param char *buffer_y: position x on the ia
+ @return void
+**/
 static void funct_prepare_res(gui_t *gui, char **args,
                                 char *buffer_x, char *buffer_y)
 {
@@ -21,6 +30,14 @@ static void funct_prepare_res(gui_t *gui, char **args,
             args[0], args[1], buffer_x, buffer_y);
 }
 
+/**
+ @brief enw command response to gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the gui structure
+ @return void
+**/
 void funct_server_enw(char **args, void *info, common_t *common)
 {
     gui_t *gui = (gui_t *)info;

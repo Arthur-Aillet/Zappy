@@ -8,6 +8,13 @@
 #include "zappy.h"
 #include <string.h>
 
+/**
+ @brief prepare response for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @return void
+**/
 static void funct_prepare_res(gui_t *gui, common_t *common,
                                 team_t *tmp_team, char **args)
 {
@@ -23,6 +30,13 @@ static void funct_prepare_res(gui_t *gui, common_t *common,
     strcat(GUI_OCTETS, "\n\0");
 }
 
+/**
+ @brief check the level of the players in the team to know if it won or not
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param gui_t *gui: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @return void
+**/
 static int to_check_in(team_t *tmp_team)
 {
     int cmp = 0;
@@ -38,6 +52,14 @@ static int to_check_in(team_t *tmp_team)
     return 1;
 }
 
+/**
+ @brief seg command response to gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the gui structure
+ @return void
+**/
 void funct_server_seg(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;

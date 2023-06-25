@@ -7,6 +7,15 @@
 
 #include "zappy.h"
 
+/**
+ @brief find the egg that needs to be destroyed
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param egg_t *new_eggs: new egg board
+ @param egg_t *old_eggs: old version of the egg table in the team
+ @param size_t nb_eggs: number eggs
+ @param egg_t egg: delete this egg
+ @return void
+**/
 static void funct_find_egg(egg_t *new_eggs, size_t nb_eggs,
                             egg_t *old_eggs, egg_t egg)
 {
@@ -22,6 +31,15 @@ static void funct_find_egg(egg_t *new_eggs, size_t nb_eggs,
     }
 }
 
+/**
+ @brief reform the new egg table without the one that was just destroyed
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param egg_t egg: delete this egg
+ @param egg_t *old_eggs: old version of the egg table in the team
+ @param size_t nb_eggs: number eggs
+ @param common_t *com: common structure of all server data
+ @return egg_t *
+**/
 egg_t *remove_egg(egg_t egg, egg_t *old_eggs, size_t nb_eggs, common_t *com)
 {
     egg_t *new_eggs = (nb_eggs - 1 == 0) ? NULL :
