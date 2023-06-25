@@ -72,6 +72,10 @@ fn zappy_app(nannou_app: &rend_ox::nannou::App) -> App<Zappy> {
         .event(zappy_event);
     let (port, hostname) = parse_arguments();
 
+    println!("Use the `Z`, `Q`, `S`, `D`, `A` and `E` keys to move the camera.");
+    println!("Use the mouse to orient the pitch and yaw of the camera.");
+    println!("Press the `Space` key to toggle camera mode.");
+
     app.user.hostname = hostname;
     app.user.port = port;
     Zappy::load(&mut app);
