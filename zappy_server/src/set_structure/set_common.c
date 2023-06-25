@@ -12,6 +12,13 @@
 #include <fcntl.h>
 #include <sys/select.h>
 
+/**
+ * @brief Set the specifique structure of server_t struct sockaddr_in
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param int port: port number to connect to server
+ * @param server_t *server: server structure for all communication data
+ * @return void
+*/
 static void set_sockaddr(server_t *server, int port)
 {
     int flag = fcntl(server->socket, F_GETFL, 0);
@@ -24,6 +31,13 @@ static void set_sockaddr(server_t *server, int port)
     server->size = sizeof(server->addr);
 }
 
+/**
+ * @brief Set the structure server_t and open it
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param int port: port number to connect to server
+ * @param server_t *server: server structure for all communication data
+ * @return int
+*/
 static int set_server(int port, server_t *server)
 {
     if ((server->socket = socket(AF_INET, SOCK_STREAM, 0)) == -1)
@@ -43,6 +57,13 @@ static int set_server(int port, server_t *server)
     return 1;
 }
 
+/**
+ * @brief Set all common_t values that are structures
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param common_t *com: common structure of all server data
+ * @param parser_t *parser: structure for parsing server data
+ * @return void
+*/
 static void set_structures(common_t *com, parser_t *parser)
 {
     com->teams = malloc(sizeof(team_t) * parser->nb_teams);
@@ -59,6 +80,13 @@ static void set_structures(common_t *com, parser_t *parser)
     }
 }
 
+/**
+ * @brief Set the structure common_t and all these values
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param int ac: number of parameters after the executable
+ * @param char *ac[]: array containing all parameters of the executable
+ * @return common_t
+*/
 common_t set_common(int ac, char *av[])
 {
     common_t com;
@@ -75,6 +103,12 @@ common_t set_common(int ac, char *av[])
     return com;
 }
 
+/**
+ * @brief free structure common_t * and all theses values allocated
+ * @author Laetitia Bousch/ Ludo De-Chavagnac
+ * @param common_t *com: free this structure
+ * @return void
+*/
 void free_common(common_t *com)
 {
     free_gui(com->gui);
