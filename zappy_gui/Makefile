@@ -19,4 +19,11 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 
+doc:
+	cargo doc
+
+doc-f:
+	cargo doc
+	firefox --new-window target/doc/rend_ox/all.html
+
 .PHONY: all re clean fclean
