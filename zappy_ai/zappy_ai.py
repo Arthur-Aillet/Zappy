@@ -51,7 +51,7 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
     creature = Creature()
     message = ""
     invtimer = 0
-
+    communication : messageinfo()
     while looping:
         try:
             message = ai.client.recv(1024).decode() # peut être mettre un timeout pour éviter de rester perdu sur une interrupt de co
@@ -77,12 +77,12 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
         if message.startswith("Message "):
             communication : messageinfo = getmsginfo(message, creature)
 
-        if messageinfo.valid:
-            if messageinfo.text.startswith("role call"):
+        if communication.valid:
+            if communication.text.startswith("role call"):
                 status_report(ai.client, creature.id, creature.message_index, creature.type, creature.level)
                 creature.message_index += 1
-            if messageinfo.text.__contains__(" deviens "):
-                change_split = messageinfo.text.split(" ")
+            if communication.text.__contains__(" deviens "):
+                change_split = communication.text.split(" ")
                 if creature.id == change_split[0] :
                     if change_split [2] == 0:
                         creature.type = Creature.Types.QUEEN
@@ -94,27 +94,27 @@ def mainloop(ai: Session): # mainloop peut return True si elle est enfant de for
                         creature.type = Creature.Types.GATHERER
                     if change_split [2] == 4:
                         creature.type = Creature.Types.WARRIOR
-            if messageinfo.text.__contains__("come back here"):
-                come_split = messageinfo.text.split(" ")
+            if communication.text.__contains__("come back here"):
+                come_split = communication.text.split(" ")
                 if creature.id == come_split[0]:
                     go_to_base(creature, ai, last_actions)
-            if messageinfo.text.startswith("it's dangerous"):
-                pick_up_list(str_to_dict(messageinfo.text.split(":")[1]), last_actions, ai)
-            if messageinfo.text.startswith("enemy spotted"):
-                enemy_split = messageinfo.text.split(" ")
+            if communication.text.startswith("it's dangerous"):
+                pick_up_list(str_to_dict(communication.text.split(":")[1]), last_actions, ai)
+            if communication.text.startswith("enemy spotted"):
+                enemy_split = communication.text.split(" ")
                 enemy_x = enemy_split[2]
                 enemy_y = enemy_split[3]
                 if enemy_x == creature.pos_x and enemy_y == creature.pos_y:
                     dont_shoot(ai.client, creature.id, creature.message_index)
                     creature.message_index += 1
-            if messageinfo.text.startswith("base moved to"):
-                move_split = messageinfo.text.split(" ")
+            if communication.text.startswith("base moved to"):
+                move_split = communication.text.split(" ")
                 creature.spawn_pos_x = move_split[3]
                 creature.spawn_pos_y = move_split[4]
-            if messageinfo.text.startswith("ritual in"):
-                creature.time_to_ritual = messageinfo.text.split(" ")[2]
-            if messageinfo.text.startswith("my job is "):
-                take_new_role_in_account(messageinfo, creature)
+            if communication.text.startswith("ritual in"):
+                creature.time_to_ritual = communication.text.split(" ")[2]
+            if communication.text.startswith("my job is "):
+                take_new_role_in_account(communication, creature)
             continue # traiter le maissage
 
         creature.looked = False
@@ -167,7 +167,7 @@ if __name__ == "__main__":
     while (run): ## point de retour en cas de fork
         print("start")
         try:
-            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 2224, "Team1")
+            client, nb, mapsize_x, mapsize_y = connect("127.0.0.1", 4444, "Team1")
         except:
             print("connection refused")
             exit(84)
@@ -175,6 +175,4 @@ if __name__ == "__main__":
             stderr.write("ko: no places in the team\n")
             exit(84)
         session = Session(client)
-        client.inventory()
-        print(session.client.recv().decode())
-        run = mainloop() # boucle principale (return en cas de fork)
+        run = mainloop(session) # boucle principale (return en cas de fork)

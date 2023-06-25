@@ -55,7 +55,7 @@ def gatherer_loop(creature: Creature, last_actions: list, ia: Session) :
         last_actions.append(fowards(ia.client))
         creature.pos_x, creature.pos_y = go_fowards(creature.pos_x, creature.pos_y, creature.orientation)
         last_actions.append(right(ia.client))
-    resource_spotted, tile: str = closest_resource(creature, last_actions, ia, "")
+    resource_spotted, tile = closest_resource(creature, last_actions, ia, "")
     if (resource_spotted != -1) :
         go_to(resource_spotted)
         last_actions.append(pick_up(ia.client, tile.split(" ")[0]))
