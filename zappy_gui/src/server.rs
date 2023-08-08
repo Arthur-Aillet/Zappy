@@ -20,16 +20,11 @@ impl ServerConn {
     pub fn new(port: &String, machine: &String) -> Option<ServerConn> {
         let try_stream = ServerConn::set_tcp_stream(port, machine);
 
-        match try_stream {
-            None => {None}
-            Some(stream) => {
-                Some(ServerConn {
-                commands: Arc::new(Mutex::new(Vec::new())),
-                listening: Arc::new(Mutex::new(true)),
-                stream,
-                })
-            }
-        }
+        try_stream.map(|stream| ServerConn {
+            commands: Arc::new(Mutex::new(Vec::new())),
+            listening: Arc::new(Mutex::new(true)),
+            stream,
+        })
     }
 
     //NOTE - Create the connection with the server and return the tcp connection
@@ -37,7 +32,7 @@ impl ServerConn {
         let connect = format!("{}:{}", machine, port);
 
         let stream = match TcpStream::connect(connect) {
-            Ok(stream) => {stream}
+            Ok(stream) => stream,
             Err(_) => {
                 return None;
             }
@@ -62,7 +57,12 @@ impl ServerConn {
                         break;
                     }
                 }
-                Ok(_) => {return Err(io::Error::new(io::ErrorKind::ConnectionAborted, "Connection aborted"))},
+                Ok(_) => {
+                    return Err(io::Error::new(
+                        io::ErrorKind::ConnectionAborted,
+                        "Connection aborted",
+                    ))
+                }
                 Err(ref err) if err.kind() == io::ErrorKind::WouldBlock => {
                     break;
                 }
@@ -78,9 +78,12 @@ impl ServerConn {
     //       If you don't need them, set the value to negative
     //       Returns false in case of error, true if none.
     pub fn send_to_server(&mut self, s: String) -> bool {
-        match write!(self.stream, "{}\n", s) {
+        match writeln!(self.stream, "{}", s) {
             Ok(_) => true,
-            Err(e) => {println!("error in message sent: {e}"); false}
+            Err(e) => {
+                println!("error in message sent: {e}");
+                false
+            }
         }
     }
 

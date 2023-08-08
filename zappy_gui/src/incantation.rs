@@ -1,6 +1,6 @@
-use std::time::Duration;
 use rend_ox::glam::Vec2;
 use rend_ox::nannou;
+use std::time::Duration;
 
 #[derive(PartialEq)]
 pub enum IncantationState {
@@ -12,9 +12,9 @@ pub enum IncantationState {
 impl IncantationState {
     pub fn _as_string(&self) -> &'static str {
         match self {
-            IncantationState::Running => {"running"},
-            IncantationState::Success => {"success"},
-            IncantationState::Failed => {"failed"},
+            IncantationState::Running => "running",
+            IncantationState::Success => "success",
+            IncantationState::Failed => "failed",
         }
     }
 }
@@ -28,12 +28,7 @@ pub struct Incantation {
 }
 
 impl Incantation {
-    pub fn new(
-        pos: Vec2,
-        level: u32,
-        players: Vec<i64>,
-        since: Duration,
-    ) -> Incantation {
+    pub fn new(pos: Vec2, level: u32, players: Vec<i64>, since: Duration) -> Incantation {
         Incantation {
             pos,
             _level: level,

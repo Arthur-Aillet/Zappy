@@ -1,11 +1,11 @@
+use crate::tantorian::PlayerState::{Alive, Dead, Egg};
+use rend_ox::glam::Vec2;
+use rend_ox::Vec3;
 use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 use std::f32::consts::PI;
-use rend_ox::glam::Vec2;
-use rend_ox::Vec3;
 use std::hash::{Hash, Hasher};
 use std::time::Duration;
-use crate::tantorian::PlayerState::{Alive, Dead, Egg};
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum Orientation {
@@ -26,7 +26,7 @@ impl Orientation {
         }
     }
 
-    pub fn to_char(&self) -> char {
+    pub fn as_char(&self) -> char {
         match self {
             Orientation::N => 'N',
             Orientation::E => 'E',
@@ -37,10 +37,10 @@ impl Orientation {
 
     pub fn as_radian(&self) -> f32 {
         match self {
-            Orientation::S => 0. * PI/180.,
-            Orientation::E => 270. * PI/180.,
-            Orientation::N => 180. * PI/180.,
-            Orientation::W => 90. * PI/180.,
+            Orientation::S => 0. * PI / 180.,
+            Orientation::E => 270. * PI / 180.,
+            Orientation::N => 180. * PI / 180.,
+            Orientation::W => 90. * PI / 180.,
         }
     }
 }
@@ -57,22 +57,22 @@ pub fn generate_color_from_string(string: &String) -> Vec3 {
         g += 10;
         b += 10;
     }
-    return Vec3::new(r as f32/255. , g as f32/255., b as f32/255.)
+    Vec3::new(r as f32 / 255., g as f32 / 255., b as f32 / 255.)
 }
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum PlayerState {
     Dead,
     Alive,
-    Egg
+    Egg,
 }
 
 impl PlayerState {
     pub fn as_string(&self) -> &'static str {
         match self {
-            Dead => {"dead"}
-            Alive => {"alive"}
-            PlayerState::Egg => {"egg"}
+            Dead => "dead",
+            Alive => "alive",
+            PlayerState::Egg => "egg",
         }
     }
 }
@@ -105,20 +105,30 @@ pub struct Tantorian {
 impl Tantorian {
     pub fn access_nth_resource(&mut self, q: usize) -> &mut u32 {
         match q {
-            0 => { &mut self.food}
-            1 => { &mut self.linemate}
-            2 => { &mut self.deraumere}
-            3 => { &mut self.sibur}
-            4 => { &mut self.mendiane}
-            5 => { &mut self.phiras}
-            6 => { &mut self.thystame}
-            _ => { panic!("Accessed to non existing resource") }
+            0 => &mut self.food,
+            1 => &mut self.linemate,
+            2 => &mut self.deraumere,
+            3 => &mut self.sibur,
+            4 => &mut self.mendiane,
+            5 => &mut self.phiras,
+            6 => &mut self.thystame,
+            _ => {
+                panic!("Accessed to non existing resource")
+            }
         }
     }
 
-    pub fn new_egg(number: i64, x: usize, y: usize, map_size: &[usize; 2], parent_number: i64, teams: &Vec<(String, Vec3)>, players: &HashMap<i64, Tantorian>) -> Option<Tantorian> {
+    pub fn new_egg(
+        number: i64,
+        x: usize,
+        y: usize,
+        map_size: &[usize; 2],
+        parent_number: i64,
+        teams: &Vec<(String, Vec3)>,
+        players: &HashMap<i64, Tantorian>,
+    ) -> Option<Tantorian> {
         let mut parent_player: Option<&Tantorian> = None;
-        for (_, player) in players {
+        for player in players.values() {
             if player.number == number && player.state != Dead {
                 println!("Player number already attributed");
                 return None;
@@ -144,7 +154,7 @@ impl Tantorian {
             let mut team_color = Vec3::default();
             for (current_name, current_color) in teams {
                 if current_name == &parent.team_name {
-                    team_color = current_color.clone();
+                    team_color = *current_color;
                 }
             }
             return Some(Tantorian {
@@ -170,13 +180,23 @@ impl Tantorian {
                 phiras: 0,
                 thystame: 0,
                 laying: None,
-            })
+            });
         }
         println!("Parent player not found");
         None
     }
 
-    pub fn new_from_command(number: i64, x: usize, y: usize, orientation: Orientation, level : u32, team_name: String, teams: &Vec<(String, Vec3)>, map_size: &[usize; 2], players: &mut HashMap<i64, Tantorian>) -> Option<Tantorian> {
+    pub fn new_from_command(
+        number: i64,
+        x: usize,
+        y: usize,
+        orientation: Orientation,
+        level: u32,
+        team_name: String,
+        teams: &Vec<(String, Vec3)>,
+        map_size: &[usize; 2],
+        players: &mut HashMap<i64, Tantorian>,
+    ) -> Option<Tantorian> {
         if !teams.iter().any(|(name, _color)| *name == team_name) {
             println!("New player team name does not exist!");
             return None;
@@ -195,7 +215,7 @@ impl Tantorian {
             z: 0.0,
         };
         let rot = Vec3::new(0., 0., orientation.as_radian());
-        for (_, player) in players {
+        for player in players.values_mut() {
             if player.team_name == team_name && player.number == number && player.state == Alive {
                 println!("New player number already attributed!");
                 return None;
@@ -204,7 +224,7 @@ impl Tantorian {
                 player.number = number;
                 player.pos = pos;
                 player.rotation = rot;
-                player.color = player.color;
+                //player.color = player.color;
                 player.level = level;
                 player.orientation = orientation;
                 player.last_orientation = orientation;
@@ -230,7 +250,7 @@ impl Tantorian {
         let mut team_color = Vec3::default();
         for (current_name, current_color) in teams {
             if current_name == &team_name {
-                team_color = current_color.clone();
+                team_color = *current_color;
             }
         }
         Some(Tantorian {

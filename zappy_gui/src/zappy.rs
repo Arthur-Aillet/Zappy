@@ -1,26 +1,26 @@
+use fork::{fork, Fork};
 use std::collections::HashMap;
 use std::f32::consts::PI;
 use std::mem::take;
+use std::process::{exit, Command};
 use std::thread::JoinHandle;
 use std::time::Duration;
-use fork::{Fork, fork};
-use std::process::{Command, exit};
 
 use rend_ox::app::App;
-use rend_ox::{Mat4, Vec3};
-use rend_ox::mesh::MeshDescriptor;
 use rend_ox::glam::{EulerRot, Quat, Vec2};
+use rend_ox::material::MaterialDescriptor;
+use rend_ox::mesh::MeshDescriptor;
 use rend_ox::nannou::event::Update;
 use rend_ox::nannou_egui::egui::CtxRef;
-use rend_ox::material::MaterialDescriptor;
+use rend_ox::{Mat4, Vec3};
 
-use crate::message::{Arrows, Message};
+use crate::incantation::Incantation;
 use crate::interpreter::{create_hash_function, ServerFunction};
 use crate::map::Map;
+use crate::message::{Arrows, Message};
 pub use crate::server::ServerConn;
 use crate::tantorian::PlayerState::{Alive, Egg};
 use crate::tantorian::Tantorian;
-use crate::incantation::{Incantation};
 use crate::ui;
 use crate::ui::ZappyUi;
 
@@ -53,23 +53,7 @@ pub struct Zappy {
     pub(crate) following: Option<(i64, String)>,
 }
 
-fn _hsv2rgb(source: Vec3) -> Vec3/* h,s,v) */ {
-    let mut r = ((((source.x + (3. / 3.)) % 1.) * 2. - 1.).abs() * 3. - 1.).clamp(0., 1.);
-    let mut g = ((((source.x + (5. / 3.)) % 1.) * 2. - 1.).abs() * 3. - 1.).clamp(0., 1.);
-    let mut b = ((((source.x + (4. / 3.)) % 1.) * 2. - 1.).abs() * 3. - 1.).clamp(0., 1.);
-
-    r = source.y * r + 1. - source.y;
-    g = source.y * g + 1. - source.y;
-    b = source.y * b + 1. - source.y;
-
-    r = source.z * r;
-    g = source.z * g;
-    b = source.z * b;
-
-    Vec3::new(r, g, b)
-}
-
-fn lerp(fst: f32, snd: f32, perc: f32) -> f32{
+fn lerp(fst: f32, snd: f32, perc: f32) -> f32 {
     fst + (snd - fst) * perc
 }
 
@@ -155,14 +139,18 @@ impl Zappy {
 
     pub fn update_incantations(app: &mut App<Zappy>, update: &Update) {
         let incantations = take(&mut app.user.incantations);
-        app.user.incantations = incantations.into_iter().filter(|i|i.is_remain(app.user.time_unit, update)).collect();
+        app.user.incantations = incantations
+            .into_iter()
+            .filter(|i| i.is_remain(app.user.time_unit, update))
+            .collect();
     }
 
     pub fn update_players(app: &mut App<Zappy>, update: &Update) {
-        for (_, player) in &mut app.user.players {
+        for player in app.user.players.values_mut() {
             if let Some(movement_start) = &player.start_movement {
                 if let Some(loops) = player.laying {
-                    let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
+                    let mut progress =
+                        update.since_start.as_secs_f32() - movement_start.as_secs_f32();
                     let modifier = 1. / (42. / app.user.time_unit);
 
                     if progress >= 1. / modifier {
@@ -170,14 +158,19 @@ impl Zappy {
                         player.start_movement = None;
                     }
                     let mut new_rot: f32 = player.orientation.as_radian();
-                    new_rot = lerp(new_rot, player.orientation.as_radian() + loops * PI * 2., (progress * modifier).powi(3));
+                    new_rot = lerp(
+                        new_rot,
+                        player.orientation.as_radian() + loops * PI * 2.,
+                        (progress * modifier).powi(3),
+                    );
                     player.rotation = Vec3 {
                         x: 0.,
                         y: 0.,
                         z: new_rot,
                     };
                 } else {
-                    let mut progress = update.since_start.as_secs_f32() - movement_start.as_secs_f32();
+                    let mut progress =
+                        update.since_start.as_secs_f32() - movement_start.as_secs_f32();
                     let modifier = 1. / (7. / app.user.time_unit);
 
                     if progress >= 1. / modifier {
@@ -191,8 +184,8 @@ impl Zappy {
                     new_pos = new_pos.lerp(player.current_tile as Vec2, progress * modifier);
                     new_rot = lerp(new_rot, player.orientation.as_radian(), progress * modifier);
                     player.pos = Vec3 {
-                        x: new_pos.x as f32 + 0.5,
-                        y: new_pos.y as f32 + 0.5,
+                        x: new_pos.x + 0.5,
+                        y: new_pos.y + 0.5,
                         z: 0.0,
                     };
                     player.rotation = Vec3 {
@@ -207,26 +200,46 @@ impl Zappy {
 
     pub fn render(app: &mut App<Zappy>) {
         Map::render(app);
-        let player_instances : Vec<Mat4> = app.user.players
+        let player_instances: Vec<Mat4> = app
+            .user
+            .players
             .iter()
-            .filter(|(_, p)|p.state == Alive)
-            .map(|(_, p)|
+            .filter(|(_, p)| p.state == Alive)
+            .map(|(_, p)| {
                 Mat4::from_scale_rotation_translation(
                     Vec3::new(1., 1., 1.),
                     Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z),
-                    p.pos))
+                    p.pos,
+                )
+            })
             .collect();
-        let egg_instances : Vec<Mat4> = app.user.players
+        let egg_instances: Vec<Mat4> = app
+            .user
+            .players
             .iter()
-            .filter(|(_, p)|p.state == Egg)
-            .map(|(_, p)|
+            .filter(|(_, p)| p.state == Egg)
+            .map(|(_, p)| {
                 Mat4::from_scale_rotation_translation(
                     Vec3::new(1., 1., 1.),
                     Quat::from_euler(EulerRot::XYZ, p.rotation.x, p.rotation.y, p.rotation.z),
-                    p.pos))
+                    p.pos,
+                )
+            })
             .collect();
-        let player_colors : Vec<Vec3> = app.user.players.iter().filter(|(_, p)|p.state == Alive).map(|(_, p)| p.color).collect();
-        let egg_colors : Vec<Vec3> = app.user.players.iter().filter(|(_, p)|p.state == Egg).map(|(_, p)| p.color).collect();
+        let player_colors: Vec<Vec3> = app
+            .user
+            .players
+            .iter()
+            .filter(|(_, p)| p.state == Alive)
+            .map(|(_, p)| p.color)
+            .collect();
+        let egg_colors: Vec<Vec3> = app
+            .user
+            .players
+            .iter()
+            .filter(|(_, p)| p.state == Egg)
+            .map(|(_, p)| p.color)
+            .collect();
 
         if let Some(player_mesh) = &app.user.tantorian_mesh {
             app.draw_instances(player_mesh, player_instances.clone(), player_colors.clone());
@@ -236,7 +249,13 @@ impl Zappy {
         }
         if let Some(mesh) = &app.user.message_mesh {
             for message in &app.user.messages {
-                app.draw_at(mesh, message.color, message.pos, Vec3::new(0., 0., 0.), message.scale);
+                app.draw_at(
+                    mesh,
+                    message.color,
+                    message.pos,
+                    Vec3::new(0., 0., 0.),
+                    message.scale,
+                );
             }
         }
         if let Some(mesh) = &app.user.arrow_mesh {
@@ -256,17 +275,28 @@ impl Zappy {
     }
 }
 
-pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
-    if let Some(new_time_unit) = zappy.user.ui.settings(ctx, &mut zappy.camera, zappy.camera_is_active) {
+pub fn display_ui(zappy: &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
+    if let Some(new_time_unit) =
+        zappy
+            .user
+            .ui
+            .settings(ctx, &mut zappy.camera, zappy.camera_is_active)
+    {
         if let Some(server) = &mut zappy.user.server {
             server.send_to_server(format!("sst {}", new_time_unit));
         }
     }
-    let (action, player_number, team_name) = zappy.user.ui
-        .players(ctx, &mut zappy.user.players, &mut zappy.user.teams, &mut zappy.user.player_auto_update, &mut zappy.user.player_refresh_factor, zappy.camera_is_active);
+    let (action, player_number, team_name) = zappy.user.ui.players(
+        ctx,
+        &mut zappy.user.players,
+        &mut zappy.user.teams,
+        &mut zappy.user.player_auto_update,
+        &mut zappy.user.player_refresh_factor,
+        zappy.camera_is_active,
+    );
     let refresh_player = action == crate::ui::PlayerAction::Refresh;
     if action == crate::ui::PlayerAction::Follow {
-        for (_, player) in &zappy.user.players {
+        for player in zappy.user.players.values() {
             if player.team_name == team_name && player.number == player_number {
                 zappy.user.following = Some((player_number, team_name));
                 break;
@@ -276,27 +306,41 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
         zappy.user.following = None;
         look_at_player(zappy, &player_number, &team_name);
     }
-    let refresh_map = zappy.user.ui.tiles(ctx, &mut zappy.user.auto_update, &mut zappy.user.refresh_factor, &zappy.user.map, zappy.camera_is_active, &zappy.user.players);
+    let refresh_map = zappy.user.ui.tiles(
+        ctx,
+        &mut zappy.user.auto_update,
+        &mut zappy.user.refresh_factor,
+        &zappy.user.map,
+        zappy.camera_is_active,
+        &zappy.user.players,
+    );
     if zappy.user.server.is_some() {
         zappy.user.ui.communications(ctx, zappy.camera_is_active);
     }
-    let state = zappy.user.ui.network_status(ctx, zappy.camera_is_active, &mut zappy.user.port, &mut zappy.user.hostname, zappy.user.server.is_some());
+    let state = zappy.user.ui.network_status(
+        ctx,
+        zappy.camera_is_active,
+        &mut zappy.user.port,
+        &mut zappy.user.hostname,
+        zappy.user.server.is_some(),
+    );
     match state {
-        ui::State::Nothing => {},
+        ui::State::Nothing => {}
         ui::State::Connect => zappy.user.try_to_connect(at),
         ui::State::Disconnect => {
             zappy.user.close_connection(at);
             zappy.user.reset_server_data();
-        },
+        }
         ui::State::Launching => {
             match fork() {
                 Ok(Fork::Child) => {
-                        println!("executing process: -p {}", zappy.user.port);
+                    println!("executing process: -p {}", zappy.user.port);
                     let _p = Command::new("../zappy_server/zappy_server")
                         .arg("-p")
-                        .arg(zappy.user.port.clone()).status();
-                        println!("execution over;");
-                        exit(0);
+                        .arg(zappy.user.port.clone())
+                        .status();
+                    println!("execution over;");
+                    exit(0);
                 }
                 Ok(Fork::Parent(_)) => println!("forked"),
                 Err(_) => println!("failed to fork"),
@@ -304,17 +348,17 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
             zappy.user.hostname = "127.0.0.1".into();
             std::thread::sleep(Duration::from_secs_f32(2.0));
             zappy.user.try_to_connect(at);
-        },
+        }
     }
     if let Some(team) = &zappy.user.winner_team {
         zappy.user.ui.win(ctx, team, zappy.camera_is_active);
     }
     if let Some(server) = &mut zappy.user.server {
         if refresh_map {
-            server.send_to_server(format!("mct"));
+            server.send_to_server("mct".to_string());
         }
         if refresh_player {
-            for (_, player) in &zappy.user.players {
+            for player in zappy.user.players.values() {
                 server.send_to_server(format!("ppo #{}", player.number));
             }
         }
@@ -323,25 +367,28 @@ pub fn display_ui(zappy : &mut App<Zappy>, at: Duration, ctx: &CtxRef) {
 
 fn ask_for_update(zappy: &mut Zappy, at: Duration) {
     if let Some(server) = &mut zappy.server {
-        if zappy.auto_update == true {
-            if zappy.last_map_update.as_secs_f32() + 20. / zappy.time_unit * zappy.refresh_factor < at.as_secs_f32() {
-                zappy.last_map_update = at;
-                server.send_to_server(format!("mct"));
-            }
+        if zappy.auto_update
+            && zappy.last_map_update.as_secs_f32() + 20. / zappy.time_unit * zappy.refresh_factor
+                < at.as_secs_f32()
+        {
+            zappy.last_map_update = at;
+            server.send_to_server("mct".to_string());
         }
-        if zappy.player_auto_update == true {
-            if zappy.last_player_update.as_secs_f32() + 7. / zappy.time_unit * zappy.player_refresh_factor < at.as_secs_f32() {
-                zappy.last_player_update = at;
-                for (_, player) in &zappy.players {
-                    server.send_to_server(format!("ppo #{}", player.number));
-                }
+        if zappy.player_auto_update
+            && zappy.last_player_update.as_secs_f32()
+                + 7. / zappy.time_unit * zappy.player_refresh_factor
+                < at.as_secs_f32()
+        {
+            zappy.last_player_update = at;
+            for player in zappy.players.values() {
+                server.send_to_server(format!("ppo #{}", player.number));
             }
         }
     }
 }
 
 fn look_at_player(model: &mut App<Zappy>, number: &i64, team_name: &String) {
-    for (_, player) in &model.user.players {
+    for player in model.user.players.values_mut() {
         if &player.team_name == team_name && &player.number == number {
             model.camera.position = Vec3 {
                 x: player.pos.x / 100.,
@@ -377,7 +424,7 @@ fn following(app: &rend_ox::nannou::App, model: &mut App<Zappy>) {
         }
     }
     if let Some((number, team_name)) = &model.user.following {
-        let player_number = number.clone();
+        let player_number = *number;
         let player_team_name = team_name.clone();
 
         look_at_player(model, &player_number, &player_team_name);
@@ -388,11 +435,17 @@ pub(crate) fn zappy_update(
     nannou_app: &rend_ox::nannou::App,
     zappy: &mut App<Zappy>,
     update: rend_ox::nannou::event::Update,
-    ctx: &CtxRef
+    ctx: &CtxRef,
 ) {
     if let Some(handle) = &zappy.user.thread_handle {
         if handle.is_finished() {
-            zappy.user.ui.network_messages.push((update.since_start, format!("Host {}:{} broke connection", zappy.user.hostname, zappy.user.port)));
+            zappy.user.ui.network_messages.push((
+                update.since_start,
+                format!(
+                    "Host {}:{} broke connection",
+                    zappy.user.hostname, zappy.user.port
+                ),
+            ));
             zappy.user.close_connection(update.since_start);
             zappy.user.reset_server_data();
         }

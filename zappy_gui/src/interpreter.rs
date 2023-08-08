@@ -1,15 +1,15 @@
-use crate::tantorian::{generate_color_from_string, Orientation, Tantorian};
-use crate::zappy::Zappy;
-use regex::Regex;
-use std::collections::HashMap;
-use std::f32::consts::PI;
-use std::sync::{Arc, Mutex};
-use std::time::Duration;
-use rend_ox::glam::{Vec2, Vec3Swizzles};
-use rend_ox::Vec3;
 use crate::incantation::{Incantation, IncantationState};
 use crate::message::{Arrows, Message};
 use crate::tantorian::PlayerState::{Alive, Dead, Egg};
+use crate::tantorian::{generate_color_from_string, Orientation, Tantorian};
+use crate::zappy::Zappy;
+use regex::Regex;
+use rend_ox::glam::{Vec2, Vec3Swizzles};
+use rend_ox::Vec3;
+use std::collections::HashMap;
+use std::f32::consts::PI;
+use std::sync::Arc;
+use std::time::Duration;
 
 pub type ServerFunction = fn(&mut Zappy, String, Duration);
 
@@ -62,14 +62,13 @@ macro_rules! parse_capture {
 
 impl Zappy {
     fn player_fork(&mut self, command: String, at: Duration) {
-        let re = Regex::new(r"^pfk #?(-?\d+)$")
-            .expect("Invalid regex");
+        let re = Regex::new(r"^pfk #?(-?\d+)$").expect("Invalid regex");
 
-        if let Some(capture) = re.captures(&*command) {
+        if let Some(capture) = re.captures(&command) {
             parse_capture!(i64, 1, number, capture, "pfk: invalid player number");
 
             let mut found = false;
-            for (_, player) in &mut self.players {
+            for player in self.players.values_mut() {
                 if player.number == number {
                     player.laying = Some(5.0);
                     player.start_movement = Some(at);
@@ -85,36 +84,52 @@ impl Zappy {
     }
 
     fn player_expulsion(&mut self, command: String, at: Duration) {
-        let re = Regex::new(r"^pex #?(-?\d+)$")
-            .expect("Invalid regex");
+        let re = Regex::new(r"^pex #?(-?\d+)$").expect("Invalid regex");
 
-        if let Some(capture) = re.captures(&*command) {
+        if let Some(capture) = re.captures(&command) {
             parse_capture!(i64, 1, number, capture, "pex: invalid player number");
 
             let mut found = false;
-            let mut pos = [0;2];
+            let mut pos = [0; 2];
             let mut orientation = Orientation::N;
-            for (_, player) in &mut self.players {
+            for player in self.players.values_mut() {
                 if player.number == number && player.state == Alive {
                     found = true;
                     orientation = player.orientation;
-                    pos = [player.current_tile.x as usize, player.current_tile.y as usize];
-                    self.arrows.push(Arrows::new_from_direction(Vec3::new(0., 0., -player.orientation.as_radian()), player.pos.x, player.pos.y, player.color.clone(), at.clone()));
+                    pos = [
+                        player.current_tile.x as usize,
+                        player.current_tile.y as usize,
+                    ];
+                    self.arrows.push(Arrows::new_from_direction(
+                        Vec3::new(0., 0., -player.orientation.as_radian()),
+                        player.pos.x,
+                        player.pos.y,
+                        player.color,
+                        at,
+                    ));
                 }
             }
             if !found {
                 println!("pex: player not found");
             }
 
-
-            for (_, player) in &mut self.players {
-                if [player.current_tile.x as usize, player.current_tile.y as usize] == pos && player.number != number {
+            for player in self.players.values_mut() {
+                if [
+                    player.current_tile.x as usize,
+                    player.current_tile.y as usize,
+                ] == pos
+                    && player.number != number
+                {
                     if player.state == Egg {
                         player.state = Dead
                     }
                     if player.state == Alive {
-                        let mut x = player.current_tile.x + (orientation == Orientation::E) as u8 as f32 - (orientation == Orientation::W) as u8 as f32;
-                        let mut y = player.current_tile.y + (orientation == Orientation::N) as u8 as f32 - (orientation == Orientation::S) as u8 as f32;
+                        let mut x = player.current_tile.x
+                            + (orientation == Orientation::E) as u8 as f32
+                            - (orientation == Orientation::W) as u8 as f32;
+                        let mut y = player.current_tile.y
+                            + (orientation == Orientation::N) as u8 as f32
+                            - (orientation == Orientation::S) as u8 as f32;
                         if x < 0. {
                             x = self.map.size[0] as f32 - 1.;
                         }
@@ -122,7 +137,7 @@ impl Zappy {
                             y = self.map.size[1] as f32 - 1.;
                         }
                         player.last_tile = player.pos.xy() - 0.5;
-                        player.current_tile = Vec2::new(x as f32, y as f32);
+                        player.current_tile = Vec2::new(x, y);
                         player.start_movement = Some(at);
                     }
                 }
@@ -133,21 +148,32 @@ impl Zappy {
     }
 
     fn drop_resource(&mut self, command: String, at: Duration) {
-        let re = Regex::new(r"^pdr #?(-?\d+) ([0-6])$")
-            .expect("Invalid regex");
+        let re = Regex::new(r"^pdr #?(-?\d+) ([0-6])$").expect("Invalid regex");
 
-        if let Some(capture) = re.captures(&*command) {
+        if let Some(capture) = re.captures(&command) {
             parse_capture!(i64, 1, number, capture, "pdr: invalid player number");
             parse_capture!(usize, 2, ressource, capture, "pdr: invalid resource number");
 
-            for (_, player) in &mut self.players {
+            for player in self.players.values_mut() {
                 if player.number == number && player.state == Alive {
                     let x = player.current_tile.as_uvec2().x as usize;
                     let y = player.current_tile.as_uvec2().y as usize;
-                    let before_quantity = self.map.tiles[x][y].access_to_nth_resource(ressource).len();
-                    self.map.update_resources(x, y, ressource, before_quantity + player.access_nth_resource(ressource).clone() as usize);
+                    let before_quantity =
+                        self.map.tiles[x][y].access_to_nth_resource(ressource).len();
+                    self.map.update_resources(
+                        x,
+                        y,
+                        ressource,
+                        before_quantity + *player.access_nth_resource(ressource) as usize,
+                    );
                     *player.access_nth_resource(ressource) = 0;
-                    self.arrows.push(Arrows::new_from_direction(Vec3::new(-PI/2., 0., 0.), player.pos.x, player.pos.y, player.color.clone(), at.clone()));
+                    self.arrows.push(Arrows::new_from_direction(
+                        Vec3::new(-PI / 2., 0., 0.),
+                        player.pos.x,
+                        player.pos.y,
+                        player.color,
+                        at,
+                    ));
                     return;
                 } else if player.number == number {
                     println!("pdr: player not alive");
@@ -161,20 +187,26 @@ impl Zappy {
     }
 
     fn collect_resource(&mut self, command: String, at: Duration) {
-        let re = Regex::new(r"^pgt #?(-?\d+) ([0-6])$")
-            .expect("Invalid regex");
+        let re = Regex::new(r"^pgt #?(-?\d+) ([0-6])$").expect("Invalid regex");
 
-        if let Some(capture) = re.captures(&*command) {
+        if let Some(capture) = re.captures(&command) {
             parse_capture!(i64, 1, number, capture, "pgt: invalid player number");
             parse_capture!(usize, 2, ressource, capture, "pgt: invalid resource number");
 
-            for (_, player) in &mut self.players {
+            for player in self.players.values_mut() {
                 if player.number == number && player.state == Alive {
                     let x = player.current_tile.as_uvec2().x as usize;
                     let y = player.current_tile.as_uvec2().y as usize;
-                    *player.access_nth_resource(ressource) += self.map.tiles[x][y].access_to_nth_resource(ressource).len() as u32;
+                    *player.access_nth_resource(ressource) +=
+                        self.map.tiles[x][y].access_to_nth_resource(ressource).len() as u32;
                     self.map.update_resources(x, y, ressource, 0);
-                    self.arrows.push(Arrows::new_from_direction(Vec3::new(PI/2., 0., 0.), player.pos.x, player.pos.y, player.color.clone(), at.clone()));
+                    self.arrows.push(Arrows::new_from_direction(
+                        Vec3::new(PI / 2., 0., 0.),
+                        player.pos.x,
+                        player.pos.y,
+                        player.color,
+                        at,
+                    ));
                     return;
                 } else if player.number == number {
                     println!("pgt: player not alive");
@@ -188,12 +220,11 @@ impl Zappy {
     }
 
     fn death_of_an_egg(&mut self, command: String, _at: Duration) {
-        let re = Regex::new(r"^edi #?(-?\d+)$")
-            .expect("Invalid regex");
-        if let Some(capture) = re.captures(&*command) {
+        let re = Regex::new(r"^edi #?(-?\d+)$").expect("Invalid regex");
+        if let Some(capture) = re.captures(&command) {
             parse_capture!(i64, 1, egg_number, capture, "edi: invalid egg number");
 
-            for (_, player) in &mut self.players {
+            for player in self.players.values_mut() {
                 if player.number == egg_number && player.state == Egg {
                     player.state = Dead;
                     return;
@@ -209,12 +240,11 @@ impl Zappy {
     }
 
     fn connection_to_egg(&mut self, command: String, _at: Duration) {
-        let re = Regex::new(r"^ebo #?(-?\d+)$")
-            .expect("Invalid regex");
-        if let Some(capture) = re.captures(&*command) {
+        let re = Regex::new(r"^ebo #?(-?\d+)$").expect("Invalid regex");
+        if let Some(capture) = re.captures(&command) {
             parse_capture!(i64, 1, egg_number, capture, "ebo: invalid egg number");
 
-            for (_, player) in &mut self.players {
+            for player in self.players.values_mut() {
                 if player.number == egg_number && player.state == Egg {
                     player.state = Alive;
                     return;
@@ -230,10 +260,9 @@ impl Zappy {
     }
 
     fn new_egg(&mut self, command: String, _at: Duration) {
-        let re = Regex::new(r"^enw #?(-?\d+) #?(-?\d+) (\d+) (\d+)$")
-            .expect("Invalid regex");
+        let re = Regex::new(r"^enw #?(-?\d+) #?(-?\d+) (\d+) (\d+)$").expect("Invalid regex");
 
-        if let Some(capture) = re.captures(&*command) {
+        if let Some(capture) = re.captures(&command) {
             parse_capture!(i64, 1, egg_number, capture, "enw: invalid egg number");
             parse_capture!(i64, 2, number, capture, "enw: invalid player number");
             parse_capture!(usize, 3, x, capture, "enw: invalid player x coordinate");
@@ -248,7 +277,7 @@ impl Zappy {
                 return;
             }
             let mut found = false;
-            for (_, player) in &self.players {
+            for player in self.players.values_mut() {
                 if player.number == number {
                     found = true;
                 }
@@ -257,7 +286,15 @@ impl Zappy {
                 println!("enw: player not found");
                 return;
             }
-            if let Some(egg) = Tantorian::new_egg(egg_number, x, y, &self.map.size, number, &self.teams, &self.players) {
+            if let Some(egg) = Tantorian::new_egg(
+                egg_number,
+                x,
+                y,
+                &self.map.size,
+                number,
+                &self.teams,
+                &self.players,
+            ) {
                 self.players.insert(egg_number, egg);
             }
         } else {
@@ -266,27 +303,32 @@ impl Zappy {
     }
 
     fn invalid_arg_sent(&mut self, _command: String, at: Duration) {
-        self.ui.network_messages.push((at, String::from("Server received invalid argument")));
+        self.ui
+            .network_messages
+            .push((at, String::from("Server received invalid argument")));
         println!("Server received invalid argument");
     }
 
     fn invalid_command_sent(&mut self, _command: String, at: Duration) {
-        self.ui.network_messages.push((at, String::from("Server received invalid command")));
+        self.ui
+            .network_messages
+            .push((at, String::from("Server received invalid command")));
         println!("Server received invalid command");
     }
 
     fn message_from_server(&mut self, command: String, at: Duration) {
-        let args: Vec<&str> = command.split(" ").collect();
+        let args: Vec<&str> = command.split(' ').collect();
 
         self.ui.network_messages.push((at, String::from(args[1])));
         println!("Server sent: {}", args[1]);
     }
 
     fn player_inventory(&mut self, command: String, at: Duration) {
-        let re = Regex::new(r"^pin #?(-?\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)$")
-            .expect("Invalid regex");
+        let re =
+            Regex::new(r"^pin #?(-?\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)$")
+                .expect("Invalid regex");
 
-        if let Some(capture) = re.captures(&*command) {
+        if let Some(capture) = re.captures(&command) {
             parse_capture!(i64, 1, number, capture, "pin: invalid player number");
             parse_capture!(usize, 2, x, capture, "pin: invalid player x coordinate");
             parse_capture!(usize, 3, y, capture, "pin: invalid player y coordinate");
@@ -308,7 +350,7 @@ impl Zappy {
                 return;
             }
             let mut found = false;
-            for (_, player) in &mut self.players {
+            for player in self.players.values_mut() {
                 if player.number == number {
                     found = true;
                     player.last_tile = player.pos.xy() - 0.5;
@@ -332,15 +374,20 @@ impl Zappy {
     }
 
     fn player_level(&mut self, command: String, _at: Duration) {
-        let re = Regex::new(r"^plv #?(-?\d+) ([1-8])$")
-            .expect("Invalid regex");
+        let re = Regex::new(r"^plv #?(-?\d+) ([1-8])$").expect("Invalid regex");
 
-        if let Some(capture) = re.captures(&*command) {
+        if let Some(capture) = re.captures(&command) {
             parse_capture!(i64, 1, number, capture, "plv: invalid player number");
-            parse_capture!(usize, 2, level, capture, "plv: invalid player level coordinate");
+            parse_capture!(
+                usize,
+                2,
+                level,
+                capture,
+                "plv: invalid player level coordinate"
+            );
 
             let mut found = false;
-            for (_, player) in &mut self.players {
+            for player in self.players.values_mut() {
                 if player.number == number {
                     found = true;
                     player.level = level as u32;
@@ -355,16 +402,21 @@ impl Zappy {
     }
 
     fn player_position(&mut self, command: String, at: Duration) {
-        let re = Regex::new(r"^ppo #?(-?\d+) (\d+) (\d+) ([1-4])$")
-            .expect("Invalid regex");
+        let re = Regex::new(r"^ppo #?(-?\d+) (\d+) (\d+) ([1-4])$").expect("Invalid regex");
 
-        if let Some(capture) = re.captures(&*command) {
+        if let Some(capture) = re.captures(&command) {
             parse_capture!(i64, 1, number, capture, "ppo: invalid player number");
             parse_capture!(usize, 2, x, capture, "ppo: invalid player x coordinate");
             parse_capture!(usize, 3, y, capture, "ppo: invalid player y coordinate");
-            parse_capture!(usize, 4, orientation, capture, "ppo: invalid player orientation");
+            parse_capture!(
+                usize,
+                4,
+                orientation,
+                capture,
+                "ppo: invalid player orientation"
+            );
 
-            if orientation < 1 || orientation > 4 {
+            if !(1..=4).contains(&orientation) {
                 println!("ppo: invalid player orientation");
                 return;
             }
@@ -377,7 +429,7 @@ impl Zappy {
                 return;
             }
             let mut found = false;
-            for (_, player) in &mut self.players {
+            for player in self.players.values_mut() {
                 if player.number == number {
                     found = true;
                     player.last_tile = player.pos.xy() - 0.5;
@@ -396,49 +448,63 @@ impl Zappy {
     }
 
     fn broadcast(&mut self, command: String, at: Duration) {
-        let args: Vec<&str> = command.split(" ").collect();
+        let args: Vec<&str> = command.split(' ').collect();
 
         if args.len() != 3 {
             println!("pbc: wrong number of arguments");
         } else {
-            let maybe_number : Result<i64, _> = args[1].to_string().parse();
+            let maybe_number: Result<i64, _> = args[1].to_string().parse();
 
             match maybe_number {
                 Ok(number) => {
-                    for (_, player) in &mut self.players {
+                    for player in self.players.values_mut() {
                         if player.number == number && player.state == Alive {
-                            self.messages.push(Message{
+                            self.messages.push(Message {
                                 pos: Vec3::new(player.pos.x, player.pos.y, 0.),
                                 scale: Vec3::new(1., 1., 1.),
-                                color: player.color.clone(),
-                                start: at.clone()
+                                color: player.color,
+                                start: at,
                             });
-                            self.ui.broadcast_messages.push((at, player.team_name.clone(), number, String::from(args[2])));
+                            self.ui.broadcast_messages.push((
+                                at,
+                                player.team_name.clone(),
+                                number,
+                                String::from(args[2]),
+                            ));
                             return;
                         }
                     }
                     println!("pbc: player not found");
                 }
-                Err(_) => {println!("pbc: invalid player number");}
+                Err(_) => {
+                    println!("pbc: invalid player number");
+                }
             }
         }
     }
 
     fn add_incantation(&mut self, command: String, at: Duration) {
-        let args: Vec<&str> = command.split(" ").collect();
+        let args: Vec<&str> = command.split(' ').collect();
 
         if args.len() < 4 {
             println!("pic: wrong number of arguments");
         } else {
-            let x : Result<u32, _> = args[1].to_string().parse();
-            let y : Result<u32, _> = args[2].to_string().parse();
-            let level : Result<u32, _> = args[3].to_string().parse();
-            let mut players : Vec<i64> = vec![];
+            let x: Result<u32, _> = args[1].to_string().parse();
+            let y: Result<u32, _> = args[2].to_string().parse();
+            let level: Result<u32, _> = args[3].to_string().parse();
+            let mut players: Vec<i64> = vec![];
             for arg in &args[4..] {
-                println!("pic: player: {}:  {:?}", arg, arg.to_string().parse() as Result<i64, _>);
+                println!(
+                    "pic: player: {}:  {:?}",
+                    arg,
+                    arg.to_string().parse() as Result<i64, _>
+                );
                 match arg.to_string().parse() {
-                    Ok(p) => { players.push(p)}
-                    _ => { println!("pic: invalid player number"); return; }
+                    Ok(p) => players.push(p),
+                    _ => {
+                        println!("pic: invalid player number");
+                        return;
+                    }
                 }
             }
 
@@ -447,7 +513,7 @@ impl Zappy {
                     Vec2::new(x as f32, y as f32),
                     level,
                     players,
-                    at
+                    at,
                 ));
             } else {
                 println!("pic: invalid arguments");
@@ -456,13 +522,13 @@ impl Zappy {
     }
 
     fn end_incantation(&mut self, command: String, at: Duration) {
-        let args: Vec<&str> = command.split(" ").collect();
+        let args: Vec<&str> = command.split(' ').collect();
 
         if args.len() != 4 {
             println!("pic: wrong number of arguments");
         } else {
-            let x : Result<u32, _> = args[1].to_string().parse();
-            let y : Result<u32, _> = args[2].to_string().parse();
+            let x: Result<u32, _> = args[1].to_string().parse();
+            let y: Result<u32, _> = args[2].to_string().parse();
             let state = match args[3] {
                 "Ok" => IncantationState::Success,
                 "KO" => IncantationState::Failed,
@@ -471,7 +537,10 @@ impl Zappy {
 
             if let (Ok(x), Ok(y)) = (x, y) {
                 for incantation in &mut self.incantations {
-                    if incantation.pos.x as u32 == x && incantation.pos.y as u32 == y && incantation.state == IncantationState::Running {
+                    if incantation.pos.x as u32 == x
+                        && incantation.pos.y as u32 == y
+                        && incantation.state == IncantationState::Running
+                    {
                         incantation.state = state;
                         incantation.since = at;
                         return;
@@ -484,17 +553,15 @@ impl Zappy {
     }
 
     fn end_of_game(&mut self, command: String, at: Duration) {
-        let args: Vec<&str> = command.split(" ").collect();
+        let args: Vec<&str> = command.split(' ').collect();
 
         if args.len() != 2 {
             println!("seg: wrong number of arguments");
+        } else if !self.teams.iter().any(|(name, _color)| *name == args[1]) {
+            println!("seg: invalid team name");
         } else {
-            if !self.teams.iter().any(|(name, _color)| *name == args[1]) {
-                println!("seg: invalid team name");
-            } else {
-                self.close_connection(at);
-                self.winner_team = Some(args[1].to_string());
-            }
+            self.close_connection(at);
+            self.winner_team = Some(args[1].to_string());
         }
     }
 
@@ -504,7 +571,7 @@ impl Zappy {
         if args.len() != 2 {
             println!("pdi: wrong number of arguments");
         } else {
-            let maybe_number : Result<i64, _> = args[1].to_string().parse();
+            let maybe_number: Result<i64, _> = args[1].to_string().parse();
 
             match maybe_number {
                 Ok(number) => {
@@ -514,7 +581,9 @@ impl Zappy {
                         }
                     }
                 }
-                Err(_) => {println!("pdi: invalid player number");}
+                Err(_) => {
+                    println!("pdi: invalid player number");
+                }
             }
         }
     }
@@ -527,9 +596,21 @@ impl Zappy {
             parse_capture!(i64, 1, number, capture, "pnw: invalid player number");
             parse_capture!(usize, 2, x, capture, "pnw: invalid player x coordinate");
             parse_capture!(usize, 3, y, capture, "pnw: invalid player y coordinate");
-            parse_capture!(usize, 4, orientation, capture, "pnw: invalid player orientation");
+            parse_capture!(
+                usize,
+                4,
+                orientation,
+                capture,
+                "pnw: invalid player orientation"
+            );
             parse_capture!(u32, 5, level, capture, "pnw: invalid player level");
-            parse_capture!(String, 6, team_name, capture, "pnw: invalid player team name");
+            parse_capture!(
+                String,
+                6,
+                team_name,
+                capture,
+                "pnw: invalid player team name"
+            );
 
             if !(1..=4).contains(&orientation) {
                 println!("pnw: invalid player orientation");
@@ -602,7 +683,7 @@ impl Zappy {
             .filter(|&x| !x.is_empty())
             .map(|x| -> usize {
                 match x.parse() {
-                    Ok(val) => {val},
+                    Ok(val) => val,
                     Err(_) => {
                         println!("bct: value needs to be a unsigned integers");
                         invalid = true;
@@ -655,10 +736,10 @@ impl Zappy {
     }
 
     fn interpret_command(&mut self, raw_command: String, at: Duration) {
-        let command_split =
-            raw_command.split('\n')
-                .filter(|&x| !x.is_empty())
-                .filter(|&x| !(x.len() == 1 && x.as_bytes()[0] == 0));
+        let command_split = raw_command
+            .split('\n')
+            .filter(|&x| !x.is_empty())
+            .filter(|&x| !(x.len() == 1 && x.as_bytes()[0] == 0));
 
         for command in command_split {
             let command_name = command.split(' ').next().expect("invalid cmd");
@@ -676,9 +757,7 @@ impl Zappy {
     pub(crate) fn interpret_commands(&mut self, at: Duration) {
         let commands_access = match &mut self.server {
             None => return,
-            Some(server) => {
-                Arc::clone(&server.commands)
-            }
+            Some(server) => Arc::clone(&server.commands),
         };
         let mut commands = commands_access.lock().expect("Mutex poisoned");
         for _ in 0..commands.len() {

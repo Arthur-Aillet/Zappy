@@ -1,9 +1,9 @@
-use rend_ox::mesh::MeshDescriptor;
-use rend_ox::{Mat4, Vec3};
+use crate::zappy::Zappy;
 use rend_ox::app::App;
 use rend_ox::glam::Quat;
+use rend_ox::mesh::MeshDescriptor;
 use rend_ox::nannou::rand::random_range;
-use crate::zappy::Zappy;
+use rend_ox::{Mat4, Vec3};
 
 #[derive(Clone, Debug)]
 pub struct Tile {
@@ -21,14 +21,16 @@ pub struct Tile {
 impl Tile {
     pub fn access_to_nth_resource(&mut self, q: usize) -> &mut Vec<Mat4> {
         match q {
-            0 => { &mut self.q0}
-            1 => { &mut self.q1}
-            2 => { &mut self.q2}
-            3 => { &mut self.q3}
-            4 => { &mut self.q4}
-            5 => { &mut self.q5}
-            6 => { &mut self.q6}
-            _ => { panic!("Accessed to non existing resource") }
+            0 => &mut self.q0,
+            1 => &mut self.q1,
+            2 => &mut self.q2,
+            3 => &mut self.q3,
+            4 => &mut self.q4,
+            5 => &mut self.q5,
+            6 => &mut self.q6,
+            _ => {
+                panic!("Accessed to non existing resource")
+            }
         }
     }
 
@@ -51,19 +53,45 @@ impl Tile {
         Mat4::from_scale_rotation_translation(
             Vec3::new(s, s, s),
             Quat::from_rotation_z(random_range(0., std::f32::consts::PI * 2.)),
-            Vec3::new(random_range(0.1, 0.9) + self.x as f32, random_range(0.1, 0.9) + self.y as f32, 0.))
+            Vec3::new(
+                random_range(0.1, 0.9) + self.x as f32,
+                random_range(0.1, 0.9) + self.y as f32,
+                0.,
+            ),
+        )
     }
 
     pub fn spawn_resource(&mut self, q: usize) -> bool {
-        return match q {
-            0 => { self.q0.push(self.spawn_resource_mat()); true}
-            1 => { self.q1.push(self.spawn_resource_mat()); true}
-            2 => { self.q2.push(self.spawn_resource_mat()); true}
-            3 => { self.q3.push(self.spawn_resource_mat()); true}
-            4 => { self.q4.push(self.spawn_resource_mat()); true}
-            5 => { self.q5.push(self.spawn_resource_mat()); true}
-            6 => { self.q6.push(self.spawn_resource_mat()); true}
-            _ => false
+        match q {
+            0 => {
+                self.q0.push(self.spawn_resource_mat());
+                true
+            }
+            1 => {
+                self.q1.push(self.spawn_resource_mat());
+                true
+            }
+            2 => {
+                self.q2.push(self.spawn_resource_mat());
+                true
+            }
+            3 => {
+                self.q3.push(self.spawn_resource_mat());
+                true
+            }
+            4 => {
+                self.q4.push(self.spawn_resource_mat());
+                true
+            }
+            5 => {
+                self.q5.push(self.spawn_resource_mat());
+                true
+            }
+            6 => {
+                self.q6.push(self.spawn_resource_mat());
+                true
+            }
+            _ => false,
         }
     }
 }
@@ -93,7 +121,7 @@ impl Map {
             mesh: None,
             rock_mesh: None,
             color: Vec3::new(0.2, 0.95, 0.25),
-            tiles: vec![vec![Tile::new();y]; x],
+            tiles: vec![vec![Tile::new(); y]; x],
         }
     }
 
@@ -101,10 +129,14 @@ impl Map {
         self.size[0] = x;
         self.size[1] = y;
 
-        self.tiles = vec![vec![Tile::new();y]; x];
+        self.tiles = vec![vec![Tile::new(); y]; x];
         for i in 0..x {
             for j in 0..y {
-                self.tiles.get_mut(i).and_then(|ts| ts.get_mut(j)).and_then(|t|{t.x = i; t.y = j; Some(t)});
+                self.tiles.get_mut(i).and_then(|ts| ts.get_mut(j)).map(|t| {
+                    t.x = i;
+                    t.y = j;
+                    t
+                });
             }
         }
     }
@@ -116,7 +148,7 @@ impl Map {
     }
     */
 
-    pub fn update_resources(&mut self, x: usize, y: usize, q: usize, n:usize) {
+    pub fn update_resources(&mut self, x: usize, y: usize, q: usize, n: usize) {
         let tile = &mut self.tiles[x][y];
         let resource = tile.access_to_nth_resource(q);
         let diff = n as i32 - resource.len() as i32;
@@ -129,25 +161,28 @@ impl Map {
         }
     }
 
-
     pub fn render(app: &mut App<Zappy>) {
         let map = &app.user.map;
         if let Some(mesh) = &app.user.map.mesh {
-            let mat = Mat4::from_scale(Vec3::new(app.user.map.size[0] as f32, app.user.map.size[1] as f32, 1.0));
+            let mat = Mat4::from_scale(Vec3::new(
+                app.user.map.size[0] as f32,
+                app.user.map.size[1] as f32,
+                1.0,
+            ));
             app.draw_instances(mesh, vec![mat], vec![app.user.map.color]);
         }
         if let Some(md) = &map.rock_mesh {
-            let mut q0_mats : Vec<Mat4> = vec![];
-            let mut q1_mats : Vec<Mat4> = vec![];
-            let mut q2_mats : Vec<Mat4> = vec![];
-            let mut q3_mats : Vec<Mat4> = vec![];
-            let mut q4_mats : Vec<Mat4> = vec![];
-            let mut q5_mats : Vec<Mat4> = vec![];
-            let mut q6_mats : Vec<Mat4> = vec![];
+            let mut q0_mats: Vec<Mat4> = vec![];
+            let mut q1_mats: Vec<Mat4> = vec![];
+            let mut q2_mats: Vec<Mat4> = vec![];
+            let mut q3_mats: Vec<Mat4> = vec![];
+            let mut q4_mats: Vec<Mat4> = vec![];
+            let mut q5_mats: Vec<Mat4> = vec![];
+            let mut q6_mats: Vec<Mat4> = vec![];
 
             for i in 0..map.size[0] {
                 for j in 0..map.size[1] {
-                    map.tiles.get(i).and_then(|ts| ts.get(j)).and_then(|t| {
+                    map.tiles.get(i).and_then(|ts| ts.get(j)).map(|t| {
                         q0_mats.append(&mut t.q0.clone());
                         q1_mats.append(&mut t.q1.clone());
                         q2_mats.append(&mut t.q2.clone());
@@ -155,18 +190,18 @@ impl Map {
                         q4_mats.append(&mut t.q4.clone());
                         q5_mats.append(&mut t.q5.clone());
                         q6_mats.append(&mut t.q6.clone());
-                        Some(t)
+                        t
                     });
                 }
             }
 
-            app.draw_instances(&md, q0_mats, vec![COLORS[0]]);
-            app.draw_instances(&md, q1_mats, vec![COLORS[1]]);
-            app.draw_instances(&md, q2_mats, vec![COLORS[2]]);
-            app.draw_instances(&md, q3_mats, vec![COLORS[3]]);
-            app.draw_instances(&md, q4_mats, vec![COLORS[4]]);
-            app.draw_instances(&md, q5_mats, vec![COLORS[5]]);
-            app.draw_instances(&md, q6_mats, vec![COLORS[6]]);
+            app.draw_instances(md, q0_mats, vec![COLORS[0]]);
+            app.draw_instances(md, q1_mats, vec![COLORS[1]]);
+            app.draw_instances(md, q2_mats, vec![COLORS[2]]);
+            app.draw_instances(md, q3_mats, vec![COLORS[3]]);
+            app.draw_instances(md, q4_mats, vec![COLORS[4]]);
+            app.draw_instances(md, q5_mats, vec![COLORS[5]]);
+            app.draw_instances(md, q6_mats, vec![COLORS[6]]);
         }
     }
 }

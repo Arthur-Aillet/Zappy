@@ -1,23 +1,23 @@
+mod arguments;
+mod incantation;
+mod interpreter;
 mod map;
+mod message;
+mod network;
 mod server;
 mod tantorian;
 mod ui;
-mod network;
 mod zappy;
-mod interpreter;
-mod arguments;
-mod message;
-mod incantation;
 
 use std::f32::consts::PI;
 use std::time::Duration;
 
 use crate::zappy::Zappy;
 
-use rend_ox::app::{app, App};
-use rend_ox::{nannou, Vec3};
-use rend_ox::nannou::{Event, winit};
 use crate::arguments::parse_arguments;
+use rend_ox::app::{app, App};
+use rend_ox::nannou::{winit, Event};
+use rend_ox::{nannou, Vec3};
 
 fn zappy_event(_nannou_app: &nannou::App, app: &mut App<Zappy>, event: nannou::Event) {
     if app.camera_is_active {
@@ -49,17 +49,19 @@ fn zappy_event(_nannou_app: &nannou::App, app: &mut App<Zappy>, event: nannou::E
     }
 }
 
-fn zappy_key_pressed(app: &rend_ox::nannou::App, model: &mut App<Zappy>, key: rend_ox::nannou::event::Key) {
+fn zappy_key_pressed(
+    app: &rend_ox::nannou::App,
+    model: &mut App<Zappy>,
+    key: rend_ox::nannou::event::Key,
+) {
     if let rend_ox::nannou::event::Key::Space = key {
         let window = app.main_window();
         if !model.camera_is_active {
             if window.set_cursor_grab(true).is_ok() {
                 model.camera_is_active = true;
             }
-        } else {
-            if window.set_cursor_grab(false).is_ok() {
-                model.camera_is_active = false;
-            }
+        } else if window.set_cursor_grab(false).is_ok() {
+            model.camera_is_active = false;
         }
         window.set_cursor_visible(!model.camera_is_active);
     }
@@ -80,8 +82,12 @@ fn zappy_app(nannou_app: &rend_ox::nannou::App) -> App<Zappy> {
     app.user.port = port;
     Zappy::load(&mut app);
     app.user.try_to_connect(Duration::from_millis(0));
-    app.camera.position = Vec3::new(app.user.map.size[0] as f32 / 200., app.user.map.size[1] as f32 / 200., 0.04);
-    app.camera.pitch = -PI/2.;
+    app.camera.position = Vec3::new(
+        app.user.map.size[0] as f32 / 200.,
+        app.user.map.size[1] as f32 / 200.,
+        0.04,
+    );
+    app.camera.pitch = -PI / 2.;
     app
 }
 

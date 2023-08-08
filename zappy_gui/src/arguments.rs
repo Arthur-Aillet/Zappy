@@ -1,6 +1,6 @@
-use std::env;
 use getopts::Options;
 use regex::Regex;
+use std::env;
 
 fn print_usage() {
     println!("USAGE:\t./zappy_gui -p port -h machine");
@@ -28,13 +28,9 @@ pub fn parse_arguments() -> (String, String) {
         }
     };
 
-    let port = matches
-        .opt_str("p")
-        .unwrap_or(String::from(""));
+    let port = matches.opt_str("p").unwrap_or(String::from(""));
 
-    let machine = matches
-        .opt_str("h")
-        .unwrap_or(String::from("127.0.0.1"));
+    let machine = matches.opt_str("h").unwrap_or(String::from("127.0.0.1"));
 
     if !is_ip_address(&machine) {
         print_usage();
