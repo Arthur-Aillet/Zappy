@@ -26,7 +26,8 @@ static void funct_finish_response(gui_t *gui)
 }
 
 /**
- @brief get and fill in the answers of the inventory info from the ai to send it to the gui
+ @brief get and fill in the answers of the inventory
+ info from the ai to send it to the gui
  @author Laetitia Bousch/ Ludo De-Chavagnac
  @param gui_t *gui: common structure of all server data
  @param ia_t *ia: structure ia for the response gui

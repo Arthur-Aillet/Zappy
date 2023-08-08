@@ -7,6 +7,14 @@
 
 #include "zappy.h"
 
+/**
+ @brief prepare response for the ia at player level
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param int *pos: position ia
+ @return void
+**/
 static void take_ressources_res_ia_player(player_t *player, ia_t *ia, int *pos)
 {
     if (player->x == pos[0] && player->y == pos[1]) {
@@ -19,6 +27,15 @@ static void take_ressources_res_ia_player(player_t *player, ia_t *ia, int *pos)
     }
 }
 
+/**
+ @brief prepare response for the ia at egg level
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param int *pos: position ia
+ @param int *post_tmp: position egg
+ @return void
+**/
 static void to_take_ressources_response_ia_egg(int *pos, int *post_tmp,
                                                 ia_t *ia, common_t *com)
 {
@@ -35,6 +52,15 @@ static void to_take_ressources_response_ia_egg(int *pos, int *post_tmp,
     }
 }
 
+/**
+ @brief check if there are egg on the tile
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param int x: position x of tile
+ @param int y: position y of tile
+ @return void
+**/
 static void to_take_ressources_response_ia_bis(ia_t *ia, common_t *com,
                                                 int x, int y)
 {
@@ -53,6 +79,15 @@ static void to_take_ressources_response_ia_bis(ia_t *ia, common_t *com,
     to_take_ressources_response_ia_food(ia, com, x, y);
 }
 
+/**
+ @brief check if there are players on the tile
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param int x: position x of tile
+ @param int y: position y of tile
+ @return void
+**/
 void to_take_ressources_response_ia(ia_t *ia, common_t *com, int x, int y)
 {
     int pos[2];

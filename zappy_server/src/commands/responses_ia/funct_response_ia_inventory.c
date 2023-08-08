@@ -7,6 +7,12 @@
 
 #include "zappy.h"
 
+/**
+ @brief check phiras on the inventory of ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 static void inventory_phiras(ia_t *ia)
 {
     char buffer_inventory[256];
@@ -22,6 +28,12 @@ static void inventory_phiras(ia_t *ia)
     strcat(OCTETS, ", ");
 }
 
+/**
+ @brief check thystame on the inventory of ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 static void inventory_thystame(ia_t *ia)
 {
     char buffer_inventory[256];
@@ -37,6 +49,12 @@ static void inventory_thystame(ia_t *ia)
     strcat(OCTETS, ", ");
 }
 
+/**
+ @brief check egg on the inventory of ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 static void inventory_egg(ia_t *ia)
 {
     char buffer_inventory[256];
@@ -53,6 +71,12 @@ static void inventory_egg(ia_t *ia)
     SIZE = strlen(OCTETS);
 }
 
+/**
+ @brief prepare reponse for the ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 static void funct_result_response_ia_inventory(ia_t *ia)
 {
     OCTETS = realloc(OCTETS, sizeof(char));
@@ -68,6 +92,14 @@ static void funct_result_response_ia_inventory(ia_t *ia)
     write(ia->buffer.sock.sockfd, OCTETS, SIZE);
 }
 
+/**
+ @brief inventory command response to ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the ia structure
+ @return void
+**/
 void funct_response_ia_inventory(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;

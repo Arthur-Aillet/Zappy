@@ -8,11 +8,14 @@
 #include "zappy.h"
 
 /**
- @brief receive and prepare the elements needed to prepare the order that will be processed by the server for the command msg
+ @brief receive and prepare the elements needed to prepare the
+        order that will be processed by the server for the command msg
  @author Laetitia Bousch/ Ludo De-Chavagnac
  @param ia_t *ia: structure of ia
- @param common_t com: structure commun -> this structure gathers all the server data
- @param msg_queue_t *new_msg: the arguments given as parameters with the command sent by the ia
+ @param common_t com: structure commun -> this structure gathers
+                                                    all the server data
+ @param msg_queue_t *new_msg: the arguments given as parameters with the
+                                                command sent by the ia
  @return void
 **/
 static void call_function_gui_bis(ia_t *ia, common_t *com,
@@ -30,7 +33,8 @@ static void call_function_gui_bis(ia_t *ia, common_t *com,
 /**
  @brief update tile and send the info to the gui
  @author Laetitia Bousch/ Ludo De-Chavagnac
- @param common_t com: structure commun -> this structure gathers all the server data
+ @param common_t com: structure commun -> this structure
+                    gathers all the server data
  @param ia_t *ia: structure of ia
  @return void
 **/
@@ -62,8 +66,10 @@ void update_tile_gui(common_t *com, ia_t *ia)
  @brief call function on the gui
  @author Laetitia Bousch/ Ludo De-Chavagnac
  @param ia_t *ia: structure of ia
- @param msg_queue_t *new_msg: the arguments given as parameters with the command sent by the ia
- @param common_t com: structure commun -> this structure gathers all the server data
+ @param msg_queue_t *new_msg: the arguments given as
+ parameters with the command sent by the ia
+ @param common_t com: structure commun -> this structure
+ gathers all the server data
  @return void
 **/
 static void call_function_gui(ia_t *ia, common_t *com, msg_queue_t *new_msg)
@@ -80,11 +86,13 @@ static void call_function_gui(ia_t *ia, common_t *com, msg_queue_t *new_msg)
 }
 
 /**
- @brief receive and prepare the elements needed to prepare the order that will be processed by the server for the command incantation
+ @brief receive and prepare the elements needed to prepare
+ the order that will be processed by the server for the command incantation
  @author Laetitia Bousch/ Ludo De-Chavagnac
  @param ia_t *ia: structure of ia
  @param char **args: the arguments receive with the command ia
- @param common_t com: structure commun -> this structure gathers all the server data
+ @param common_t com: structure commun -> this structure
+ gathers all the server data
  @return void
 **/
 void funct_client_ia_incantation(ia_t *ia, char **args, common_t *com)

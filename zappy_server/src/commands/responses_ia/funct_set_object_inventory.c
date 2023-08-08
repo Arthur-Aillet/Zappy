@@ -7,6 +7,15 @@
 
 #include "zappy.h"
 
+/**
+ @brief prepare response for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param int idx: resource number
+ @param char **args: the arguments you need to answer the gui
+ @return char *
+**/
 static void funct_response_gui(ia_t *ia, int idx, common_t *com, char **args)
 {
     char buffer_args[256];
@@ -29,6 +38,14 @@ static void funct_response_gui(ia_t *ia, int idx, common_t *com, char **args)
     funct_server_pdr(args, com->gui, com);
 }
 
+/**
+ @brief set command response to ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param int idx: resource number
+ @return void
+**/
 void response_set(ia_t *ia, int idx, common_t *com)
 {
     char **args = malloc(sizeof(char *) * 3);
@@ -48,6 +65,14 @@ void response_set(ia_t *ia, int idx, common_t *com)
     free_array((void **)args);
 }
 
+/**
+ @brief find the resource that needs to be modified tree part
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param char **args: the arguments you need to answer the gui
+ @return char *
+**/
 static void next_if_funct_tree(ia_t *ia, common_t *com, char **args)
 {
     if (strcmp(args[0], "phiras") == 0) {
@@ -59,6 +84,14 @@ static void next_if_funct_tree(ia_t *ia, common_t *com, char **args)
     }
 }
 
+/**
+ @brief find the resource that needs to be modified second part
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param char **args: the arguments you need to answer the gui
+ @return char *
+**/
 static void next_if_funct_bis(ia_t *ia, common_t *com, char **args)
 {
     if (strcmp(args[0], "sibur") == 0) {
@@ -70,6 +103,14 @@ static void next_if_funct_bis(ia_t *ia, common_t *com, char **args)
     }
 }
 
+/**
+ @brief find the resource that needs to be modified first part
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @param char **args: the arguments you need to answer the gui
+ @return char *
+**/
 void next_if_funct_set(ia_t *ia, common_t *com, char **args)
 {
     if (strcmp(args[0], "linemate") == 0) {

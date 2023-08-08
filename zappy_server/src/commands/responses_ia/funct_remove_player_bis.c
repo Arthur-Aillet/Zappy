@@ -7,6 +7,15 @@
 
 #include "zappy.h"
 
+/**
+ @brief modify the position of the enemy according to the
+ orientation that the ai arrived
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param player_t *ennemy: structure ia ennemy
+ @param common_t *common: common structure of all server data
+ @param player_t *ia: structure ia player
+ @return void
+**/
 static void remove_finish_choose_player(player_t *ennemy, player_t *ia,
                                         common_t *com)
 {
@@ -25,6 +34,14 @@ static void remove_finish_choose_player(player_t *ennemy, player_t *ia,
     }
 }
 
+/**
+ @brief modify the position of the enemy according to the
+ orientation that the ai arrived
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param player_t *ennemy: structure ia ennemy
+ @param common_t *common: common structure of all server data
+ @return void
+**/
 static void remove_choose_player_est(player_t *ennemy, common_t *com)
 {
     if (ennemy->x == 0) {
@@ -34,6 +51,15 @@ static void remove_choose_player_est(player_t *ennemy, common_t *com)
     }
 }
 
+/**
+ @brief modify the position of the enemy according to the
+ orientation that the ai arrived
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param player_t *ennemy: structure ia ennemy
+ @param common_t *common: common structure of all server data
+ @param player_t *ia: structure ia player
+ @return void
+**/
 void remove_choose_player(player_t *ennemy, common_t *com, player_t *ia)
 {
     if (ia->orientation == North) {
@@ -49,6 +75,12 @@ void remove_choose_player(player_t *ennemy, common_t *com, player_t *ia)
     }
 }
 
+/**
+ @brief return the number of ia needed according to the level
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: structure ia
+ @return int
+**/
 int set_nbr_ia(ia_t *ia)
 {
     if (ia->player->level == 1) {
@@ -63,6 +95,13 @@ int set_nbr_ia(ia_t *ia)
     return 6;
 }
 
+/**
+ @brief prepare response for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param int x: the element that must be put in the answer for
+ the gui
+ @return char *
+**/
 char *prepare_arg_response_gui(int x)
 {
     char buffer_args[256];

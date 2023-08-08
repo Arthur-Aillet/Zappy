@@ -55,7 +55,8 @@ int to_find_ia_incantation(common_t *com, ia_t *ia)
 /**
  @brief create a message for the response ia
  @author Laetitia Bousch/ Ludo De-Chavagnac
- @param msg_queue_t new_msg: recording of the new order in the pending queue
+ @param msg_queue_t new_msg: recording of the new
+            order in the pending queue
  @return void
 **/
 void to_create_message_response_ia(msg_queue_t *new_msg)
@@ -108,7 +109,8 @@ int to_check_ressources(ia_t *ia, common_t *com, int x, int y)
  @brief complete the arguments needed for the incantation
  @author Laetitia Bousch/ Ludo De-Chavagnac
  @param tile_t *tile: each box of the maps
- @param char **args: the arguments given as parameters with the command sent by the ia
+ @param char **args: the arguments given as parameters
+ with the command sent by the ia
  @param int nbr_ia: numbre ia
  @return void
 **/

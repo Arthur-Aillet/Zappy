@@ -7,6 +7,12 @@
 
 #include "zappy.h"
 
+/**
+ @brief check food on the inventory of ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 void inventory_food(ia_t *ia)
 {
     char buffer_inventory[256];
@@ -22,6 +28,12 @@ void inventory_food(ia_t *ia)
     strcat(OCTETS, ", ");
 }
 
+/**
+ @brief check linemate on the inventory of ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 void inventory_linemate(ia_t *ia)
 {
     char buffer_inventory[256];
@@ -37,6 +49,12 @@ void inventory_linemate(ia_t *ia)
     strcat(OCTETS, ", ");
 }
 
+/**
+ @brief check deraumere on the inventory of ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 void inventory_deraumere(ia_t *ia)
 {
     char buffer_inventory[256];
@@ -52,6 +70,12 @@ void inventory_deraumere(ia_t *ia)
     strcat(OCTETS, ", ");
 }
 
+/**
+ @brief check sibur on the inventory of ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 void inventory_sibur(ia_t *ia)
 {
     char buffer_inventory[256];
@@ -67,6 +91,12 @@ void inventory_sibur(ia_t *ia)
     strcat(OCTETS, ", ");
 }
 
+/**
+ @brief check mendiane on the inventory of ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 void inventory_mendiane(ia_t *ia)
 {
     char buffer_inventory[256];

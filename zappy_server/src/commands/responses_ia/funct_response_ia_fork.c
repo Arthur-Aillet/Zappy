@@ -7,6 +7,13 @@
 
 #include "zappy.h"
 
+/**
+ @brief add new egg in the team
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param team_t *team: team structure
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 static void to_add_new_egg(ia_t *ia, team_t *team)
 {
     team->egg = realloc(team->egg, sizeof(egg_t) * (team->nb_eggs + 1));
@@ -16,6 +23,13 @@ static void to_add_new_egg(ia_t *ia, team_t *team)
     team->egg[team->nb_eggs] = set_egg(ia->player->x, ia->player->y);
 }
 
+/**
+ @brief prepare reponse for the ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param team_t *team: team structure
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 static void funct_prepare_res(team_t *team, ia_t *ia)
 {
     team->egg = realloc(team->egg, sizeof(egg_t) * (team->nb_eggs + 1));
@@ -34,6 +48,12 @@ static void funct_prepare_res(team_t *team, ia_t *ia)
     strcat(OCTETS, "ok\n\0");
 }
 
+/**
+ @brief create response for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param int arg: argument to put in the response sent to the gui
+ @return char *
+**/
 static char *create_args_for_response_gui(int arg)
 {
     char *new_args;
@@ -49,6 +69,14 @@ static char *create_args_for_response_gui(int arg)
     return new_args;
 }
 
+/**
+ @brief fork command response to ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the ia structure
+ @return void
+**/
 void funct_response_ia_fork(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;

@@ -7,6 +7,13 @@
 
 #include "zappy.h"
 
+/**
+ @brief prepare response for the ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param ia_t *ia: the ia structure
+ @return char *
+**/
 static void eject_response(common_t *com, ia_t *ia)
 {
     SIZE = 4;
@@ -22,6 +29,14 @@ static void eject_response(common_t *com, ia_t *ia)
     write(ia->buffer.sock.sockfd, OCTETS, SIZE);
 }
 
+/**
+ @brief eject command response to ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the ia structure
+ @return void
+**/
 void funct_response_ia_eject(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;

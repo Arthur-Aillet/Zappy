@@ -7,6 +7,12 @@
 
 #include "zappy.h"
 
+/**
+ @brief prepare response for the orientation
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia: the ia structure
+ @return void
+**/
 static void right_log(ia_t *ia)
 {
     char dir[10];
@@ -27,6 +33,14 @@ static void right_log(ia_t *ia)
             ia->player->id, P, B, dir, N);
 }
 
+/**
+ @brief right command response to ia
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param char **args: the arguments you need to answer the gui
+ @param void *info: matches the ia structure
+ @return void
+**/
 void funct_response_ia_right(char **args, void *info, common_t *com)
 {
     ia_t *ia = (ia_t *)info;

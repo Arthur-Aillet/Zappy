@@ -7,6 +7,13 @@
 
 #include "zappy.h"
 
+/**
+ @brief prepare response for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param int x: the element that must be put in the answer
+ for the gui
+ @return void
+**/
 static void funct_prepare_response_gui(player_t *ia, common_t *com, int r)
 {
     char **args = malloc(sizeof(char *) * 4);
@@ -22,6 +29,13 @@ static void funct_prepare_response_gui(player_t *ia, common_t *com, int r)
     free_array((void**)args);
 }
 
+/**
+ @brief returns the number of elements in the queue
+ depending on the commands the AI ​​wants to execute
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param ia_t *ia_tmp: structure ia player
+ @return int
+**/
 static int funct_status_master(ia_t *ia_tmp)
 {
     int cmp;
@@ -30,6 +44,16 @@ static int funct_status_master(ia_t *ia_tmp)
     return cmp;
 }
 
+/**
+ @brief remove the incantation command in the ai which are
+ in incantation and change their status
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param player_t *ia: structure ia player
+ @param int i: number ia in incantation
+ @param char **args: structure ia player
+ @return void
+**/
 static void funct_status_incantation(int i, common_t *com,
                                 player_t *ia, char **args)
 {
@@ -49,6 +73,14 @@ static void funct_status_incantation(int i, common_t *com,
     }
 }
 
+/**
+ @brief check the status incantation and prepare response
+ for the gui
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param common_t *common: common structure of all server data
+ @param player_t *ia: structure ia player
+ @return void
+**/
 static void to_check_status_incantation(common_t *com, player_t *ia)
 {
     int i = set_nbr_ia(to_find_ia_int(com->gui->map.tiles
@@ -70,6 +102,16 @@ static void to_check_status_incantation(common_t *com, player_t *ia)
     free_array((void**)args);
 }
 
+/**
+ @brief check if there is an incantation and run and
+ if not call the functions to know in which direction the enemy
+ should be pushed
+ @author Laetitia Bousch/ Ludo De-Chavagnac
+ @param player_t *ennemy: structure ia ennemy
+ @param common_t *common: common structure of all server data
+ @param player_t *ia: structure ia player
+ @return void
+**/
 void remove_player(player_t *ennemy, player_t *ia, common_t *com)
 {
     if (ennemy->incantation != NO) {
