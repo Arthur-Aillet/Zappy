@@ -3,7 +3,7 @@ use getopts::Options;
 use regex::Regex;
 
 fn print_usage() {
-    println!("USAGE:\t./zappy_ai -p port -h machine");
+    println!("USAGE:\t./zappy_gui -p port -h machine");
     println!("\tport\tis the port number");
     println!("\tmachine\tis the name of the machine; localhost by default");
 }
