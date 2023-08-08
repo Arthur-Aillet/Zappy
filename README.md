@@ -3,7 +3,7 @@
 
 Last project of the second school year at epitech. Zappy is a game for developers, where players have to design AIs to make them fight together.
 
-### Contexte
+### Context
 
 Zappy, it is a project to compose three parts:
 
