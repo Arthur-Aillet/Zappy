@@ -489,7 +489,7 @@ impl Zappy {
         if args.len() != 2 {
             println!("seg: wrong number of arguments");
         } else {
-            if !self.teams.iter().any(|(name, _color)| *name == args[1].to_string()) {
+            if !self.teams.iter().any(|(name, _color)| *name == args[1]) {
                 println!("seg: invalid team name");
             } else {
                 self.close_connection(at);
@@ -499,7 +499,7 @@ impl Zappy {
     }
 
     fn death_of_player(&mut self, command: String, _at: Duration) {
-        let args: Vec<&str> = command.split(" ").collect();
+        let args: Vec<&str> = command.split(' ').collect();
 
         if args.len() != 2 {
             println!("pdi: wrong number of arguments");
@@ -508,7 +508,7 @@ impl Zappy {
 
             match maybe_number {
                 Ok(number) => {
-                    for (_, player) in &mut self.players {
+                    for player in &mut self.players.values_mut() {
                         if player.number == number {
                             player.state = Dead;
                         }
@@ -523,7 +523,7 @@ impl Zappy {
         let re = Regex::new(r"^pnw #?(-?\d+) (\d+) (\d+) ([1-4]) ([0-8]) (\w+)$")
             .expect("Invalid regex");
 
-        if let Some(capture) = re.captures(&*command) {
+        if let Some(capture) = re.captures(&command) {
             parse_capture!(i64, 1, number, capture, "pnw: invalid player number");
             parse_capture!(usize, 2, x, capture, "pnw: invalid player x coordinate");
             parse_capture!(usize, 3, y, capture, "pnw: invalid player y coordinate");
@@ -531,7 +531,7 @@ impl Zappy {
             parse_capture!(u32, 5, level, capture, "pnw: invalid player level");
             parse_capture!(String, 6, team_name, capture, "pnw: invalid player team name");
 
-            if orientation < 1 || orientation > 4 {
+            if !(1..=4).contains(&orientation) {
                 println!("pnw: invalid player orientation");
                 return;
             }
@@ -562,7 +562,7 @@ impl Zappy {
     }
 
     fn add_team_name(&mut self, command: String, _at: Duration) {
-        let args: Vec<&str> = command.split(" ").collect();
+        let args: Vec<&str> = command.split(' ').collect();
 
         if args.len() != 2 {
             println!("tna: wrong number of arguments");
@@ -579,7 +579,7 @@ impl Zappy {
     }
 
     fn set_time_unit(&mut self, command: String, _at: Duration) {
-        let args: Vec<&str> = command.split(" ").collect();
+        let args: Vec<&str> = command.split(' ').collect();
 
         if args.len() != 2 {
             println!("sgt/sst: wrong number of arguments");
@@ -597,21 +597,21 @@ impl Zappy {
     fn tile_content(&mut self, command: String, _at: Duration) {
         let mut invalid = false;
         let args: Vec<usize> = command
-            .split(" ")
+            .split(' ')
             .skip(1)
             .filter(|&x| !x.is_empty())
             .map(|x| -> usize {
-                return match x.parse() {
+                match x.parse() {
                     Ok(val) => {val},
                     Err(_) => {
                         println!("bct: value needs to be a unsigned integers");
                         invalid = true;
                         0
                     }
-                };
+                }
             })
             .collect();
-        if invalid == true {
+        if invalid {
             return;
         }
         if args.len() != 9 {
@@ -628,28 +628,26 @@ impl Zappy {
     }
 
     fn set_map_size(&mut self, command: String, _at: Duration) {
-        let args: Vec<&str> = command.split(" ").collect();
+        let args: Vec<&str> = command.split(' ').collect();
 
         if args.len() == 3 {
-            let x: usize;
             let x_result: Result<usize, _> = args[1].parse();
-            match x_result {
-                Ok(val) => x = val,
+            let x = match x_result {
+                Ok(val) => val,
                 Err(_) => {
                     println!("width needs to be a unsigned integer");
                     return;
                 }
-            }
+            };
 
-            let y: usize;
             let y_result: Result<usize, _> = args[2].parse();
-            match y_result {
-                Ok(val) => y = val,
+            let y = match y_result {
+                Ok(val) => val,
                 Err(_) => {
                     println!("height needs to be a unsigned integer");
                     return;
                 }
-            }
+            };
             self.map.resize(x, y);
         } else {
             println!("Invalid arguments to the size command received");
@@ -658,12 +656,12 @@ impl Zappy {
 
     fn interpret_command(&mut self, raw_command: String, at: Duration) {
         let command_split =
-            raw_command.split("\n")
+            raw_command.split('\n')
                 .filter(|&x| !x.is_empty())
                 .filter(|&x| !(x.len() == 1 && x.as_bytes()[0] == 0));
 
         for command in command_split {
-            let command_name = command.split(" ").next().expect("invalid cmd");
+            let command_name = command.split(' ').next().expect("invalid cmd");
             let maybe_func = self.functions.get(command_name);
 
             match maybe_func {
@@ -676,12 +674,10 @@ impl Zappy {
     }
 
     pub(crate) fn interpret_commands(&mut self, at: Duration) {
-        let commands_access: Arc<Mutex<Vec<String>>>;
-
-        match &mut self.server {
+        let commands_access = match &mut self.server {
             None => return,
             Some(server) => {
-                commands_access = Arc::clone(&server.commands);
+                Arc::clone(&server.commands)
             }
         };
         let mut commands = commands_access.lock().expect("Mutex poisoned");

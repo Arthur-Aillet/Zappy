@@ -150,12 +150,11 @@ impl ZappyUi {
                     }
                     None => (),
                 }
-                let button: egui::Button;
-                if clicked_last_frame {
-                    button = egui::Button::new("   ").fill(egui::Color32::from_rgb(200, 200, 200));
+                let button = if clicked_last_frame {
+                    egui::Button::new("   ").fill(egui::Color32::from_rgb(200, 200, 200))
                 } else {
-                    button = egui::Button::new("   ");
-                }
+                    egui::Button::new("   ")
+                };
 
                 if ui.add(button).clicked() {
                     if clicked_last_frame {
