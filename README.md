@@ -74,9 +74,9 @@ _____________________
 
 ### Zappy Server
 
-[Gui protocol](./zappy_server/ZAPPY_GUI.md)
+[Gui protocol](./zappy_server/README_GUI.md)
 
-[Ai protocol](./zappy_server/ZAPPY_AI.md)
+[Ai protocol](./zappy_server/README_AI.md)
 
 ```
   doxygen // generate gui documentation, found at docs/html/index.html
